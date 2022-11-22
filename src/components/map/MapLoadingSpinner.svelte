@@ -1,4 +1,4 @@
-<div class="absolute top-0 z-50 map-loading rounded-lg">
+<div class="absolute top-0 z-10 map-loading ">
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: rgb(241, 242, 243); display: block;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
     <rect x="19" y="19" width="20" height="20" fill="#0a0a0a">

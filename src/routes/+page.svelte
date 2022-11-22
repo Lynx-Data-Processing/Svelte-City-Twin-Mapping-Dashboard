@@ -75,45 +75,22 @@
 	};
 	fetchSmarterAIDevices();
 
-	const getGPSDataFromOneSmarterAIFile = async (file) => {
-		const response = await getGeojsonDataFromFile(file);
-		if (response.status === 200) {
-			if (response.data) {
-				let gpsRawData = response.data;
-				gpsRawData['deviceId'] = 'CK20520033';
-				gpsData = rawSmarterAIGPSDataToGeojson([gpsRawData]);
-				mapDetails = {
-					id: 0,
-					center: gpsData[0].features[0].geometry.coordinates,
-					zoom: 15,
-					pitch: 0,
-					bearing: -17.6
-				};
-			} else {
-				alert('Not able to fetch devices from Smarter AI');
-			}
-		} else {
-			alert(response);
-		}
-	};
+
 
 	const getGPSDataFromAllSmarterAIFiles = async (events) => {
-		let snapshots = events.map(function (event) {
-			return event.snapshots;
-		});
-		snapshots = snapshots.flat(1);
-		snapshots = snapshots.filter((snapshot) => snapshot.source === 'sensor');
-		let sensorDownloadUrls = snapshots.map((snapshot) => snapshot.downloadUrl);
 
 		//* Preapre the GPS Array
 		let tempGPSList = [];
-		for (let index = 0; index < sensorDownloadUrls.length; index++) {
-			const sensorDonloadUrl = sensorDownloadUrls[index];
+		for (let index = 0; index < events.length; index++) {
+			const event = events[index];
+			const sensorDonloadUrl = event.snapshots[2].downloadUrl;
 			const response = await getGeojsonDataFromFile(sensorDonloadUrl);
 			if (response.status === 200) {
 				if (response.data) {
 					let gpsRawData = response.data;
 					gpsRawData['deviceId'] = 'CK20520033';
+					gpsRawData['recordingStartTimestamp'] = event.recordingStartTimestamp
+					gpsRawData['recordingEndTimestamp'] = event.recordingEndTimestamp
 					tempGPSList.push(gpsRawData);
 				} else {
 					console.log('Not able to fetch devices from Smarter AI');
@@ -126,6 +103,8 @@
 		//* If data exists, create the GPS Geojson layer
 		if (tempGPSList.length) {
 			gpsData = rawSmarterAIGPSDataToGeojson(tempGPSList);
+
+			console.log(gpsData)
 			mapDetails = {
 				id: 0,
 				center: gpsData[0].features[0].geometry.coordinates,
@@ -160,58 +139,63 @@
 	};
 </script>
 
-<Navbar title={'City Twin Mapping Dashboard - Kingston'} bind:selectedMenu bind:menuComponents />
-<main class="grid grid-cols-1 gap-4 lg:grid-cols-12 my-4 px-4">
-	<div class={`col-span-1 lg:col-span-12 relative`}>
-		<Map
-			bind:devicesArray
-			bind:isLoading
-			{mapDetails}
-			bind:gpsFilters
-			bind:gpsData
-			bind:layerList
-			bind:mapStyle
-			bind:isReadyForStyleSwitching
-			bind:selectedPolygon
-			bind:pointOfInterest
-			bind:selectedMenu
-		/>
+<div class="flex flex-col">
 
-		<div class="absolute top-2 left-2 flex flex-row gap-4 z-100">
-			<div class={`flex flex-col gap-4`}>
-				<Layers bind:layerList />
-				{#if selectedMenu === 0}
-					<DateTime bind:dateTimeDictionary />
-					<SearchDetails bind:dateTimeDictionary bind:selectedPolygon {fetchEventsData} />
-				{:else if selectedMenu === 1}
-					<StreetView bind:pointOfInterest />
-				{:else if selectedMenu === 2}
-					<Filters bind:gpsFilters bind:gpsData />
-				{:else if selectedMenu === 3}
-					<SpeedView bind:gpsData />
-					<!-- <ChartView bind:gpsData /> -->
-				{/if}
+	<Navbar title={'City Twin Mapping Dashboard - Kingston'} bind:selectedMenu bind:menuComponents />
+	<main class="flex-1 grid grid-cols-1 gap-4 lg:grid-cols-12 ">
+		<div class={`card col-span-1 lg:col-span-12 relative`}>
+			<Map
+				bind:devicesArray
+				bind:isLoading
+				{mapDetails}
+				bind:gpsFilters
+				bind:gpsData
+				bind:layerList
+				bind:mapStyle
+				bind:isReadyForStyleSwitching
+				bind:selectedPolygon
+				bind:pointOfInterest
+				bind:selectedMenu
+			/>
+	
+			<div class="absolute top-2 left-2 flex flex-row gap-4 z-100">
+				<div class={`flex flex-col gap-4`}>
+					<Layers bind:layerList />
+					{#if selectedMenu === 0}
+						<DateTime bind:dateTimeDictionary />
+						<SearchDetails bind:dateTimeDictionary bind:selectedPolygon {fetchEventsData} />
+					{:else if selectedMenu === 1}
+						<StreetView bind:pointOfInterest />
+					{:else if selectedMenu === 2}
+						<Filters bind:gpsFilters bind:gpsData />
+					{:else if selectedMenu === 3}
+						<SpeedView bind:gpsData />
+						<!-- <ChartView bind:gpsData /> -->
+					{/if}
+				</div>
+				<div>
+					<MapStyleSelector bind:mapStyle bind:isReadyForStyleSwitching />
+				</div>
+				
 			</div>
-			<div>
-				<MapStyleSelector bind:mapStyle bind:isReadyForStyleSwitching />
-			</div>
+	
 			
+	
+			{#if isLoading === true}
+				<MapLoadingSpinner />
+			{:else if isError === true}
+				<MapError />
+			{/if}
 		</div>
+	</main>
 
-		
+</div>
 
-		{#if isLoading === true}
-			<MapLoadingSpinner />
-		{:else if isError === true}
-			<MapError />
-		{/if}
-	</div>
-</main>
 
 {#if eventList.length}
 	<section class="grid grid-cols-1 gap-4 lg:grid-cols-12 my-4 px-4">
 		<div class="col-span-1 md:col-span-12">
-			<RecordingsTable bind:eventList {getGPSDataFromOneSmarterAIFile} />
+			<RecordingsTable bind:eventList  />
 		</div>
 	</section>
 {/if}

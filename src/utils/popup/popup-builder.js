@@ -18,7 +18,7 @@ export const buildPopup = async (features, layerName, devicesArray) => {
   }
 
   if (layerName.includes('GPS')) {
-    const src = await findVideo(features.properties.UTCTime, devicesArray.find(
+    const src = await findVideo(features.properties.StartTime, features.properties.EndTime, devicesArray.find(
       (device) => device.deviceKey === features.properties.Device_Id,
     ).id);
 

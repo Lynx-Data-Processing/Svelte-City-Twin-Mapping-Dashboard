@@ -2,7 +2,6 @@
 	import { onMount } from "svelte";
 	import { getDevicon } from '../utils/devicon-icons'
 	export let eventList;
-	export let getGPSDataFromOneSmarterAIFile;
 
 	const PROGRAMMING_TOOLS = ["googlecloud"];
 	
@@ -46,7 +45,7 @@
 
 <section class="card h-fit scale-in-center">
 	<div class="p-4">
-		<p class="font-bold my-1">Video Table View:</p>
+		<p class="my-1">Video Table View:</p>
 		{#if paginatedFiles.length}
 			<table class="table w-full rounded-lg">
 				<thead>
@@ -57,7 +56,7 @@
                         <th>Device Label</th>
                         <th>Saved On</th>
                         <th>Trigger Name</th>
-						<th>Options</th>
+					
 						
 					</tr>
 				</thead>
@@ -93,7 +92,7 @@
 									</div>
 								</td>
                                 <td>{event.triggerName}</td>
-								<td><button on:click={() => getGPSDataFromOneSmarterAIFile(event.snapshots[2].downloadUrl)} class="card-btn btn-primary"> <i class="fa-solid fa-share " /> Add GPS Data to Map </button></td>
+								
 							</tr>
 
                     
@@ -104,13 +103,13 @@
 			<hr class="my-4" />
 			<p>{`${paginationFrom + 1}-${paginationTo} of ${videoFiles.length}`}</p>
 			<div class="flex items-center space-x-2 mt-2">
-				<button on:click={() => setPaginationPage(paginationPage - 1)} class="px-4 py-2  btn-pagination"> Previous </button>
+				<button on:click={() => setPaginationPage(paginationPage - 1)} class="px-4 py-2  btn-gray-sm"> Previous </button>
 				{#each Array(numberOfPages) as _, index (index)}
-					<button on:click={() => setPaginationPage(index)} class={`px-4 py-2 ${paginationPage === index ? "btn-pagination-primary font-bold " : "btn-pagination"}`}>
+					<button on:click={() => setPaginationPage(index)} class={`px-4 py-2 ${paginationPage === index ? "btn-pagination-primary-sm font-bold " : "btn-gray-sm"}`}>
 						{index}
 					</button>
 				{/each}
-				<button on:click={() => setPaginationPage(paginationPage + 1)} class="px-4 py-2  btn-pagination "> Next </button>
+				<button on:click={() => setPaginationPage(paginationPage + 1)} class="px-4 py-2  btn-gray-sm "> Next </button>
 			</div>
 		{:else}
 			<div class="alert alert-red my-1" role="alert">No Events Found.</div>

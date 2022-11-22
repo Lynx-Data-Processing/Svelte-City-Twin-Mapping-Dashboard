@@ -45,7 +45,7 @@
 			{#each gpsFilters as filterItem}
 				<p class=" my-1">{filterItem.name}:</p>
 
-				<div class="py-1">
+				<div class="py-1 px-4">
 					<RangeSlider
 						bind:values={filterItem.selected}
 						pips

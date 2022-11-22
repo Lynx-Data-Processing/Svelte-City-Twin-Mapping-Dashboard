@@ -61,7 +61,7 @@
 		</div>
 
 		<div>
-			<button on:click={toggleTerms} class="toggle-btn text-center hover:underline">
+			<button on:click={toggleTerms} class=" text-center hover:underline">
 				{#if showTerms}
 					<i class="fa-solid fa-arrow-up" />
 					<span>Hide</span>

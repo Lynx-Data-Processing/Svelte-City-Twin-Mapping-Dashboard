@@ -23,12 +23,12 @@
 </script>
 
 <hr />
-<footer class="bg-smoke  py-8 px-4">
+<footer class="bg-smoke  py-8 px-8">
 	<div class="grid grid-cols-1 md:grid-cols-3 py-2 mb-8">
 		<div class="col-span-1 ">
-			<p>About</p>
+			<p class="font-bold">About</p>
 
-			{#each ABOUT_LIST as item}
+			{#each APPLICATION_TOOLS_LIST as item}
 				<div  class="my-2">
 					<a href={`${item.link}`} target="_blank" class="text-sm  hover:underline" rel="noreferrer">{item.name}</a>
 				</div>
@@ -36,7 +36,7 @@
 		</div>
 
 		<div class="col-span-1">
-			<p>Application Tools</p>
+			<p class="font-bold">Application Tools</p>
 			{#each APPLICATION_TOOLS_LIST as item}
 				<div class="my-2">
 					<a href={`${item.link}`} target="_blank" rel="noreferrer" class="text-sm  hover:underline">{item.name}</a>
@@ -45,9 +45,9 @@
 		</div>
 
 		<div class="col-span-1 ">
-			<p>Details</p>
+			<p class="font-bold">Details</p>
 
-			{#each DETAILS_LIST as item}
+			{#each APPLICATION_TOOLS_LIST as item}
 				<div class="my-2">
 					<a href={`${item.link}`} target="_blank" class="text-sm  hover:underline" rel="noreferrer">{item.name}</a>
 				</div>

@@ -533,4 +533,4 @@
 	});
 </script>
 
-<div class="h-96 md:h-screen scale-in-center"><div class="h-full rounded-lg" id="map" /></div>
+<div class="h-96 md:h-screen scale-in-center"><div class="h-full" id="map" /></div>
