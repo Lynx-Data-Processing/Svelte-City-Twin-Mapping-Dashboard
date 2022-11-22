@@ -23,17 +23,16 @@
 		isLargeMenu = !isLargeMenu;
 	};
 </script>
-<div class="absolute top-2 left-2">
 
 
 <section class="card h-fit scale-in-center p-4" >
 	
-	<button class="card-btn  my-1  text-center" on:click={toggleMenu}> <i class={`fa-solid ${isLargeMenu ? "fa-minimize" : "fa-expand"}`} /> </button>
-	<p class=" my-1">Map Style:</p>
+	<button class="card-btn  btn-black-outline my-1" on:click={toggleMenu}> <i class={`fa-solid ${isLargeMenu ? "fa-minimize" : "fa-expand"}`} /> Map Style </button>
+	
 	{#if isLargeMenu === true}
 		<div class="flex flex-col">
 			{#each mapStyleList as mapStyleItem}
-			<button class={`map-style my-1 ${mapStyle === mapStyleItem.id ? "map-style-selected" : ""}`} on:click={() => toggleStyle(mapStyleItem.id)}><img class="mapstyle-img" src={mapStyleItem.img} height="100" width="100" alt="" /></button>
+			<button class={`map-style my-1 ${mapStyle === mapStyleItem.id ? "map-style-selected" : ""}`} on:click={() => toggleStyle(mapStyleItem.id)}><img class="mapstyle-img h-auto w-32" src={mapStyleItem.img} alt="" /></button>
 			{/each}
 		</div>
 	{:else}
@@ -47,4 +46,4 @@
 	
 	
 </section>
-</div>
+

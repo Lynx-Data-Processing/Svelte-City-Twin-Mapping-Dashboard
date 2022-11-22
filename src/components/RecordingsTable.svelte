@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import { getDevicon } from '../utils/devicon-icons'
-	export let files;
+	export let eventList;
 	export let getGPSDataFromOneSmarterAIFile;
 
 	const PROGRAMMING_TOOLS = ["googlecloud"];
@@ -34,14 +34,14 @@
 	};
 
 	const updatePaginationFiles = () => {
-		videoFiles = files;
+		videoFiles = eventList;
 		numberOfPages = Math.ceil(videoFiles.length / numberOfItemsPerPage);
 		paginationFrom = paginationPage * numberOfItemsPerPage;
 		paginationTo = Math.min((paginationPage + 1) * numberOfItemsPerPage, videoFiles.length);
 		paginatedFiles = videoFiles.slice(paginationPage * numberOfItemsPerPage, paginationPage * numberOfItemsPerPage + numberOfItemsPerPage);
 	};
 
-	$:files && updatePaginationFiles();
+	$:eventList && updatePaginationFiles();
 </script>
 
 <section class="card h-fit scale-in-center">
@@ -113,7 +113,7 @@
 				<button on:click={() => setPaginationPage(paginationPage + 1)} class="px-4 py-2  btn-pagination "> Next </button>
 			</div>
 		{:else}
-			<div class="alert alert-red my-1" role="alert">No Google Drive Files Found.</div>
+			<div class="alert alert-red my-1" role="alert">No Events Found.</div>
 		{/if}
 	</div>
 </section>

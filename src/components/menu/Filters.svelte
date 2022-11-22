@@ -37,7 +37,7 @@
 			</div>
 		{/each}
 
-		<button on:click={resetFilters} class={`card-btn  btn-red-outline my-1 `}> Reset All Filters </button>
+		<button on:click={resetFilters} class={`card-btn  btn-black-outline my-1 `}> Reset All Filters </button>
 	{:else}
 		<p class=" my-1">Filters:</p>
 		<div class="alert alert-red my-1" role="alert">GPS Data has not been loaded.</div>
