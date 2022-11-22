@@ -103,7 +103,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData) => {
     const dataName = rawData.dataName || `GPS - ${deviceId}`;
     const dateTime = rawData.dateTime || uuidv4();
     const dataType = rawData.dataType || 'Point';
-    const hasFilter = rawData.hasFilter || true;
+    const hasFilter = rawData.hasFilter || false;
     //* Create Geojson feature collection
     const geoJson = {
       type: 'FeatureCollection',

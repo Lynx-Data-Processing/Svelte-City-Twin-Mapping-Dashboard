@@ -4,7 +4,7 @@
 	import area from "@turf/area";
 	export let dateTimeDictionary;
 	export let selectedPolygon;
-	export let fetchBigQueryData;
+	export let fetchEventsData;
 
 	let areaString = "0m";
 	let areaNumber = 0;
@@ -26,7 +26,7 @@
 <section class="card h-fit scale-in-center p-4">
 	<p class=" my-1">Search Vehicle Data:</p>
 	{#if  areaNumber <= 15000000 && dateTimeDictionary.startDateTime && dateTimeDictionary.endDateTime}
-		<button class={`card-btn btn-green my-1`} on:click={fetchBigQueryData}><i class="fa-solid fa-database " /> Search Data </button>
+		<button class={`card-btn btn-green my-1`} on:click={fetchEventsData}><i class="fa-solid fa-database " /> Search Data </button>
 	{:else}
 		<div class="alert alert-red my-1" role="alert">Select a Date, Time, and a Valid Polygon before Searching.</div>
 	{/if}

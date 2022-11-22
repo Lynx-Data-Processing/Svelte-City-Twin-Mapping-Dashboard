@@ -312,11 +312,9 @@
 			map.moveLayer(fillList.layerName);
 			map.on("click", fillList.layerName, async (e) => {
 				pointOfInterest = { lat: e.lngLat.lat, lng: e.lngLat.lng, deviceId: e.features[0].properties.deviceId };
-				console.log(e);
 				smallPopup
 					.setLngLat(e.lngLat)
-					//HERE
-					.setHTML(e?.features ? await buildPopup(e.features[0], fillList.layerName, devicesArray) : "<div>properties do not exist</div>")
+					.setHTML(e?.features ? await buildPopup(e.features[0], fillList.layerName, devicesArray) : "<div>Properties do not exist</div>")
 					.addTo(map);
 			});
 			// Change the cursor to a pointer when the mouse is over the places layer.
@@ -379,13 +377,13 @@
 				const dataType = rawGpsElement.dataType;
 				const dataHasFilter = rawGpsElement.hasFilter;
 				let gpsElement = createLayerListElement(
-					(layerName = dataName),
-					(sourceName = dataSourceName),
-					(type = dataType),
-					(isShown = true),
-					(faIcon = "fa-road"),
-					(hasFilter = dataHasFilter),
-					(data = rawGpsElement)
+					dataName,
+					dataSourceName,
+					dataType,
+					true,
+					"fa-road",
+					dataHasFilter,
+					rawGpsElement
 				);
 				addMapSource(gpsElement);
 				if (dataType === "Point") {

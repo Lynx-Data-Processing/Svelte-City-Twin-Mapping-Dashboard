@@ -60,7 +60,6 @@
 		if (response.status === 200) {
 			if (response.data.endpoints.length > 0) {
 				devicesArray = response.data.endpoints;
-				console.log(response.data.endpoints);
 			} else {
 				alert("Not able to fetch devices from Smarter AI");
 			}
@@ -68,7 +67,7 @@
 			alert(response);
 		}
 	};
-
+	fetchSmarterAIDevices();
 
 
 	const getGPSDataFromSmarterAI = async (file) =>{
@@ -96,41 +95,19 @@
 	
 
 	let files = [];
-	const fetchBigQueryData = async () => {
-		isLoading = true;
-		isError = false;
-		//* The API expects an API token, date time dictionary for filtering, and an area polygon
-
+	const fetchEventsData = async () => {
 		const response = await getAllEvents(dateTimeDictionary.startDateTime, dateTimeDictionary.endDateTime);
-		console.log(response);
 		if (response && response.status === 200) {
 			if (response.data) {
 				const eventList = response.data.eventList;
-				console.table(eventList);
-
-				//get all the snapshots here from each object
 				files = eventList;
-
-				// const gpsRawData = response.apiResult.results;
-				// gpsData = rawGPSDataToGeojson(gpsRawData);
-				// mapDetails = {
-				// 	id: 0,
-				// 	center: gpsData[0].features[0].geometry.coordinates,
-				// 	zoom: 15,
-				// 	pitch: 0,
-				// 	bearing: -17.6,
-				// };
-				alert("Added GPS Data to the Map");
+				
 			} else {
-				alert("No GPS data found");
+				alert("No GPS Events found");
 			}
-
-			console.log(response)
 		} else {
 			alert(response);
-			isError = true;
 		}
-		isLoading = false;
 	};
 </script>
 
@@ -140,7 +117,7 @@
 		<Layers bind:layerList />
 		{#if selectedMenu === 0}
 			<DateTime bind:dateTimeDictionary />
-			<SearchDetails bind:dateTimeDictionary bind:selectedPolygon {fetchBigQueryData} />
+			<SearchDetails bind:dateTimeDictionary bind:selectedPolygon fetchEventsData={fetchEventsData} />
 		{:else if selectedMenu === 1}
 			<StreetView bind:pointOfInterest />
 		{:else if selectedMenu === 2}
