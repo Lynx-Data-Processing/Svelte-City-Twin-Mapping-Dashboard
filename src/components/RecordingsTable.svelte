@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	export let files;
+	export let getGPSDataFromSmarterAI;
 
 	const PROGRAMMING_TOOLS = ["googlecloud"];
 	const returnLinkGivenIfStringContains = (toolString) => {
@@ -71,7 +72,7 @@
                         <th>Device Label</th>
                         <th>Saved On</th>
                         <th>Trigger Name</th>
-                  
+						<th>Options</th>
 						
 					</tr>
 				</thead>
@@ -107,7 +108,7 @@
 									</div>
 								</td>
                                 <td>{event.triggerName}</td>
-                              
+								<td><button on:click={() => getGPSDataFromSmarterAI(event.snapshots[2].downloadUrl)} class="px-4 py-2  btn-pagination"> Get GPS Data </button></td>
 							</tr>
 
                     

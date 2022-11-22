@@ -61,4 +61,22 @@ export const getAllEvents = (fromDateTime, toDateTime) =>{
   return response;
 } 
 
+
+
+
+
+export const getGeojsonDataFromFile = async (file) =>{
+  const config = {
+      method: 'get',
+      url: `${file}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    
+  const response = axiosUtility(config);
+  console.log(response);
+
+}
+
 export default getListOfDevicesUnderTenant;
