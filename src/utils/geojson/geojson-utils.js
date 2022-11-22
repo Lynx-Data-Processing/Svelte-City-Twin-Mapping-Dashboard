@@ -92,4 +92,40 @@ export const rawGPSDataToGeojson = (rawData) => {
   return geoJsonArray;
 };
 
+
+
+export const rawSmarterAIGPSDataToGeojson = (rawData) => {
+  const groupedArray = groupByKey(rawData, 'deviceId');
+  const geoJsonArray = [];
+
+  for (const [deviceId, innerArray] of Object.entries(groupedArray)) {
+    //* Set initial Geojson element details
+    const dataName = rawData.dataName || `GPS - ${deviceId}`;
+    const dateTime = rawData.dateTime || uuidv4();
+    const dataType = rawData.dataType || 'Point';
+    const hasFilter = rawData.hasFilter || true;
+    //* Create Geojson feature collection
+    const geoJson = {
+      type: 'FeatureCollection',
+      dataName,
+      dateTime,
+      dataType,
+      hasFilter,
+      features: [],
+    };
+  
+    for (const point of innerArray) {
+      const coordinates = [parseFloat(point.GEO_LOCATION.longitude), parseFloat(point.GEO_LOCATION.latitude)];
+      const properties = point.GEO_LOCATION;
+      properties.Color = getVehicleSpeedColor(getSpeed(properties));
+      
+      //* Create the final feature config and push it to the feature array
+      const feature = { type: 'Feature', geometry: { type: 'Point', coordinates }, properties };
+      geoJson.features.push(feature);
+    }
+    geoJsonArray.push(geoJson);
+  }
+  return geoJsonArray;
+};
+
 export default rawGPSDataToGeojson;

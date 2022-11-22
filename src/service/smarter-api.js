@@ -2,10 +2,12 @@
 /* eslint-disable no-console */
 
 import { axiosUtility } from '../utils/fetch-data';
-import { getUTCTime} from '../utils/time-util';
-import {  PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_KEY,  PUBLIC_TENANT_ID,  PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL,
-  PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL,  PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID} from '$env/static/public'
-  import axios from 'axios';
+import { getUTCTime } from '../utils/time-util';
+import {
+  PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_KEY, PUBLIC_TENANT_ID, PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL,
+  PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL, PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID
+} from '$env/static/public'
+import axios from 'axios';
 
 //* Fetch all devices under the Geotab Tenant key
 export const getListOfDevicesUnderTenant = async () => {
@@ -18,7 +20,7 @@ export const getListOfDevicesUnderTenant = async () => {
         'Content-Type': 'application/json',
       },
     };
-    
+
     const promise = await axios(config);
     console.log(promise)
     return promise;
@@ -34,7 +36,7 @@ export const getListOfDevicesUnderTenant = async () => {
 
 //* If we need more information about the device
 export const getDeviceDetails = async (deviceId) => {
- 
+
   try {
     const config = {
       method: 'get',
@@ -43,7 +45,7 @@ export const getDeviceDetails = async (deviceId) => {
         'Content-Type': 'application/json',
       },
     };
-    
+
     const promise = await axios(config);
     console.log(promise)
     return promise;
@@ -61,7 +63,7 @@ export const getDeviceDetails = async (deviceId) => {
 //* The api returns video meta data and videos together
 //* API ONLY loads videos saved on the cloud
 export const getAllVideoRecordingsFromDevice = async (deviceId, fromDateTime, toDateTime) => {
- 
+
   try {
     const config = {
       method: 'get',
@@ -71,7 +73,7 @@ export const getAllVideoRecordingsFromDevice = async (deviceId, fromDateTime, to
         Authorization: `${PUBLIC_API_KEY}`,
       },
     };
-    
+
     const promise = await axios(config);
     console.log(promise)
     return promise;
@@ -85,15 +87,15 @@ export const getAllVideoRecordingsFromDevice = async (deviceId, fromDateTime, to
   }
 };
 
-export const getAllEvents = async (fromDateTime, toDateTime) =>{
+export const getAllEvents = async (fromDateTime, toDateTime) => {
 
   try {
     let config = {
       method: 'get',
       url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=20&deviceId=${PUBLIC_DEVICE_ID}&tenantId=${PUBLIC_TENANT_ID}&startTimestamp=1668120661000&endTimestamp=1668633730542`,
-      headers: { }
+      headers: {}
     };
-    
+
     const promise = await axios(config);
     console.log(promise)
     return promise;
@@ -105,12 +107,12 @@ export const getAllEvents = async (fromDateTime, toDateTime) =>{
     }
     return error.message;
   }
-} 
+}
 
 
 
-export const getGeojsonDataFromFile = async (file) =>{
-  
+export const getGeojsonDataFromFile = async (file) => {
+
 
   try {
     const config = {
@@ -120,9 +122,8 @@ export const getGeojsonDataFromFile = async (file) =>{
         'Content-Type': 'application/json',
       },
     };
-    
+
     const promise = await axios(config);
-    console.log(promise)
     return promise;
   } catch (error) {
     if (error.response) {

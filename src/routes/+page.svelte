@@ -13,7 +13,7 @@
 	import Navbar from "../components/Navbar.svelte";
 
 	//import { getBigQueryDataWithPolygon } from "../service/geotab-bigquery.js";
-	import { rawGPSDataToGeojson } from "../utils/geojson/geojson-utils.js";
+	import { rawGPSDataToGeojson, rawSmarterAIGPSDataToGeojson } from "../utils/geojson/geojson-utils.js";
 	import { getListOfDevicesUnderTenant, getAllEvents, getGeojsonDataFromFile } from "../service/smarter-api";
 	import MapLoadingSpinner from "../components/map/MapLoadingSpinner.svelte";
 	import MapError from "../components/map/MapError.svelte";
@@ -71,8 +71,27 @@
 
 
 
-	const getGPSDataFromSmarterAI = (file) =>{
-		getGeojsonDataFromFile(file)
+	const getGPSDataFromSmarterAI = async (file) =>{
+		const response = await getGeojsonDataFromFile(file)
+		if (response.status === 200) {
+			if (response.data) {
+				console.log(response.data)
+				let gpsRawData = response.data
+				gpsData =  rawSmarterAIGPSDataToGeojson([gpsRawData]);
+				console.log(gpsData)
+				mapDetails = {
+					id: 0,
+					center: gpsData[0].features[0].geometry.coordinates,
+					zoom: 15,
+					pitch: 0,
+					bearing: -17.6,
+				};
+			} else {
+				alert("Not able to fetch devices from Smarter AI");
+			}
+		} else {
+			alert(response);
+		}
 	}
 	
 
