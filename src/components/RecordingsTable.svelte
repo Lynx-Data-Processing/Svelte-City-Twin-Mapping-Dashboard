@@ -1,26 +1,11 @@
 <script>
 	import { onMount } from "svelte";
+	import { getDevicon } from '../utils/devicon-icons'
 	export let files;
-	export let getGPSDataFromSmarterAI;
+	export let getGPSDataFromOneSmarterAIFile;
 
 	const PROGRAMMING_TOOLS = ["googlecloud"];
-	const returnLinkGivenIfStringContains = (toolString) => {
-		if (toolString.includes("GoogleDrive")) {
-			return `icons/${toolString}.svg`;
-		}
-
-		if (toolString.includes("plain")) {
-			const tempString = toolString.replace("-plain", "");
-			return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tempString}/${tempString}-plain.svg`;
-		}
-
-		if (toolString.includes("wordmark")) {
-			const tempString = toolString.replace("-wordmark", "");
-			return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tempString}/${tempString}-wordmark.svg`;
-		}
-
-		return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${toolString}/${toolString}-original.svg`;
-	};
+	
 
 	let videoFiles = [];
 	let paginatedFiles = [];
@@ -102,13 +87,13 @@
                                 <td>{event.deviceLabel}</td>
                                 <td>
 									<div class="flex flex-wrap justify-center  ">
-										{#each PROGRAMMING_TOOLS as tool}
-											<img height="100" width="auto" title={tool} key={tool} class={`img-icon w-8 mx-2 py-2`} alt="" src={returnLinkGivenIfStringContains(tool)} loading="lazy" />
+										{#each PROGRAMMING_TOOLS as icon}
+											<img height="100" width="auto" title={icon} key={icon} class={`img-icon w-8 mx-2 py-2`} alt="" src={getDevicon(icon)} loading="lazy" />
 										{/each}
 									</div>
 								</td>
                                 <td>{event.triggerName}</td>
-								<td><button on:click={() => getGPSDataFromSmarterAI(event.snapshots[2].downloadUrl)} class="card-btn btn-primary"> Get GPS Data </button></td>
+								<td><button on:click={() => getGPSDataFromOneSmarterAIFile(event.snapshots[2].downloadUrl)} class="card-btn btn-primary"> <i class="fa-solid fa-share " /> Add GPS Data to Map </button></td>
 							</tr>
 
                     
