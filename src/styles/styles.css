@@ -231,15 +231,12 @@ h6 {
 
 .map-style {
   transition: all 0.5s;
-  border-radius: var(--radius-lg);
-  border-width: 0.25rem;
-  border-style: solid;
 }
 .map-style:hover {
   border-color: var(--primary-color);
 }
 .map-loading {
-  background-color: var(--gray);
+
   color: white;
   opacity: 0.9;
   display: grid;
@@ -299,7 +296,7 @@ h6 {
   color: white;
 }
 
-.btn-pagination{
+.btn-gray-sm{
   border-width: 1px; 
   border-color: var(--btn-default-hover); 
   border-style: solid; 
@@ -307,17 +304,17 @@ h6 {
   background-color: var(--btn-default);
 }
 
-.btn-pagination:hover{
+.btn-gray-sm:hover{
   background-color: var(--btn-default-hover);
 }
 
 
-.btn-pagination-primary{
+.btn-pagination-primary-sm{
   border-radius: var(--radius-lg);
   background-color: var(--primary-color);
   color: var(--white);
 }
 
-.btn-pagination-primary:hover{
+.btn-pagination-primary-sm:hover{
   background-color: var(--primary-color-hover);
 }
