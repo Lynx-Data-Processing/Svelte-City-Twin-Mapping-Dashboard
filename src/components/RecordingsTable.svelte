@@ -108,7 +108,7 @@
 									</div>
 								</td>
                                 <td>{event.triggerName}</td>
-								<td><button on:click={() => getGPSDataFromSmarterAI(event.snapshots[2].downloadUrl)} class="px-4 py-2  btn-pagination"> Get GPS Data </button></td>
+								<td><button on:click={() => getGPSDataFromSmarterAI(event.snapshots[2].downloadUrl)} class="card-btn btn-primary"> Get GPS Data </button></td>
 							</tr>
 
                     
