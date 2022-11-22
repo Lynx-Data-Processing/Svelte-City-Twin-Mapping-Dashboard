@@ -11,9 +11,7 @@
 	import SpeedView from "../components/menu/SpeedView.svelte";
 	// import ChartView from "../components/menu/Chart.svelte";
 	import Navbar from "../components/Navbar.svelte";
-
-	//import { getBigQueryDataWithPolygon } from "../service/geotab-bigquery.js";
-	import { rawGPSDataToGeojson, rawSmarterAIGPSDataToGeojson } from "../utils/geojson/geojson-utils.js";
+	import { rawSmarterAIGPSDataToGeojson } from "../utils/geojson/geojson-utils.js";
 	import { getListOfDevicesUnderTenant, getAllEvents, getGeojsonDataFromFile } from "../service/smarter-api";
 	import MapLoadingSpinner from "../components/map/MapLoadingSpinner.svelte";
 	import MapError from "../components/map/MapError.svelte";
@@ -32,7 +30,7 @@
 	let layerList = [];
 	let pointOfInterest = null;
 	let selectedPolygon = null;
-	let isMenuOpen = false;
+
 	//* Set Payload details for fetching
 	let dateTimeDictionary = {
 		startDateTime: "2015-06-23T00:00",
@@ -50,9 +48,6 @@
 	let gpsData = [];
 	let gpsFilters = [
 		{ id: "Speed", name: "Speed Filter", default: [0, 100], step: 10, suffix: "Km/h", selected: [0, 300] },
-		{ id: "Reason", name: "Reason Filter", default: [0, 50], step: 5, suffix: "", selected: [0, 50] },
-		{ id: "Valid", name: "Valid Filter", default: [0, 1], step: 1, suffix: "", selected: [0, 1] },
-		{ id: "Ignition", name: "Ignition Filter", default: [0, 1], step: 1, suffix: "", selected: [0, 1] },
 	];
 	let devicesArray = [];
 	const fetchSmarterAIDevices = async () => {
@@ -70,14 +65,13 @@
 	fetchSmarterAIDevices();
 
 
-	const getGPSDataFromSmarterAI = async (file) =>{
+	const getGPSDataFromOneSmarterAIFile = async (file) =>{
 		const response = await getGeojsonDataFromFile(file)
 		if (response.status === 200) {
 			if (response.data) {
-				console.log(response.data)
 				let gpsRawData = response.data
+				gpsRawData['deviceId'] = 'CK20520033'
 				gpsData =  rawSmarterAIGPSDataToGeojson([gpsRawData]);
-				console.log(gpsData)
 				mapDetails = {
 					id: 0,
 					center: gpsData[0].features[0].geometry.coordinates,
@@ -117,7 +111,7 @@
 		<Layers bind:layerList />
 		{#if selectedMenu === 0}
 			<DateTime bind:dateTimeDictionary />
-			<SearchDetails bind:dateTimeDictionary bind:selectedPolygon fetchEventsData={fetchEventsData} />
+			<SearchDetails bind:dateTimeDictionary bind:selectedPolygon {fetchEventsData} />
 		{:else if selectedMenu === 1}
 			<StreetView bind:pointOfInterest />
 		{:else if selectedMenu === 2}
@@ -155,7 +149,7 @@
 <section class="grid grid-cols-1 gap-4 lg:grid-cols-12 my-4 px-4">
 	{#if files.length}
 		<div class="col-span-1 md:col-span-12">
-			<RecordingsTable bind:files  {getGPSDataFromSmarterAI}/>
+			<RecordingsTable bind:files  {getGPSDataFromOneSmarterAIFile}/>
 		</div>
 	{:else}
 		<div class="col-span-1 md:col-span-3">

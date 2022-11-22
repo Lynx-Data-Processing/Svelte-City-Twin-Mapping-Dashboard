@@ -41,66 +41,16 @@ const groupByKey = (array, key) => {
   return groupedArray;
 };
 
-//* The bigquery data is known as raw gps data
+
 //* To use the data on mapbox, the data must be in GEOJSON format
 //* Because all the data are points, we'll be creating point sets
-export const rawGPSDataToGeojson = (rawData) => {
-  const groupedArray = groupByKey(rawData, 'deviceId');
-  const geoJsonArray = [];
-
-  for (const [key, innerArray] of Object.entries(groupedArray)) {
-    //* Set initial Geojson element details
-    const dataName = rawData.dataName || `GPS - ${key}`;
-    const dateTime = rawData.dateTime || uuidv4();
-    const dataType = rawData.dataType || 'Point';
-    const hasFilter = rawData.hasFilter || true;
-    //* Create Geojson feature collection
-    const geoJson = {
-      type: 'FeatureCollection',
-      dataName,
-      dateTime,
-      dataType,
-      hasFilter,
-      features: [],
-    };
-    //* For every bigquery row create a GEOJSON GPS point
-    //* Device_Id, Speed, Size, and UTCTime are the most import properties
-    //! Speed is currently randomized because the data had little variation
-    for (const point of innerArray) {
-      const coordinates = [point.longitude, point.latitude];
-      const properties = {
-        Device_Id: point.deviceId || null,
-        Speed: point.speed ? (point.speed / 5) * Math.random() * 3 : 0,
-        Reason: point.gps_reason || 0,
-        Valid: point.gps_valid || 0,
-        Ignition: point.ignition || 0,
-        Time: point.time.value || null,
-        UTCTime: new Date(point.time.value).toUTCString() || null,
-      };
-
-      //* Add a color and size to the point
-      //* Count is used for sizing. The larger the number, the bigger the point on the map
-      properties.Color = getVehicleSpeedColor(getSpeed(properties));
-      properties.Size = 1;
-
-      //* Create the final feature config and push it to the feature array
-      const feature = { type: 'Feature', geometry: { type: 'Point', coordinates }, properties };
-      geoJson.features.push(feature);
-    }
-    geoJsonArray.push(geoJson);
-  }
-  return geoJsonArray;
-};
-
-
-
 export const rawSmarterAIGPSDataToGeojson = (rawData) => {
   const groupedArray = groupByKey(rawData, 'deviceId');
   const geoJsonArray = [];
 
   for (const [deviceId, innerArray] of Object.entries(groupedArray)) {
     //* Set initial Geojson element details
-    const dataName = rawData.dataName || `GPS - ${deviceId}`;
+    const dataName = rawData.dataName || `Selected Route - ${deviceId}`;
     const dateTime = rawData.dateTime || uuidv4();
     const dataType = rawData.dataType || 'Point';
     const hasFilter = rawData.hasFilter || false;
@@ -117,6 +67,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData) => {
     for (const point of innerArray) {
       const coordinates = [parseFloat(point.GEO_LOCATION.longitude), parseFloat(point.GEO_LOCATION.latitude)];
       const properties = point.GEO_LOCATION;
+      properties.Device_Id = deviceId;
       properties.Color = getVehicleSpeedColor(getSpeed(properties));
       
       //* Create the final feature config and push it to the feature array
@@ -128,4 +79,3 @@ export const rawSmarterAIGPSDataToGeojson = (rawData) => {
   return geoJsonArray;
 };
 
-export default rawGPSDataToGeojson;

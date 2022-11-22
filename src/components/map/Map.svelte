@@ -62,7 +62,7 @@
 	const fetchInitialMapData = async () => {
 		try {
 			//* 3D bultings layer element
-			createLayerListElement("3D-Buildings", "composite", "Polygon", true,  "fa-building",  false ,  null);
+			createLayerListElement("3D-Buildings", "composite", "Polygon", false,  "fa-building",  false ,  null);
 
 			// Neighbourhoods (Zones) data
 			const response = await axiosCacheGetUtility(PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL);
@@ -74,7 +74,7 @@
 						"Neighbourhoods",
 						"NeighbourhoodsSource",
 						"Polygon",
-						true,
+						false,
 						"fa-border-all",
 						false,
 						neighbourhoodsData
