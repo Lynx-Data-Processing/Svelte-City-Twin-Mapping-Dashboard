@@ -10,6 +10,7 @@
 	import StreetView from '../components/menu/StreetView.svelte';
 	import SpeedView from '../components/menu/SpeedView.svelte';
 	// import ChartView from "../components/menu/Chart.svelte";
+	import { findVideo } from '../utils/popup/video-finder';
 	import Navbar from '../components/Navbar.svelte';
 	import { rawSmarterAIGPSDataToGeojson } from '../utils/geojson/geojson-utils.js';
 	import {
@@ -75,36 +76,39 @@
 	};
 	fetchSmarterAIDevices();
 
-
-
 	const getGPSDataFromAllSmarterAIFiles = async (events) => {
-
 		//* Preapre the GPS Array
 		let tempGPSList = [];
+		let downloadLinks = [];
 		for (let index = 0; index < events.length; index++) {
 			const event = events[index];
 			const sensorDonloadUrl = event.snapshots[2].downloadUrl;
 			const response = await getGeojsonDataFromFile(sensorDonloadUrl);
-			if (response.status === 200) {
-				if (response.data) {
-					let gpsRawData = response.data;
-					gpsRawData['deviceId'] = 'CK20520033';
-					gpsRawData['recordingStartTimestamp'] = event.recordingStartTimestamp
-					gpsRawData['recordingEndTimestamp'] = event.recordingEndTimestamp
-					tempGPSList.push(gpsRawData);
+			try {
+				if (response.status === 200) {
+					if (response.data) {
+						let gpsRawData = response.data;
+						gpsRawData['id'] = event.id;
+						gpsRawData['deviceId'] = event.deviceId;
+						gpsRawData['endpointId'] = event.endpointId;
+						gpsRawData['recordingStartTimestamp'] = event.recordingStartTimestamp;
+						gpsRawData['recordingEndTimestamp'] = event.recordingEndTimestamp;
+						tempGPSList.push(gpsRawData);
+					} else {
+						console.log('Not able to fetch devices from Smarter AI');
+					}
 				} else {
-					console.log('Not able to fetch devices from Smarter AI');
+					console.error('Unable load File GPS Data');
 				}
-			} else {
-				console.error('Unable load File GPS Data');
+			} catch (err) {
+				console.error(err);
 			}
 		}
 
+		let videoLinks = []
 		//* If data exists, create the GPS Geojson layer
 		if (tempGPSList.length) {
 			gpsData = rawSmarterAIGPSDataToGeojson(tempGPSList);
-
-			console.log(gpsData)
 			mapDetails = {
 				id: 0,
 				center: gpsData[0].features[0].geometry.coordinates,
@@ -112,6 +116,29 @@
 				pitch: 0,
 				bearing: -17.6
 			};
+
+			for (const geojson of gpsData) { // You can use `let` instead of `const` if you like
+				
+				for (const gpsElement of geojson.features) {
+					
+					const videoLink = await findVideo(gpsElement.properties.StartTime, gpsElement.properties.EndTime, gpsElement.properties.EndpointId);
+					console.log(videoLink)
+
+					const video = {
+						"eventId" : gpsElement.properties.EventId,
+						"deviceId" :  gpsElement.properties.DeviceId,
+         				"endpointId" : gpsElement.properties.EndpointId,
+						"startTimestamp": gpsElement.properties.StartTime,
+            			"endTimestamp": gpsElement.properties.EndTime,
+						"videoUrl" : videoLink
+					}
+
+					videoLinks.push(  video)
+				}
+			
+			}
+			
+			console.log(videoLinks)
 		}
 	};
 
@@ -140,8 +167,7 @@
 </script>
 
 <div class="flex flex-col">
-
-	<Navbar title={'City Twin Mapping Dashboard - Kingston'} bind:selectedMenu bind:menuComponents />
+	<Navbar title={'City Twin Mapping Dashboard'} bind:selectedMenu bind:menuComponents />
 	<main class="flex-1 grid grid-cols-1 gap-4 lg:grid-cols-12 ">
 		<div class={`col-span-1 lg:col-span-12 relative`}>
 			<Map
@@ -157,7 +183,7 @@
 				bind:pointOfInterest
 				bind:selectedMenu
 			/>
-	
+
 			<div class="absolute top-2 left-2 flex flex-row gap-4 z-100">
 				<div class={`flex flex-col gap-4`}>
 					<Layers bind:layerList />
@@ -176,11 +202,8 @@
 				<div>
 					<MapStyleSelector bind:mapStyle bind:isReadyForStyleSwitching />
 				</div>
-				
 			</div>
-	
-			
-	
+
 			{#if isLoading === true}
 				<MapLoadingSpinner />
 			{:else if isError === true}
@@ -188,14 +211,12 @@
 			{/if}
 		</div>
 	</main>
-
 </div>
-
 
 {#if eventList.length}
 	<section class="grid grid-cols-1 gap-4 lg:grid-cols-12 my-8 px-4">
 		<div class="col-span-1 md:col-span-12">
-			<RecordingsTable bind:eventList  />
+			<RecordingsTable bind:eventList />
 		</div>
 	</section>
 {/if}

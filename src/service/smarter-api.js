@@ -47,7 +47,6 @@ export const getDeviceDetails = async (deviceId) => {
     };
 
     const promise = await axios(config);
-    console.log(promise)
     return promise;
   } catch (error) {
     if (error.response) {
@@ -75,7 +74,6 @@ export const getAllVideoRecordingsFromDevice = async (deviceId, fromDateTime, to
     };
 
     const promise = await axios(config);
-    console.log(promise)
     return promise;
   } catch (error) {
     if (error.response) {
@@ -92,12 +90,11 @@ export const getAllEvents = async (fromDateTime, toDateTime) => {
   try {
     let config = {
       method: 'get',
-      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=20&deviceId=${PUBLIC_DEVICE_ID}&tenantId=${PUBLIC_TENANT_ID}&startTimestamp=1668120661000&endTimestamp=1668633730542`,
+      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=2000&deviceId=${PUBLIC_DEVICE_ID}&tenantId=${PUBLIC_TENANT_ID}`,
       headers: {}
     };
 
     const promise = await axios(config);
-    console.log(promise)
     return promise;
   } catch (error) {
     if (error.response) {
