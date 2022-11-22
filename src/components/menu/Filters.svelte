@@ -1,9 +1,9 @@
 <script>
-	import RangeSlider from "svelte-range-slider-pips";
+	import RangeSlider from 'svelte-range-slider-pips';
 	/**
 	 * @type {any}
 	 */
-	 export let gpsFilters;
+	export let gpsFilters;
 	export let gpsData;
 
 	const resetFilters = () => {
@@ -14,33 +14,60 @@
 		}
 		gpsFilters = tempArray;
 	};
+
+	let showTerms = true;
+	const toggleTerms = () => {
+		showTerms = !showTerms;
+	};
 </script>
 
 <section class="card h-fit scale-in-center p-4">
-	{#if gpsData.length}
-		{#each gpsFilters as filterItem}
-			<p class=" my-1">{filterItem.name}:</p>
+	<div class="flex flow-row justify-between my-1">
+		<div>
+			<p>Filter:</p>
+		</div>
 
-			<div class="py-1">
-				<RangeSlider
-					bind:values={filterItem.selected}
-					pips
-					min={filterItem.default[0]}
-					max={filterItem.default[1]}
-					step={filterItem.step}
-					float
-					suffix={filterItem.suffix}
-					range
-					first="label"
-					last="label"
-				/>
-			</div>
-		{/each}
+		<div>
+			<button on:click={toggleTerms} class="toggle-btn text-center hover:underline">
+				{#if showTerms}
+					<i class="fa-solid fa-arrow-up" />
+					<span>Hide</span>
+				{:else}
+					<i class="fa-solid fa-arrow-down" />
+					<span>Show</span>
+				{/if}
+			</button>
+		</div>
+	</div>
 
-		<button on:click={resetFilters} class={`card-btn  btn-black-outline my-1 `}> Reset All Filters </button>
-	{:else}
-		<p class=" my-1">Filters:</p>
-		<div class="alert alert-red my-1" role="alert">GPS Data has not been loaded.</div>
+	{#if showTerms}
+		{#if gpsData.length}
+			{#each gpsFilters as filterItem}
+				<p class=" my-1">{filterItem.name}:</p>
+
+				<div class="py-1">
+					<RangeSlider
+						bind:values={filterItem.selected}
+						pips
+						min={filterItem.default[0]}
+						max={filterItem.default[1]}
+						step={filterItem.step}
+						float
+						suffix={filterItem.suffix}
+						range
+						first="label"
+						last="label"
+					/>
+				</div>
+			{/each}
+
+			<button on:click={resetFilters} class={`card-btn  btn-black-outline my-1 `}>
+				Reset All Filters
+			</button>
+		{:else}
+			
+			<div class="alert alert-red my-1" role="alert">GPS Data has not been loaded.</div>
+		{/if}
 	{/if}
 </section>
 

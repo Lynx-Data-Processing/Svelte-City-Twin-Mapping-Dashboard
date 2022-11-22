@@ -153,6 +153,7 @@
 
 <section class="card h-fit scale-in-center p-4">
 	<p class=" my-1">Speed Legend (Km/h):</p>
+	
 
 	<div bind:this={chartDiv} class={`${gpsData.length? "h-96" : "h-0"} w-full rounded-lg`} />
 	{#if gpsData.length}

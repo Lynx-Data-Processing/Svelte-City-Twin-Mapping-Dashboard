@@ -37,6 +37,8 @@
 
 <section class="card h-fit scale-in-center p-4">
 	<p class=" my-1">Layers:</p>
+
+	
 	{#if layerList.length}
 		<button on:click={toggleLayers} class={`card-btn   ${showAllLayers ? "btn-green" : " btn-error-outline"}  my-1 `}> {showAllLayers ? "Show All" : "Disable All"} </button>
 		<div class="overflow-auto ">

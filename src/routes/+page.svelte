@@ -177,7 +177,7 @@
 			bind:selectedMenu
 		/>
 
-		<div class="absolute top-2 left-2 flex flex-row gap-4">
+		<div class="absolute top-2 left-2 flex flex-row gap-4 z-100">
 			<div class={`flex flex-col gap-4`}>
 				<Layers bind:layerList />
 				{#if selectedMenu === 0}
