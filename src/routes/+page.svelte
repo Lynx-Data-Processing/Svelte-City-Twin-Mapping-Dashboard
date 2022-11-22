@@ -143,7 +143,7 @@
 
 	<Navbar title={'City Twin Mapping Dashboard - Kingston'} bind:selectedMenu bind:menuComponents />
 	<main class="flex-1 grid grid-cols-1 gap-4 lg:grid-cols-12 ">
-		<div class={`card col-span-1 lg:col-span-12 relative`}>
+		<div class={`col-span-1 lg:col-span-12 relative`}>
 			<Map
 				bind:devicesArray
 				bind:isLoading
@@ -193,7 +193,7 @@
 
 
 {#if eventList.length}
-	<section class="grid grid-cols-1 gap-4 lg:grid-cols-12 my-4 px-4">
+	<section class="grid grid-cols-1 gap-4 lg:grid-cols-12 my-8 px-4">
 		<div class="col-span-1 md:col-span-12">
 			<RecordingsTable bind:eventList  />
 		</div>

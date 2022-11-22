@@ -54,8 +54,12 @@
                         <th>Video (Back)</th>
                         <th>Device Id</th>
                         <th>Device Label</th>
+						<th>Start Time</th>
+						<th>End Time</th>
                         <th>Saved On</th>
+						<th>Trigger ID</th>
                         <th>Trigger Name</th>
+						<th>Has GPS Data</th>
 					
 						
 					</tr>
@@ -64,7 +68,7 @@
 					{#each paginatedFiles as event}
 					
 							<tr>
-								<td class="w-64">
+								<td class="w-32">
                                     <img
                                         src={event.snapshots[0].downloadUrl}
                                         onerror="https://i.picsum.photos/id/870/200/300.jpg?blur=2&grayscale&hmac=ujRymp644uYVjdKJM7kyLDSsrqNSMVRPnGU99cKl6Vs"
@@ -73,7 +77,7 @@
 									/>			
 								</td>
 
-                                <td class="w-64">
+                                <td class="w-32">
                                     <img
                                         src={event.snapshots[1].downloadUrl}
                                         onerror="https://i.picsum.photos/id/870/200/300.jpg?blur=2&grayscale&hmac=ujRymp644uYVjdKJM7kyLDSsrqNSMVRPnGU99cKl6Vs"
@@ -84,6 +88,10 @@
                               
                                 <td>{event.deviceId}</td>
                                 <td>{event.deviceLabel}</td>
+
+
+								<td>{event.recordingStartTimestamp}</td>
+								<td>{event.recordingEndTimestamp}</td>
                                 <td>
 									<div class="flex flex-wrap justify-center  ">
 										{#each PROGRAMMING_TOOLS as icon}
@@ -91,7 +99,15 @@
 										{/each}
 									</div>
 								</td>
+								<td>{event.eventTriggerId}</td>
                                 <td>{event.triggerName}</td>
+								<td>
+									{#if event.snapshots[2]}
+										<i class="fa-solid fa-check text-success fa-lg" />
+									{:else}
+										<i class="fa-solid fa-x text-error fa-lg" />
+									{/if}
+								</td>
 								
 							</tr>
 
