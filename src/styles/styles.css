@@ -245,7 +245,7 @@ h6 {
   border-color: var(--primary-color);
 }
 .map-loading {
-
+  
   color: white;
   opacity: 0.9;
   display: grid;

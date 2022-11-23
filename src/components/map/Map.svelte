@@ -18,13 +18,13 @@
 	export let isLoading;
 	export let layerList;
 	export let selectedPolygon;
+	export let videoLinks;
 	export let mapStyle;
 	export let isReadyForStyleSwitching;
 	export let mapDetails;
-	export let pointOfInterest;
+	export let selectedEvent;
 	export let gpsData;
 	export let gpsFilters;
-	export let devicesArray;
 	export let selectedMenu;
 	let map = null;
 	let isInitialDataLoaded = false;
@@ -56,7 +56,7 @@
 			return element;
 		} catch (err) {
 			console.error(err);
-			alert("Unable to create Layer Element");
+			console.log("Unable to create Layer Element");
 		}
 	};
 	const fetchInitialMapData = async () => {
@@ -81,10 +81,10 @@
 					);
 					
 				} else {
-					alert("No City Neighbourhoods data Exist");
+					console.log("No City Neighbourhoods data Exist");
 				}
 			} else {
-				alert("Unable to load City Neighbourhoods data");
+				console.log("Unable to load City Neighbourhoods data");
 			}
 			const treeResponse = await axiosCacheGetUtility(PUBLIC_TREES_URL);
 			if (treeResponse.status === 200) {
@@ -95,14 +95,14 @@
 					createLayerListElement("Trees", "TreesSource", "Point", true,  "fa-border-all", false,  treesData);
 				
 				} else {
-					alert("No City Trees data Exist");
+					console.log("No City Trees data Exist");
 				}
 			} else {
-				alert("Unable to load City Trees data");
+				console.log("Unable to load City Trees data");
 			}
 		} catch (err) {
 			console.error(err);
-			alert("Unable to fetch initial Map Data");
+			console.log("Unable to fetch initial Map Data");
 		}
 
 		addDataSources();
@@ -115,7 +115,7 @@
 			});
 		} catch (err) {
 			console.error(err);
-			alert("Unable to fetch initial Map Data");
+			console.log("Unable to fetch initial Map Data");
 		}
 	};
 	const addDataSources = () => {
@@ -311,10 +311,10 @@
 			map.setLayoutProperty(fillList.layerName, "visibility", "none");
 			map.moveLayer(fillList.layerName);
 			map.on("click", fillList.layerName, async (e) => {
-				pointOfInterest = { lat: e.lngLat.lat, lng: e.lngLat.lng, deviceId: e.features[0].properties.deviceId };
+				selectedEvent = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
 				smallPopup
 					.setLngLat(e.lngLat)
-					.setHTML(e?.features ? await buildPopup(e.features[0], fillList.layerName, devicesArray) : "<div>Properties do not exist</div>")
+					.setHTML(e?.features ? await buildPopup(e.features[0], fillList.layerName, videoLinks) : "<div>Properties do not exist</div>")
 					.addTo(map);
 			});
 			// Change the cursor to a pointer when the mouse is over the places layer.
@@ -434,7 +434,7 @@
 			});
 		} catch (err) {
 			console.log(err);
-			alert("Unable to add GPS Filters");
+			console.log("Unable to add GPS Filters");
 		}
 	};
 	const addMapFilter = () => {
@@ -456,7 +456,7 @@
 			}
 		} catch (err) {
 			console.log(err);
-			alert("Unable to add GPS Filters");
+			console.log("Unable to add GPS Filters");
 		}
 	};
 	const resizeMap = () => {
@@ -475,7 +475,7 @@
 			});
 		} catch (err) {
 			console.log(err);
-			alert("Unable to resize the Map");
+			console.log("Unable to resize the Map");
 		}
 	};
 	$: map && selectedMenu !== null && resizeMap();

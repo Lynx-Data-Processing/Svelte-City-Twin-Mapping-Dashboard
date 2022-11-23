@@ -22,7 +22,6 @@ export const getListOfDevicesUnderTenant = async () => {
     };
 
     const promise = await axios(config);
-    console.log(promise)
     return promise;
   } catch (error) {
     if (error.response) {

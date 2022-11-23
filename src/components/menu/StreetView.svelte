@@ -9,7 +9,6 @@
 
 	const initializeStreetView = () => {
 		try {
-			// @ts-ignore
 			streetViewObject = new google.maps.StreetViewPanorama(streetViewContainer, {
 				position: pointOfInterest,
 				pov: {

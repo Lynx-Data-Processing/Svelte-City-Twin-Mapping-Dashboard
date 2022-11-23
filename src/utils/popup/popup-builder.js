@@ -1,6 +1,6 @@
 import { findVideo } from './video-finder';
 
-export const buildPopup = async (features, layerName, devicesArray) => {
+export const buildPopup = async (features, layerName, videoLinks) => {
   const container = document.createElement('div');
 
   const sliced = Object.fromEntries(Object.entries(features.properties).slice(0, 8));
@@ -18,7 +18,8 @@ export const buildPopup = async (features, layerName, devicesArray) => {
   }
 
   if (layerName.includes('GPS')) {
-    const src = await findVideo(features.properties.StartTime, features.properties.EndTime, features.properties.EndpointId);
+  
+    const src = videoLinks.find(o=>  o.eventId === features.properties.EventId).videoUrl;
 
     if (!src) {
       // create div to store the image in

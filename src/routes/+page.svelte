@@ -8,8 +8,6 @@
 	import MapStyleSelector from '../components/map/MapStyleSelector.svelte';
 	import Filters from '../components/menu/Filters.svelte';
 	import StreetView from '../components/menu/StreetView.svelte';
-	import SpeedView from '../components/menu/SpeedView.svelte';
-	// import ChartView from "../components/menu/Chart.svelte";
 	import { findVideo } from '../utils/popup/video-finder';
 	import Navbar from '../components/Navbar.svelte';
 	import { rawSmarterAIGPSDataToGeojson } from '../utils/geojson/geojson-utils.js';
@@ -21,6 +19,7 @@
 	import MapLoadingSpinner from '../components/map/MapLoadingSpinner.svelte';
 	import MapError from '../components/map/MapError.svelte';
 	import RecordingsTable from '../components/RecordingsTable.svelte';
+	import SelectedVideo from '../components/menu/SelectedVideo.svelte'
 	//* Set Initial Map Details
 	let isReadyForStyleSwitching = false;
 	let mapStyle = 'outdoors-v11';
@@ -33,7 +32,7 @@
 	};
 	//* Polygon and point of interest details
 	let layerList = [];
-	let pointOfInterest = null;
+	let selectedEvent = null;
 	let selectedPolygon = null;
 
 	//* Set Payload details for fetching
@@ -45,7 +44,7 @@
 		{ id: 0, title: 'Search Data', icon: 'fa-database' },
 		{ id: 1, title: 'Street View', icon: 'fa-road' },
 		{ id: 2, title: 'Filter View', icon: 'fa-filter' },
-		{ id: 3, title: 'Speed & Chart View', icon: 'fa-chart-simple' }
+		{ id: 3, title: 'Video Player', icon: 'fa-video' }
 	];
 	let selectedMenu = menuComponents[0].id;
 	let isLoading = true;
@@ -53,7 +52,7 @@
 	let gpsData = [];
 	let gpsFilters = [
 		{
-			id: 'speed',
+			id: 'Speed',
 			name: 'Speed Filter',
 			default: [0, 100],
 			step: 10,
@@ -76,10 +75,10 @@
 	};
 	fetchSmarterAIDevices();
 
+	let videoLinks = [];
 	const getGPSDataFromAllSmarterAIFiles = async (events) => {
 		//* Preapre the GPS Array
 		let tempGPSList = [];
-		let downloadLinks = [];
 		for (let index = 0; index < events.length; index++) {
 			const event = events[index];
 			const sensorDonloadUrl = event.snapshots[2].downloadUrl;
@@ -105,7 +104,6 @@
 			}
 		}
 
-		let videoLinks = []
 		//* If data exists, create the GPS Geojson layer
 		if (tempGPSList.length) {
 			gpsData = rawSmarterAIGPSDataToGeojson(tempGPSList);
@@ -117,28 +115,27 @@
 				bearing: -17.6
 			};
 
-			for (const geojson of gpsData) { // You can use `let` instead of `const` if you like
-				
+			for (const geojson of gpsData) {
+				// You can use `let` instead of `const` if you like
+
 				for (const gpsElement of geojson.features) {
-					
-					const videoLink = await findVideo(gpsElement.properties.StartTime, gpsElement.properties.EndTime, gpsElement.properties.EndpointId);
-					console.log(videoLink)
-
+					const videoLink = await findVideo(
+						gpsElement.properties.StartTime,
+						gpsElement.properties.EndTime,
+						gpsElement.properties.EndpointId
+					);
 					const video = {
-						"eventId" : gpsElement.properties.EventId,
-						"deviceId" :  gpsElement.properties.DeviceId,
-         				"endpointId" : gpsElement.properties.EndpointId,
-						"startTimestamp": gpsElement.properties.StartTime,
-            			"endTimestamp": gpsElement.properties.EndTime,
-						"videoUrl" : videoLink
-					}
+						eventId: gpsElement.properties.EventId,
+						deviceId: gpsElement.properties.DeviceId,
+						endpointId: gpsElement.properties.EndpointId,
+						startTimestamp: gpsElement.properties.StartTime,
+						endTimestamp: gpsElement.properties.EndTime,
+						videoUrl: videoLink
+					};
 
-					videoLinks.push(  video)
+					videoLinks.push(video);
 				}
-			
 			}
-			
-			console.log(videoLinks)
 		}
 	};
 
@@ -164,6 +161,8 @@
 		}
 		isLoading = false;
 	};
+
+
 </script>
 
 <div class="flex flex-col">
@@ -171,7 +170,7 @@
 	<main class="flex-1 grid grid-cols-1 gap-4 lg:grid-cols-12 ">
 		<div class={`col-span-1 lg:col-span-12 relative`}>
 			<Map
-				bind:devicesArray
+				bind:videoLinks
 				bind:isLoading
 				{mapDetails}
 				bind:gpsFilters
@@ -180,7 +179,7 @@
 				bind:mapStyle
 				bind:isReadyForStyleSwitching
 				bind:selectedPolygon
-				bind:pointOfInterest
+				bind:selectedEvent
 				bind:selectedMenu
 			/>
 
@@ -191,12 +190,11 @@
 						<DateTime bind:dateTimeDictionary />
 						<SearchDetails bind:dateTimeDictionary bind:selectedPolygon {fetchEventsData} />
 					{:else if selectedMenu === 1}
-						<StreetView bind:pointOfInterest />
+						<StreetView bind:selectedEvent />
 					{:else if selectedMenu === 2}
 						<Filters bind:gpsFilters bind:gpsData />
 					{:else if selectedMenu === 3}
-						<SpeedView bind:gpsData />
-						<!-- <ChartView bind:gpsData /> -->
+						<SelectedVideo bind:selectedEvent bind:videoLinks />
 					{/if}
 				</div>
 				<div>

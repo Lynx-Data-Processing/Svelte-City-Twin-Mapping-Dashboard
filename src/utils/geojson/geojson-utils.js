@@ -22,7 +22,7 @@ const getSpeed = (properties) => {
   for (const [key, value] of Object.entries(properties)) {
     const lowerKey = key.toLowerCase();
     if (lowerKey.includes('speed')) {
-      speed = value;
+      speed = parseInt(value, 10);;
     }
   }
   return speed;
@@ -55,7 +55,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData) => {
       const dataName = rawData.dataName || `GPS - ${deviceId}`;
       const dateTime = rawData.dateTime || uuidv4();
       const dataType = rawData.dataType || 'Point';
-      const hasFilter = rawData.hasFilter || false;
+      const hasFilter = rawData.hasFilter || true;
       //* Create Geojson feature collection
       const geoJson = {
         type: 'FeatureCollection',
@@ -72,6 +72,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData) => {
           const properties = point.GEO_LOCATION;
           properties.EventId = point.id;
           properties.DeviceId = point.deviceId;
+          properties.Speed = getSpeed(properties);
           properties.EndpointId = point.endpointId;
           properties.StartTime = point.recordingStartTimestamp;
           properties.EndTime = point.recordingEndTimestamp;
