@@ -1,19 +1,33 @@
 <script>
-// @ts-nocheck
+	// @ts-nocheck
 
-	import { onMount } from "svelte";
-	import { onDestroy } from "svelte";
-	import { getObjectsWhereKeyEqualsValue, removeObjectWhereValueEqualsString, checkIfElementExists } from "../../utils/filter-data.js";
-	import { buildPopup } from "../../utils/popup/popup-builder";
-	import { axiosGetUtility, axiosCacheGetUtility } from "../../utils/fetch-data";
-	import { rawKingstonGPSDataToGeojsonNeighbourhoods, rawKingstonTreeDataToGeojsonTrees } from "../../utils/geojson/kingston-geojson-util";
+	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
+	import {
+		getObjectsWhereKeyEqualsValue,
+		removeObjectWhereValueEqualsString,
+		checkIfElementExists
+	} from '../../utils/filter-data.js';
+	import { buildPopup } from '../../utils/popup/popup-builder';
+	import { axiosGetUtility, axiosCacheGetUtility } from '../../utils/fetch-data';
+	import {
+		rawKingstonGPSDataToGeojsonNeighbourhoods,
+		rawKingstonTreeDataToGeojsonTrees,
+		rawKingstonDataToGeojsonData
+	} from '../../utils/geojson/kingston-geojson-util';
 
-	import {  PUBLIC_MAPBOX_KEY, PUBLIC_TREES_URL , PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL} from '$env/static/public'
-	
-	import { v4 as uuidv4 } from "uuid";
+	import {
+		PUBLIC_MAPBOX_KEY,
+		PUBLIC_TREES_URL,
+		PUBLIC_PLANNING_URL,
+		PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
+		PUBLIC_PLANNING_POLYGON_URL
+	} from '$env/static/public';
+
+	import { v4 as uuidv4 } from 'uuid';
 	import mapboxgl from 'mapbox-gl';
-	import MapboxDraw from "@mapbox/mapbox-gl-draw";
-	import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+	import MapboxDraw from '@mapbox/mapbox-gl-draw';
+	import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
 	export let isLoading;
 	export let layerList;
@@ -22,6 +36,7 @@
 	export let mapStyle;
 	export let isReadyForStyleSwitching;
 	export let mapDetails;
+	export let selectedPOI;
 	export let selectedEvent;
 	export let gpsData;
 	export let gpsFilters;
@@ -33,58 +48,83 @@
 		displayControlsDefault: false,
 		controls: {
 			polygon: true,
-			trash: true,
+			trash: true
 		},
-		defaultMode: "simple_select",
+		defaultMode: 'simple_select'
 	});
 
-	const createLayerListElement = (layerName, sourceName, type, isShown, faIcon, hasFilter, data) => {
+	const createLayerListElement = (
+		layerName,
+		sourceName,
+		type,
+		isShown,
+		faIcon,
+		hasFilter,
+		data
+	) => {
 		try {
 			let tempList = layerList;
-			const hasElement = checkIfElementExists(tempList, "layerName", layerName);
+			const hasElement = checkIfElementExists(tempList, 'layerName', layerName);
 			if (hasElement) {
-				tempList = removeObjectWhereValueEqualsString(tempList, "layerName", layerName);
+				tempList = removeObjectWhereValueEqualsString(tempList, 'layerName', layerName);
 				if (map.getLayer(layerName)) {
 					map.removeLayer(layerName);
 					map.removeSource(sourceName);
 				}
 			}
 			//Create the new element and change the layer list
-			const element = { id: uuidv4(), icon: faIcon, type: type, isShown: isShown, layerName: layerName, hasFilter: hasFilter, sourceName: sourceName, data: data };
+			const element = {
+				id: uuidv4(),
+				icon: faIcon,
+				type: type,
+				isShown: isShown,
+				layerName: layerName,
+				hasFilter: hasFilter,
+				sourceName: sourceName,
+				data: data
+			};
 			tempList.push(element);
 			layerList = tempList;
 			return element;
 		} catch (err) {
 			console.error(err);
-			console.log("Unable to create Layer Element");
+			console.log('Unable to create Layer Element');
 		}
 	};
 	const fetchInitialMapData = async () => {
 		try {
 			//* 3D bultings layer element
-			createLayerListElement("3D-Buildings", "composite", "Polygon", false,  "fa-building",  false ,  null);
+			createLayerListElement(
+				'3D-Buildings',
+				'composite',
+				'Other',
+				false,
+				'fa-building',
+				false,
+				null
+			);
 
 			// Neighbourhoods (Zones) data
 			const response = await axiosCacheGetUtility(PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL);
 			if (response.status === 200) {
 				const rawNeighbourhoodsData = response.data.records;
 				if (rawNeighbourhoodsData.length >= 1) {
-					const neighbourhoodsData = rawKingstonGPSDataToGeojsonNeighbourhoods(rawNeighbourhoodsData);
+					const neighbourhoodsData =
+						rawKingstonGPSDataToGeojsonNeighbourhoods(rawNeighbourhoodsData);
 					createLayerListElement(
-						"Neighbourhoods",
-						"NeighbourhoodsSource",
-						"Polygon",
+						'Neighbourhoods',
+						'NeighbourhoodsSource',
+						'Polygon',
 						false,
-						"fa-border-all",
+						'fa-border-all',
 						false,
 						neighbourhoodsData
 					);
-					
 				} else {
-					console.log("No City Neighbourhoods data Exist");
+					console.log('No City Neighbourhoods data Exist');
 				}
 			} else {
-				console.log("Unable to load City Neighbourhoods data");
+				console.log('Unable to load City Neighbourhoods data');
 			}
 			const treeResponse = await axiosCacheGetUtility(PUBLIC_TREES_URL);
 			if (treeResponse.status === 200) {
@@ -92,17 +132,73 @@
 
 				if (rawTreesData.length >= 1) {
 					const treesData = rawKingstonTreeDataToGeojsonTrees(rawTreesData);
-					createLayerListElement("Trees", "TreesSource", "Point", true,  "fa-border-all", false,  treesData);
-				
+					createLayerListElement(
+						'Trees',
+						'TreesSource',
+						'Point',
+						true,
+						'fa-border-all',
+						false,
+						treesData
+					);
 				} else {
-					console.log("No City Trees data Exist");
+					console.log('No City Trees data Exist');
 				}
 			} else {
-				console.log("Unable to load City Trees data");
+				console.log('Unable to load City Trees data');
 			}
+
+			const planningResponse = await axiosCacheGetUtility(PUBLIC_PLANNING_URL);
+			if (planningResponse.status === 200) {
+				const rawPlanningData = planningResponse.data.records;
+
+				if (rawPlanningData.length >= 1) {
+					const planningData = rawKingstonDataToGeojsonData(rawPlanningData);
+
+					console.log(planningData)
+					createLayerListElement(
+						'City Planning',
+						'PlanningSource',
+						'Point',
+						true,
+						'fa-border-all',
+						false,
+						planningData
+					);
+				} else {
+					console.log('No Planning data Exist');
+				}
+			} else {
+				console.log('Unable to load City Planning data');
+			}
+
+
+			const planningPolygonResponse = await axiosCacheGetUtility(PUBLIC_PLANNING_POLYGON_URL);
+			if (planningPolygonResponse.status === 200) {
+				const rawPlanningPolygonData = planningPolygonResponse.data.records;
+
+				if (rawPlanningPolygonData.length >= 1) {
+					const planningData = rawKingstonDataToGeojsonData(rawPlanningPolygonData, 'Planning Polygon','Polygon');
+					console.log(planningData)
+					createLayerListElement(
+						'City Planning Polygon',
+						'PlanningPolygpnSource',
+						'Polygon',
+						false,
+						'fa-border-all',
+						false,
+						planningData
+					);
+				} else {
+					console.log('No Planning data Exist');
+				}
+			} else {
+				console.log('Unable to load City Planning data');
+			}
+
 		} catch (err) {
 			console.error(err);
-			console.log("Unable to fetch initial Map Data");
+			console.log('Unable to fetch initial Map Data');
 		}
 
 		addDataSources();
@@ -110,12 +206,12 @@
 	const addMapSource = (layerListElement) => {
 		try {
 			map.addSource(layerListElement.sourceName, {
-				type: "geojson",
-				data: layerListElement.data,
+				type: 'geojson',
+				data: layerListElement.data
 			});
 		} catch (err) {
 			console.error(err);
-			console.log("Unable to fetch initial Map Data");
+			console.log('Unable to fetch initial Map Data');
 		}
 	};
 	const addDataSources = () => {
@@ -127,98 +223,114 @@
 				const dataType = gpsElement.type;
 
 				//Add the buildings layer
-				if (dataName.includes("Buildings")) {
+				if (dataName.includes('Buildings')) {
 					addBuildingLayer(gpsElement);
 				}
 
 				//* If the layer is neighbourhoods and does not include outline
-				if (dataName.includes("Neighbourhoods")) {
+
+				if (dataType === 'Polygon') {
 					addMapSource(gpsElement);
-					if (dataType === "Polygon") {
-						addNeighbourhoodsLayer(gpsElement, ["get", "Color"]);
-					}
+					addPolygonLayer(gpsElement, 0.5, ['get', 'Color'])
 				}
 
-				//* If the layer is neighbourhoods and does not include outline
-				if (dataName.includes("Trees")) {
+				if (dataType === 'Point') {
 					addMapSource(gpsElement);
-					if (dataType === "Point") {
-						addPointLayer(gpsElement, "Trunk_Diameter", ["get", "Color"]);
-					}
+					addPointLayer(gpsElement, 'Size', ['get', 'Color']);
 				}
 			});
 
 			isInitialDataLoaded = true;
 			isLoading = false;
-		} catch (e) {
-			
-		}
+		} catch (e) {}
 	};
 	const addTerrainLayer = () => {
-		map.addSource("mapbox-dem", {
-			type: "raster-dem",
-			url: "mapbox://mapbox.mapbox-terrain-dem-v1",
+		map.addSource('mapbox-dem', {
+			type: 'raster-dem',
+			url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
 			tileSize: 512,
-			maxzoom: 14,
+			maxzoom: 14
 		});
-		map.setTerrain({ source: "mapbox-dem", exaggeration: 1.5 });
+		map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
 		// add a sky layer that will show when the map is highly pitched
 		map.addLayer({
-			id: "sky",
-			type: "sky",
+			id: 'sky',
+			type: 'sky',
 			paint: {
-				"sky-type": "atmosphere",
-				"sky-atmosphere-sun": [0.0, 0.0],
-				"sky-atmosphere-sun-intensity": 15,
-			},
+				'sky-type': 'atmosphere',
+				'sky-atmosphere-sun': [0.0, 0.0],
+				'sky-atmosphere-sun-intensity': 15
+			}
 		});
 	};
-	const addBuildingLayer = (fillList, opacity = 1, color = "#dee7e7") => {
+	const addBuildingLayer = (fillList, opacity = 1, color = '#dee7e7') => {
 		map.addLayer({
 			id: fillList.layerName,
 			source: fillList.sourceName,
-			"source-layer": "building",
-			filter: ["==", "extrude", "true"],
-			type: "fill-extrusion",
+			'source-layer': 'building',
+			filter: ['==', 'extrude', 'true'],
+			type: 'fill-extrusion',
 			minzoom: 15,
 			paint: {
-				"fill-extrusion-color": color,
-				"fill-extrusion-height": ["interpolate", ["linear"], ["zoom"], 15, 0, 15.05, ["get", "height"]],
-				"fill-extrusion-base": ["interpolate", ["linear"], ["zoom"], 15, 0, 15.05, ["get", "min_height"]],
-				"fill-extrusion-opacity": opacity,
-			},
+				'fill-extrusion-color': color,
+				'fill-extrusion-height': [
+					'interpolate',
+					['linear'],
+					['zoom'],
+					15,
+					0,
+					15.05,
+					['get', 'height']
+				],
+				'fill-extrusion-base': [
+					'interpolate',
+					['linear'],
+					['zoom'],
+					15,
+					0,
+					15.05,
+					['get', 'min_height']
+				],
+				'fill-extrusion-opacity': opacity
+			}
 		});
 	};
 
 	//* This polygon layer is used for city zones.
 	//* It is special because each layer changes opacity when the user hovers over the gps polygon
-	const addNeighbourhoodsLayer = (fillList, color = "blue") => {
+	const addNeighbourhoodsLayer = (fillList, color = 'blue') => {
 		try {
 			map.addLayer({
 				id: fillList.layerName,
-				type: "fill",
+				type: 'fill',
 				source: fillList.sourceName,
 				layout: {},
 				paint: {
-					"fill-color": color,
-					"fill-opacity": ["case", ["boolean", ["feature-state", "hover"], false], 1, 0.5],
-				},
+					'fill-color': color,
+					'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 1, 0.5]
+				}
 			});
-			map.setLayoutProperty(fillList.layerName, "visibility", "none");
+			map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
 			let hoveredStateId = null;
-			map.on("mousemove", fillList.layerName, (e) => {
+			map.on('mousemove', fillList.layerName, (e) => {
 				if (e.features.length > 0) {
 					if (hoveredStateId !== null) {
-						map.setFeatureState({ source: fillList.sourceName, id: hoveredStateId }, { hover: false });
+						map.setFeatureState(
+							{ source: fillList.sourceName, id: hoveredStateId },
+							{ hover: false }
+						);
 					}
 					hoveredStateId = e.features[0].id;
 					map.setFeatureState({ source: fillList.sourceName, id: hoveredStateId }, { hover: true });
 				}
 			});
 
-			map.on("mouseleave", fillList.layerName, () => {
+			map.on('mouseleave', fillList.layerName, () => {
 				if (hoveredStateId !== null) {
-					map.setFeatureState({ source: fillList.sourceName, id: hoveredStateId }, { hover: false });
+					map.setFeatureState(
+						{ source: fillList.sourceName, id: hoveredStateId },
+						{ hover: false }
+					);
 				}
 				hoveredStateId = null;
 			});
@@ -226,19 +338,19 @@
 			console.log(err);
 		}
 	};
-	const addPolygonLayer = (fillList, opacity = 0.5, color = "red") => {
+	const addPolygonLayer = (fillList, opacity = 0.5, color = 'red') => {
 		map.addLayer({
 			id: fillList.layerName,
-			type: "fill",
+			type: 'fill',
 			source: fillList.sourceName,
 			paint: {
-				"fill-color": color,
-				"fill-opacity": opacity,
-			},
+				'fill-color': color,
+				'fill-opacity': opacity
+			}
 		});
-		map.setLayoutProperty(fillList.layerName, "visibility", "none");
-		map.on("click", fillList.layerName, (e) => {
-			let description = "";
+		map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
+		map.on('click', fillList.layerName, (e) => {
+			let description = '';
 			const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
 			for (const [key, value] of Object.entries(sliced)) {
 				description += `<span class="block ">${key}</span><span class="block">${value}</span>`;
@@ -246,30 +358,30 @@
 			smallPopup.setLngLat(e.lngLat).setHTML(description).addTo(map);
 		});
 		// Change the cursor to a pointer when the mouse is over the places layer.
-		map.on("mouseenter", fillList.layerName, () => {
-			map.getCanvas().style.cursor = "pointer";
+		map.on('mouseenter', fillList.layerName, () => {
+			map.getCanvas().style.cursor = 'pointer';
 		});
 		// Change it back to a pointer when it leaves.
-		map.on("mouseleave", fillList.layerName, () => {
-			map.getCanvas().style.cursor = "";
+		map.on('mouseleave', fillList.layerName, () => {
+			map.getCanvas().style.cursor = '';
 		});
 	};
-	const addLineLayer = (fillList, lineWidth = 4, color = "red") => {
+	const addLineLayer = (fillList, lineWidth = 4, color = 'red') => {
 		map.addLayer({
 			id: fillList.layerName,
-			type: "line",
+			type: 'line',
 			source: fillList.sourceName,
 			layout: {
-				"line-join": "round",
-				"line-cap": "round",
+				'line-join': 'round',
+				'line-cap': 'round'
 			},
 			paint: {
-				"line-color": color,
-				"line-width": lineWidth,
-			},
+				'line-color': color,
+				'line-width': lineWidth
+			}
 		});
-		map.on("click", fillList.layerName, (e) => {
-			let description = "";
+		map.on('click', fillList.layerName, (e) => {
+			let description = '';
 			const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
 			for (const [key, value] of Object.entries(sliced)) {
 				description += `<span class="block ">${key}</span><span class="block">${value}</span>`;
@@ -277,53 +389,63 @@
 			smallPopup.setLngLat(e.lngLat).setHTML(description).addTo(map);
 		});
 		// Change the cursor to a pointer when the mouse is over the places layer.
-		map.on("mouseenter", fillList.layerName, () => {
-			map.getCanvas().style.cursor = "pointer";
+		map.on('mouseenter', fillList.layerName, () => {
+			map.getCanvas().style.cursor = 'pointer';
 		});
 		// Change it back to a pointer when it leaves.
-		map.on("mouseleave", fillList.layerName, () => {
-			map.getCanvas().style.cursor = "";
+		map.on('mouseleave', fillList.layerName, () => {
+			map.getCanvas().style.cursor = '';
 		});
 	};
-	const addPointLayer = (fillList, pointSizeName = "Size", color = "blue") => {
+	const addPointLayer = (fillList, pointSizeName = 'Size', color = 'blue') => {
 		try {
 			map.addLayer(
 				{
 					id: fillList.layerName,
-					type: "circle",
+					type: 'circle',
 					source: fillList.sourceName,
 					minzoom: 12,
 					paint: {
-						"circle-radius": [
-							"interpolate",
-							["linear"],
-							["zoom"],
+						'circle-radius': [
+							'interpolate',
+							['linear'],
+							['zoom'],
 							7,
-							["interpolate", ["linear"], ["get", pointSizeName], 1, 2, 3, 4],
+							['interpolate', ['linear'], ['get', pointSizeName], 1, 2, 3, 4],
 							16,
-							["interpolate", ["linear"], ["get", pointSizeName], 3, 6, 9, 12],
+							['interpolate', ['linear'], ['get', pointSizeName], 3, 6, 9, 12]
 						],
-						"circle-color": color,
-					},
+						'circle-color': color
+					}
 				},
-				"waterway-label"
+				'waterway-label'
 			);
-			map.setLayoutProperty(fillList.layerName, "visibility", "none");
+			map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
 			map.moveLayer(fillList.layerName);
-			map.on("click", fillList.layerName, async (e) => {
-				selectedEvent = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
+			map.on('click', fillList.layerName, async (e) => {
+				if (fillList.layerName.includes('GPS')) {
+					selectedEvent = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
+					selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
+				} else {
+					selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
+				}
+
 				smallPopup
 					.setLngLat(e.lngLat)
-					.setHTML(e?.features ? await buildPopup(e.features[0], fillList.layerName, videoLinks) : "<div>Properties do not exist</div>")
+					.setHTML(
+						e?.features
+							? await buildPopup(e.features[0], fillList.layerName, videoLinks)
+							: '<div>Properties do not exist</div>'
+					)
 					.addTo(map);
 			});
 			// Change the cursor to a pointer when the mouse is over the places layer.
-			map.on("mouseenter", fillList.layerName, () => {
-				map.getCanvas().style.cursor = "pointer";
+			map.on('mouseenter', fillList.layerName, () => {
+				map.getCanvas().style.cursor = 'pointer';
 			});
 			// Change it back to a pointer when it leaves.
-			map.on("mouseleave", fillList.layerName, () => {
-				map.getCanvas().style.cursor = "";
+			map.on('mouseleave', fillList.layerName, () => {
+				map.getCanvas().style.cursor = '';
 			});
 		} catch (err) {
 			console.log(err);
@@ -357,10 +479,10 @@
 			layerList.forEach(function (gpsElement) {
 				const dataName = gpsElement.layerName;
 				const dataType = gpsElement.type;
-				if (dataName.includes("GPS")) {
+				if (dataName.includes('GPS')) {
 					addMapSource(gpsElement);
-					if (dataType === "Point") {
-						addPointLayer(gpsElement, "Size", ["get", "Color"]);
+					if (dataType === 'Point') {
+						addPointLayer(gpsElement, 'Size', ['get', 'Color']);
 					}
 				}
 			});
@@ -381,13 +503,13 @@
 					dataSourceName,
 					dataType,
 					true,
-					"fa-road",
+					'fa-road',
 					dataHasFilter,
 					rawGpsElement
 				);
 				addMapSource(gpsElement);
-				if (dataType === "Point") {
-					addPointLayer(gpsElement, "Size", ["get", "Color"]);
+				if (dataType === 'Point') {
+					addPointLayer(gpsElement, 'Size', ['get', 'Color']);
 				}
 			});
 			clearPolygon();
@@ -399,20 +521,20 @@
 	const switchStyle = () => {
 		if (map === null || isReadyForStyleSwitching === false) return;
 		try {
-			map.setStyle("mapbox://styles/mapbox/" + mapStyle);
+			map.setStyle('mapbox://styles/mapbox/' + mapStyle);
 		} catch (err) {
 			console.log(err);
 		}
 	};
 	const createFilterArray = () => {
 		if (map === null || gpsData.length <= 0) return;
-		let filterArray = ["all"];
+		let filterArray = ['all'];
 		for (let i = 0; i < gpsFilters.length; i++) {
 			let id = gpsFilters[i].id;
 			let min = gpsFilters[i].selected[0];
 			let max = gpsFilters[i].selected[1];
-			let minArray = [">=", ["get", id], min];
-			let maxArray = ["<=", ["get", id], max];
+			let minArray = ['>=', ['get', id], min];
+			let maxArray = ['<=', ['get', id], max];
 			filterArray.push(minArray);
 			filterArray.push(maxArray);
 		}
@@ -428,13 +550,13 @@
 				const dataName = gpsElement.layerName;
 				const hasFilter = gpsElement.hasFilter;
 
-				if (dataName.includes("GPS") && hasFilter) {
+				if (dataName.includes('GPS') && hasFilter) {
 					map.setFilter(dataName, filterArray);
 				}
 			});
 		} catch (err) {
 			console.log(err);
-			console.log("Unable to add GPS Filters");
+			console.log('Unable to add GPS Filters');
 		}
 	};
 	const addMapFilter = () => {
@@ -449,33 +571,31 @@
 					return;
 				}
 				if (tempLayerIsShown === true) {
-					map.setLayoutProperty(tempLayerName, "visibility", "visible");
+					map.setLayoutProperty(tempLayerName, 'visibility', 'visible');
 				} else {
-					map.setLayoutProperty(tempLayerName, "visibility", "none");
+					map.setLayoutProperty(tempLayerName, 'visibility', 'none');
 				}
 			}
 		} catch (err) {
 			console.log(err);
-			console.log("Unable to add GPS Filters");
+			console.log('Unable to add GPS Filters');
 		}
 	};
 	const resizeMap = () => {
 		try {
 			map.resize();
-		} catch (err) {
-			
-		}
+		} catch (err) {}
 	};
 	const updateMapCenter = () => {
 		if (map === null) return;
 		try {
 			map.flyTo({
 				center: mapDetails.center,
-				zoom: mapDetails.zoom,
+				zoom: mapDetails.zoom
 			});
 		} catch (err) {
 			console.log(err);
-			console.log("Unable to resize the Map");
+			console.log('Unable to resize the Map');
 		}
 	};
 	$: map && selectedMenu !== null && resizeMap();
@@ -489,44 +609,44 @@
 			zoom: mapDetails.zoom,
 			pitch: mapDetails.pitch,
 			bearing: mapDetails.bearing,
-			container: "map",
+			container: 'map',
 			antialias: true,
-			style: "mapbox://styles/mapbox/" + mapStyle,
+			style: 'mapbox://styles/mapbox/' + mapStyle
 		});
 		// Get the initial Data
 		await fetchInitialMapData();
-		map.addControl(draw, "bottom-left");
+		map.addControl(draw, 'bottom-left');
 		map.addControl(
 			new MapboxGeocoder({
 				accessToken: mapboxgl.accessToken,
-				mapboxgl: mapboxgl,
+				mapboxgl: mapboxgl
 			})
 		);
-		map.addControl(new mapboxgl.FullscreenControl(), "bottom-right");
-		map.addControl(new mapboxgl.NavigationControl(), "bottom-right");
-		map.on("style.load", function () {
+		map.addControl(new mapboxgl.FullscreenControl(), 'bottom-right');
+		map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+		map.on('style.load', function () {
 			addDataSources();
 			if (gpsData) addExistingDynamicGPSElements();
 		});
 		// Mapboxs normal way to show and hide layers. This calls the filter every second
-		map.on("idle", () => {
+		map.on('idle', () => {
 			addMapFilter();
 			if (gpsData) addMapGPSFilters();
 		});
 		const interval = setInterval(function () {
 			resizeMap();
 		}, 500);
-		map.on("draw.create", updatePolygon);
-		map.on("draw.delete", clearPolygon);
-		map.on("draw.update", updatePolygon);
-		map.on("contextmenu", clearPolygon);
+		map.on('draw.create', updatePolygon);
+		map.on('draw.delete', clearPolygon);
+		map.on('draw.update', updatePolygon);
+		map.on('contextmenu', clearPolygon);
 	});
 	onDestroy(() => {
 		try {
 			// Remove all the layers and data sources as they are cached and take up a lot of memory
 			for (let i = 0; i < layerList.length; i++) {
-				map.removeLayer(layerList[i]["layerName"]);
-				map.removeSource(layerList[i]["sourceName"]);
+				map.removeLayer(layerList[i]['layerName']);
+				map.removeSource(layerList[i]['sourceName']);
 			}
 			map = null;
 		} catch (e) {}

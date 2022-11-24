@@ -78,6 +78,7 @@ export const rawKingstonTreeDataToGeojsonTrees = (rawData) => {
     };
     // Make the tree points green
     properties.Color = 'Green';
+    properties.Size = properties.trunk_diameter;
 
     //* Create the final feature config and add the feature id for the ability to hover
     const feature = {
@@ -87,3 +88,43 @@ export const rawKingstonTreeDataToGeojsonTrees = (rawData) => {
   }
   return geoJson;
 };
+
+
+export const rawKingstonDataToGeojsonData = (rawData, name = 'General', geojsonDataType = 'Point') => {
+  try {
+    //* Set initial Geojson element details
+    const dataName = rawData.dataName || name;
+    const dateTime = rawData.dateTime || uuidv4();
+    const dataType = rawData.dataType || geojsonDataType;
+
+    //* Create Geojson feature collection
+    const geoJson = {
+      type: 'FeatureCollection',
+      dataName,
+      dateTime,
+      dataType,
+      features: [],
+    };
+    //* For every bigquery row create a GEOJSON GPS element
+    for (const gpsElement of rawData) {
+      let coordinates = gpsElement.fields.geojson.coordinates || gpsElement.geometry.coordinates;
+
+
+      const properties = gpsElement.fields;
+      properties.Size = 1;
+      properties.Color = 'Blue';
+
+      //* Create the final feature config and add the feature id for the ability to hover
+      const feature = {
+        type: 'Feature', geometry: { type: geojsonDataType, coordinates }, properties,
+      };
+      geoJson.features.push(feature);
+    }
+    console.log(geoJson)
+    return geoJson;
+  }
+  catch (err) {
+    console.log(err);
+  }
+};
+
