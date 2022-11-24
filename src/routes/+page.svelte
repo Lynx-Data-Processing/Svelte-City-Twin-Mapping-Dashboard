@@ -25,19 +25,20 @@
 	let mapStyle = 'outdoors-v11';
 	let mapDetails = {
 		id: 0,
-		center: [-76.5, 44.233334],
-		zoom: 11,
+		center: [-76.491143, 44.231689],
+		zoom: 12,
 		pitch: 0,
 		bearing: -17.6
 	};
 	//* Polygon and point of interest details
 	let layerList = [];
 	let selectedEvent = null;
+	let selectedPOI = null;
 	let selectedPolygon = null;
 
 	//* Set Payload details for fetching
 	let dateTimeDictionary = {
-		startDateTime: '2015-06-23T00:00',
+		startDateTime: '2022-10-23T00:00',
 		endDateTime: '2022-12-23T00:00'
 	};
 	let menuComponents = [
@@ -183,6 +184,7 @@
 				bind:mapStyle
 				bind:isReadyForStyleSwitching
 				bind:selectedPolygon
+				bind:selectedPOI
 				bind:selectedEvent
 				bind:selectedMenu
 			/>
@@ -194,7 +196,7 @@
 						<DateTime bind:dateTimeDictionary />
 						<SearchDetails bind:dateTimeDictionary bind:selectedPolygon {fetchEventsData} />
 					{:else if selectedMenu === 1}
-						<StreetView bind:selectedEvent />
+						<StreetView bind:selectedPOI />
 					{:else if selectedMenu === 2}
 						<Filters bind:gpsFilters bind:gpsData />
 					{:else if selectedMenu === 3}

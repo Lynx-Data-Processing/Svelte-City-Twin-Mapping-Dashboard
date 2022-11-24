@@ -50,8 +50,8 @@
 			<table class="table w-full rounded-lg">
 				<thead>
 					<tr>
-						<th>Video (Front)</th>
-                        <th>Video (Back)</th>
+						<th>Video (Road)</th>
+                        <th>Video (Inside)</th>
                         <th>Device Id</th>
                         <th>Device Label</th>
 						<th>Start Time</th>
