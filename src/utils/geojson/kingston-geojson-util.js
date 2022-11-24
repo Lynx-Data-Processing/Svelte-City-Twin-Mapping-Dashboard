@@ -90,7 +90,7 @@ export const rawKingstonTreeDataToGeojsonTrees = (rawData) => {
 };
 
 
-export const rawKingstonDataToGeojsonData = (rawData, name = 'General', geojsonDataType = 'Point') => {
+export const rawKingstonDataToGeojsonData = (rawData, name = 'General', geojsonDataType = 'Point', color= 'Blue') => {
   try {
     //* Set initial Geojson element details
     const dataName = rawData.dataName || name;
@@ -112,7 +112,7 @@ export const rawKingstonDataToGeojsonData = (rawData, name = 'General', geojsonD
 
       const properties = gpsElement.fields;
       properties.Size = 1;
-      properties.Color = 'Blue';
+      properties.Color = color;
 
       //* Create the final feature config and add the feature id for the ability to hover
       const feature = {

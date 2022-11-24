@@ -41,9 +41,9 @@
 	
 	{#if layerList.length}
 		<button on:click={toggleLayers} class={`card-btn   ${showAllLayers ? "btn-green" : " btn-error-outline"}  my-1 `}> {showAllLayers ? "Show All" : "Disable All"} </button>
-		<div class="overflow-auto ">
+		<div class="flex flex-col ">
 			{#each layerList as layer}
-				<button key={layer.layerName} on:click={() => toggleLayer(layer)} class={`card-btn ${layer.isShown ? "btn-primary" : "btn-black-outline"} my-1 `}>
+				<button key={layer.layerName} on:click={() => toggleLayer(layer)} class={`card-btn  ${layer.isShown ? "btn-primary" : "btn-black-outline"} my-1 `}>
 					<i class="fa-solid {layer.icon} " />
 					{layer.layerName}
 				</button>

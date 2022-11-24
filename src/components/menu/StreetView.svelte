@@ -53,7 +53,7 @@
 	};
 </script>
 
-<section class="card h-fit scale-in-center">
+<section class="card h-fit scale-in-center w-[32rem]">
 
 	{#if selectedPOI == null}
 		<div class="p-4">

@@ -157,7 +157,7 @@
 
 					console.log(planningData)
 					createLayerListElement(
-						'City Planning',
+						'City Planning Points',
 						'PlanningSource',
 						'Point',
 						true,
@@ -178,10 +178,9 @@
 				const rawPlanningPolygonData = planningPolygonResponse.data.records;
 
 				if (rawPlanningPolygonData.length >= 1) {
-					const planningData = rawKingstonDataToGeojsonData(rawPlanningPolygonData, 'Planning Polygon','Polygon');
-					console.log(planningData)
+					const planningData = rawKingstonDataToGeojsonData(rawPlanningPolygonData, 'Planning Polygon','Polygon', 'Purple');
 					createLayerListElement(
-						'City Planning Polygon',
+						'City Planning Area',
 						'PlanningPolygpnSource',
 						'Polygon',
 						false,

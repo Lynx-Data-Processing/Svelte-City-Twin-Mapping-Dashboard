@@ -31,7 +31,7 @@
 	};
 </script>
 
-<section class="card h-fit scale-in-center p-4">
+<section class="card h-fit scale-in-center p-4 w-[32rem]">
 	<div class="flex flow-row justify-between my-1">
 		<div>
 			<p>Search Vehicle Data:</p>
