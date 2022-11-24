@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte/internal';
 	import { onDestroy } from 'svelte';
 
-	export let pointOfInterest;
+	export let selectedPOI;
 	let streetViewObject = null;
 	let streetViewContainer = null;
 	let error = null;
@@ -10,7 +10,7 @@
 	const initializeStreetView = () => {
 		try {
 			streetViewObject = new google.maps.StreetViewPanorama(streetViewContainer, {
-				position: pointOfInterest,
+				position: selectedPOI,
 				pov: {
 					heading: 34,
 					pitch: 10
@@ -22,7 +22,7 @@
 	};
 	onMount(() => {
 		try {
-			if (pointOfInterest !== null) {
+			if (selectedPOI !== null) {
 				initializeStreetView();
 			}
 		} catch (err) {
@@ -34,12 +34,12 @@
 		try {
 			streetViewObject === null
 				? initializeStreetView()
-				: streetViewObject.setPosition(pointOfInterest);
+				: streetViewObject.setPosition(selectedPOI);
 		} catch (err) {
 			error = err;
 		}
 	};
-	$: pointOfInterest && onLocationChange();
+	$: selectedPOI && onLocationChange();
 	onDestroy(() => {
 		try {
 			streetViewObject = null;
@@ -53,35 +53,17 @@
 	};
 </script>
 
-<section class="card h-fit scale-in-center p-4">
-	<div class="flex flow-row justify-between my-1">
-		<div>
-			<p>Street View:</p>
-		</div>
+<section class="card h-fit scale-in-center">
 
-		<div>
-			<button on:click={toggleTerms} class=" text-center hover:underline">
-				{#if showTerms}
-					<i class="fa-solid fa-arrow-up" />
-					<span>Hide</span>
-				{:else}
-					<i class="fa-solid fa-arrow-down" />
-					<span>Show</span>
-				{/if}
-			</button>
-		</div>
-	</div>
-
-	{#if showTerms}
-		{#if pointOfInterest == null}
+	{#if selectedPOI == null}
+		<div class="p-4">
+			<p class="font-bold my-1">Street View:</p>
 			<div class="alert alert-red my-1" role="alert">Select a point on the map.</div>
-		{/if}
-		{#if error !== null}
-			<div class="alert alert-red my-1" role="alert">{error}</div>
-		{/if}
-		<div
-			bind:this={streetViewContainer}
-			class={`${pointOfInterest == null ? 'h-0' : 'h-96'} w-full rounded-lg`}
-		/>
+		</div>
+		
 	{/if}
+	<div
+		bind:this={streetViewContainer}
+		class={`${selectedPOI == null ? 'h-0' : 'h-96'} w-full rounded-lg`}
+	/>
 </section>

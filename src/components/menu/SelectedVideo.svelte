@@ -11,6 +11,7 @@
 
 <section class="card {selectedEvent ? 'h-96' : 'h-fit'} scale-in-center">
 	{#if selectedEvent && videoUrl}
+
 		<video 
 			class="h-96 w-full overflow-hidden rounded-lg"
 			controls
