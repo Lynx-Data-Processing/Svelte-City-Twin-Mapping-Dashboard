@@ -19,7 +19,9 @@ export const buildPopup = async (features, layerName, videoLinks) => {
 
   if (layerName.includes('GPS')) {
   
-    const src = videoLinks.find(o=>  o.eventId === features.properties.EventId).videoUrl;
+    //const src = videoLinks.find(o=>  o.eventId === features.properties.EventId).videoUrl;
+
+    const src = `/USARS_Machine_Learning/${features.properties.EventId}-converted.mp4`;
 
     if (!src) {
       // create div to store the image in

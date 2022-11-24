@@ -115,29 +115,33 @@
 				bearing: -17.6
 			};
 
-			for (const geojson of gpsData) {
-				// You can use `let` instead of `const` if you like
+			// for (const geojson of gpsData) {
+			// 	// You can use `let` instead of `const` if you like
 
-				for (const gpsElement of geojson.features) {
-					const videoLink = await findVideo(
-						gpsElement.properties.StartTime,
-						gpsElement.properties.EndTime,
-						gpsElement.properties.EndpointId
-					);
-					const video = {
-						eventId: gpsElement.properties.EventId,
-						deviceId: gpsElement.properties.DeviceId,
-						endpointId: gpsElement.properties.EndpointId,
-						startTimestamp: gpsElement.properties.StartTime,
-						endTimestamp: gpsElement.properties.EndTime,
-						videoUrl: videoLink
-					};
+			// 	for (const gpsElement of geojson.features) {
+			// 		const videoLink = await findVideo(
+			// 			gpsElement.properties.StartTime,
+			// 			gpsElement.properties.EndTime,
+			// 			gpsElement.properties.EndpointId
+			// 		);
+			// 		const video = {
+			// 			eventId: gpsElement.properties.EventId,
+			// 			deviceId: gpsElement.properties.DeviceId,
+			// 			endpointId: gpsElement.properties.EndpointId,
+			// 			startTimestamp: gpsElement.properties.StartTime,
+			// 			endTimestamp: gpsElement.properties.EndTime,
+			// 			videoUrl: videoLink
+			// 		};
 
-					videoLinks.push(video);
-				}
-			}
+			// 		videoLinks.push(video);
+			// 	}
+			// }
 		}
+
+		console.log(videoLinks);
 	};
+
+
 
 	let eventList = [];
 	const fetchEventsData = async () => {

@@ -3,7 +3,8 @@
 	export let videoLinks;
 	let videoUrl = null;
 	const updateVideoUrl = () => {
-		videoUrl = videoLinks.find((o) => o.eventId === selectedEvent.data.EventId).videoUrl;
+		videoUrl = `/USARS_Machine_Learning/${selectedEvent.data.EventId}-converted.mp4`;
+		//videoUrl = videoLinks.find((o) => o.eventId === selectedEvent.data.EventId).videoUrl;
 	};
 	$: selectedEvent && updateVideoUrl();
 </script>
