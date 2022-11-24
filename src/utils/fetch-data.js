@@ -22,6 +22,33 @@ export const axiosUtility = async (config) => {
   }
 };
 
+export const axiosBlobUtility = async (url) =>{
+
+      var data = JSON.stringify({
+        "video_link": url
+      });
+  
+      
+      let config = {
+        method: 'post',
+        url: 'http://127.0.0.1:8000/machinelearning',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : data
+      };
+      
+      return await axios(config)
+      .then((response) => {
+  
+  
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+}
+
 export const axiosGetUtility = async (url) => {
   try {
     const config = {

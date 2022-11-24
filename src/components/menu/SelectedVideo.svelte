@@ -1,10 +1,19 @@
 <script>
+	import { axiosBlobUtility } from '../../utils/fetch-data'
 	export let selectedEvent;
 	export let videoLinks;
 	let videoUrl = null;
-	const updateVideoUrl = () => {
-		videoUrl = `/USARS_Machine_Learning/${selectedEvent.data.EventId}-converted.mp4`;
-		//videoUrl = videoLinks.find((o) => o.eventId === selectedEvent.data.EventId).videoUrl;
+
+
+	const updateVideoUrl = async () => {
+	
+		if(selectedEvent.data.DeviceId === 'CK20520033'){
+			videoUrl = `/USARS_Machine_Learning/${selectedEvent.data.EventId}-converted.mp4`;
+		}
+		else{
+			videoUrl = videoLinks.find(o=>  o.eventId === selectedEvent.data.EventId).videoUrl;
+
+		}
 	};
 	$: selectedEvent && updateVideoUrl();
 </script>

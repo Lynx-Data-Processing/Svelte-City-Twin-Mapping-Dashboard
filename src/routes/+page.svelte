@@ -10,7 +10,7 @@
 	import StreetView from '../components/menu/StreetView.svelte';
 	import { findVideo } from '../utils/popup/video-finder';
 	import Navbar from '../components/Navbar.svelte';
-	import { rawSmarterAIGPSDataToGeojson } from '../utils/geojson/geojson-utils.js';
+	import { rawSmarterAIGPSDataToGeojson , rawGPSDataToGeojsonData} from '../utils/geojson/geojson-utils.js';
 	import {
 		getListOfDevicesUnderTenant,
 		getAllEvents,
@@ -20,6 +20,7 @@
 	import MapError from '../components/map/MapError.svelte';
 	import RecordingsTable from '../components/RecordingsTable.svelte';
 	import SelectedVideo from '../components/menu/SelectedVideo.svelte'
+	import AddGeojson from '../components/menu/AddGeojson.svelte';
 	//* Set Initial Map Details
 	let isReadyForStyleSwitching = false;
 	let mapStyle = 'outdoors-v11';
@@ -45,7 +46,8 @@
 		{ id: 0, title: 'Search Data', icon: 'fa-database' },
 		{ id: 1, title: 'Street View', icon: 'fa-road' },
 		{ id: 2, title: 'Filter View', icon: 'fa-filter' },
-		{ id: 3, title: 'Video Player', icon: 'fa-video' }
+		{ id: 3, title: 'Video Player', icon: 'fa-video' },
+		{ id: 4, title: 'Add Geojson', icon: 'fa-map' }
 	];
 	let selectedMenu = menuComponents[0].id;
 	let isLoading = true;
@@ -116,27 +118,27 @@
 				bearing: -17.6
 			};
 
-			// for (const geojson of gpsData) {
-			// 	// You can use `let` instead of `const` if you like
+			for (const geojson of gpsData) {
+				// You can use `let` instead of `const` if you like
 
-			// 	for (const gpsElement of geojson.features) {
-			// 		const videoLink = await findVideo(
-			// 			gpsElement.properties.StartTime,
-			// 			gpsElement.properties.EndTime,
-			// 			gpsElement.properties.EndpointId
-			// 		);
-			// 		const video = {
-			// 			eventId: gpsElement.properties.EventId,
-			// 			deviceId: gpsElement.properties.DeviceId,
-			// 			endpointId: gpsElement.properties.EndpointId,
-			// 			startTimestamp: gpsElement.properties.StartTime,
-			// 			endTimestamp: gpsElement.properties.EndTime,
-			// 			videoUrl: videoLink
-			// 		};
+				for (const gpsElement of geojson.features) {
+					const videoLink = await findVideo(
+						gpsElement.properties.StartTime,
+						gpsElement.properties.EndTime,
+						gpsElement.properties.EndpointId
+					);
+					const video = {
+						eventId: gpsElement.properties.EventId,
+						deviceId: gpsElement.properties.DeviceId,
+						endpointId: gpsElement.properties.EndpointId,
+						startTimestamp: gpsElement.properties.StartTime,
+						endTimestamp: gpsElement.properties.EndTime,
+						videoUrl: videoLink
+					};
 
-			// 		videoLinks.push(video);
-			// 	}
-			// }
+					videoLinks.push(video);
+				}
+			}
 		}
 
 		console.log(videoLinks);
@@ -167,6 +169,21 @@
 		isLoading = false;
 	};
 
+
+	const addGeojsonData = (input, name = 'Own Data' , dataType = 'Point', color = 'Red') =>{
+		
+	
+		gpsData = [rawGPSDataToGeojsonData(input, name, dataType, color)];
+
+	
+			mapDetails = {
+				id: 0,
+				center: gpsData[0].features[0].geometry.coordinates,
+				zoom: 15,
+				pitch: 0,
+				bearing: -17.6
+			};
+	}
 
 </script>
 
@@ -201,6 +218,9 @@
 						<Filters bind:gpsFilters bind:gpsData />
 					{:else if selectedMenu === 3}
 						<SelectedVideo bind:selectedEvent bind:videoLinks />
+					{:else if selectedMenu === 4}
+
+						<AddGeojson {addGeojsonData} />
 					{/if}
 				</div>
 				<div>
