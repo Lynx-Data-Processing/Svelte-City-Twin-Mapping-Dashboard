@@ -90,7 +90,7 @@ export const rawKingstonTreeDataToGeojsonTrees = (rawData) => {
 };
 
 
-export const rawKingstonDataToGeojsonData = (rawData, name = 'General', geojsonDataType = 'Point', color= null) => {
+export const rawKingstonDataToGeojsonData = (rawData, name = 'General', geojsonDataType = 'Point', color= 'Random') => {
   try {
     //* Set initial Geojson element details
     const dataName = rawData.dataName || name;
@@ -114,12 +114,12 @@ export const rawKingstonDataToGeojsonData = (rawData, name = 'General', geojsonD
       properties.Size = 1;
 
       //* If a color was not specified, generate a random color
-      if(color){
-        properties.Color = color;
+      if(color === 'Random'){
+        let elementColor = (Math.floor(Math.random() * 16777215).toString(16)).toString();
+        properties.Color = elementColor.length !== 6 ?   elementColor.padEnd(6, '0')  :`#${elementColor}`;        
       }
       else{
-        let elementColor = (Math.floor(Math.random() * 16777215).toString(16)).toString();
-        properties.Color = elementColor.length !== 6 ?   elementColor.padEnd(6, '0')  :`#${elementColor}`;
+        properties.Color = color;
       }
     
       //* Create the final feature config and add the feature id for the ability to hover

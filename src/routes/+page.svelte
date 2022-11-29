@@ -1,5 +1,15 @@
-<script>
-	// @ts-nocheck
+<script lang="ts">
+	import type {
+		layerLisElementType,
+		gpsFilterType,
+		dateTimeDictionaryType,
+		mapDetailsType,
+		selectedEventType,
+		videoType,
+		selectedPOIType,
+		eventType,
+		menuComponentsType
+	} from '../types/types';
 
 	import Map from '../components/map/Map.svelte';
 	import SearchDetails from '../components/menu/SearchDetails.svelte';
@@ -10,7 +20,10 @@
 	import StreetView from '../components/menu/StreetView.svelte';
 	import { findVideo } from '../utils/popup/video-finder';
 	import Navbar from '../components/Navbar.svelte';
-	import { rawSmarterAIGPSDataToGeojson , rawGPSDataToGeojsonData} from '../utils/geojson/geojson-utils.js';
+	import {
+		rawSmarterAIGPSDataToGeojson,
+		rawGPSDataToGeojsonData
+	} from '../utils/geojson/geojson-utils.js';
 	import {
 		getListOfDevicesUnderTenant,
 		getAllEvents,
@@ -19,12 +32,12 @@
 	import MapLoadingSpinner from '../components/map/MapLoadingSpinner.svelte';
 	import MapError from '../components/map/MapError.svelte';
 	import RecordingsTable from '../components/RecordingsTable.svelte';
-	import SelectedVideo from '../components/menu/SelectedVideo.svelte'
+	import SelectedVideo from '../components/menu/SelectedVideo.svelte';
 	import AddGeojson from '../components/menu/AddGeojson.svelte';
 	//* Set Initial Map Details
-	let isReadyForStyleSwitching = false;
-	let mapStyle = 'outdoors-v11';
-	let mapDetails = {
+	let isReadyForStyleSwitching : boolean = false;
+	let mapStyle : string = 'outdoors-v11';
+	let mapDetails: mapDetailsType = {
 		id: 0,
 		center: [-76.491143, 44.231689],
 		zoom: 12,
@@ -32,28 +45,28 @@
 		bearing: -17.6
 	};
 	//* Polygon and point of interest details
-	let layerList = [];
-	let selectedEvent = null;
-	let selectedPOI = null;
-	let selectedPolygon = null;
+	let layerList: layerLisElementType[] = [];
+	let selectedEvent: selectedEventType | null = null;
+	let selectedPOI: selectedPOIType | null = null;
+	let selectedPolygon: object | null = null;
 
 	//* Set Payload details for fetching
-	let dateTimeDictionary = {
+	let dateTimeDictionary : dateTimeDictionaryType = {
 		startDateTime: '2022-10-23T00:00',
 		endDateTime: '2022-12-23T00:00'
 	};
-	let menuComponents = [
+	let menuComponents : menuComponentsType[] = [
 		{ id: 0, title: 'Search Data', icon: 'fa-database' },
 		{ id: 1, title: 'Street View', icon: 'fa-road' },
 		{ id: 2, title: 'Filter View', icon: 'fa-filter' },
 		{ id: 3, title: 'Video Player', icon: 'fa-video' },
 		{ id: 4, title: 'Add Geojson', icon: 'fa-map' }
 	];
-	let selectedMenu = menuComponents[0].id;
+	let selectedMenu : number = menuComponents[0].id;
 	let isLoading = true;
 	let isError = false;
-	let gpsData = [];
-	let gpsFilters = [
+	let gpsData: any[] = [];
+	let gpsFilters : gpsFilterType[] = [
 		{
 			id: 'Speed',
 			name: 'Speed Filter',
@@ -64,9 +77,8 @@
 		}
 	];
 
-
-	let videoLinks = [];
-	const getGPSDataFromAllSmarterAIFiles = async (events) => {
+	let videoLinks: videoType[] = [];
+	const getGPSDataFromAllSmarterAIFiles = async (events: eventType[]) => {
 		//* Preapre the GPS Array
 		let tempGPSList = [];
 		for (let index = 0; index < events.length; index++) {
@@ -127,13 +139,9 @@
 				}
 			}
 		}
-
-		console.log(videoLinks);
 	};
 
-
-
-	let eventList = [];
+	let eventList: eventType[] = [];
 	const fetchEventsData = async () => {
 		isLoading = true;
 		isError = false;
@@ -156,22 +164,17 @@
 		isLoading = false;
 	};
 
-
-	const addGeojsonData = (input, name = 'Own Data' , dataType = 'Point', color = 'Red') =>{
-		
-	
+	const addGeojsonData = (input: object, name = 'Own Data', dataType = 'Point', color = 'Red') => {
 		gpsData = [rawGPSDataToGeojsonData(input, name, dataType, color)];
 
-	
-			mapDetails = {
-				id: 0,
-				center: gpsData[0].features[0].geometry.coordinates,
-				zoom: 15,
-				pitch: 0,
-				bearing: -17.6
-			};
-	}
-
+		mapDetails = {
+			id: 0,
+			center: gpsData[0].features[0].geometry.coordinates,
+			zoom: 15,
+			pitch: 0,
+			bearing: -17.6
+		};
+	};
 </script>
 
 <div class="flex flex-col">
@@ -206,7 +209,6 @@
 					{:else if selectedMenu === 3}
 						<SelectedVideo bind:selectedEvent bind:videoLinks />
 					{:else if selectedMenu === 4}
-
 						<AddGeojson {addGeojsonData} />
 					{/if}
 				</div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-
+	import type { layerLisElementType, gpsFilterType, dateTimeDictionaryType, selectedPOIType, mapDetailsType , videoType} from '../../types/types';
 	import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
 	import {
@@ -23,24 +23,26 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import mapboxgl from 'mapbox-gl';
 	import MapboxDraw from '@mapbox/mapbox-gl-draw';
+	import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+	import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 	import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
-	export let isLoading;
-	export let layerList;
+	export let isLoading : boolean;
+	export let layerList : layerLisElementType[];
 	export let selectedPolygon;
-	export let videoLinks;
-	export let mapStyle;
-	export let isReadyForStyleSwitching;
-	export let mapDetails;
-	export let selectedPOI;
-	export let selectedEvent;
-	export let gpsData;
-	export let gpsFilters;
-	export let selectedMenu;
-	let map = null;
+	export let videoLinks : videoType[];
+	export let mapStyle : string;
+	export let isReadyForStyleSwitching : boolean;
+	export let mapDetails : mapDetailsType;
+	export let selectedPOI : selectedPOIType | null;
+	export let selectedEvent : any;
+	export let gpsData : any;
+	export let gpsFilters : gpsFilterType[];
+	export let selectedMenu : number;
+	let map : any = null;
 	let isInitialDataLoaded = false;
 	const smallPopup = new mapboxgl.Popup();
-	const draw = new MapboxDraw({
+	const draw = new (MapboxDraw as any)({
 		displayControlsDefault: false,
 		controls: {
 			polygon: true,
@@ -50,15 +52,15 @@
 	});
 
 	const createLayerListElement = (
-		layerName,
-		sourceName,
-		type,
-		isShown,
-		faIcon,
-		hasFilter,
-		data
-	) => {
-		try {
+		layerName : string,
+		sourceName : string,
+		type : string,
+		isShown : boolean,
+		faIcon : string,
+		hasFilter : boolean,
+		data : any
+	) : layerLisElementType => {
+		
 			let tempList = layerList;
 			const hasElement = checkIfElementExists(tempList, 'layerName', layerName);
 			if (hasElement) {
@@ -69,7 +71,7 @@
 				}
 			}
 			//Create the new element and change the layer list
-			const element = {
+			const element : layerLisElementType = {
 				id: uuidv4(),
 				icon: faIcon,
 				type: type,
@@ -82,14 +84,11 @@
 			tempList.push(element);
 			layerList = tempList;
 			return element;
-		} catch (err) {
-			console.error(err);
-			console.log('Unable to create Layer Element');
-		}
+		
 	};
 
 
-	const fetchDataFromAPIAndCreateLayer = async (url, layerName, showOnLoad = false, dataType = 'Point', dataColor = null, dataIcon = 'fa-border-all', hasFilter = false) =>{
+	const fetchDataFromAPIAndCreateLayer = async (url : string, layerName : string, showOnLoad = false, dataType = 'Point', dataColor = 'Random', dataIcon = 'fa-border-all', hasFilter = false) =>{
 		try{
 		const response = await axiosCacheGetUtility(url);
 			if (response.status === 200) {
@@ -131,7 +130,7 @@
 			);
 
 
-			await fetchDataFromAPIAndCreateLayer(PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL, 'Neighbourhoods', false, 'Polygon', null, 'fa-border-all', false )
+			await fetchDataFromAPIAndCreateLayer(PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL, 'Neighbourhoods', false, 'Polygon', 'Random', 'fa-border-all', false )
 			await fetchDataFromAPIAndCreateLayer(PUBLIC_TREES_URL, 'Trees', false, 'Point', 'Green', 'fa-border-all', false)
 			await fetchDataFromAPIAndCreateLayer(PUBLIC_PLANNING_URL, 'City Planning Points', false, 'Point', 'Blue', 'fa-border-all', false)
 			await fetchDataFromAPIAndCreateLayer(PUBLIC_PLANNING_POLYGON_URL, 'City Planning Area', false, 'Polygon', 'Purple', 'fa-border-all', false)
@@ -144,7 +143,7 @@
 
 		
 	};
-	const addMapSource = (layerListElement) => {
+	const addMapSource = (layerListElement : layerLisElementType) => {
 		try {
 			map.addSource(layerListElement.sourceName, {
 				type: 'geojson',
@@ -204,7 +203,7 @@
 			}
 		});
 	};
-	const addBuildingLayer = (fillList, opacity = 1, color = '#dee7e7') => {
+	const addBuildingLayer = (fillList : layerLisElementType, opacity = 1, color = '#dee7e7') => {
 		map.addLayer({
 			id: fillList.layerName,
 			source: fillList.sourceName,
@@ -238,7 +237,7 @@
 	};
 
 	
-	const addPolygonLayer = (fillList, opacity = 0.5, color = 'red') => {
+	const addPolygonLayer = (fillList : layerLisElementType, opacity = 0.5, color = ['red']) => {
 		map.addLayer({
 			id: fillList.layerName,
 			type: 'fill',
@@ -249,7 +248,7 @@
 			}
 		});
 		map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
-		map.on('click', fillList.layerName, (e) => {
+		map.on('click', fillList.layerName, (e : any) => {
 			let description = '';
 			const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
 			for (const [key, value] of Object.entries(sliced)) {
@@ -266,7 +265,7 @@
 			map.getCanvas().style.cursor = '';
 		});
 	};
-	const addLineLayer = (fillList, lineWidth = 4, color = 'red') => {
+	const addLineLayer = (fillList : layerLisElementType, lineWidth = 4, color = ['red']) => {
 		map.addLayer({
 			id: fillList.layerName,
 			type: 'line',
@@ -280,7 +279,7 @@
 				'line-width': lineWidth
 			}
 		});
-		map.on('click', fillList.layerName, (e) => {
+		map.on('click', fillList.layerName, (e : any) => {
 			let description = '';
 			const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
 			for (const [key, value] of Object.entries(sliced)) {
@@ -297,7 +296,7 @@
 			map.getCanvas().style.cursor = '';
 		});
 	};
-	const addPointLayer = (fillList, pointSizeName = 'Size', color = 'blue') => {
+	const addPointLayer = (fillList : layerLisElementType, pointSizeName = 'Size', color = ['Blue']) => {
 		try {
 			map.addLayer(
 				{
@@ -322,7 +321,7 @@
 			);
 			map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
 			map.moveLayer(fillList.layerName);
-			map.on('click', fillList.layerName, async (e) => {
+			map.on('click', fillList.layerName, async (e : any) => {
 				if (fillList.layerName.includes('GPS')) {
 					selectedEvent = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
 					selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
@@ -412,12 +411,12 @@
 			tempLayerList = tempLayerList.filter((obj) => obj.layerName === '3D-Buildings');
 			layerList = tempLayerList
 
-			gpsData.forEach(function (rawGpsElement) {
+			gpsData.forEach(function (rawGpsElement : any) {
 				const dataName = rawGpsElement.dataName;
 				const dataSourceName = `${dataName}Source`;
 				const dataType = rawGpsElement.dataType;
 				const dataHasFilter = rawGpsElement.hasFilter;
-				let gpsElement = createLayerListElement(
+				let gpsElement : layerLisElementType = createLayerListElement(
 					dataName,
 					dataSourceName,
 					dataType,
@@ -455,8 +454,8 @@
 			let id = gpsFilters[i].id;
 			let min = gpsFilters[i].selected[0];
 			let max = gpsFilters[i].selected[1];
-			let minArray = ['>=', ['get', id], min];
-			let maxArray = ['<=', ['get', id], max];
+			let minArray : any = ['>=', ['get', id], min];
+			let maxArray : any = ['<=', ['get', id], max];
 			filterArray.push(minArray);
 			filterArray.push(maxArray);
 		}

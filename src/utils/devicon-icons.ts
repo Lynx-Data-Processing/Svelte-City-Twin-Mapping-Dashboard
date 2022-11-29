@@ -1,4 +1,4 @@
-export const getDevicon = (toolString) => {
+export const getDevicon = (toolString : string) => {
     if (toolString.includes("plain")) {
         const tempString = toolString.replace("-plain", "");
         return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tempString}/${tempString}-plain.svg`;
