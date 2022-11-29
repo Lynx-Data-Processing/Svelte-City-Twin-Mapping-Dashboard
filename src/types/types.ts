@@ -30,7 +30,18 @@ export type videoType = {
     endpointId: number,
     startTimestamp: number,
     endTimestamp: number,
-    videoUrl: string
+    videoUrl?: string
+}
+
+
+export type mediaRecordingType = {
+    startTimestamp: number,
+    endTimestamp: number,
+    source: string,
+    type: string,
+    url: string,
+    urlExpiry: number,
+    available: boolean
 }
 
 export type snapshotType = {
@@ -61,6 +72,14 @@ export type eventType = {
 
 };
 
+export type eventGeojsonType = {
+    ACCELEROMETER: object,
+    GYROSCOPE: object,
+    GEO_LOCATION: object,
+    VIDEO_META: object
+}
+
+
 export type mapDetailsType = {
     id: number,
     center: number[],
@@ -87,3 +106,18 @@ export type selectedEventType = {
     data: any,
 }
 
+export type geojsonType = {
+    type: string,
+    dataName: string,
+    dateTime: string,
+    dataType: string,
+    hasFilter: boolean,
+    features: geojsonFeatureType[]
+}
+
+export type geojsonFeatureType = {
+    type: string,
+    geometry: object,
+    properties: object
+
+};

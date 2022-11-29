@@ -77,8 +77,18 @@
 		}
 	];
 
-	let videoLinks: videoType[] = [];
-	const getGPSDataFromAllSmarterAIFiles = async (events: eventType[]) => {
+	const updateMapCenter = (coordinates : number[]) => {
+		mapDetails = {
+			id: 0,
+			center: coordinates,
+			zoom: 15,
+			pitch: 0,
+			bearing: -17.6,
+		};
+	};
+
+	let videoArray: videoType[] = [];
+	const getMediaEventsFromAllSmarterAIFiles = async (events: eventType[]) => {
 		//* Preapre the GPS Array
 		let tempGPSList = [];
 		for (let index = 0; index < events.length; index++) {
@@ -88,6 +98,7 @@
 			try {
 				if (response.status === 200) {
 					if (response.data) {
+						//* Add additional properties to the GPS data
 						let gpsRawData = response.data;
 						gpsRawData['id'] = event.id;
 						gpsRawData['deviceId'] = event.deviceId;
@@ -109,24 +120,17 @@
 		//* If data exists, create the GPS Geojson layer
 		if (tempGPSList.length) {
 			gpsData = rawSmarterAIGPSDataToGeojson(tempGPSList);
-			mapDetails = {
-				id: 0,
-				center: gpsData[0].features[0].geometry.coordinates,
-				zoom: 15,
-				pitch: 0,
-				bearing: -17.6
-			};
+			updateMapCenter(gpsData[0].geometry.coordinates);
 
+			//* Get the video links
 			for (const geojson of gpsData) {
-				// You can use `let` instead of `const` if you like
-
 				for (const gpsElement of geojson.features) {
-					const videoLink = await findVideo(
+					const videoLink : string = await findVideo(
 						gpsElement.properties.StartTime,
 						gpsElement.properties.EndTime,
 						gpsElement.properties.EndpointId
 					);
-					const video = {
+					const video : videoType= {
 						eventId: gpsElement.properties.EventId,
 						deviceId: gpsElement.properties.DeviceId,
 						endpointId: gpsElement.properties.EndpointId,
@@ -135,7 +139,7 @@
 						videoUrl: videoLink
 					};
 
-					videoLinks.push(video);
+					videoArray.push(video);
 				}
 			}
 		}
@@ -153,7 +157,7 @@
 			if (response.data) {
 				eventList = response.data.eventList;
 
-				await getGPSDataFromAllSmarterAIFiles(eventList);
+				await getMediaEventsFromAllSmarterAIFiles(eventList);
 			} else {
 				alert('No GPS Events found');
 			}
@@ -164,16 +168,15 @@
 		isLoading = false;
 	};
 
-	const addGeojsonData = (input: object, name = 'Own Data', dataType = 'Point', color = 'Red') => {
+	const addGeojsonData = (input : object, name = "Own Data", dataType = "Point", color = "Red") => {
 		gpsData = [rawGPSDataToGeojsonData(input, name, dataType, color)];
-
-		mapDetails = {
-			id: 0,
-			center: gpsData[0].features[0].geometry.coordinates,
-			zoom: 15,
-			pitch: 0,
-			bearing: -17.6
-		};
+		if(dataType ==='Point'){
+			updateMapCenter(gpsData[0].features[0].geometry.coordinates)
+		}
+		else{
+			updateMapCenter(gpsData[0].features[0].geometry.coordinates[0][0])
+		}
+		
 	};
 </script>
 
@@ -182,7 +185,7 @@
 	<main class="flex-1 grid grid-cols-1 gap-4 lg:grid-cols-12 ">
 		<div class={`col-span-1 lg:col-span-12 relative`}>
 			<Map
-				bind:videoLinks
+				bind:videoArray
 				bind:isLoading
 				{mapDetails}
 				bind:gpsFilters
@@ -207,7 +210,7 @@
 					{:else if selectedMenu === 2}
 						<Filters bind:gpsFilters bind:gpsData />
 					{:else if selectedMenu === 3}
-						<SelectedVideo bind:selectedEvent bind:videoLinks />
+						<SelectedVideo bind:selectedEvent bind:videoArray />
 					{:else if selectedMenu === 4}
 						<AddGeojson {addGeojsonData} />
 					{/if}

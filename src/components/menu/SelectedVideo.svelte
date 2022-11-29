@@ -1,18 +1,21 @@
 <script  lang="ts">
 	export let selectedEvent : any;
-	export let videoLinks : any[];
+	export let videoArray : any[];
 	let videoUrl : string = '';
 
 
 	const updateVideoUrl = async () => {
 	
-		if(selectedEvent.data.DeviceId === 'CK20520033'){
-			videoUrl = `/USARS_Machine_Learning/${selectedEvent.data.EventId}-converted.mp4`;
-		}
-		else{
-			const tempUrl = videoLinks.find(o=>  o.eventId === selectedEvent.data.EventId);
-			videoUrl =  tempUrl || '';
-		}
+		const tempUrl = videoArray.find(o=>  o.eventId === selectedEvent.data.EventId);
+		videoUrl =  tempUrl || '';
+
+		// if(selectedEvent.data.DeviceId === 'CK20520033'){
+		// 	videoUrl = `/USARS_Machine_Learning/${selectedEvent.data.EventId}-converted.mp4`;
+		// }
+		// else{
+		// 	const tempUrl = videoArray.find(o=>  o.eventId === selectedEvent.data.EventId);
+		// 	videoUrl =  tempUrl || '';
+		// }
 	};
 	$: selectedEvent && updateVideoUrl();
 </script>

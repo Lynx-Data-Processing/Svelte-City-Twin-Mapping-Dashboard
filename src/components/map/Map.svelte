@@ -30,7 +30,7 @@
 	export let isLoading : boolean;
 	export let layerList : layerLisElementType[];
 	export let selectedPolygon;
-	export let videoLinks : videoType[];
+	export let videoArray : videoType[];
 	export let mapStyle : string;
 	export let isReadyForStyleSwitching : boolean;
 	export let mapDetails : mapDetailsType;
@@ -135,7 +135,6 @@
 			await fetchDataFromAPIAndCreateLayer(PUBLIC_PLANNING_URL, 'City Planning Points', false, 'Point', 'Blue', 'fa-border-all', false)
 			await fetchDataFromAPIAndCreateLayer(PUBLIC_PLANNING_POLYGON_URL, 'City Planning Area', false, 'Polygon', 'Purple', 'fa-border-all', false)
 
-			addDataSources();
 
 		} catch (err) {
 			console.error(err);
@@ -151,10 +150,10 @@
 			});
 		} catch (err) {
 			console.error(err);
-			console.log('Unable to fetch initial Map Data');
 		}
 	};
 	const addDataSources = () => {
+		console.log('Adding Data Sources');
 		try {
 			addTerrainLayer();
 			//* Add the additional layers
@@ -166,8 +165,6 @@
 				if (dataName.includes('Buildings')) {
 					addBuildingLayer(gpsElement);
 				}
-
-				//* If the layer is neighbourhoods and does not include outline
 
 				if (dataType === 'Polygon') {
 					addMapSource(gpsElement);
@@ -333,7 +330,7 @@
 					.setLngLat(e.lngLat)
 					.setHTML(
 						e?.features
-							? await buildPopup(e.features[0], fillList.layerName, videoLinks)
+							? await buildPopup(e.features[0], fillList.layerName, videoArray)
 							: '<div>Properties do not exist</div>'
 					)
 					.addTo(map);
@@ -398,18 +395,6 @@
 		if (map === null || gpsData.length <= 0) return;
 		try {
 
-			layerList.forEach(function (gpsElement) {
-				const layerName = gpsElement.layerName;
-				const sourceName = gpsElement.sourceName;
-				if (map.getLayer(layerName) && layerName!= '3D-Buildings') {
-					map.removeLayer(layerName);
-					map.removeSource(sourceName);
-				}
-			});
-
-			let tempLayerList = layerList;
-			tempLayerList = tempLayerList.filter((obj) => obj.layerName === '3D-Buildings');
-			layerList = tempLayerList
 
 			gpsData.forEach(function (rawGpsElement : any) {
 				const dataName = rawGpsElement.dataName;
@@ -553,9 +538,7 @@
 			addMapFilter();
 			if (gpsData) addMapGPSFilters();
 		});
-		const interval = setInterval(function () {
-			resizeMap();
-		}, 500);
+	
 
 		map.on('draw.create', updatePolygon);
 		map.on('draw.delete', clearPolygon);
