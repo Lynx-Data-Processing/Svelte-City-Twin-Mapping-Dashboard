@@ -1,18 +1,14 @@
-<script>
-	// @ts-nocheck
+<script lang="ts">
 
 	import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
 	import {
-		getObjectsWhereKeyEqualsValue,
 		removeObjectWhereValueEqualsString,
 		checkIfElementExists
 	} from '../../utils/filter-data.js';
 	import { buildPopup } from '../../utils/popup/popup-builder';
 	import { axiosGetUtility, axiosCacheGetUtility } from '../../utils/fetch-data';
 	import {
-		rawKingstonGPSDataToGeojsonNeighbourhoods,
-		rawKingstonTreeDataToGeojsonTrees,
 		rawKingstonDataToGeojsonData
 	} from '../../utils/geojson/kingston-geojson-util';
 
@@ -91,6 +87,36 @@
 			console.log('Unable to create Layer Element');
 		}
 	};
+
+
+	const fetchDataFromAPIAndCreateLayer = async (url, layerName, showOnLoad = false, dataType = 'Point', dataColor = null, dataIcon = 'fa-border-all', hasFilter = false) =>{
+		try{
+		const response = await axiosCacheGetUtility(url);
+			if (response.status === 200) {
+				const rawData = response.data.records;
+
+				if (rawData.length) {
+					const cleanData = rawKingstonDataToGeojsonData(rawData, layerName, dataType, dataColor);
+					createLayerListElement(
+						layerName,
+						`${layerName}Source`,
+						dataType,
+						showOnLoad,
+						dataIcon,
+						hasFilter,
+						cleanData
+					);
+				} else {
+					console.log(`No ${layerName} data Exist`);
+				}
+			} else {
+				console.log(`Unable to load data for ${layerName}`);
+			}
+		} catch (err){
+			console.error(err);
+		}
+	}
+
 	const fetchInitialMapData = async () => {
 		try {
 			//* 3D bultings layer element
@@ -104,103 +130,19 @@
 				null
 			);
 
-			// Neighbourhoods (Zones) data
-			const response = await axiosCacheGetUtility(PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL);
-			if (response.status === 200) {
-				const rawNeighbourhoodsData = response.data.records;
-				if (rawNeighbourhoodsData.length >= 1) {
-					const neighbourhoodsData =
-						rawKingstonGPSDataToGeojsonNeighbourhoods(rawNeighbourhoodsData);
-					createLayerListElement(
-						'Neighbourhoods',
-						'NeighbourhoodsSource',
-						'Polygon',
-						false,
-						'fa-border-all',
-						false,
-						neighbourhoodsData
-					);
-				} else {
-					console.log('No City Neighbourhoods data Exist');
-				}
-			} else {
-				console.log('Unable to load City Neighbourhoods data');
-			}
-			const treeResponse = await axiosCacheGetUtility(PUBLIC_TREES_URL);
-			if (treeResponse.status === 200) {
-				const rawTreesData = treeResponse.data.records;
 
-				if (rawTreesData.length >= 1) {
-					const treesData = rawKingstonTreeDataToGeojsonTrees(rawTreesData);
-					createLayerListElement(
-						'Trees',
-						'TreesSource',
-						'Point',
-						true,
-						'fa-border-all',
-						false,
-						treesData
-					);
-				} else {
-					console.log('No City Trees data Exist');
-				}
-			} else {
-				console.log('Unable to load City Trees data');
-			}
+			await fetchDataFromAPIAndCreateLayer(PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL, 'Neighbourhoods', false, 'Polygon', null, 'fa-border-all', false )
+			await fetchDataFromAPIAndCreateLayer(PUBLIC_TREES_URL, 'Trees', false, 'Point', 'Green', 'fa-border-all', false)
+			await fetchDataFromAPIAndCreateLayer(PUBLIC_PLANNING_URL, 'City Planning Points', false, 'Point', 'Blue', 'fa-border-all', false)
+			await fetchDataFromAPIAndCreateLayer(PUBLIC_PLANNING_POLYGON_URL, 'City Planning Area', false, 'Polygon', 'Purple', 'fa-border-all', false)
 
-			const planningResponse = await axiosCacheGetUtility(PUBLIC_PLANNING_URL);
-			if (planningResponse.status === 200) {
-				const rawPlanningData = planningResponse.data.records;
-
-				if (rawPlanningData.length >= 1) {
-					const planningData = rawKingstonDataToGeojsonData(rawPlanningData);
-
-					console.log(planningData)
-					createLayerListElement(
-						'City Planning Points',
-						'PlanningSource',
-						'Point',
-						true,
-						'fa-border-all',
-						false,
-						planningData
-					);
-				} else {
-					console.log('No Planning data Exist');
-				}
-			} else {
-				console.log('Unable to load City Planning data');
-			}
-
-
-			const planningPolygonResponse = await axiosCacheGetUtility(PUBLIC_PLANNING_POLYGON_URL);
-			if (planningPolygonResponse.status === 200) {
-				const rawPlanningPolygonData = planningPolygonResponse.data.records;
-
-				if (rawPlanningPolygonData.length >= 1) {
-					const planningData = rawKingstonDataToGeojsonData(rawPlanningPolygonData, 'Planning Polygon','Polygon', 'Purple');
-					createLayerListElement(
-						'City Planning Area',
-						'PlanningPolygpnSource',
-						'Polygon',
-						false,
-						'fa-border-all',
-						false,
-						planningData
-					);
-				} else {
-					console.log('No Planning data Exist');
-				}
-			} else {
-				console.log('Unable to load City Planning data');
-			}
+			addDataSources();
 
 		} catch (err) {
 			console.error(err);
-			console.log('Unable to fetch initial Map Data');
 		}
 
-		addDataSources();
+		
 	};
 	const addMapSource = (layerListElement) => {
 		try {
@@ -295,48 +237,7 @@
 		});
 	};
 
-	//* This polygon layer is used for city zones.
-	//* It is special because each layer changes opacity when the user hovers over the gps polygon
-	const addNeighbourhoodsLayer = (fillList, color = 'blue') => {
-		try {
-			map.addLayer({
-				id: fillList.layerName,
-				type: 'fill',
-				source: fillList.sourceName,
-				layout: {},
-				paint: {
-					'fill-color': color,
-					'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 1, 0.5]
-				}
-			});
-			map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
-			let hoveredStateId = null;
-			map.on('mousemove', fillList.layerName, (e) => {
-				if (e.features.length > 0) {
-					if (hoveredStateId !== null) {
-						map.setFeatureState(
-							{ source: fillList.sourceName, id: hoveredStateId },
-							{ hover: false }
-						);
-					}
-					hoveredStateId = e.features[0].id;
-					map.setFeatureState({ source: fillList.sourceName, id: hoveredStateId }, { hover: true });
-				}
-			});
-
-			map.on('mouseleave', fillList.layerName, () => {
-				if (hoveredStateId !== null) {
-					map.setFeatureState(
-						{ source: fillList.sourceName, id: hoveredStateId },
-						{ hover: false }
-					);
-				}
-				hoveredStateId = null;
-			});
-		} catch (err) {
-			console.log(err);
-		}
-	};
+	
 	const addPolygonLayer = (fillList, opacity = 0.5, color = 'red') => {
 		map.addLayer({
 			id: fillList.layerName,
@@ -473,15 +374,20 @@
 		}
 	};
 	const addExistingDynamicGPSElements = () => {
-		if (map === null || gpsData.length <= 0) return;
+		if (map === null || layerList.length <= 0) return;
 		try {
 			layerList.forEach(function (gpsElement) {
 				const dataName = gpsElement.layerName;
 				const dataType = gpsElement.type;
-				if (dataName.includes('GPS')) {
+				
+				if (dataName !== "3D-Buildings") {
 					addMapSource(gpsElement);
-					if (dataType === 'Point') {
-						addPointLayer(gpsElement, 'Size', ['get', 'Color']);
+					if (dataType === "Point") {
+						addPointLayer(gpsElement, "Count", ["get", "Color"]);
+					}
+
+					if(dataType === 'Polygon'){
+						addPolygonLayer(gpsElement, 0.5,  ["get", "Color"]);
 					}
 				}
 			});
@@ -492,6 +398,20 @@
 	const addNewDynamicGPSElements = () => {
 		if (map === null || gpsData.length <= 0) return;
 		try {
+
+			layerList.forEach(function (gpsElement) {
+				const layerName = gpsElement.layerName;
+				const sourceName = gpsElement.sourceName;
+				if (map.getLayer(layerName) && layerName!= '3D-Buildings') {
+					map.removeLayer(layerName);
+					map.removeSource(sourceName);
+				}
+			});
+
+			let tempLayerList = layerList;
+			tempLayerList = tempLayerList.filter((obj) => obj.layerName === '3D-Buildings');
+			layerList = tempLayerList
+
 			gpsData.forEach(function (rawGpsElement) {
 				const dataName = rawGpsElement.dataName;
 				const dataSourceName = `${dataName}Source`;
@@ -507,11 +427,14 @@
 					rawGpsElement
 				);
 				addMapSource(gpsElement);
-				if (dataType === 'Point') {
-					addPointLayer(gpsElement, 'Size', ['get', 'Color']);
+				if (dataType === "Point") {
+					addPointLayer(gpsElement, "Count", ["get", "Color"]);
+				}
+				
+				if(dataType === 'Polygon'){
+					addPolygonLayer(gpsElement, 0.5,  ["get", "Color"]);
 				}
 			});
-			clearPolygon();
 		} catch (err) {
 			console.log(err);
 		}
@@ -594,10 +517,9 @@
 			});
 		} catch (err) {
 			console.log(err);
-			console.log('Unable to resize the Map');
 		}
 	};
-	$: map && selectedMenu !== null && resizeMap();
+	$: map && selectedMenu && resizeMap();
 	$: map && mapStyle && isInitialDataLoaded && switchStyle();
 	$: map && gpsData && isInitialDataLoaded && addNewDynamicGPSElements();
 	$: map && mapDetails && isInitialDataLoaded && updateMapCenter();
@@ -635,6 +557,7 @@
 		const interval = setInterval(function () {
 			resizeMap();
 		}, 500);
+
 		map.on('draw.create', updatePolygon);
 		map.on('draw.delete', clearPolygon);
 		map.on('draw.update', updatePolygon);

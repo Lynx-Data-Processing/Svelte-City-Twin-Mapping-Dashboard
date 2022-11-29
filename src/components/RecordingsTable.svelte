@@ -1,12 +1,12 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import { getDevicon } from '../utils/devicon-icons';
-	export let eventList;
+	export let eventList: any;
 
 	const PROGRAMMING_TOOLS = ['googlecloud'];
 
 	let videoFiles = [];
-	let paginatedFiles = [];
+	let paginatedFiles: any = [];
 	let paginationPage = 0;
 	const numberOfItemsPerPageList = [10, 20, 30];
 	let numberOfItemsPerPage = numberOfItemsPerPageList[0];
@@ -19,7 +19,7 @@
 	});
 
 	//* Update the current pagination page
-	const setPaginationPage = (page) => {
+	const setPaginationPage = (page: number) => {
 		if (page < 0) {
 			paginationPage = 0;
 		} else if (page >= numberOfPages) {
@@ -42,7 +42,10 @@
 		);
 	};
 
-	let hideEventArray = [908858960990491, 909537321918290, 909018095295269, 909719704476540, 909019158951566, 909721602262269];
+	let hideEventArray = [
+		908858960990491, 909537321918290, 909018095295269, 909719704476540, 909019158951566,
+		909721602262269
+	];
 	$: eventList && updatePaginationFiles();
 </script>
 
@@ -71,31 +74,19 @@
 							<td class="w-32">
 								<img
 									src={event.snapshots[0].downloadUrl}
-									onerror="https://i.picsum.photos/id/870/200/300.jpg?blur=2&grayscale&hmac=ujRymp644uYVjdKJM7kyLDSsrqNSMVRPnGU99cKl6Vs"
 									alt="Dashcam"
 									class="h-full w-auto object-cover rounded-lg"
 								/>
 							</td>
 
 							<td class="w-32">
-								{#if hideEventArray.includes(event.id)}
-								
-
-									<img
-									src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYniamX9xxvMlgmWIrZXmiueRb_Errvrqkaw&usqp=CAU'}
-									onerror="https://i.picsum.photos/id/870/200/300.jpg?blur=2&grayscale&hmac=ujRymp644uYVjdKJM7kyLDSsrqNSMVRPnGU99cKl6Vs"
+								<img
+									src={!hideEventArray.includes(event.id)
+										? event.snapshots[1].downloadUrl
+										: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYniamX9xxvMlgmWIrZXmiueRb_Errvrqkaw&usqp=CAU'}
 									alt="Dashcam"
 									class="h-full w-auto object-cover rounded-lg"
 								/>
-								{:else}
-
-								<img
-								src={event.snapshots[1].downloadUrl}
-								onerror="https://i.picsum.photos/id/870/200/300.jpg?blur=2&grayscale&hmac=ujRymp644uYVjdKJM7kyLDSsrqNSMVRPnGU99cKl6Vs"
-								alt="Dashcam"
-								class="h-full w-auto object-cover rounded-lg"
-							/>
-								{/if}
 							</td>
 
 							<td>{event.deviceId}</td>
@@ -110,7 +101,6 @@
 											height="100"
 											width="auto"
 											title={icon}
-											key={icon}
 											class={`img-icon w-8 mx-2 py-2`}
 											alt=""
 											src={getDevicon(icon)}
@@ -136,7 +126,8 @@
 			<hr class="my-4" />
 			<p>{`${paginationFrom + 1}-${paginationTo} of ${videoFiles.length}`}</p>
 			<div class="flex items-center space-x-2 mt-2">
-				<button  disabled={(paginationPage === 0)}
+				<button
+					disabled={paginationPage === 0}
 					on:click={() => setPaginationPage(paginationPage - 1)}
 					class="px-4 py-2  btn-gray-sm"
 				>
@@ -152,7 +143,8 @@
 						{index}
 					</button>
 				{/each}
-				<button disabled={(paginationPage === numberOfPages-1)}
+				<button
+					disabled={paginationPage === numberOfPages - 1}
 					on:click={() => setPaginationPage(paginationPage + 1)}
 					class="px-4 py-2  btn-gray-sm "
 				>

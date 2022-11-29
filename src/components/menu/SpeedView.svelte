@@ -1,6 +1,6 @@
-<script>
+<script  lang="ts">
 	import { SPEED_COLORS } from '../../constants';
-	export let gpsData;
+	export let gpsData : any[];
 
 	let showTerms = true;
 	const toggleTerms = () => {

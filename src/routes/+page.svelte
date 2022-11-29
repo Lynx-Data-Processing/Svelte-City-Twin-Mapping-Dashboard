@@ -63,20 +63,7 @@
 			selected: [0, 300]
 		}
 	];
-	let devicesArray = [];
-	const fetchSmarterAIDevices = async () => {
-		const response = await getListOfDevicesUnderTenant();
-		if (response.status === 200) {
-			if (response.data.endpoints.length > 0) {
-				devicesArray = response.data.endpoints;
-			} else {
-				alert('Not able to fetch devices from Smarter AI');
-			}
-		} else {
-			alert(response);
-		}
-	};
-	fetchSmarterAIDevices();
+
 
 	let videoLinks = [];
 	const getGPSDataFromAllSmarterAIFiles = async (events) => {

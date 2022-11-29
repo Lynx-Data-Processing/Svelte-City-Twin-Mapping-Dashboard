@@ -1,10 +1,10 @@
-<script>
-	// @ts-nocheck
+<script lang="ts">
+	import type { dateTimeDictionaryType } from '../../types/types';
 
 	import area from '@turf/area';
-	export let dateTimeDictionary;
-	export let selectedPolygon;
-	export let fetchEventsData;
+	export let dateTimeDictionary : dateTimeDictionaryType;
+	export let selectedPolygon : any;
+	export let fetchEventsData : Function;
 
 	let areaString = '0m';
 	let areaNumber = 0;
@@ -52,7 +52,7 @@
 
 	{#if showTerms}
 		{#if areaNumber <= 15000000 && dateTimeDictionary.startDateTime && dateTimeDictionary.endDateTime}
-			<button class={`card-btn btn-green my-1`} on:click={fetchEventsData}
+			<button class={`card-btn btn-green my-1`} on:click={() => fetchEventsData()}
 				><i class="fa-solid fa-database " /> Search Data
 			</button>
 		{:else}

@@ -1,13 +1,7 @@
-<script>
+<script  lang="ts">
 	export let title = '';
-	/**
-	 * @type {any}
-	 */
-	export let selectedMenu;
-	/**
-	 * @type {any}
-	 */
-	export let menuComponents;
+	export let selectedMenu : number;
+	export let menuComponents : any;
 </script>
 
 <navbar class="shadow-lg z-50">

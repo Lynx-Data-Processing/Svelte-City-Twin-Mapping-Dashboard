@@ -1,11 +1,12 @@
-<script>
-	/**
-	 * @type {{ [x: string]: null; startDateTime?: any; endDateTime?: any; }}
-	 */
-	export let dateTimeDictionary;
+<script lang="ts">
+	import type { dateTimeDictionaryType } from '../../types/types';
+
+	export let dateTimeDictionary :dateTimeDictionaryType;
 
 	const clearDateTime = () => {
-		Object.keys(dateTimeDictionary).forEach((dateTime) => (dateTimeDictionary[dateTime] = null));
+		Object.keys(dateTimeDictionary).reduce((accumulator, key) => {
+		return {...accumulator, [key]: ''};
+		}, {});
 	};
 
 	let showTerms = true;

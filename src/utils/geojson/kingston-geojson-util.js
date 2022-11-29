@@ -90,7 +90,7 @@ export const rawKingstonTreeDataToGeojsonTrees = (rawData) => {
 };
 
 
-export const rawKingstonDataToGeojsonData = (rawData, name = 'General', geojsonDataType = 'Point', color= 'Blue') => {
+export const rawKingstonDataToGeojsonData = (rawData, name = 'General', geojsonDataType = 'Point', color= null) => {
   try {
     //* Set initial Geojson element details
     const dataName = rawData.dataName || name;
@@ -112,8 +112,16 @@ export const rawKingstonDataToGeojsonData = (rawData, name = 'General', geojsonD
 
       const properties = gpsElement.fields;
       properties.Size = 1;
-      properties.Color = color;
 
+      //* If a color was not specified, generate a random color
+      if(color){
+        properties.Color = color;
+      }
+      else{
+        let elementColor = (Math.floor(Math.random() * 16777215).toString(16)).toString();
+        properties.Color = elementColor.length !== 6 ?   elementColor.padEnd(6, '0')  :`#${elementColor}`;
+      }
+    
       //* Create the final feature config and add the feature id for the ability to hover
       const feature = {
         type: 'Feature', geometry: { type: geojsonDataType, coordinates }, properties,

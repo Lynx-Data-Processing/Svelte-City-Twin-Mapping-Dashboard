@@ -1,8 +1,5 @@
-<script>
+<script >
 	import RangeSlider from 'svelte-range-slider-pips';
-	/**
-	 * @type {any}
-	 */
 	export let gpsFilters;
 	export let gpsData;
 

@@ -1,4 +1,4 @@
-<script>
+<script >
 	import { onMount } from 'svelte/internal';
 	import { onDestroy } from 'svelte';
 

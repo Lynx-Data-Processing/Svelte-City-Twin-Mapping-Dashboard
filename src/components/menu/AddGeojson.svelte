@@ -1,5 +1,5 @@
-<script>
-	export let addGeojsonData;
+<script lang="ts">
+	export let addGeojsonData: Function;
 	let value = '';
 	let name = '';
 	let color = '#e66465';
@@ -29,36 +29,36 @@
 		</div>
 	</div>
 
-
-    {#if showTerms}
-
-	<div>
-		<hr class="my-2" />
-		<input class="border w-full my-1 rounded-lg p-2" placeholder="GEOJSON Name" bind:value={name} />
+	{#if showTerms}
 		<div>
-			<p>Data Color:</p>
-			<input class="my-1" type="color" id="head" name="head" bind:value={color} />
+			<hr class="my-2" />
+			<input
+				class="border w-full my-1 rounded-lg p-2"
+				placeholder="GEOJSON Name"
+				bind:value={name}
+			/>
+			<div>
+				<p>Data Color:</p>
+				<input class="my-1" type="color" id="head" name="head" bind:value={color} />
+			</div>
+
+			<textarea class="border my-1 p-2" placeholder="Add GEOJSON Data" bind:value />
+
+			<hr class="my-2" />
+
+			{#if value !== '' && name !== '' && color !== ''}
+				<button
+					class={`card-btn btn-primary my-1`}
+					on:click={() => addGeojsonData(value, name, 'Point', color)}
+					><i class="fa-solid fa-plus " /> Add Geojson Data
+				</button>
+			{:else}
+				<div class="alert alert-red my-1" role="alert">
+					Add a name, select a color, and add GEOJSON Data
+				</div>
+			{/if}
 		</div>
-
-		<textarea class="border my-1 p-2" placeholder="Add GEOJSON Data" bind:value />
-
-		<hr class="my-2" />
-
-       {#if value !== '' && name !== '' && color !== ''}
-         <!-- content here -->
-     
-		<button
-			class={`card-btn btn-primary my-1`}
-			on:click={() => addGeojsonData(value, name, 'Point', color)}
-			><i class="fa-solid fa-plus " /> Add Geojson Data
-		</button>
-
-        {:else}
-		<div class="alert alert-red my-1" role="alert">Add a name, select a color, and add GEOJSON Data</div>
 	{/if}
-	</div>
-
-    {/if}
 </section>
 
 <style>

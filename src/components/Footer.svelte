@@ -1,28 +1,12 @@
-<script>
-// @ts-nocheck
+<script  lang="ts">
 
+	import { getDevicon } from '../utils/devicon-icons';
 	import { ABOUT_LIST, APPLICATION_TOOLS_LIST, DETAILS_LIST, PROGRAMMING_TOOLS } from "../constants";
 
-	const returnLinkGivenIfStringContains = (toolString) => {
-		if (toolString.includes("streamlit")) {
-			return `icons/${toolString}-original.svg`;
-		}
 
-		if (toolString.includes("plain")) {
-			const tempString = toolString.replace("-plain", "");
-			return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tempString}/${tempString}-plain.svg`;
-		}
-
-		if (toolString.includes("wordmark")) {
-			const tempString = toolString.replace("-wordmark", "");
-			return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tempString}/${tempString}-wordmark.svg`;
-		}
-
-		return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${toolString}/${toolString}-original.svg`;
-	};
 </script>
 
-<hr />
+
 <footer class="bg-smoke  py-8 px-8">
 	<div class="grid grid-cols-1 md:grid-cols-3 py-2 mb-8">
 		<div class="col-span-1 ">
@@ -79,7 +63,7 @@
 
 			<div class="flex flex-wrap justify-between  ">
 				{#each PROGRAMMING_TOOLS as tool}
-				<img height="100" width="auto" title={tool}  class={`img-icon w-8 mx-2 py-2`} alt="" src={returnLinkGivenIfStringContains(tool)} loading="lazy" />
+				<img height="100" width="auto" title={tool}  class={`img-icon w-8 mx-2 py-2`} alt="" src={getDevicon(tool)} loading="lazy" />
 				{/each}
 	
 			</div>

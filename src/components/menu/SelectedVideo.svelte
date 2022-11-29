@@ -1,8 +1,7 @@
-<script>
-	import { axiosBlobUtility } from '../../utils/fetch-data'
-	export let selectedEvent;
-	export let videoLinks;
-	let videoUrl = null;
+<script  lang="ts">
+	export let selectedEvent : any;
+	export let videoLinks : any[];
+	let videoUrl : string = '';
 
 
 	const updateVideoUrl = async () => {
@@ -11,14 +10,14 @@
 			videoUrl = `/USARS_Machine_Learning/${selectedEvent.data.EventId}-converted.mp4`;
 		}
 		else{
-			videoUrl = videoLinks.find(o=>  o.eventId === selectedEvent.data.EventId).videoUrl;
-
+			const tempUrl = videoLinks.find(o=>  o.eventId === selectedEvent.data.EventId);
+			videoUrl =  tempUrl || '';
 		}
 	};
 	$: selectedEvent && updateVideoUrl();
 </script>
 
-<section class="card {selectedEvent ? 'h-96' : 'h-fit'} scale-in-center">
+<section class="card {selectedEvent ? 'h-96' : 'h-fit'} scale-in-center w-[32rem]">
 	{#if selectedEvent && videoUrl}
 
 		<video 
