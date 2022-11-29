@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { layerLisElementType, gpsFilterType, dateTimeDictionaryType, selectedPOIType, mapDetailsType , videoType} from '../../types/types';
+	import type { layerLisElementType, gpsFilterType, dateTimeDictionaryType, selectedPOIType, mapDetailsType , videoType, selectedEventType} from '../../types/types';
 	import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
 	import {
@@ -35,7 +35,7 @@
 	export let isReadyForStyleSwitching : boolean;
 	export let mapDetails : mapDetailsType;
 	export let selectedPOI : selectedPOIType | null;
-	export let selectedEvent : any;
+	export let selectedEvent : selectedEventType | null;
 	export let gpsData : any;
 	export let gpsFilters : gpsFilterType[];
 	export let selectedMenu : number;
@@ -149,7 +149,7 @@
 				data: layerListElement.data
 			});
 		} catch (err) {
-			console.error(err);
+			
 		}
 	};
 	const addDataSources = () => {
@@ -544,6 +544,8 @@
 		map.on('draw.delete', clearPolygon);
 		map.on('draw.update', updatePolygon);
 		map.on('contextmenu', clearPolygon);
+
+		resizeMap();
 	});
 	onDestroy(() => {
 		try {

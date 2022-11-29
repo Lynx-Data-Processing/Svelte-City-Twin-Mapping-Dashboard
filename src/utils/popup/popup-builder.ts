@@ -20,18 +20,15 @@ export const buildPopup = async (features : any, layerName : string, videoLinks 
   if (layerName.includes('GPS')) {
   
     let src = '';
-    if(features.properties.DeviceId === 'CK20520033'){
-      src = `/USARS_Machine_Learning/${features.properties.EventId}-converted.mp4`;
-    }
-    else{
-      if(features.properties.DeviceId === 'CK20520033'){
-        src = `/USARS_Machine_Learning/${features.properties.EventId}-converted.mp4`;
-      }
-      else{
-        const tempVideo = videoLinks.find(o=>  o.eventId === features.properties.EventId);
-        src =  tempVideo?.videoUrl || '';
-      }
-    }
+    // if(features.properties.DeviceId === 'CK20520033'){
+    //   src = `/USARS_Machine_Learning/${features.properties.EventId}-converted.mp4`;
+    // }
+    // else{
+      
+    // }
+
+    const videos = videoLinks.filter(o=>  o.eventId === features.properties.EventId);
+    src =  videos.length ? videos[0].videoUrl! : '';
 
     if (!src) {
       // create div to store the image in

@@ -1,14 +1,19 @@
 <script  lang="ts">
-	export let selectedEvent : any;
-	export let videoArray : any[];
+		import type {
+		selectedEventType,
+		videoType,
+	} from '../../types/types';
+
+
+	export let selectedEvent : selectedEventType | null = null;
+	export let videoArray : videoType[];
 	let videoUrl : string = '';
 
-
 	const updateVideoUrl = async () => {
-	
-		const tempUrl = videoArray.find(o=>  o.eventId === selectedEvent.data.EventId);
-		videoUrl =  tempUrl || '';
-
+		if(selectedEvent){
+			const videos : videoType[] = videoArray.filter(o=>  o.eventId === selectedEvent!.data.EventId);
+			videoUrl = videos.length ? videos[0].videoUrl! : '';
+		}
 		// if(selectedEvent.data.DeviceId === 'CK20520033'){
 		// 	videoUrl = `/USARS_Machine_Learning/${selectedEvent.data.EventId}-converted.mp4`;
 		// }

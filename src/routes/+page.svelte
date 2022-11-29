@@ -120,7 +120,7 @@
 		//* If data exists, create the GPS Geojson layer
 		if (tempGPSList.length) {
 			gpsData = rawSmarterAIGPSDataToGeojson(tempGPSList);
-			updateMapCenter(gpsData[0].geometry.coordinates);
+			updateMapCenter(gpsData[0].features[0].geometry.coordinates);
 
 			//* Get the video links
 			for (const geojson of gpsData) {
@@ -143,6 +143,8 @@
 				}
 			}
 		}
+
+		console.log('Video Array', videoArray);
 	};
 
 	let eventList: eventType[] = [];
