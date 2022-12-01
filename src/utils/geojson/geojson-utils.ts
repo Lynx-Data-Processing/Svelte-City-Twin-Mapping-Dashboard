@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { SPEED_COLORS } from '../../constants';
 
+import { GeojsonEnum, GeojsonDataEnum } from '../../types/enums';
 import type { geojsonFeatureType , geojsonType} from '../../types/types';
 
 //* Get a color for every 10km/h
@@ -48,9 +49,9 @@ export const rawSmarterAIGPSDataToGeojson = (rawData : any) => {
     try {
 
       //* Set initial Geojson element details
-      const dataName = rawData.dataName || `GPS - ${deviceId}`;
+      const dataName = rawData.dataName || `${GeojsonDataEnum.GPS} - ${deviceId}`;
       const dateTime = rawData.dateTime || uuidv4();
-      const dataType = rawData.dataType || 'Point';
+      const dataType = rawData.dataType || GeojsonEnum.Point;
       const hasFilter = rawData.hasFilter || true;
       //* Create Geojson feature collection
       const geoJson : geojsonType = {
@@ -75,7 +76,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData : any) => {
           properties.Color = getVehicleSpeedColor(getSpeed(properties));
 
           //* Create the final feature config and push it to the feature array
-          const feature : geojsonFeatureType = { type: 'Feature', geometry: { type: 'Point', coordinates }, properties };
+          const feature : geojsonFeatureType = { type: 'Feature', geometry: { type: GeojsonEnum.Point, coordinates }, properties };
           geoJson.features.push(feature);
           
         }
@@ -93,7 +94,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData : any) => {
 };
 
 
-export const rawGPSDataToGeojsonData = (rawData : any, name = 'General', geojsonDataType = 'Point', color= 'Blue') => {
+export const rawGPSDataToGeojsonData = (rawData : any, name = 'General', geojsonDataType = GeojsonEnum.Point, color= 'Blue') => {
   try {
 
     rawData = JSON.parse(rawData)

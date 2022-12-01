@@ -94,6 +94,7 @@ export type menuComponentsType = {
     icon: string,
 }
 
+
 export type selectedPOIType = {
     lat: number,
     lng: number,

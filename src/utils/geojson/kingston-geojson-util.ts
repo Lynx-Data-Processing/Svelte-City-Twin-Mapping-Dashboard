@@ -1,19 +1,20 @@
+import { GeojsonDataEnum } from './../../types/enums';
 /* eslint-disable prefer-destructuring */
 /* eslint-disable max-len */
 /* eslint-disable dot-notation */
 /* eslint-disable no-restricted-syntax */
 import { v4 as uuidv4 } from 'uuid';
 import type { geojsonFeatureType , geojsonType} from '../../types/types';
-
+import { GeojsonEnum } from '../../types/enums';
 
 //* The Kingston API Json data needs to be cleaned
 //* To use the data on mapbox, the data must be in GEOJSON format
 //* All neighbourhoods are polygons
 export const rawKingstonGPSDataToGeojsonNeighbourhoods = (rawData : any) => {
   //* Set initial Geojson element details
-  const dataName = rawData.dataName ? rawData.dataName : 'Neighbourhoods';
+  const dataName = rawData.dataName ? rawData.dataName : GeojsonDataEnum.Neighbourhoods;
   const dateTime = rawData.dateTime ? rawData.dateTime : uuidv4();
-  const dataType = rawData.dataType ? rawData.dataType : 'Polygon';
+  const dataType = rawData.dataType ? rawData.dataType : GeojsonEnum.Polygon;
   const hasFilter = rawData.hasFilter || false;
 
   //* Create Geojson feature collection
@@ -48,7 +49,7 @@ export const rawKingstonGPSDataToGeojsonNeighbourhoods = (rawData : any) => {
 
     //* Create the final feature config and add the feature id for the ability to hover
     const feature : geojsonFeatureType = {
-      type: 'Feature', geometry: { type: 'Polygon', coordinates }, properties,
+      type: 'Feature', geometry: { type: GeojsonEnum.Polygon, coordinates }, properties,
     };
     geoJson.features.push(feature);
   }
@@ -58,9 +59,9 @@ export const rawKingstonGPSDataToGeojsonNeighbourhoods = (rawData : any) => {
 // trees
 export const rawKingstonTreeDataToGeojsonTrees = (rawData : any) => {
   //* Set initial Geojson element details
-  const dataName = rawData.dataName || 'Trees';
+  const dataName = rawData.dataName || GeojsonDataEnum.Trees;
   const dateTime = rawData.dateTime || uuidv4();
-  const dataType = rawData.dataType || 'Point';
+  const dataType = rawData.dataType || GeojsonEnum.Point;
   const hasFilter = rawData.hasFilter || false;
 
   //* Create Geojson feature collection
@@ -97,7 +98,7 @@ export const rawKingstonTreeDataToGeojsonTrees = (rawData : any) => {
 };
 
 
-export const rawKingstonDataToGeojsonData = (rawData : any, name = 'General', geojsonDataType = 'Point', color= 'Random') => {
+export const rawKingstonDataToGeojsonData = (rawData : any, name = 'General', geojsonDataType = GeojsonEnum.Point, color= 'Random') => {
   try {
     //* Set initial Geojson element details
     const dataName = rawData.dataName || name;
