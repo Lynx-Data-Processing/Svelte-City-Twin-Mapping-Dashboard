@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { GeojsonEnum, GeojsonDataEnum } from '../../types/enums';
-	import type { layerLisElementType, gpsFilterType, dateTimeDictionaryType, selectedPOIType, mapDetailsType , videoType, selectedEventType} from '../../types/types';
+	import type { layerLisElementType, gpsFilterType, dateTimeDictionaryType, selectedPOIType, mapDetailsType , videoType, selectedEventType, geojsonType} from '../../types/types';
+	import { GeojsonEnum } from '../../types/enums';
 	import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
 	import {
@@ -18,7 +18,8 @@
 		PUBLIC_TREES_URL,
 		PUBLIC_PLANNING_URL,
 		PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
-		PUBLIC_PLANNING_POLYGON_URL
+		PUBLIC_PLANNING_POLYGON_URL,
+		PUBLIC_ROADS_URL
 	} from '$env/static/public';
 
 	import { v4 as uuidv4 } from 'uuid';
@@ -132,10 +133,8 @@
 
 
 			await fetchDataFromAPIAndCreateLayer(PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL, 'Neighbourhoods', false, GeojsonEnum.Polygon, 'Random', 'fa-border-all', false )
-			await fetchDataFromAPIAndCreateLayer(PUBLIC_TREES_URL, 'Trees', false, GeojsonEnum.Point, 'Green', 'fa-border-all', false)
-			await fetchDataFromAPIAndCreateLayer(PUBLIC_PLANNING_URL, 'City Planning Points', false, GeojsonEnum.Point, 'Blue', 'fa-border-all', false)
-			await fetchDataFromAPIAndCreateLayer(PUBLIC_PLANNING_POLYGON_URL, 'City Planning Area', false, GeojsonEnum.Polygon, 'Purple', 'fa-border-all', false)
-
+			await fetchDataFromAPIAndCreateLayer(PUBLIC_TREES_URL, 'Trees', true, GeojsonEnum.Point, 'Green', 'fa-border-all', false)
+			
 
 		} catch (err) {
 			console.error(err);
@@ -154,6 +153,7 @@
 		}
 	};
 	const addDataSources = () => {
+		console.log('Adding Data Sources');
 		try {
 			addTerrainLayer();
 			//* Add the additional layers
@@ -319,7 +319,7 @@
 			map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
 			map.moveLayer(fillList.layerName);
 			map.on('click', fillList.layerName, async (e : any) => {
-				if (fillList.layerName.includes(GeojsonDataEnum.GPS)) {
+				if (fillList.layerName.includes('GPS')) {
 					selectedEvent = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
 					selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
 				} else {
@@ -429,7 +429,7 @@
 		try {
 			map.setStyle('mapbox://styles/mapbox/' + mapStyle);
 		} catch (err) {
-			console.error(err);
+			console.log(err);
 		}
 	};
 	const createFilterArray = () => {
@@ -456,12 +456,13 @@
 				const dataName = gpsElement.layerName;
 				const hasFilter = gpsElement.hasFilter;
 
-				if (dataName.includes(GeojsonDataEnum.GPS) && hasFilter) {
+				if (dataName.includes('GPS') && hasFilter) {
 					map.setFilter(dataName, filterArray);
 				}
 			});
 		} catch (err) {
 			console.log(err);
+			console.log('Unable to add GPS Filters');
 		}
 	};
 	const addMapFilter = () => {
@@ -483,14 +484,13 @@
 			}
 		} catch (err) {
 			console.log(err);
+			console.log('Unable to add GPS Filters');
 		}
 	};
 	const resizeMap = () => {
 		try {
 			map.resize();
-		} catch (err) {
-			console.log(err);
-		}
+		} catch (err) {}
 	};
 	const updateMapCenter = () => {
 		if (map === null) return;
@@ -532,7 +532,6 @@
 		map.on('style.load', function () {
 			addDataSources();
 			if (gpsData) addExistingDynamicGPSElements();
-			resizeMap();
 		});
 		// Mapboxs normal way to show and hide layers. This calls the filter every second
 		map.on('idle', () => {
@@ -546,7 +545,7 @@
 		map.on('draw.update', updatePolygon);
 		map.on('contextmenu', clearPolygon);
 
-		
+		resizeMap();
 	});
 	onDestroy(() => {
 		try {

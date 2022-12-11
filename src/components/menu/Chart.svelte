@@ -151,7 +151,7 @@
 	});
 </script>
 
-<section class="card h-fit scale-in-center p-4">
+<section class="card h-fit slide-in-left p-4">
 	<p class=" my-1">Speed Legend (Km/h):</p>
 	
 

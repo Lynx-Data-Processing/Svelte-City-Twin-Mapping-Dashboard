@@ -83,8 +83,10 @@ export const rawSmarterAIGPSDataToGeojson = (rawData : any) => {
        
       }
 
-      geoJsonArray.push(geoJson);
-
+      //* Push the geojson element to the array if it has features
+      if(geoJson.features.length > 0){
+        geoJsonArray.push(geoJson);
+      }
     }
     catch (err) {
       console.error(err)

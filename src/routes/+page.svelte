@@ -11,8 +11,9 @@
 		menuComponentsType
 	} from '../types/types';
 
+	import { GeojsonEnum } from '../types/enums';
+
 	import Map from '../components/map/Map.svelte';
-	import SearchDetails from '../components/menu/SearchDetails.svelte';
 	import DateTime from '../components/menu/DateTime.svelte';
 	import Layers from '../components/map/Layers.svelte';
 	import MapStyleSelector from '../components/map/MapStyleSelector.svelte';
@@ -24,6 +25,7 @@
 		rawSmarterAIGPSDataToGeojson,
 		rawGPSDataToGeojsonData
 	} from '../utils/geojson/geojson-utils.js';
+	import { getGPSSensorDataFromEventFiles } from '../utils/geojson/gpsData-utils';
 	import {
 		getListOfDevicesUnderTenant,
 		getAllEvents,
@@ -35,8 +37,8 @@
 	import SelectedVideo from '../components/menu/SelectedVideo.svelte';
 	import AddGeojson from '../components/menu/AddGeojson.svelte';
 	//* Set Initial Map Details
-	let isReadyForStyleSwitching : boolean = false;
-	let mapStyle : string = 'outdoors-v11';
+	let isReadyForStyleSwitching: boolean = false;
+	let mapStyle: string = 'outdoors-v11';
 	let mapDetails: mapDetailsType = {
 		id: 0,
 		center: [-76.491143, 44.231689],
@@ -51,22 +53,22 @@
 	let selectedPolygon: object | null = null;
 
 	//* Set Payload details for fetching
-	let dateTimeDictionary : dateTimeDictionaryType = {
+	let dateTimeDictionary: dateTimeDictionaryType = {
 		startDateTime: '2022-10-23T00:00',
 		endDateTime: '2022-12-23T00:00'
 	};
-	let menuComponents : menuComponentsType[] = [
+	let menuComponents: menuComponentsType[] = [
 		{ id: 0, title: 'Search Data', icon: 'fa-database' },
 		{ id: 1, title: 'Street View', icon: 'fa-road' },
 		{ id: 2, title: 'Filter View', icon: 'fa-filter' },
 		{ id: 3, title: 'Video Player', icon: 'fa-video' },
 		{ id: 4, title: 'Add Geojson', icon: 'fa-map' }
 	];
-	let selectedMenu : number = menuComponents[0].id;
+	let selectedMenu: number = menuComponents[0].id;
 	let isLoading = true;
 	let isError = false;
 	let gpsData: any[] = [];
-	let gpsFilters : gpsFilterType[] = [
+	let gpsFilters: gpsFilterType[] = [
 		{
 			id: 'Speed',
 			name: 'Speed Filter',
@@ -77,60 +79,39 @@
 		}
 	];
 
-	const updateMapCenter = (coordinates : number[]) => {
+	const updateMapCenter = (coordinates: number[]) => {
 		mapDetails = {
 			id: 0,
 			center: coordinates,
 			zoom: 15,
 			pitch: 0,
-			bearing: -17.6,
+			bearing: -17.6
 		};
 	};
 
 	let videoArray: videoType[] = [];
-	const getMediaEventsFromAllSmarterAIFiles = async (events: eventType[]) => {
-		//* Preapre the GPS Array
-		let tempGPSList = [];
-		for (let index = 0; index < events.length; index++) {
-			const event = events[index];
-			const sensorDonloadUrl = event.snapshots[2].downloadUrl;
-			const response = await getGeojsonDataFromFile(sensorDonloadUrl);
-			try {
-				if (response.status === 200) {
-					if (response.data) {
-						//* Add additional properties to the GPS data
-						let gpsRawData = response.data;
-						gpsRawData['id'] = event.id;
-						gpsRawData['deviceId'] = event.deviceId;
-						gpsRawData['endpointId'] = event.endpointId;
-						gpsRawData['recordingStartTimestamp'] = event.recordingStartTimestamp;
-						gpsRawData['recordingEndTimestamp'] = event.recordingEndTimestamp;
-						tempGPSList.push(gpsRawData);
-					} else {
-						console.log('Not able to fetch devices from Smarter AI');
-					}
-				} else {
-					console.error('Unable load File GPS Data');
-				}
-			} catch (err) {
-				console.error(err);
-			}
-		}
+	let eventList: eventType[] = [];
+	const getMediaEventsFromAllSmarterAIFiles = async (rawEventList: eventType[]) => {
+	
+		const [tempGPSList, tempEventList]  = await getGPSSensorDataFromEventFiles(rawEventList);
+		eventList = tempEventList;
 
 		//* If data exists, create the GPS Geojson layer
 		if (tempGPSList.length) {
-			gpsData = rawSmarterAIGPSDataToGeojson(tempGPSList);
+			const tempGeojsonData = rawSmarterAIGPSDataToGeojson(tempGPSList);
+			if (!tempGeojsonData) return;
+			gpsData = tempGeojsonData;
 			updateMapCenter(gpsData[0].features[0].geometry.coordinates);
 
-			//* Get the video links
+			let tempVideoArray: videoType[] = [];
 			for (const geojson of gpsData) {
 				for (const gpsElement of geojson.features) {
-					const videoLink : string = await findVideo(
+					const videoLink: string = await findVideo(
 						gpsElement.properties.StartTime,
 						gpsElement.properties.EndTime,
 						gpsElement.properties.EndpointId
 					);
-					const video : videoType= {
+					const video: videoType = {
 						eventId: gpsElement.properties.EventId,
 						deviceId: gpsElement.properties.DeviceId,
 						endpointId: gpsElement.properties.EndpointId,
@@ -139,46 +120,51 @@
 						videoUrl: videoLink
 					};
 
-					videoArray.push(video);
+					tempVideoArray.push(video);
 				}
 			}
+			videoArray = tempVideoArray;
 		}
 
 		console.log('Video Array', videoArray);
 	};
 
-	let eventList: eventType[] = [];
 	const fetchEventsData = async () => {
 		isLoading = true;
 		isError = false;
-		const response = await getAllEvents(
-			dateTimeDictionary.startDateTime,
-			dateTimeDictionary.endDateTime
-		);
-		if (response && response.status === 200) {
-			if (response.data) {
-				eventList = response.data.eventList;
 
-				await getMediaEventsFromAllSmarterAIFiles(eventList);
+		try {
+			const response = await getAllEvents(
+				dateTimeDictionary.startDateTime,
+				dateTimeDictionary.endDateTime
+			);
+
+			if (response && response.status === 200 && response.data) {
+				const rawEventList = response.data.eventList;
+				await getMediaEventsFromAllSmarterAIFiles(rawEventList);
 			} else {
 				alert('No GPS Events found');
 			}
-		} else {
-			alert(response);
+		} catch (err) {
+			alert(err);
 			isError = true;
 		}
+
 		isLoading = false;
 	};
 
-	const addGeojsonData = (input : object, name = "Own Data", dataType = "Point", color = "Red") => {
+	const addGeojsonData = (
+		input: object,
+		name = 'Own Data',
+		dataType = GeojsonEnum.Point,
+		color = 'Red'
+	) => {
 		gpsData = [rawGPSDataToGeojsonData(input, name, dataType, color)];
-		if(dataType ==='Point'){
-			updateMapCenter(gpsData[0].features[0].geometry.coordinates)
+		if (dataType === 'Point') {
+			updateMapCenter(gpsData[0].features[0].geometry.coordinates);
+		} else {
+			updateMapCenter(gpsData[0].features[0].geometry.coordinates[0][0]);
 		}
-		else{
-			updateMapCenter(gpsData[0].features[0].geometry.coordinates[0][0])
-		}
-		
 	};
 </script>
 
@@ -205,8 +191,7 @@
 				<div class={`flex flex-col gap-4`}>
 					<Layers bind:layerList />
 					{#if selectedMenu === 0}
-						<DateTime bind:dateTimeDictionary />
-						<SearchDetails bind:dateTimeDictionary bind:selectedPolygon {fetchEventsData} />
+						<DateTime bind:dateTimeDictionary bind:selectedPolygon {fetchEventsData} />
 					{:else if selectedMenu === 1}
 						<StreetView bind:selectedPOI />
 					{:else if selectedMenu === 2}

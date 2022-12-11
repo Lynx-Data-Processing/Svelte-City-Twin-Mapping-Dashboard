@@ -13,9 +13,35 @@
 	const toggleTerms = () => {
 		showTerms = !showTerms;
 	};
+
+	import area from '@turf/area';
+	export let selectedPolygon : any;
+	export let fetchEventsData : Function;
+
+	let areaString = '0m';
+	let areaNumber = 0;
+	const calculateArea = () => {
+		try {
+			const areaMeters = area(selectedPolygon);
+
+			areaNumber = areaMeters;
+			areaString =
+				areaMeters < 1000000
+					? areaMeters.toFixed(2) + 'm\xB2'
+					: (areaMeters / 1000000).toFixed(2) + 'Km\xB2';
+
+			console.log(areaNumber);
+		} catch (err) {
+			areaString = 'Error calculating area.';
+		}
+	};
+	//$: selectedPolygon && calculateArea();
 </script>
 
-<section class="card h-fit scale-in-center p-4">
+
+
+
+<section class="card h-fit slide-in-left p-4 w-[32rem]">
 	<div class="flex flow-row justify-between my-1">
 		<div>
 			<p>Date Time Selection:</p>
@@ -36,6 +62,7 @@
 
 	{#if showTerms}
 		<div class="datepicker form-floating my-1  w-full" data-mdb-toggle-button="false">
+			<label for="floatingInput">Select Start date</label>
 			<input
 				type="datetime-local"
 				class="form-control date-picker p-2"
@@ -45,10 +72,11 @@
 				max="2022-12-31"
 				bind:value={dateTimeDictionary.startDateTime}
 			/>
-			<label for="floatingInput">Select Start date</label>
+		
 		</div>
 
 		<div class="datepicker form-floating my-1 w-full" data-mdb-toggle-button="false">
+			<label for="floatingInput">Select End date</label>
 			<input
 				type="datetime-local"
 				class="form-control date-picker p-2"
@@ -58,7 +86,7 @@
 				max="2022-12-31"
 				bind:value={dateTimeDictionary.endDateTime}
 			/>
-			<label for="floatingInput">Select End date</label>
+		
 		</div>
 
 		{#if dateTimeDictionary.startDateTime && dateTimeDictionary.endDateTime}
@@ -70,6 +98,18 @@
 			</div>
 		{:else}
 			<div class="alert alert-red my-1" role="alert">Select a Date and Time before Searching.</div>
+		{/if}
+
+
+		<p>Search Vehicle Data:</p>
+		{#if areaNumber <= 15000000 && dateTimeDictionary.startDateTime && dateTimeDictionary.endDateTime}
+			<button class={`card-btn btn-primary my-1`} on:click={() => fetchEventsData()}
+				><i class="fa-solid fa-database " /> Search Data
+			</button>
+		{:else}
+			<div class="alert alert-red my-1" role="alert">
+				Select a Date, Time, and a Valid Polygon before Searching.
+			</div>
 		{/if}
 	{/if}
 </section>

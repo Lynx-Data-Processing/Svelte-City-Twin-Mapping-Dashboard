@@ -18,7 +18,7 @@
 	};
 </script>
 
-<section class="card h-fit scale-in-center p-4 w-[32rem]">
+<section class="card h-fit slide-in-left p-4 w-[32rem]">
 	<div class="flex flow-row justify-between my-1">
 		<div>
 			<p>Filter:</p>

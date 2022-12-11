@@ -1,7 +1,7 @@
 <script lang="ts">
-		import type { layerLisElementType } from '../../types/types';
+	import type { layerLisElementType } from '../../types/types';
 
-	export let layerList : layerLisElementType[] = [];
+	export let layerList: layerLisElementType[] = [];
 	let showAllLayers = false;
 	const toggleLayers = () => {
 		try {
@@ -15,7 +15,7 @@
 			showAllLayers = !showAllLayers;
 		} catch (e) {}
 	};
-	const toggleLayer = (selectedLayer : layerLisElementType) => {
+	const toggleLayer = (selectedLayer: layerLisElementType) => {
 		try {
 			// Get the object from the list and toggle the is shown
 			let tempCollection = layerList;
@@ -33,23 +33,53 @@
 		let initialIsShown = layerList[0].isShown;
 		return layerList.every((element) => element.isShown === initialIsShown);
 	};
+
+	let showTerms = true;
+	const toggleTerms = () => {
+		showTerms = !showTerms;
+	};
 </script>
 
-<section class="card h-fit scale-in-center p-4">
-	<p class=" my-1">Layers:</p>
-
-	
-	{#if layerList.length}
-		<button on:click={toggleLayers} class={`card-btn   ${showAllLayers ? "btn-green" : " btn-error-outline"}  my-1 `}> {showAllLayers ? "Show All" : "Disable All"} </button>
-		<div class="flex flex-col ">
-			{#each layerList as layer}
-				<button  on:click={() => toggleLayer(layer)} class={`card-btn  ${layer.isShown ? "btn-primary" : "btn-black-outline"} my-1 `}>
-					<i class="fa-solid {layer.icon} " />
-					{layer.layerName}
-				</button>
-			{/each}
+<section class="card h-fit slide-in-left p-4">
+	<div class="flex flow-row justify-between my-1">
+		<div>
+			<p>Layers:</p>
 		</div>
-	{:else}
-		<div class="alert alert-green my-1" role="alert">Loading Data.</div>
+
+		<div>
+			<button on:click={toggleTerms} class="toggle-btn text-center hover:underline">
+				{#if showTerms}
+					<i class="fa-solid fa-arrow-up" />
+					<span>Hide</span>
+				{:else}
+					<i class="fa-solid fa-arrow-down" />
+					<span>Show</span>
+				{/if}
+			</button>
+		</div>
+	</div>
+
+	{#if showTerms}
+		{#if layerList.length}
+			<button
+				on:click={toggleLayers}
+				class={`card-btn   ${showAllLayers ? 'btn-green' : ' btn-error-outline'}  my-1 `}
+			>
+				{showAllLayers ? 'Show All' : 'Disable All'}
+			</button>
+			<div class="flex flex-col ">
+				{#each layerList as layer}
+					<button
+						on:click={() => toggleLayer(layer)}
+						class={`card-btn  ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} my-1 `}
+					>
+						<i class="fa-solid {layer.icon} " />
+						{layer.layerName}
+					</button>
+				{/each}
+			</div>
+		{:else}
+			<div class="alert alert-green my-1" role="alert">Loading Data.</div>
+		{/if}
 	{/if}
 </section>

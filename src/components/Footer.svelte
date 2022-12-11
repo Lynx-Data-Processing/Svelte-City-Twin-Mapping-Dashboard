@@ -1,47 +1,15 @@
 <script  lang="ts">
 
 	import { getDevicon } from '../utils/devicon-icons';
-	import { ABOUT_LIST, APPLICATION_TOOLS_LIST, DETAILS_LIST, PROGRAMMING_TOOLS } from "../constants";
+	import { PROGRAMMING_TOOLS } from "../constants";
 
 
 </script>
 
 
 <footer class="bg-smoke  py-8 px-8">
-	<div class="grid grid-cols-1 md:grid-cols-3 py-2 mb-8">
-		<div class="col-span-1 ">
-			<p class="font-bold">About</p>
 
-			{#each APPLICATION_TOOLS_LIST as item}
-				<div  class="my-2">
-					<a href={`${item.link}`} target="_blank" class="text-sm  hover:underline" rel="noreferrer">{item.name}</a>
-				</div>
-			{/each}
-		</div>
-
-		<div class="col-span-1">
-			<p class="font-bold">Application Tools</p>
-			{#each APPLICATION_TOOLS_LIST as item}
-				<div class="my-2">
-					<a href={`${item.link}`} target="_blank" rel="noreferrer" class="text-sm  hover:underline">{item.name}</a>
-				</div>
-			{/each}
-		</div>
-
-		<div class="col-span-1 ">
-			<p class="font-bold">Details</p>
-
-			{#each APPLICATION_TOOLS_LIST as item}
-				<div class="my-2">
-					<a href={`${item.link}`} target="_blank" class="text-sm  hover:underline" rel="noreferrer">{item.name}</a>
-				</div>
-			{/each}
-		</div>
-	</div>
-
-	<hr />
-
-	<div class="grid grid-cols-1 sm:grid-cols-3 mt-8">
+	<div class="grid grid-cols-1 sm:grid-cols-3 ">
 		<div class="col-span-1">
 			<p>© USARs. All rights reserved.</p>
 			<p class="text-xs my-2">Website Terms and Policies</p>

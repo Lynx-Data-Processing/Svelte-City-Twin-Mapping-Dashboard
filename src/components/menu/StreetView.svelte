@@ -53,11 +53,11 @@
 	};
 </script>
 
-<section class="card h-fit scale-in-center w-[32rem]">
+<section class="card h-fit slide-in-left w-[32rem]">
 
 	{#if selectedPOI == null}
 		<div class="p-4">
-			<p class="font-bold my-1">Street View:</p>
+			<p class="my-1">Street View:</p>
 			<div class="alert alert-red my-1" role="alert">Select a point on the map.</div>
 		</div>
 		

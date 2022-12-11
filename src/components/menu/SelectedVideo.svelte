@@ -10,22 +10,14 @@
 	let videoUrl : string = '';
 
 	const updateVideoUrl = async () => {
-		if(selectedEvent){
-			const videos : videoType[] = videoArray.filter(o=>  o.eventId === selectedEvent!.data.EventId);
-			videoUrl = videos.length ? videos[0].videoUrl! : '';
-		}
-		// if(selectedEvent.data.DeviceId === 'CK20520033'){
-		// 	videoUrl = `/USARS_Machine_Learning/${selectedEvent.data.EventId}-converted.mp4`;
-		// }
-		// else{
-		// 	const tempUrl = videoArray.find(o=>  o.eventId === selectedEvent.data.EventId);
-		// 	videoUrl =  tempUrl || '';
-		// }
+
+		const videos : videoType[] = videoArray.filter(o=>  o.eventId === selectedEvent!.data.EventId);
+		videoUrl = videos.length ? videos[0].videoUrl! : '';
 	};
 	$: selectedEvent && updateVideoUrl();
 </script>
 
-<section class="card {selectedEvent ? 'h-96' : 'h-fit'} scale-in-center w-[32rem]">
+<section class="card {selectedEvent ? 'h-96' : 'h-fit'} slide-in-left w-[32rem]">
 	{#if selectedEvent && videoUrl}
 
 		<video 
@@ -38,7 +30,7 @@
 		><track src="captions_en.vtt" kind="captions" srclang="en" label="english_captions"> </video>
 	{:else}
 		<div class="p-4">
-			<p class="font-bold my-1">Video Player:</p>
+			<p class="my-1">Video Player:</p>
 			<div class="alert alert-red my-1" role="alert">No Video selected.</div>
 		</div>
 	{/if}

@@ -41,11 +41,6 @@
 			paginationPage * numberOfItemsPerPage + numberOfItemsPerPage
 		);
 	};
-
-	let hideEventArray = [
-		908858960990491, 909537321918290, 909018095295269, 909719704476540, 909019158951566,
-		909721602262269
-	];
 	$: eventList && updatePaginationFiles();
 </script>
 
@@ -81,9 +76,7 @@
 
 							<td class="w-32">
 								<img
-									src={!hideEventArray.includes(event.id)
-										? event.snapshots[1].downloadUrl
-										: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYniamX9xxvMlgmWIrZXmiueRb_Errvrqkaw&usqp=CAU'}
+									src={event.snapshots[1].downloadUrl}
 									alt="Dashcam"
 									class="h-full w-auto object-cover rounded-lg"
 								/>
