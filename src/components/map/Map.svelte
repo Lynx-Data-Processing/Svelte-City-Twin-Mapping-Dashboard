@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { layerLisElementType, gpsFilterType, dateTimeDictionaryType, selectedPOIType, mapDetailsType , videoType, selectedEventType, geojsonType} from '../../types/types';
+	import type { layerLisElementType, selectedPOIType, mapDetailsType , videoType, selectedEventType, geojsonType} from '../../types/types';
 	import { GeojsonEnum } from '../../types/enums';
 	import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
@@ -8,7 +8,7 @@
 		checkIfElementExists
 	} from '../../utils/filter-data.js';
 	import { buildPopup } from '../../utils/popup/popup-builder';
-	import { axiosGetUtility, axiosCacheGetUtility } from '../../utils/fetch-data';
+	import { axiosCacheGetUtility } from '../../utils/fetch-data';
 	import {
 		rawKingstonDataToGeojsonData
 	} from '../../utils/geojson/kingston-geojson-util';
@@ -36,7 +36,6 @@
 	export let selectedPOI : selectedPOIType | null;
 	export let selectedEvent : selectedEventType | null;
 	export let gpsData : any;
-	export let gpsFilters : gpsFilterType[];
 	export let selectedMenu : number;
 	let map : any = null;
 	let isInitialDataLoaded = false;
@@ -429,39 +428,7 @@
 			console.log(err);
 		}
 	};
-	const createFilterArray = () => {
-		if (map === null || gpsData.length <= 0) return;
-		let filterArray = ['all'];
-		for (let i = 0; i < gpsFilters.length; i++) {
-			let id = gpsFilters[i].id;
-			let min = gpsFilters[i].selected[0];
-			let max = gpsFilters[i].selected[1];
-			let minArray : any = ['>=', ['get', id], min];
-			let maxArray : any = ['<=', ['get', id], max];
-			filterArray.push(minArray);
-			filterArray.push(maxArray);
-		}
-		return filterArray;
-	};
-	//GPS Filter shows and hides points on the map if the values change.
-	//To add another filter use >, <, = and the value
-	const addMapGPSFilters = () => {
-		if (map === null || gpsData.length <= 0) return;
-		try {
-			let filterArray = createFilterArray();
-			layerList.forEach(function (gpsElement) {
-				const dataName = gpsElement.layerName;
-				const hasFilter = gpsElement.hasFilter;
 
-				if (dataName.includes('GPS') && hasFilter) {
-					map.setFilter(dataName, filterArray);
-				}
-			});
-		} catch (err) {
-			console.log(err);
-			console.log('Unable to add GPS Filters');
-		}
-	};
 	const addMapFilter = () => {
 		// If map not loaded, abort
 		if (map === null) return;
@@ -533,7 +500,6 @@
 		// Mapboxs normal way to show and hide layers. This calls the filter every second
 		map.on('idle', () => {
 			addMapFilter();
-			if (gpsData) addMapGPSFilters();
 		});
 	
 
