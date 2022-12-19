@@ -1,5 +1,12 @@
 <script lang="ts">
-	import type { layerLisElementType, selectedPOIType, mapDetailsType , videoType, selectedEventType, geojsonType} from '../../types/types';
+	import type {
+		layerLisElementType,
+		selectedPOIType,
+		mapDetailsType,
+		videoType,
+		selectedEventType,
+		menuComponentsType
+	} from '../../types/types';
 	import { GeojsonEnum } from '../../types/enums';
 	import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
@@ -9,9 +16,7 @@
 	} from '../../utils/filter-data.js';
 	import { buildPopup } from '../../utils/popup/popup-builder';
 	import { axiosCacheGetUtility } from '../../utils/fetch-data';
-	import {
-		rawKingstonDataToGeojsonData
-	} from '../../utils/geojson/kingston-geojson-util';
+	import { rawKingstonDataToGeojsonData } from '../../utils/geojson/kingston-geojson-util';
 
 	import {
 		PUBLIC_MAPBOX_KEY,
@@ -26,19 +31,20 @@
 	import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 	import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
-	export let isLoading : boolean;
-	export let layerList : layerLisElementType[];
+	export let isLoading: boolean;
+	export let layerList: layerLisElementType[];
 	export let selectedPolygon;
-	export let videoArray : videoType[];
-	export let mapStyle : string;
-	export let isReadyForStyleSwitching : boolean = false;
-	export let mapDetails : mapDetailsType;
-	export let selectedPOI : selectedPOIType | null;
-	export let selectedEvent : selectedEventType | null;
-	export let gpsData : any;
-	export let selectedMenu : number;
-	let map : any = null;
+	export let videoArray: videoType[];
+	export let mapStyle: string;
+	export let isReadyForStyleSwitching: boolean = false;
+	export let mapDetails: mapDetailsType;
+	export let selectedPOI: selectedPOIType | null;
+	export let selectedEvent: selectedEventType | null;
+	export let gpsData: any;
+	export let selectedMenu: menuComponentsType;
+	let map: any = null;
 	let isInitialDataLoaded = false;
+
 	const smallPopup = new mapboxgl.Popup();
 	const draw = new (MapboxDraw as any)({
 		displayControlsDefault: false,
@@ -50,45 +56,50 @@
 	});
 
 	const createLayerListElement = (
-		layerName : string,
-		sourceName : string,
-		type : string,
-		isShown : boolean,
-		faIcon : string,
-		hasFilter : boolean,
-		data : any
-	) : layerLisElementType => {
-		
-			let tempList = layerList;
-			const hasElement = checkIfElementExists(tempList, 'layerName', layerName);
-			if (hasElement) {
-				tempList = removeObjectWhereValueEqualsString(tempList, 'layerName', layerName);
-				if (map.getLayer(layerName)) {
-					map.removeLayer(layerName);
-					map.removeSource(sourceName);
-				}
+		layerName: string,
+		sourceName: string,
+		type: string,
+		isShown: boolean,
+		faIcon: string,
+		hasFilter: boolean,
+		data: any
+	): layerLisElementType => {
+		let tempList = layerList;
+		const hasElement = checkIfElementExists(tempList, 'layerName', layerName);
+		if (hasElement) {
+			tempList = removeObjectWhereValueEqualsString(tempList, 'layerName', layerName);
+			if (map.getLayer(layerName)) {
+				map.removeLayer(layerName);
+				map.removeSource(sourceName);
 			}
-			//Create the new element and change the layer list
-			const element : layerLisElementType = {
-				id: uuidv4(),
-				icon: faIcon,
-				type: type,
-				isShown: isShown,
-				layerName: layerName,
-				hasFilter: hasFilter,
-				sourceName: sourceName,
-				data: data
-			};
-			tempList.push(element);
-			layerList = tempList;
-			return element;
-		
+		}
+		//Create the new element and change the layer list
+		const element: layerLisElementType = {
+			id: uuidv4(),
+			icon: faIcon,
+			type: type,
+			isShown: isShown,
+			layerName: layerName,
+			hasFilter: hasFilter,
+			sourceName: sourceName,
+			data: data
+		};
+		tempList.push(element);
+		layerList = tempList;
+		return element;
 	};
 
-
-	const fetchDataFromAPIAndCreateLayer = async (url : string, layerName : string, showOnLoad = false, dataType = GeojsonEnum.Point, dataColor = 'Random', dataIcon = 'fa-border-all', hasFilter = false) =>{
-		try{
-		const response = await axiosCacheGetUtility(url);
+	const fetchDataFromAPIAndCreateLayer = async (
+		url: string,
+		layerName: string,
+		showOnLoad = false,
+		dataType = GeojsonEnum.Point,
+		dataColor = 'Random',
+		dataIcon = 'fa-border-all',
+		hasFilter = false
+	) => {
+		try {
+			const response = await axiosCacheGetUtility(url);
 			if (response.status === 200) {
 				const rawData = response.data.records;
 
@@ -109,14 +120,14 @@
 			} else {
 				console.log(`Unable to load data for ${layerName}`);
 			}
-		} catch (err){
+		} catch (err) {
 			console.error(err);
 		}
-	}
+	};
 
 	const fetchInitialMapData = async () => {
 		try {
-			//* 3D bultings layer element
+		
 			createLayerListElement(
 				'3D-Buildings',
 				'composite',
@@ -127,56 +138,81 @@
 				null
 			);
 
-
-			await fetchDataFromAPIAndCreateLayer(PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL, 'Neighbourhoods', false, GeojsonEnum.Polygon, 'Random', 'fa-border-all', false )
-			await fetchDataFromAPIAndCreateLayer(PUBLIC_TREES_URL, 'Trees', true, GeojsonEnum.Point, 'Green', 'fa-border-all', false)
-			
-
+			await fetchDataFromAPIAndCreateLayer(
+				PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
+				'Neighbourhoods',
+				false,
+				GeojsonEnum.Polygon,
+				'Random',
+				'fa-border-all',
+				false
+			);
+			await fetchDataFromAPIAndCreateLayer(
+				PUBLIC_TREES_URL,
+				'Trees',
+				true,
+				GeojsonEnum.Point,
+				'Green',
+				'fa-border-all',
+				false
+			);
 		} catch (err) {
 			console.error(err);
 		}
-
-		
 	};
-	const addMapSource = (layerListElement : layerLisElementType) => {
+
+
+	const checkIfMapSourceExists = (sourceName: string) => {
 		try {
+			const source = map.getSource(sourceName);
+			if (source) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (err) {
+			return false;
+		}
+	};
+
+	const addMapSource = (layerListElement: layerLisElementType) => {
+		try {
+			const sourceExists = checkIfMapSourceExists(layerListElement.sourceName);
+			if (sourceExists) {
+				map.removeSource(layerListElement.sourceName);
+			}
 			map.addSource(layerListElement.sourceName, {
 				type: 'geojson',
 				data: layerListElement.data
 			});
-		} catch (err) {
-			
-		}
+		} catch (err) {}
 	};
-	const addDataSources = () => {
-		console.log('Adding Data Sources');
+
+	const addInitialMapDataSources = () => {
 		try {
 			addTerrainLayer();
 			//* Add the additional layers
 			layerList.forEach(function (gpsElement) {
-				const dataName = gpsElement.layerName;
-				const dataType = gpsElement.type;
-
+				const { layerName, type } = gpsElement;
 				//Add the buildings layer
-				if (dataName.includes('Buildings')) {
+				if (layerName.includes('Buildings')) {
 					addBuildingLayer(gpsElement);
 				}
 
-				if (dataType === 'Polygon') {
+				if (type === 'Polygon') {
 					addMapSource(gpsElement);
-					addPolygonLayer(gpsElement, 0.5, ['get', 'Color'])
+					addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
 				}
 
-				if (dataType === 'Point') {
+				if (type === 'Point') {
 					addMapSource(gpsElement);
 					addPointLayer(gpsElement, 'Size', ['get', 'Color']);
 				}
 			});
-
-			isInitialDataLoaded = true;
-			isLoading = false;
 		} catch (e) {}
 	};
+
+	
 	const addTerrainLayer = () => {
 		map.addSource('mapbox-dem', {
 			type: 'raster-dem',
@@ -196,7 +232,7 @@
 			}
 		});
 	};
-	const addBuildingLayer = (fillList : layerLisElementType, opacity = 1, color = '#dee7e7') => {
+	const addBuildingLayer = (fillList: layerLisElementType, opacity = 1, color = '#dee7e7') => {
 		map.addLayer({
 			id: fillList.layerName,
 			source: fillList.sourceName,
@@ -229,8 +265,7 @@
 		});
 	};
 
-	
-	const addPolygonLayer = (fillList : layerLisElementType, opacity = 0.5, color = ['red']) => {
+	const addPolygonLayer = (fillList: layerLisElementType, opacity = 0.5, color = ['red']) => {
 		map.addLayer({
 			id: fillList.layerName,
 			type: 'fill',
@@ -241,7 +276,7 @@
 			}
 		});
 		map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
-		map.on('click', fillList.layerName, (e : any) => {
+		map.on('click', fillList.layerName, (e: any) => {
 			let description = '';
 			const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
 			for (const [key, value] of Object.entries(sliced)) {
@@ -258,7 +293,7 @@
 			map.getCanvas().style.cursor = '';
 		});
 	};
-	const addLineLayer = (fillList : layerLisElementType, lineWidth = 4, color = ['red']) => {
+	const addLineLayer = (fillList: layerLisElementType, lineWidth = 4, color = ['red']) => {
 		map.addLayer({
 			id: fillList.layerName,
 			type: 'line',
@@ -272,7 +307,7 @@
 				'line-width': lineWidth
 			}
 		});
-		map.on('click', fillList.layerName, (e : any) => {
+		map.on('click', fillList.layerName, (e: any) => {
 			let description = '';
 			const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
 			for (const [key, value] of Object.entries(sliced)) {
@@ -289,7 +324,11 @@
 			map.getCanvas().style.cursor = '';
 		});
 	};
-	const addPointLayer = (fillList : layerLisElementType, pointSizeName = 'Size', color = ['Blue']) => {
+	const addPointLayer = (
+		fillList: layerLisElementType,
+		pointSizeName = 'Size',
+		color = ['Blue']
+	) => {
 		try {
 			map.addLayer(
 				{
@@ -314,7 +353,7 @@
 			);
 			map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
 			map.moveLayer(fillList.layerName);
-			map.on('click', fillList.layerName, async (e : any) => {
+			map.on('click', fillList.layerName, async (e: any) => {
 				if (fillList.layerName.includes('GPS')) {
 					selectedEvent = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
 					selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
@@ -371,15 +410,15 @@
 			layerList.forEach(function (gpsElement) {
 				const dataName = gpsElement.layerName;
 				const dataType = gpsElement.type;
-				
-				if (dataName !== "3D-Buildings") {
+
+				if (dataName !== '3D-Buildings') {
 					addMapSource(gpsElement);
-					if (dataType === "Point") {
-						addPointLayer(gpsElement, "Count", ["get", "Color"]);
+					if (dataType === 'Point') {
+						addPointLayer(gpsElement, 'Count', ['get', 'Color']);
 					}
 
-					if(dataType === 'Polygon'){
-						addPolygonLayer(gpsElement, 0.5,  ["get", "Color"]);
+					if (dataType === 'Polygon') {
+						addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
 					}
 				}
 			});
@@ -390,14 +429,12 @@
 	const addNewDynamicGPSElements = () => {
 		if (map === null || gpsData.length <= 0) return;
 		try {
-
-
-			gpsData.forEach(function (rawGpsElement : any) {
+			gpsData.forEach(function (rawGpsElement: any) {
 				const dataName = rawGpsElement.dataName;
 				const dataSourceName = `${dataName}Source`;
 				const dataType = rawGpsElement.dataType;
 				const dataHasFilter = rawGpsElement.hasFilter;
-				let gpsElement : layerLisElementType = createLayerListElement(
+				let gpsElement: layerLisElementType = createLayerListElement(
 					dataName,
 					dataSourceName,
 					dataType,
@@ -407,12 +444,12 @@
 					rawGpsElement
 				);
 				addMapSource(gpsElement);
-				if (dataType === "Point") {
-					addPointLayer(gpsElement, "Count", ["get", "Color"]);
+				if (dataType === 'Point') {
+					addPointLayer(gpsElement, 'Count', ['get', 'Color']);
 				}
-				
-				if(dataType === 'Polygon'){
-					addPolygonLayer(gpsElement, 0.5,  ["get", "Color"]);
+
+				if (dataType === 'Polygon') {
+					addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
 				}
 			});
 		} catch (err) {
@@ -494,14 +531,13 @@
 		map.addControl(new mapboxgl.FullscreenControl(), 'bottom-right');
 		map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 		map.on('style.load', function () {
-			addDataSources();
+			addInitialMapDataSources();
 			if (gpsData) addExistingDynamicGPSElements();
 		});
 		// Mapboxs normal way to show and hide layers. This calls the filter every second
 		map.on('idle', () => {
 			addMapFilter();
 		});
-	
 
 		map.on('draw.create', updatePolygon);
 		map.on('draw.delete', clearPolygon);
