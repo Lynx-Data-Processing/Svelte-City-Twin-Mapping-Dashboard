@@ -1,25 +1,26 @@
+import type { gpsFilterType, geojsonType } from '../../types/types';
 
-import type { gpsFilterType } from '../../types/types';
-
-export const createFiltersDictionary = (geojsonElement : any) => {
+export const createGPSFilters = (geojsonArray: geojsonType[]) => {
     let gpsFilters: gpsFilterType[] = [];
 
-    if (geojsonElement && geojsonElement.features) {
-        const gpsData = geojsonElement.features[0].properties;
-        for (const key in gpsData) {
-            if (Object.prototype.hasOwnProperty.call(gpsData, key)) {
-                const element = gpsData[key];
-                if (typeof element === 'number') {
-                    gpsFilters.push({
-                        id: key,
-                        name: key,
-                        default: [0, 100],
-                        step: 10,
-                        suffix: 'AA',
-                        selected: [0, 300]
-                    });
-                }
+
+    if (geojsonArray) {
+        const gpsKeys = geojsonArray[0].features[0].properties;
+
+        for (const [key, value] of Object.entries(gpsKeys)) {
+            console.log(key, value);
+
+            if (typeof value === 'number') {
+                gpsFilters.push({
+                    id: key,
+                    name: key,
+                    default: [value / 2, value * 2],
+                    step: value / 2,
+                    suffix: 'AA',
+                    selected: [value / 2, value * 2]
+                });
             }
+
         }
     }
     return gpsFilters;

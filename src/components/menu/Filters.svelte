@@ -4,6 +4,8 @@
 	export let gpsData;
 
 	const resetFilters = () => {
+		if(!gpsData.length) return;
+
 		let tempArray = gpsFilters;
 		for (let i = 0; i < tempArray.length; i += 1) {
 			tempArray[i].selected[0] = tempArray[i].default[0];
@@ -67,6 +69,3 @@
 		{/if}
 	{/if}
 </section>
-
-<style>
-</style>

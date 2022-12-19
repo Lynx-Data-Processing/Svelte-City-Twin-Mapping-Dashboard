@@ -16,10 +16,7 @@
 	import {
 		PUBLIC_MAPBOX_KEY,
 		PUBLIC_TREES_URL,
-		PUBLIC_PLANNING_URL,
-		PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
-		PUBLIC_PLANNING_POLYGON_URL,
-		PUBLIC_ROADS_URL
+		PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL
 	} from '$env/static/public';
 
 	import { v4 as uuidv4 } from 'uuid';
@@ -34,7 +31,7 @@
 	export let selectedPolygon;
 	export let videoArray : videoType[];
 	export let mapStyle : string;
-	export let isReadyForStyleSwitching : boolean;
+	export let isReadyForStyleSwitching : boolean = false;
 	export let mapDetails : mapDetailsType;
 	export let selectedPOI : selectedPOIType | null;
 	export let selectedEvent : selectedEventType | null;

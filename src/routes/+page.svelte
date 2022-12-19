@@ -20,7 +20,7 @@
 	import Filters from '../components/menu/Filters.svelte';
 	import StreetView from '../components/menu/StreetView.svelte';
 	import { findVideo } from '../utils/popup/video-finder';
-	import Navbar from '../components/Navbar.svelte';
+	import Navbar from '../widgets/Navbar.svelte';
 	import {
 		rawSmarterAIGPSDataToGeojson,
 		rawGPSDataToGeojsonData
@@ -36,8 +36,10 @@
 	import RecordingsTable from '../components/RecordingsTable.svelte';
 	import SelectedVideo from '../components/menu/SelectedVideo.svelte';
 	import AddGeojson from '../components/menu/AddGeojson.svelte';
+	import { createGPSFilters } from '../utils/filters/filters-utils';
+	import SelectionMenu from '../components/menu/SelectionMenu.svelte';
 	//* Set Initial Map Details
-	let isReadyForStyleSwitching: boolean = false;
+	
 	let mapStyle: string = 'outdoors-v11';
 	let mapDetails: mapDetailsType = {
 		id: 0,
@@ -60,24 +62,13 @@
 	let menuComponents: menuComponentsType[] = [
 		{ id: 0, title: 'Search Data', icon: 'fa-database' },
 		{ id: 1, title: 'Street View', icon: 'fa-road' },
-		{ id: 2, title: 'Filter View', icon: 'fa-filter' },
-		{ id: 3, title: 'Video Player', icon: 'fa-video' },
-		{ id: 4, title: 'Add Geojson', icon: 'fa-map' }
+		{ id: 2, title: 'Video Player', icon: 'fa-video' },
+		{ id: 3, title: 'Add Geojson', icon: 'fa-map' }
 	];
-	let selectedMenu: number = menuComponents[0].id;
-	let isLoading = true;
+	let selectedMenu: menuComponentsType = menuComponents[0];
+	let isLoading = false;
 	let isError = false;
 	let gpsData: any[] = [];
-	let gpsFilters: gpsFilterType[] = [
-		{
-			id: 'Speed',
-			name: 'Speed Filter',
-			default: [0, 100],
-			step: 10,
-			suffix: 'Km/h',
-			selected: [0, 300]
-		}
-	];
 
 	const updateMapCenter = (coordinates: number[]) => {
 		mapDetails = {
@@ -92,8 +83,7 @@
 	let videoArray: videoType[] = [];
 	let eventList: eventType[] = [];
 	const getMediaEventsFromAllSmarterAIFiles = async (rawEventList: eventType[]) => {
-	
-		const [tempGPSList, tempEventList]  = await getGPSSensorDataFromEventFiles(rawEventList);
+		const [tempGPSList, tempEventList] = await getGPSSensorDataFromEventFiles(rawEventList);
 		eventList = tempEventList;
 
 		//* If data exists, create the GPS Geojson layer
@@ -168,58 +158,49 @@
 	};
 </script>
 
-<div class="flex flex-col">
-	<Navbar title={'City Twin Mapping Dashboard'} bind:selectedMenu bind:menuComponents />
-	<main class="flex-1 grid grid-cols-1 gap-4 lg:grid-cols-12 ">
-		<div class={`col-span-1 lg:col-span-12 relative`}>
-			<Map
-				bind:videoArray
-				bind:isLoading
-				{mapDetails}
-				bind:gpsFilters
-				bind:gpsData
-				bind:layerList
-				bind:mapStyle
-				bind:isReadyForStyleSwitching
-				bind:selectedPolygon
-				bind:selectedPOI
-				bind:selectedEvent
-				bind:selectedMenu
-			/>
+<SelectionMenu bind:selectedMenu bind:menuComponents />
+<main class="grid grid-cols-1 gap-4 lg:grid-cols-12 ">
+	<div class={`col-span-1 lg:col-span-12 relative`}>
+		<Map
+			bind:videoArray
+			bind:isLoading
+			{mapDetails}
+			
+			bind:gpsData
+			bind:layerList
+			bind:mapStyle
+			bind:selectedPolygon
+			bind:selectedPOI
+			bind:selectedEvent
+			bind:selectedMenu
+		/>
 
-			<div class="absolute top-2 left-2 flex flex-row gap-4 z-100">
-				<div class={`flex flex-col gap-4`}>
-					<Layers bind:layerList />
-					{#if selectedMenu === 0}
-						<DateTime bind:dateTimeDictionary bind:selectedPolygon {fetchEventsData} />
-					{:else if selectedMenu === 1}
-						<StreetView bind:selectedPOI />
-					{:else if selectedMenu === 2}
-						<Filters bind:gpsFilters bind:gpsData />
-					{:else if selectedMenu === 3}
-						<SelectedVideo bind:selectedEvent bind:videoArray />
-					{:else if selectedMenu === 4}
-						<AddGeojson {addGeojsonData} />
-					{/if}
-				</div>
-				<div>
-					<MapStyleSelector bind:mapStyle bind:isReadyForStyleSwitching />
-				</div>
+		{#if isLoading === true}
+			<MapLoadingSpinner />
+		{:else if isError === true}
+			<MapError />
+		{/if}
+
+		<div class="absolute top-2 left-2 flex flex-row gap-4 z-100">
+			<div class={`flex flex-col gap-4`}>
+				<Layers bind:layerList />
+				{#if selectedMenu.id === 0}
+					<DateTime bind:dateTimeDictionary  {fetchEventsData} />
+				{:else if selectedMenu.id === 1}
+					<StreetView bind:selectedPOI />
+				{:else if selectedMenu.id === 2}
+					<SelectedVideo bind:selectedEvent bind:videoArray />
+				{:else if selectedMenu.id === 3}
+					<AddGeojson {addGeojsonData} />
+				{/if}
 			</div>
-
-			{#if isLoading === true}
-				<MapLoadingSpinner />
-			{:else if isError === true}
-				<MapError />
-			{/if}
+			<div>
+				<MapStyleSelector bind:mapStyle />
+			</div>
 		</div>
-	</main>
-</div>
+	</div>
+</main>
 
 {#if eventList.length}
-	<section class="grid grid-cols-1 gap-4 lg:grid-cols-12 my-8 px-4">
-		<div class="col-span-1 md:col-span-12">
-			<RecordingsTable bind:eventList />
-		</div>
-	</section>
+	<RecordingsTable bind:eventList />
 {/if}

@@ -1,63 +1,15 @@
-<script>
-// @ts-nocheck
+<script  lang="ts">
 
-	import { ABOUT_LIST, APPLICATION_TOOLS_LIST, DETAILS_LIST, PROGRAMMING_TOOLS } from "../constants";
+	import { getDevicon } from '../utils/devicon-icons';
+	import { PROGRAMMING_TOOLS } from "../constants";
 
-	const returnLinkGivenIfStringContains = (toolString) => {
-		if (toolString.includes("streamlit")) {
-			return `icons/${toolString}-original.svg`;
-		}
 
-		if (toolString.includes("plain")) {
-			const tempString = toolString.replace("-plain", "");
-			return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tempString}/${tempString}-plain.svg`;
-		}
-
-		if (toolString.includes("wordmark")) {
-			const tempString = toolString.replace("-wordmark", "");
-			return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tempString}/${tempString}-wordmark.svg`;
-		}
-
-		return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${toolString}/${toolString}-original.svg`;
-	};
 </script>
 
-<hr />
-<footer class="bg-smoke  py-8 px-4">
-	<div class="grid grid-cols-1 md:grid-cols-3 py-2 mb-8">
-		<div class="col-span-1 ">
-			<p>About</p>
 
-			{#each ABOUT_LIST as item}
-				<div  class="my-2">
-					<a href={`${item.link}`} target="_blank" class="text-sm  hover:underline" rel="noreferrer">{item.name}</a>
-				</div>
-			{/each}
-		</div>
+<footer class="bg-smoke  py-8 px-8">
 
-		<div class="col-span-1">
-			<p>Application Tools</p>
-			{#each APPLICATION_TOOLS_LIST as item}
-				<div class="my-2">
-					<a href={`${item.link}`} target="_blank" rel="noreferrer" class="text-sm  hover:underline">{item.name}</a>
-				</div>
-			{/each}
-		</div>
-
-		<div class="col-span-1 ">
-			<p>Details</p>
-
-			{#each DETAILS_LIST as item}
-				<div  class="my-2">
-					<a href={`${item.link}`} target="_blank" class="text-sm  hover:underline" rel="noreferrer">{item.name}</a>
-				</div>
-			{/each}
-		</div>
-	</div>
-
-	<hr />
-
-	<div class="grid grid-cols-1 sm:grid-cols-3 mt-8">
+	<div class="grid grid-cols-1 sm:grid-cols-3 ">
 		<div class="col-span-1">
 			<p>© USARs. All rights reserved.</p>
 			<p class="text-xs my-2">Website Terms and Policies</p>
@@ -74,13 +26,12 @@
 			<p>License Terms</p>
 
 			<p class="text-xs my-2">
-				Application uses MAPBOX to display Geojson data. Interactive, thoroughly customizable maps in the browser, powered by vector tiles and WebGL. The application makes use of Geotab APIs, and a
-				multitude of 3rd party APIs.
+				Application uses MAPBOX to display Geojson data. Interactive, thoroughly customizable maps in the browser, powered by vector tiles and WebGL. 
 			</p>
 
 			<div class="flex flex-wrap justify-between  ">
 				{#each PROGRAMMING_TOOLS as tool}
-				<img height="100" width="auto" title={tool} class={`img-icon w-8 mx-2 py-2`} alt="" src={returnLinkGivenIfStringContains(tool)} loading="lazy" />
+				<img height="100" width="auto" title={tool}  class={`img-icon w-8 mx-2 py-2`} alt="" src={getDevicon(tool)} loading="lazy" />
 				{/each}
 	
 			</div>

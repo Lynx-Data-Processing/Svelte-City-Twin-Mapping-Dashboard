@@ -1,66 +1,62 @@
-<script >
+<script>
 	import { onMount } from 'svelte/internal';
 	import { onDestroy } from 'svelte';
 
-	export let selectedPOI;
 	let streetViewObject = null;
 	let streetViewContainer = null;
-	let error = null;
 
-	const initializeStreetView = () => {
+	const initializeStreetView = (poi) => {
 		try {
 			streetViewObject = new google.maps.StreetViewPanorama(streetViewContainer, {
-				position: selectedPOI,
+				position: poi,
 				pov: {
 					heading: 34,
 					pitch: 10
 				}
 			});
-		} catch (err) {
-			error = err;
+		} catch (error) {
+			console.error(error);
 		}
 	};
-	onMount(() => {
+
+	const onLocationChange = (poi) => {
 		try {
-			if (selectedPOI !== null) {
-				initializeStreetView();
+			if (streetViewObject === null) {
+				initializeStreetView(poi);
+			} else {
+				streetViewObject.setPosition(poi);
 			}
-		} catch (err) {
-			error = err;
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	export let selectedPOI;
+
+	onMount(() => {
+		if (selectedPOI !== null) {
+			initializeStreetView(selectedPOI);
 		}
 	});
-	// When the location changes, set the new lat long to the map
-	const onLocationChange = () => {
-		try {
-			streetViewObject === null
-				? initializeStreetView()
-				: streetViewObject.setPosition(selectedPOI);
-		} catch (err) {
-			error = err;
-		}
-	};
-	$: selectedPOI && onLocationChange();
+
+	$: selectedPOI && onLocationChange(selectedPOI);
+
 	onDestroy(() => {
 		try {
 			streetViewObject = null;
 			streetViewContainer = null;
-		} catch (e) {}
+		} catch (error) {
+			console.error(error);
+		}
 	});
-
-	let showTerms = true;
-	const toggleTerms = () => {
-		showTerms = !showTerms;
-	};
 </script>
 
 <section class="card h-fit slide-in-left w-[32rem]">
-
 	{#if selectedPOI == null}
 		<div class="p-4">
 			<p class="my-1">Street View:</p>
 			<div class="alert alert-red my-1" role="alert">Select a point on the map.</div>
 		</div>
-		
 	{/if}
 	<div
 		bind:this={streetViewContainer}

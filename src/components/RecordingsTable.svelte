@@ -44,8 +44,8 @@
 	$: eventList && updatePaginationFiles();
 </script>
 
-<section class="card h-fit scale-in-center">
-	<div class="p-4">
+<section class="my-8 px-4">
+	<section class="card h-fit scale-in-center p-4">
 		<p class="my-1">Video Table View:</p>
 		{#if paginatedFiles.length}
 			<table class="table w-full rounded-lg">
@@ -147,5 +147,5 @@
 		{:else}
 			<div class="alert alert-red my-1" role="alert">No Events Found.</div>
 		{/if}
-	</div>
+	</section>
 </section>

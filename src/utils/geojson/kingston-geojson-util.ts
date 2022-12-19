@@ -138,7 +138,7 @@ export const rawKingstonDataToGeojsonData = (rawData : any, name = 'General', ge
       };
       geoJson.features.push(feature);
     }
-    console.log(geoJson)
+
     return geoJson;
   }
   catch (err) {

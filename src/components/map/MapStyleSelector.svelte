@@ -1,6 +1,5 @@
 <script lang="ts">
 	export let mapStyle : string;
-	export let isReadyForStyleSwitching : boolean;
 	let isLargeMenu :  boolean = false;
 	const mapStyleList = [
 		{ id: 0, name: "Streets", value: "streets-v11", img: "https://assets.website-files.com/5e83362767d71ffd59a0c8a9/5ea01b977fb48a501b898a93_ipad-map%20streets.png" },
@@ -12,9 +11,8 @@
 	const toggleStyle = (mapStyleValue : string) => {
 		try {
 			mapStyle = mapStyleValue;
-			isReadyForStyleSwitching = true;
 		} catch (e) {
-			alert('Unable to toggle Map Style')
+			console.log('Unable to toggle Map Style')
 		}
 	};
 	const toggleMenu = () => {

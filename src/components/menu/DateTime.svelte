@@ -14,28 +14,7 @@
 		showTerms = !showTerms;
 	};
 
-	import area from '@turf/area';
-	export let selectedPolygon : any;
 	export let fetchEventsData : Function;
-
-	let areaString = '0m';
-	let areaNumber = 0;
-	const calculateArea = () => {
-		try {
-			const areaMeters = area(selectedPolygon);
-
-			areaNumber = areaMeters;
-			areaString =
-				areaMeters < 1000000
-					? areaMeters.toFixed(2) + 'm\xB2'
-					: (areaMeters / 1000000).toFixed(2) + 'Km\xB2';
-
-			console.log(areaNumber);
-		} catch (err) {
-			areaString = 'Error calculating area.';
-		}
-	};
-	//$: selectedPolygon && calculateArea();
 </script>
 
 
@@ -102,7 +81,7 @@
 
 
 		<p>Search Vehicle Data:</p>
-		{#if areaNumber <= 15000000 && dateTimeDictionary.startDateTime && dateTimeDictionary.endDateTime}
+		{#if  dateTimeDictionary.startDateTime && dateTimeDictionary.endDateTime}
 			<button class={`card-btn btn-primary my-1`} on:click={() => fetchEventsData()}
 				><i class="fa-solid fa-database " /> Search Data
 			</button>
