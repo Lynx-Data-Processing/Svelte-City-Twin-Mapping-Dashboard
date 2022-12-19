@@ -65,10 +65,9 @@
 		hasFilter: boolean,
 		data: any
 	): layerLisElementType => {
-		let tempList = layerList;
-		const hasElement = checkIfElementExists(tempList, 'layerName', layerName);
+		const hasElement = checkIfElementExists(layerList, 'layerName', layerName);
 		if (hasElement) {
-			tempList = removeObjectWhereValueEqualsString(tempList, 'layerName', layerName);
+			layerList = removeObjectWhereValueEqualsString(layerList, 'layerName', layerName);
 			if (map.getLayer(layerName)) {
 				map.removeLayer(layerName);
 				map.removeSource(sourceName);
@@ -85,8 +84,8 @@
 			sourceName: sourceName,
 			data: data
 		};
-		tempList.push(element);
-		layerList = tempList;
+
+		layerList.push(element);
 		return element;
 	};
 
@@ -103,21 +102,18 @@
 			const response = await axiosCacheGetUtility(url);
 			if (response.status === 200) {
 				const rawData = response.data.records;
+				if (!rawData.length) return;
 
-				if (rawData.length) {
-					const cleanData = rawKingstonDataToGeojsonData(rawData, layerName, dataType, dataColor);
-					createLayerListElement(
-						layerName,
-						`${layerName}Source`,
-						dataType,
-						showOnLoad,
-						dataIcon,
-						hasFilter,
-						cleanData
-					);
-				} else {
-					console.log(`No ${layerName} data Exist`);
-				}
+				const cleanData = rawKingstonDataToGeojsonData(rawData, layerName, dataType, dataColor);
+				createLayerListElement(
+					layerName,
+					`${layerName}Source`,
+					dataType,
+					showOnLoad,
+					dataIcon,
+					hasFilter,
+					cleanData
+				);
 			} else {
 				console.log(`Unable to load data for ${layerName}`);
 			}
