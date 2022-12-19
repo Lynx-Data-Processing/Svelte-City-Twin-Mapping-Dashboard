@@ -208,6 +208,8 @@
 					addPointLayer(gpsElement, 'Size', ['get', 'Color']);
 				}
 			});
+
+			isInitialDataLoaded = true;
 		} catch (e) {}
 	};
 
@@ -230,10 +232,10 @@
 			}
 		});
 	};
-	const addBuildingLayer = (fillList: layerLisElementType, opacity = 1, color = '#dee7e7') => {
+	const addBuildingLayer = (layerElement: layerLisElementType, opacity = 1, color = '#dee7e7') => {
 		map.addLayer({
-			id: fillList.layerName,
-			source: fillList.sourceName,
+			id: layerElement.layerName,
+			source: layerElement.sourceName,
 			'source-layer': 'building',
 			filter: ['==', 'extrude', 'true'],
 			type: 'fill-extrusion',
@@ -263,18 +265,18 @@
 		});
 	};
 
-	const addPolygonLayer = (fillList: layerLisElementType, opacity = 0.5, color = ['red']) => {
+	const addPolygonLayer = (layerElement: layerLisElementType, opacity = 0.5, color = ['red']) => {
 		map.addLayer({
-			id: fillList.layerName,
+			id: layerElement.layerName,
 			type: 'fill',
-			source: fillList.sourceName,
+			source: layerElement.sourceName,
 			paint: {
 				'fill-color': color,
 				'fill-opacity': opacity
 			}
 		});
-		map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
-		map.on('click', fillList.layerName, (e: any) => {
+		map.setLayoutProperty(layerElement.layerName, 'visibility', 'none');
+		map.on('click', layerElement.layerName, (e: any) => {
 			let description = '';
 			const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
 			for (const [key, value] of Object.entries(sliced)) {
@@ -283,19 +285,19 @@
 			smallPopup.setLngLat(e.lngLat).setHTML(description).addTo(map);
 		});
 		// Change the cursor to a pointer when the mouse is over the places layer.
-		map.on('mouseenter', fillList.layerName, () => {
+		map.on('mouseenter', layerElement.layerName, () => {
 			map.getCanvas().style.cursor = 'pointer';
 		});
 		// Change it back to a pointer when it leaves.
-		map.on('mouseleave', fillList.layerName, () => {
+		map.on('mouseleave', layerElement.layerName, () => {
 			map.getCanvas().style.cursor = '';
 		});
 	};
-	const addLineLayer = (fillList: layerLisElementType, lineWidth = 4, color = ['red']) => {
+	const addLineLayer = (layerElement: layerLisElementType, lineWidth = 4, color = ['red']) => {
 		map.addLayer({
-			id: fillList.layerName,
+			id: layerElement.layerName,
 			type: 'line',
-			source: fillList.sourceName,
+			source: layerElement.sourceName,
 			layout: {
 				'line-join': 'round',
 				'line-cap': 'round'
@@ -305,7 +307,7 @@
 				'line-width': lineWidth
 			}
 		});
-		map.on('click', fillList.layerName, (e: any) => {
+		map.on('click', layerElement.layerName, (e: any) => {
 			let description = '';
 			const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
 			for (const [key, value] of Object.entries(sliced)) {
@@ -314,25 +316,25 @@
 			smallPopup.setLngLat(e.lngLat).setHTML(description).addTo(map);
 		});
 		// Change the cursor to a pointer when the mouse is over the places layer.
-		map.on('mouseenter', fillList.layerName, () => {
+		map.on('mouseenter', layerElement.layerName, () => {
 			map.getCanvas().style.cursor = 'pointer';
 		});
 		// Change it back to a pointer when it leaves.
-		map.on('mouseleave', fillList.layerName, () => {
+		map.on('mouseleave', layerElement.layerName, () => {
 			map.getCanvas().style.cursor = '';
 		});
 	};
 	const addPointLayer = (
-		fillList: layerLisElementType,
+		layerElement: layerLisElementType,
 		pointSizeName = 'Size',
 		color = ['Blue']
 	) => {
 		try {
 			map.addLayer(
 				{
-					id: fillList.layerName,
+					id: layerElement.layerName,
 					type: 'circle',
-					source: fillList.sourceName,
+					source: layerElement.sourceName,
 					minzoom: 1,
 					paint: {
 						'circle-radius': [
@@ -349,10 +351,10 @@
 				},
 				'waterway-label'
 			);
-			map.setLayoutProperty(fillList.layerName, 'visibility', 'none');
-			map.moveLayer(fillList.layerName);
-			map.on('click', fillList.layerName, async (e: any) => {
-				if (fillList.layerName.includes('GPS')) {
+			map.setLayoutProperty(layerElement.layerName, 'visibility', 'none');
+			map.moveLayer(layerElement.layerName);
+			map.on('click', layerElement.layerName, async (e: any) => {
+				if (layerElement.layerName.includes('GPS')) {
 					selectedEvent = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
 					selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
 				} else {
@@ -363,17 +365,17 @@
 					.setLngLat(e.lngLat)
 					.setHTML(
 						e?.features
-							? await buildPopup(e.features[0], fillList.layerName, videoArray)
+							? await buildPopup(e.features[0], layerElement.layerName, videoArray)
 							: '<div>Properties do not exist</div>'
 					)
 					.addTo(map);
 			});
 			// Change the cursor to a pointer when the mouse is over the places layer.
-			map.on('mouseenter', fillList.layerName, () => {
+			map.on('mouseenter', layerElement.layerName, () => {
 				map.getCanvas().style.cursor = 'pointer';
 			});
 			// Change it back to a pointer when it leaves.
-			map.on('mouseleave', fillList.layerName, () => {
+			map.on('mouseleave', layerElement.layerName, () => {
 				map.getCanvas().style.cursor = '';
 			});
 		} catch (err) {
@@ -400,29 +402,24 @@
 			console.log(err);
 		}
 	};
+
 	const addExistingDynamicGPSElements = () => {
 		if (map === null || layerList.length <= 0) return;
-		try {
-			layerList.forEach(function (gpsElement) {
-				if (gpsElement.layerName !== '3D-Buildings') {
-					addMapSource(gpsElement);
-					if (gpsElement.type === 'Point') {
-						addPointLayer(gpsElement, 'Count', ['get', 'Color']);
-					}
 
-					if (gpsElement.type === 'Polygon') {
-						addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
-					}
+		layerList.forEach((gpsElement) => {
+			if (gpsElement.layerName !== '3D-Buildings') {
+				addMapSource(gpsElement);
+				if (gpsElement.type === 'Point') {
+					addPointLayer(gpsElement, 'Count', ['get', 'Color']);
+				} else if (gpsElement.type === 'Polygon') {
+					addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
 				}
-			});
-		} catch (err) {
-			console.log(err);
-		}
+			}
+		});
 	};
+
 	const addNewDynamicGPSElements = () => {
-		if (map === null || gpsData.length <= 0) {
-			return;
-		}
+		if (map === null || gpsData.length <= 0) return;
 
 		gpsData.forEach((rawGpsElement: geojsonType) => {
 			const { dataName, dataType, hasFilter } = rawGpsElement;
@@ -438,11 +435,12 @@
 				rawGpsElement
 			);
 
-			addMapSource(gpsElement);
+			if (gpsElement === null) return;
 
-			if (dataType === 'Point') {
+			addMapSource(gpsElement);
+			if (gpsElement.type === 'Point') {
 				addPointLayer(gpsElement, 'Count', ['get', 'Color']);
-			} else if (dataType === 'Polygon') {
+			} else if (gpsElement.type === 'Polygon') {
 				addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
 			}
 		});
@@ -490,9 +488,9 @@
 		}
 	};
 	$: map && selectedMenu && resizeMap();
-	$: map && mapStyle && isInitialDataLoaded && switchStyle();
-	$: map && gpsData && isInitialDataLoaded && addNewDynamicGPSElements();
-	$: map && mapDetails && isInitialDataLoaded && updateMapCenter();
+	$: map && mapStyle && switchStyle();
+	$: map && gpsData && addNewDynamicGPSElements();
+	$: map && mapDetails && updateMapCenter();
 	onMount(async () => {
 		mapboxgl.accessToken = PUBLIC_MAPBOX_KEY;
 		map = new mapboxgl.Map({
@@ -533,11 +531,10 @@
 	});
 	onDestroy(() => {
 		try {
-			// Remove all the layers and data sources as they are cached and take up a lot of memory
-			for (let i = 0; i < layerList.length; i++) {
-				map.removeLayer(layerList[i]['layerName']);
-				map.removeSource(layerList[i]['sourceName']);
-			}
+			layerList.forEach(({ layerName, sourceName }) => {
+				map.removeLayer(layerName);
+				map.removeSource(sourceName);
+			});
 			map = null;
 		} catch (e) {}
 	});
