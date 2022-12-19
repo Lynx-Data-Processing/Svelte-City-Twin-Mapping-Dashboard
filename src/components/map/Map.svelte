@@ -5,7 +5,8 @@
 		mapDetailsType,
 		videoType,
 		selectedEventType,
-		menuComponentsType
+		menuComponentsType,
+		geojsonType
 	} from '../../types/types';
 	import { GeojsonEnum } from '../../types/enums';
 	import { onMount } from 'svelte';
@@ -127,7 +128,6 @@
 
 	const fetchInitialMapData = async () => {
 		try {
-		
 			createLayerListElement(
 				'3D-Buildings',
 				'composite',
@@ -160,7 +160,6 @@
 			console.error(err);
 		}
 	};
-
 
 	const checkIfMapSourceExists = (sourceName: string) => {
 		try {
@@ -212,7 +211,6 @@
 		} catch (e) {}
 	};
 
-	
 	const addTerrainLayer = () => {
 		map.addSource('mapbox-dem', {
 			type: 'raster-dem',
@@ -388,8 +386,6 @@
 			const data = draw.getAll();
 			if (data.features.length > 0) {
 				selectedPolygon = data.features[0];
-
-				console.log(selectedPolygon);
 			}
 		} catch (err) {
 			console.log(err);
@@ -408,16 +404,13 @@
 		if (map === null || layerList.length <= 0) return;
 		try {
 			layerList.forEach(function (gpsElement) {
-				const dataName = gpsElement.layerName;
-				const dataType = gpsElement.type;
-
-				if (dataName !== '3D-Buildings') {
+				if (gpsElement.layerName !== '3D-Buildings') {
 					addMapSource(gpsElement);
-					if (dataType === 'Point') {
+					if (gpsElement.type === 'Point') {
 						addPointLayer(gpsElement, 'Count', ['get', 'Color']);
 					}
 
-					if (dataType === 'Polygon') {
+					if (gpsElement.type === 'Polygon') {
 						addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
 					}
 				}
@@ -427,34 +420,32 @@
 		}
 	};
 	const addNewDynamicGPSElements = () => {
-		if (map === null || gpsData.length <= 0) return;
-		try {
-			gpsData.forEach(function (rawGpsElement: any) {
-				const dataName = rawGpsElement.dataName;
-				const dataSourceName = `${dataName}Source`;
-				const dataType = rawGpsElement.dataType;
-				const dataHasFilter = rawGpsElement.hasFilter;
-				let gpsElement: layerLisElementType = createLayerListElement(
-					dataName,
-					dataSourceName,
-					dataType,
-					true,
-					'fa-road',
-					dataHasFilter,
-					rawGpsElement
-				);
-				addMapSource(gpsElement);
-				if (dataType === 'Point') {
-					addPointLayer(gpsElement, 'Count', ['get', 'Color']);
-				}
-
-				if (dataType === 'Polygon') {
-					addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
-				}
-			});
-		} catch (err) {
-			console.log(err);
+		if (map === null || gpsData.length <= 0) {
+			return;
 		}
+
+		gpsData.forEach((rawGpsElement: geojsonType) => {
+			const { dataName, dataType, hasFilter } = rawGpsElement;
+			const dataSourceName = `${dataName}Source`;
+
+			const gpsElement = createLayerListElement(
+				dataName,
+				dataSourceName,
+				dataType,
+				true,
+				'fa-road',
+				hasFilter,
+				rawGpsElement
+			);
+
+			addMapSource(gpsElement);
+
+			if (dataType === 'Point') {
+				addPointLayer(gpsElement, 'Count', ['get', 'Color']);
+			} else if (dataType === 'Polygon') {
+				addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
+			}
+		});
 	};
 	//Switch the map style only if the map exists and the map is ready for switching styles
 	const switchStyle = () => {
@@ -466,28 +457,22 @@
 		}
 	};
 
-	const addMapFilter = () => {
-		// If map not loaded, abort
-		if (map === null) return;
+	const addMapLayerVisibility = () => {
+		// If map not loaded or layers not loaded, return
+		if (map === null || !layerList.every((layer) => map.getLayer(layer.layerName))) {
+			return;
+		}
+
 		try {
-			// If any of the layers are not loaded, abort
-			for (let i = 0; i < layerList.length; i += 1) {
-				const tempLayerName = layerList[i].layerName;
-				const tempLayerIsShown = layerList[i].isShown;
-				if (!map.getLayer(tempLayerName)) {
-					return;
-				}
-				if (tempLayerIsShown === true) {
-					map.setLayoutProperty(tempLayerName, 'visibility', 'visible');
-				} else {
-					map.setLayoutProperty(tempLayerName, 'visibility', 'none');
-				}
-			}
-		} catch (err) {
-			console.log(err);
-			console.log('Unable to add GPS Filters');
+			// Set layer visibility based on isShown flag
+			layerList.forEach((layer) => {
+				map.setLayoutProperty(layer.layerName, 'visibility', layer.isShown ? 'visible' : 'none');
+			});
+		} catch (error) {
+			console.error(error);
 		}
 	};
+
 	const resizeMap = () => {
 		try {
 			map.resize();
@@ -536,7 +521,7 @@
 		});
 		// Mapboxs normal way to show and hide layers. This calls the filter every second
 		map.on('idle', () => {
-			addMapFilter();
+			addMapLayerVisibility();
 		});
 
 		map.on('draw.create', updatePolygon);
