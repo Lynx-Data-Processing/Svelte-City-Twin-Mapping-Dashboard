@@ -1,5 +1,5 @@
 import { buildPopup } from '../popup/popup-builder';
-import type { layerLisElementType,  selectedEventType, selectedPOIType, videoType } from '../../types/types';
+import type { LayerLisElementType,  SelectedEventType, SelectedPOIType, VideoType } from '../../types/types';
 
 export 	const addTerrainLayer = (map:any,) => {
     map.addSource('mapbox-dem', {
@@ -24,7 +24,7 @@ export 	const addTerrainLayer = (map:any,) => {
 };
 
 
-export const addBuildingLayer = (map:any, fillList : layerLisElementType, opacity = 1, color = '#dee7e7') => {
+export const addBuildingLayer = (map:any, fillList : LayerLisElementType, opacity = 1, color = '#dee7e7') => {
     map.addLayer({
         id: fillList.layerName,
         source: fillList.sourceName,
@@ -59,7 +59,7 @@ export const addBuildingLayer = (map:any, fillList : layerLisElementType, opacit
     return map;
 };
 
-export const addPolygonLayer = (map:any, smallPopup: any, fillList : layerLisElementType, opacity = 0.5, color = ['red']) => {
+export const addPolygonLayer = (map:any, smallPopup: any, fillList : LayerLisElementType, opacity = 0.5, color = ['red']) => {
     map.addLayer({
         id: fillList.layerName,
         type: 'fill',
@@ -89,7 +89,7 @@ export const addPolygonLayer = (map:any, smallPopup: any, fillList : layerLisEle
 };
 
 
-export const addLineLayer = (map:any, smallPopup: any, fillList : layerLisElementType, lineWidth = 4, color = ['red']) => {
+export const addLineLayer = (map:any, smallPopup: any, fillList : LayerLisElementType, lineWidth = 4, color = ['red']) => {
     map.addLayer({
         id: fillList.layerName,
         type: 'line',
