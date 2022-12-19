@@ -32,12 +32,11 @@
 	import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 	import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
-	export let isLoading: boolean;
+
 	export let layerList: layerLisElementType[];
-	export let selectedPolygon;
+	export let selectedPolygon = null;
 	export let videoArray: videoType[];
 	export let mapStyle: string;
-	export let isReadyForStyleSwitching: boolean = false;
 	export let mapDetails: mapDetailsType;
 	export let selectedPOI: selectedPOIType | null;
 	export let selectedEvent: selectedEventType | null;
