@@ -65,9 +65,10 @@
 		hasFilter: boolean,
 		data: any
 	): layerLisElementType => {
-		const hasElement = checkIfElementExists(layerList, 'layerName', layerName);
+		let tempLayerList = layerList;
+		const hasElement = checkIfElementExists(tempLayerList, 'layerName', layerName);
 		if (hasElement) {
-			layerList = removeObjectWhereValueEqualsString(layerList, 'layerName', layerName);
+			tempLayerList = removeObjectWhereValueEqualsString(tempLayerList, 'layerName', layerName);
 			if (map.getLayer(layerName)) {
 				map.removeLayer(layerName);
 				map.removeSource(sourceName);
@@ -85,7 +86,8 @@
 			data: data
 		};
 
-		layerList.push(element);
+		tempLayerList.push(element);
+		layerList = tempLayerList;
 		return element;
 	};
 
@@ -152,6 +154,8 @@
 				'fa-border-all',
 				false
 			);
+
+			isInitialDataLoaded = true;
 		} catch (err) {
 			console.error(err);
 		}
@@ -170,12 +174,23 @@
 		}
 	};
 
+	const checkIfMapLayerExists = (layerName: string) => {
+		try {
+			const layer = map.getLayer(layerName);
+			if (layer) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (err) {
+			return false;
+		}
+	};
+
 	const addMapSource = (layerListElement: layerLisElementType) => {
 		try {
 			const sourceExists = checkIfMapSourceExists(layerListElement.sourceName);
-			if (sourceExists) {
-				map.removeSource(layerListElement.sourceName);
-			}
+			if (sourceExists) return;
 			map.addSource(layerListElement.sourceName, {
 				type: 'geojson',
 				data: layerListElement.data
@@ -405,6 +420,10 @@
 		layerList.forEach((gpsElement) => {
 			if (gpsElement.layerName !== '3D-Buildings') {
 				addMapSource(gpsElement);
+
+				const doesLayerExist = checkIfMapLayerExists(gpsElement.layerName);
+				if(doesLayerExist) map.removeLayer(gpsElement.layerName);
+				
 				if (gpsElement.type === 'Point') {
 					addPointLayer(gpsElement, 'Count', ['get', 'Color']);
 				} else if (gpsElement.type === 'Polygon') {
@@ -443,7 +462,7 @@
 	};
 	//Switch the map style only if the map exists and the map is ready for switching styles
 	const switchStyle = () => {
-		if (map === null || isReadyForStyleSwitching === false) return;
+		if (map === null || isInitialDataLoaded === false) return;
 		try {
 			map.setStyle('mapbox://styles/mapbox/' + mapStyle);
 		} catch (err) {
@@ -516,6 +535,7 @@
 		// Mapboxs normal way to show and hide layers. This calls the filter every second
 		map.on('idle', () => {
 			addMapLayerVisibility();
+			resizeMap();
 		});
 
 		map.on('draw.create', updatePolygon);
@@ -523,7 +543,7 @@
 		map.on('draw.update', updatePolygon);
 		map.on('contextmenu', clearPolygon);
 
-		resizeMap();
+	
 	});
 	onDestroy(() => {
 		try {
