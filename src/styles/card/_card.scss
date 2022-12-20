@@ -1,0 +1,35 @@
+
+
+.card {
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    background-color: var(--white);
+    border-width: 1px;
+    border-style: solid;
+  }
+  
+  .toggle-btn {
+  
+    -webkit-transition: all 200ms;
+    transition: all 200ms;
+    border-radius: var(--radius-lg);
+    width: 100%;
+  }
+  
+  
+  .card-btn {
+    
+    padding: 1rem;
+    text-align: left;
+    -webkit-transition: all 200ms;
+    transition: all 200ms;
+    border-radius: var(--radius-lg);
+    width: 100%;
+  }
+  
+  .card-btn::hover {
+    background-color: var(--btn-default-hover);
+  }
+  

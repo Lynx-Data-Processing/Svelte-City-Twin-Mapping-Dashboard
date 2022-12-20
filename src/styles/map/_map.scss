@@ -1,0 +1,54 @@
+
+.map-style {
+    transition: all 0.5s;
+  }
+  .map-style:hover {
+    border-color: var(--primary-color);
+  }
+  .map-loading {
+    
+    color: white;
+    opacity: 0.9;
+    display: grid;
+    place-items: center;
+    height: 100%;
+    width: 100%;
+  }
+  .map-error {
+    background-color: var(--error-color);
+    color: white;
+    opacity: 0.9;
+    display: grid;
+    place-items: center;
+    height: 100%;
+    width: 100%;
+  }
+  .map-style-selected {
+    border-color: var(--primary-color);
+  }
+  .mapboxgl-popup {
+    border-radius: var(--radius-lg);
+  }
+  .mapboxgl-popup-content {
+    padding: 1rem !important;
+  }
+
+
+  
+
+.configurable-application--loading {
+    text-align: center;
+    display: block;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #fff;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: url(https://www.arcgis.com/apps/instant/interactivelegend/assets/loader-ie9.gif);
+  }
+  
+  
+  
+  
+  

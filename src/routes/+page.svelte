@@ -31,7 +31,6 @@
 	import AddGeojson from '../components/menu/AddGeojson.svelte';
 	import SelectionMenu from '../components/menu/SelectionMenu.svelte';
 	
-	
 	//* Set Initial Map Details
 	let mapStyle: string = 'outdoors-v11';
 	let mapDetails: mapDetailsType = {
@@ -41,8 +40,6 @@
 		pitch: 0,
 		bearing: -17.6
 	};
-
-	
 	//* Polygon and point of interest details
 	let layerList: layerLisElementType[] = [];
 	let selectedEvent: selectedEventType | null = null;
@@ -154,8 +151,8 @@
 			}
 
 			const rawEventList = response.data.eventList;
-			const tempGpsData = getMediaEventsFromAllSmarterAIFiles(rawEventList);
-			getVideosFromGpsData(tempGpsData);
+			const tempGpsData = await getMediaEventsFromAllSmarterAIFiles(rawEventList);
+			await getVideosFromGpsData(tempGpsData);
 		} catch (error) {
 			alert(error);
 			isError = true;
