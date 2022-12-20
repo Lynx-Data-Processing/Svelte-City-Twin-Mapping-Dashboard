@@ -8,7 +8,7 @@
 	};
 </script>
 
-<section class="card h-fit slide-in-left p-4">
+<section class="card h-fit slide-in-left p-4 w-[15rem]" >
 	<div class="flex flow-row justify-between my-1">
 		<div>
 			<p>Speed Legend (Km/h):</p>

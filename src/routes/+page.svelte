@@ -13,7 +13,7 @@
 	import { GeojsonEnum } from '../types/enums';
 
 	import Map from '../components/map/Map.svelte';
-	import DateTime from '../components/menu/DateTime.svelte';
+	import DateTime from '../components/menu/SearchDateTime.svelte';
 	import Layers from '../components/map/Layers.svelte';
 	import MapStyleSelector from '../components/map/MapStyleSelector.svelte';
 	import StreetView from '../components/menu/StreetView.svelte';
@@ -30,6 +30,7 @@
 	import SelectedVideo from '../components/menu/SelectedVideo.svelte';
 	import AddGeojson from '../components/menu/AddGeojson.svelte';
 	import SelectionMenu from '../components/menu/SelectionMenu.svelte';
+	import SpeedView from '../components/menu/SpeedView.svelte';
 	
 	//* Set Initial Map Details
 	let mapStyle: string = 'outdoors-v11';
@@ -226,10 +227,24 @@
 					<AddGeojson {addGeojsonData} />
 				{/if}
 			</div>
-			<div>
+			
+		</div>
+
+		<div class="absolute top-16 right-2 flex flex-row gap-4 z-100">
+
+			<div class={`flex flex-col gap-4`}>
+
+			<div class="h-fit">
 				<MapStyleSelector bind:mapStyle />
 			</div>
+
+			<div class="h-fit">
+				<SpeedView  bind:gpsData/>
+			</div>
+
+			</div>
 		</div>
+
 	</div>
 </main>
 

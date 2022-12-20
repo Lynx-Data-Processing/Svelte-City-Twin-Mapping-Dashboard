@@ -26,10 +26,21 @@
   .map-style-selected {
     border-color: var(--primary-color);
   }
-  .mapboxgl-popup {
+
+  
+  .mapboxgl-popup-close-button {
+    padding: 1rem !important;
+    font-size: x-large !important;
+    color: var(--error-color);
+  }
+
+  .mapboxgl-popup-content {
     border-radius: var(--radius-lg);
   }
+
+  
   .mapboxgl-popup-content {
+    overflow: hidden;
     padding: 1rem !important;
   }
 

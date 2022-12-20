@@ -29,7 +29,7 @@
 				Application uses MAPBOX to display Geojson data. Interactive, thoroughly customizable maps in the browser, powered by vector tiles and WebGL. 
 			</p>
 
-			<div class="flex flex-wrap justify-between  ">
+			<div class="flex flex-wrap ">
 				{#each PROGRAMMING_TOOLS as tool}
 				<img height="100" width="auto" title={tool}  class={`img-icon w-8 mx-2 py-2`} alt="" src={getDevicon(tool)} loading="lazy" />
 				{/each}

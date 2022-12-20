@@ -1,52 +1,52 @@
 import type {
-  videoType} from '../../types/types';
+  videoType
+} from '../../types/types';
 
-export const buildPopup = async (features : any, layerName : string, videoLinks : videoType[]) => {
+
+function separateCaps(str: string) {
+  const words = str.split(/(?=[A-Z])/);
+  const firstWord = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+  const rest = words.slice(1).join(' ');
+  return firstWord + ' ' + rest;
+}
+
+function shortenString(str : string) {
+  if (str.length > 6) {
+    return str.slice(0, 6);
+  }
+  return str;
+}
+
+export const buildPopup = async (features: any, layerName: string, videoLinks: videoType[]) => {
   const container = document.createElement('div');
 
   const sliced = Object.fromEntries(Object.entries(features.properties).slice(0, 8));
   for (const [key, value] of Object.entries(sliced)) {
     const keyChild = document.createElement('p');
     keyChild.classList.add('block', 'font-bold');
-    keyChild.append(key.toString());
+    keyChild.append(separateCaps(key.toString()));
 
     const valueChild = document.createElement('p');
     valueChild.classList.add('block');
-    valueChild.append((value as any).toString());
+    valueChild.append(shortenString((value as any).toString()));
 
     container.append(keyChild, valueChild);
   }
 
   if (layerName.includes('GPS')) {
-  
-    let src = '';
-    // if(features.properties.DeviceId === 'CK20520033'){
-    //   src = `/USARS_Machine_Learning/${features.properties.EventId}-converted.mp4`;
-    // }
-    // else{
-      
-    // }
 
-    const videos = videoLinks.filter(o=>  o.eventId === features.properties.EventId);
-    src =  videos.length ? videos[0].videoUrl! : '';
+    const videos = videoLinks.filter(o => o.eventId === features.properties.EventId);
+    let src = videos.length ? videos[0].videoUrl! : '';
 
     if (!src) {
-      // create div to store the image in
       const pictureChild = document.createElement('div');
-      // pictureChild.width = 320;
-      // pictureChild.height = 240;
-
-      // create the image
       const defaultImg = document.createElement('img');
       defaultImg.src = 'https://www.thejungleadventure.com/assets/images/logo/novideo.png';
-
-      // append the image to the fiv
       pictureChild.appendChild(defaultImg);
-
-      // append the div to the container
       container.append(pictureChild);
     } else {
       const videoChild = document.createElement('video');
+      videoChild.classList.add('object-cover', 'rounded-lg');
       videoChild.width = 320;
       videoChild.height = 240;
       videoChild.controls = true;

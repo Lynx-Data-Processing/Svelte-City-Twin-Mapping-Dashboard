@@ -34,7 +34,7 @@
 		return layerList.every((element) => element.isShown === initialIsShown);
 	};
 
-	let showTerms = true;
+	let showTerms = false;
 	const toggleTerms = () => {
 		showTerms = !showTerms;
 	};
@@ -63,7 +63,7 @@
 		{#if layerList.length}
 			<button
 				on:click={toggleLayers}
-				class={`card-btn   ${showAllLayers ? 'btn-green' : ' btn-error-outline'}  my-1 `}
+				class={`btn   ${showAllLayers ? 'btn-green' : 'btn-error-outline'}  my-1 `}
 			>
 				{showAllLayers ? 'Show All' : 'Disable All'}
 			</button>
@@ -71,7 +71,7 @@
 				{#each layerList as layer}
 					<button
 						on:click={() => toggleLayer(layer)}
-						class={`card-btn  ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} my-1 `}
+						class={`btn  ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} my-1 `}
 					>
 						<i class="fa-solid {layer.icon} " />
 						{layer.layerName}

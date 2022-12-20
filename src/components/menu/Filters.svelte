@@ -60,7 +60,7 @@
 				</div>
 			{/each}
 
-			<button on:click={resetFilters} class={`card-btn  btn-black-outline my-1 `}>
+			<button on:click={resetFilters} class={`btn  btn-black-outline my-1 `}>
 				Reset All Filters
 			</button>
 		{:else}

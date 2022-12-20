@@ -10,26 +10,3 @@
     border-style: solid;
   }
   
-  .toggle-btn {
-  
-    -webkit-transition: all 200ms;
-    transition: all 200ms;
-    border-radius: var(--radius-lg);
-    width: 100%;
-  }
-  
-  
-  .card-btn {
-    
-    padding: 1rem;
-    text-align: left;
-    -webkit-transition: all 200ms;
-    transition: all 200ms;
-    border-radius: var(--radius-lg);
-    width: 100%;
-  }
-  
-  .card-btn::hover {
-    background-color: var(--btn-default-hover);
-  }
-  

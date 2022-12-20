@@ -7,7 +7,9 @@ import type { geojsonFeatureType , geojsonType} from '../../types/types';
 //* Get a color for every 10km/h
 //* Example: 0-9Km/h, 10-19km/h
 export const getVehicleSpeedColor = (speed : number) => {
-  let speedIndex : number = speed
+
+  const rangeSize = 10;
+  let speedIndex = Math.floor(speed / rangeSize);
   speedIndex = speedIndex >= SPEED_COLORS.length ? SPEED_COLORS.length - 1 : speedIndex;
   return SPEED_COLORS[speedIndex];
 };

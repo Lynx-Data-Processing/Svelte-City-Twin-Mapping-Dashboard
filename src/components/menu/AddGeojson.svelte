@@ -48,7 +48,7 @@
 
 			{#if value !== '' && name !== '' && color !== ''}
 				<button
-					class={`card-btn btn-primary my-1`}
+					class={`btn btn-primary my-1`}
 					on:click={() => addGeojsonData(value, name, 'Point', color)}
 					><i class="fa-solid fa-plus " /> Add Geojson Data
 				</button>
