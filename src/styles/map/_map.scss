@@ -3,7 +3,7 @@
 }
 
 .map-style:hover {
-  border-color: var(--primary-color);
+  border-color: $primary-color;
 }
 
 .map-loading {
@@ -17,7 +17,7 @@
 }
 
 .map-error {
-  background-color: var(--error-color);
+  background-color: $error-color;
   color: white;
   opacity: 0.9;
   display: grid;
@@ -34,11 +34,11 @@
 .mapboxgl-popup-close-button {
   padding: 1rem !important;
   font-size: x-large !important;
-  color: var(--error-color);
+  color: $error-color;
 }
 
 .mapboxgl-popup-content {
-  border-radius: var(--radius-lg);
+  border-radius: $radius-lg;
 }
 
 

@@ -2,7 +2,7 @@
 	export let title: string;
 	export let width = 'w-[32rem]';
 	export let disableToggle = false;
-	export let showOnLoad = false;
+	export let showOnLoad = true;
 	let showTerms = showOnLoad;
 	const toggleTerms = () => {
 		showTerms = !showTerms;
