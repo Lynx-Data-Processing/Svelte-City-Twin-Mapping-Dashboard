@@ -13,7 +13,7 @@
 	];
 </script>
 
-<footer class="bg-smoke  py-8 px-8">
+<footer class="bg-smoke  py-16 px-8">
 	<div class="grid grid-cols-1 sm:grid-cols-3 ">
 		<div class="col-span-1">
 			<p>© USARs. All rights reserved.</p>

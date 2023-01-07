@@ -35,24 +35,26 @@
 	};
 </script>
 
-{#if layerList.length}
-	<button
-		on:click={toggleLayers}
-		class={`btn   ${showAllLayers ? 'btn-green' : 'btn-error-outline'}  my-1 `}
-	>
-		{showAllLayers ? 'Show All' : 'Disable All'}
-	</button>
-	<div class="flex flex-col ">
-		{#each layerList as layer}
-			<button
-				on:click={() => toggleLayer(layer)}
-				class={`btn  ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} my-1 `}
-			>
-				<i class="fa-solid {layer.icon} " />
-				{layer.layerName}
-			</button>
-		{/each}
-	</div>
-{:else}
-	<div class="alert alert-green my-1" role="alert">Loading Data.</div>
-{/if}
+<div class="flex flex-col">
+	{#if layerList.length}
+		<button
+			on:click={toggleLayers}
+			class={`btn   ${showAllLayers ? 'btn-green' : 'btn-error-outline'}  my-1 `}
+		>
+			{showAllLayers ? 'Show All' : 'Disable All'}
+		</button>
+		<div class="flex flex-col ">
+			{#each layerList as layer}
+				<button
+					on:click={() => toggleLayer(layer)}
+					class={`btn  ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} my-1 `}
+				>
+					<i class="fa-solid {layer.icon} " />
+					{layer.layerName}
+				</button>
+			{/each}
+		</div>
+	{:else}
+		<div class="alert alert-green my-1" role="alert">Loading Data.</div>
+	{/if}
+</div>

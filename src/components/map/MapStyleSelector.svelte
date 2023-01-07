@@ -42,14 +42,16 @@
 	};
 </script>
 
-{#each mapStyleList as mapStyleItem}
-	<div>
-		<input
-			value={mapStyleItem.name}
-			type="radio"
-			checked={mapStyle === mapStyleItem.value}
-			on:click={() => toggleStyle(mapStyleItem.value)}
-		/>
-		<label class="ml-2" for={mapStyleItem.name}>{mapStyleItem.name}</label>
-	</div>
-{/each}
+<div class="flex flex-col">
+	{#each mapStyleList as mapStyleItem}
+		<div>
+			<input
+				value={mapStyleItem.name}
+				type="radio"
+				checked={mapStyle === mapStyleItem.value}
+				on:click={() => toggleStyle(mapStyleItem.value)}
+			/>
+			<label class="ml-2" for={mapStyleItem.name}>{mapStyleItem.name}</label>
+		</div>
+	{/each}
+</div>

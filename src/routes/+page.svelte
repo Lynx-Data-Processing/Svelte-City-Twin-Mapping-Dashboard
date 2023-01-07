@@ -10,29 +10,24 @@
 		videoType
 	} from '../types/types';
 
-	import { GeojsonEnum } from '../types/enums';
+	import Card from '../components/Card.svelte';
 
-	import Card from '../components/menu/Card.svelte';
-
+	import { default as PaginatedTable } from '../components/Events/PaginatedTable.svelte';
 	import Layers from '../components/map/Layers.svelte';
 	import Map from '../components/map/Map.svelte';
 	import MapError from '../components/map/MapError.svelte';
 	import MapLoadingSpinner from '../components/map/MapLoadingSpinner.svelte';
 	import MapStyleSelector from '../components/map/MapStyleSelector.svelte';
 	import AddGeojson from '../components/menu/AddGeojson.svelte';
-	import DateTime from '../components/menu/SearchData.svelte';
+	import SearchData from '../components/menu/SearchData.svelte';
 	import SelectedVideo from '../components/menu/SelectedVideo.svelte';
 	import SelectionMenu from '../components/menu/SelectionMenu.svelte';
 	import SpeedView from '../components/menu/SpeedView.svelte';
 	import StreetView from '../components/menu/StreetView.svelte';
-	import RecordingsTable from '../components/RecordingsTable.svelte';
 	import { getAllEvents } from '../service/smarter-api';
-	import {
-		rawGPSDataToGeojsonData,
-		rawSmarterAIGPSDataToGeojson
-	} from '../utils/geojson/geojson-utils.js';
+	import { rawSmarterAIGPSDataToGeojson } from '../utils/geojson/geojson-utils.js';
 	import { getGPSSensorDataFromEventFiles } from '../utils/geojson/gpsData-utils';
-	import { findVideo } from '../utils/popup/video-finder';
+	import { findVideo } from '../utils/video-finder';
 
 	//* Set Initial Map Details
 	let mapStyle: string = 'outdoors-v11';
@@ -85,7 +80,6 @@
 	const getMediaEventsFromAllSmarterAIFiles = async (rawEventList: eventType[]) => {
 		const [tempGPSList, tempEventList] = await getGPSSensorDataFromEventFiles(rawEventList);
 		eventList = tempEventList;
-
 		if (!tempGPSList.length) return;
 
 		//* If data exists, create the GPS Geojson layer
@@ -156,96 +150,74 @@
 
 		isLoading = false;
 	};
-
-	/**
-	 * Adds GeoJSON data to the `gpsData` array and updates the map center.
-	 * @param input The input data in the form of an object.
-	 * @param name The name of the data.
-	 * @param dataType The type of data, either 'Point' or 'Polygon'.
-	 * @param color The color of the data.
-	 */
-	const addGeojsonData = (
-		input: object,
-		name = 'Own Data',
-		dataType = GeojsonEnum.Point,
-		color = 'Red'
-	) => {
-		try {
-			gpsData = [rawGPSDataToGeojsonData(input, name, dataType, color)];
-		} catch (error) {
-			console.error(`Error converting input data to GeoJSON: ${error}`);
-			return;
-		}
-
-		try {
-			const coordinates =
-				dataType === 'Point'
-					? gpsData[0].features[0].geometry.coordinates
-					: gpsData[0].features[0].geometry.coordinates[0][0];
-			updateMapCenter(coordinates);
-		} catch (error) {
-			console.error(`Error updating map center: ${error}`);
-		}
-	};
 </script>
 
 <SelectionMenu bind:selectedMenu bind:menuComponents />
-<main class="grid grid-cols-1 gap-4 lg:grid-cols-12 ">
-	<div class={`col-span-1 lg:col-span-12 relative`}>
-		<Map
-			bind:videoArray
-			{mapDetails}
-			bind:gpsData
-			bind:layerList
-			bind:mapStyle
-			bind:selectedPOI
-			bind:selectedEvent
-			bind:selectedMenu
-		/>
+<main>
+	<div class="grid grid-cols-1 gap-4 lg:grid-cols-12 ">
+		<div class={`col-span-1 lg:col-span-12 relative`}>
+			<Map
+				bind:videoArray
+				{mapDetails}
+				bind:gpsData
+				bind:layerList
+				bind:mapStyle
+				bind:selectedPOI
+				bind:selectedEvent
+				bind:selectedMenu
+			/>
 
-		{#if isLoading === true}
-			<MapLoadingSpinner />
-		{:else if isError === true}
-			<MapError />
-		{/if}
+			{#if isLoading === true}
+				<MapLoadingSpinner />
+			{:else if isError === true}
+				<MapError />
+			{/if}
 
-		<div class="absolute top-2 left-2 flex flex-row gap-4 z-100">
-			<div class={`flex flex-col gap-4`}>
-				<Card title="Layers">
-					<Layers bind:layerList />
-				</Card>
-				{#if selectedMenu.id === 0}
-					<Card title="Search Data">
-						<DateTime bind:dateTimeDictionary {fetchEventsData} />
+			<div class="absolute top-2 left-2 flex flex-row gap-4 z-100">
+				<div class={`flex flex-col gap-4`}>
+					<Card title="Layers" showOnLoad={true}>
+						<Layers bind:layerList />
 					</Card>
-				{:else if selectedMenu.id === 1}
-					<Card title="Street View">
-						<StreetView bind:selectedPOI />
-					</Card>
-				{:else if selectedMenu.id === 2}
-					<SelectedVideo bind:selectedEvent bind:videoArray />
-				{:else if selectedMenu.id === 3}
-					<Card title="Add GeoJSON">
-						<AddGeojson {addGeojsonData} />
-					</Card>
-				{/if}
+					{#if selectedMenu.id === 0}
+						<Card title="Search Data" showOnLoad={true}>
+							<SearchData bind:dateTimeDictionary {fetchEventsData} />
+						</Card>
+					{:else if selectedMenu.id === 1}
+						<Card title="Street View">
+							<StreetView bind:selectedPOI />
+						</Card>
+					{:else if selectedMenu.id === 2}
+						<Card title="Video Player">
+							<SelectedVideo bind:selectedEvent bind:videoArray />
+						</Card>
+					{:else if selectedMenu.id === 3}
+						<Card title="Add GeoJSON">
+							<AddGeojson bind:gpsData {updateMapCenter} />
+						</Card>
+					{/if}
+				</div>
 			</div>
-		</div>
 
-		<div class="absolute top-16 right-2 flex flex-row gap-4 z-100">
-			<div class={`flex flex-col gap-4`}>
-				<Card title="Map Style" width="w-[15rem]">
-					<MapStyleSelector bind:mapStyle />
-				</Card>
+			<div class="absolute top-16 right-2 flex flex-row gap-4 z-100">
+				<div class={`flex flex-col gap-4`}>
+					<Card title="Map Style" width="w-[15rem]">
+						<MapStyleSelector bind:mapStyle />
+					</Card>
 
-				<Card title="Speed Legend" width="w-[15rem]">
-					<SpeedView bind:gpsData />
-				</Card>
+					<Card title="Speed Legend" width="w-[15rem]">
+						<SpeedView bind:gpsData />
+					</Card>
+				</div>
 			</div>
 		</div>
 	</div>
+	{#if eventList.length}
+		<div class="grid grid-cols-1 gap-4 lg:grid-cols-12 p-4">
+			<div class={`col-span-1 lg:col-span-12 relative`}>
+				<Card title="Recordings" width="w-full" disableToggle={true}>
+					<PaginatedTable bind:eventList />
+				</Card>
+			</div>
+		</div>
+	{/if}
 </main>
-
-{#if eventList.length}
-	<RecordingsTable bind:eventList />
-{/if}

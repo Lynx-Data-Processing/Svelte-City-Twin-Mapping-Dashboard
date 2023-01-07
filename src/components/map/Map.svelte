@@ -1,37 +1,35 @@
 <script lang="ts">
-	import type {
-		layerLisElementType,
-		selectedPOIType,
-		mapDetailsType,
-		videoType,
-		selectedEventType,
-		menuComponentsType,
-		geojsonType
-	} from '../../types/types';
+	import { onDestroy, onMount } from 'svelte';
 	import { GeojsonEnum } from '../../types/enums';
-	import { onMount } from 'svelte';
-	import { onDestroy } from 'svelte';
-	import {
-		removeObjectWhereValueEqualsString,
-		checkIfElementExists
-	} from '../../utils/filter-data.js';
-	import { buildPopup } from '../../utils/popup/popup-builder';
+	import type {
+		geojsonType,
+		layerLisElementType,
+		mapDetailsType,
+		menuComponentsType,
+		selectedEventType,
+		selectedPOIType,
+		videoType
+	} from '../../types/types';
 	import { axiosCacheGetUtility } from '../../utils/fetch-data';
+	import {
+		checkIfElementExists,
+		removeObjectWhereValueEqualsString
+	} from '../../utils/filter-data.js';
 	import { rawKingstonDataToGeojsonData } from '../../utils/geojson/kingston-geojson-util';
+	import { buildPopup } from '../../utils/popup/popup-builder';
 
 	import {
 		PUBLIC_MAPBOX_KEY,
-		PUBLIC_TREES_URL,
-		PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL
+		PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
+		PUBLIC_TREES_URL
 	} from '$env/static/public';
 
-	import { v4 as uuidv4 } from 'uuid';
-	import mapboxgl from 'mapbox-gl';
 	import MapboxDraw from '@mapbox/mapbox-gl-draw';
+	import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 	import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 	import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-	import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
-
+	import mapboxgl from 'mapbox-gl';
+	import { v4 as uuidv4 } from 'uuid';
 
 	export let layerList: layerLisElementType[];
 	export let selectedPolygon = null;
@@ -421,8 +419,8 @@
 				addMapSource(gpsElement);
 
 				const doesLayerExist = checkIfMapLayerExists(gpsElement.layerName);
-				if(doesLayerExist) map.removeLayer(gpsElement.layerName);
-				
+				if (doesLayerExist) map.removeLayer(gpsElement.layerName);
+
 				if (gpsElement.type === 'Point') {
 					addPointLayer(gpsElement, 'Count', ['get', 'Color']);
 				} else if (gpsElement.type === 'Polygon') {
@@ -541,8 +539,6 @@
 		map.on('draw.delete', clearPolygon);
 		map.on('draw.update', updatePolygon);
 		map.on('contextmenu', clearPolygon);
-
-	
 	});
 	onDestroy(() => {
 		try {

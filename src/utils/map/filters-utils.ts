@@ -1,5 +1,7 @@
 import type { geojsonType, gpsFilterType } from '../../types/types';
 
+// Used to create the filters for the GPS data
+//! Currently not used but will be used in the future
 export const createGPSFilters = (geojsonArray: geojsonType[]) => {
     let gpsFilters: gpsFilterType[] = [];
 
@@ -20,7 +22,6 @@ export const createGPSFilters = (geojsonArray: geojsonType[]) => {
                     selected: [value / 2, value * 2]
                 });
             }
-
         }
     }
     return gpsFilters;

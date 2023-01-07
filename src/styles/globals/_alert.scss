@@ -1,14 +1,15 @@
-
 .alert {
-    padding: 1rem;
-    text-align: left;
-    border-radius: var(--radius-lg);
-  }
-  .alert-red {
-    color: var(--error-color);
-    background-color: var(--error-color-light);
-  }
-  .alert-green {
-    color: var(--success-color);
-    background-color: var(--success-color-light);
-  }
+  padding: 1rem;
+  text-align: left;
+  border-radius: var(--radius-lg);
+}
+
+.alert-red {
+  color: var(--error-color);
+  background-color: var(--error-color-light);
+}
+
+.alert-green {
+  color: var(--success-color);
+  background-color: var(--success-color-light);
+}

@@ -10,7 +10,7 @@ function separateCaps(str: string) {
   return firstWord + ' ' + rest;
 }
 
-function shortenString(str : string) {
+function shortenString(str: string) {
   if (str.length > 6) {
     return str.slice(0, 6);
   }

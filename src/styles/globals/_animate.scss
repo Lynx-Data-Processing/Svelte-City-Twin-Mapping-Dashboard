@@ -16,18 +16,21 @@
 		transform: translateX(1000px);
 		opacity: 0;
 	}
+
 	100% {
 		-webkit-transform: translateX(0);
 		transform: translateX(0);
 		opacity: 1;
 	}
 }
+
 @keyframes slide-in-right {
 	0% {
 		-webkit-transform: translateX(1000px);
 		transform: translateX(1000px);
 		opacity: 0;
 	}
+
 	100% {
 		-webkit-transform: translateX(0);
 		transform: translateX(0);
@@ -54,48 +57,59 @@
 		-webkit-transform: translate(0);
 		transform: translate(0);
 	}
+
 	20% {
 		-webkit-transform: translate(-2px, 2px);
 		transform: translate(-2px, 2px);
 	}
+
 	40% {
 		-webkit-transform: translate(-2px, -2px);
 		transform: translate(-2px, -2px);
 	}
+
 	60% {
 		-webkit-transform: translate(2px, 2px);
 		transform: translate(2px, 2px);
 	}
+
 	80% {
 		-webkit-transform: translate(2px, -2px);
 		transform: translate(2px, -2px);
 	}
+
 	100% {
 		-webkit-transform: translate(0);
 		transform: translate(0);
 	}
 }
+
 @keyframes vibrate-1 {
 	0% {
 		-webkit-transform: translate(0);
 		transform: translate(0);
 	}
+
 	20% {
 		-webkit-transform: translate(-2px, 2px);
 		transform: translate(-2px, 2px);
 	}
+
 	40% {
 		-webkit-transform: translate(-2px, -2px);
 		transform: translate(-2px, -2px);
 	}
+
 	60% {
 		-webkit-transform: translate(2px, 2px);
 		transform: translate(2px, 2px);
 	}
+
 	80% {
 		-webkit-transform: translate(2px, -2px);
 		transform: translate(2px, -2px);
 	}
+
 	100% {
 		-webkit-transform: translate(0);
 		transform: translate(0);
@@ -120,18 +134,21 @@
 		transform: translateY(-1000px);
 		opacity: 0;
 	}
+
 	100% {
 		-webkit-transform: translateY(0);
 		transform: translateY(0);
 		opacity: 1;
 	}
 }
+
 @keyframes slide-in-top {
 	0% {
 		-webkit-transform: translateY(-1000px);
 		transform: translateY(-1000px);
 		opacity: 0;
 	}
+
 	100% {
 		-webkit-transform: translateY(0);
 		transform: translateY(0);
@@ -155,14 +172,17 @@
 	0% {
 		opacity: 0;
 	}
+
 	100% {
 		opacity: 1;
 	}
 }
+
 @keyframes fade-in {
 	0% {
 		opacity: 0;
 	}
+
 	100% {
 		opacity: 1;
 	}
@@ -172,10 +192,10 @@
 .loading {
 	text-align: center;
 	display: block;
-	
+
 	overflow: hidden;
 	background-color: #fff;
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-image: url(https://www.arcgis.com/apps/instant/interactivelegend/assets/loader-ie9.gif);
-  }
+}

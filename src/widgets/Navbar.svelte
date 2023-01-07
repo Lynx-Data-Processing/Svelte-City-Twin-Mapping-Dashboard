@@ -1,5 +1,5 @@
 <navbar class="shadow-lg z-50">
-	<div class={`bg-dark   py-5 px-8 text-white  z-10 flex justify-between`}>
+	<div class={`bg-dark   py-5 px-4 text-white  z-10 flex justify-between`}>
 		<div><p class="text-xl  ">City Twin Mapping Dashboard</p></div>
 		<div>
 			<a

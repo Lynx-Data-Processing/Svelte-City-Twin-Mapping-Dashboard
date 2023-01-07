@@ -8,7 +8,7 @@
 
 
 :root {
-    font-family: 'Quicksand', sans-serif;
+
     --white: rgb(255, 255, 255);
     --smoke: rgb(250, 250, 250);
     --dark: rgb(37, 37, 37);
@@ -56,14 +56,6 @@ $radius-lg: 0.5rem;
 
 
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'Source Serif Pro', serif;
-}
 
 
 .text-error {
@@ -94,7 +86,7 @@ h6 {
     border-style: solid;
     width: 100%;
 
-    &:hover{
+    &:hover {
         cursor: pointer;
         color: $black;
     }
@@ -106,7 +98,7 @@ h6 {
     &-no-rounded {
         border-radius: 0;
     }
-   
+
 
     &-primary {
         background-color: $primary-color;
@@ -121,7 +113,7 @@ h6 {
         background-color: $btn-default;
 
         &:hover {
-            
+
             background-color: $btn-default-light;
         }
     }
@@ -149,7 +141,7 @@ h6 {
         border-color: $dark;
 
         &:hover {
-            
+
             background-color: $btn-default-light;
         }
     }
