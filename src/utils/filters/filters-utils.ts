@@ -1,4 +1,4 @@
-import type { gpsFilterType, geojsonType } from '../../types/types';
+import type { geojsonType, gpsFilterType } from '../../types/types';
 
 export const createGPSFilters = (geojsonArray: geojsonType[]) => {
     let gpsFilters: gpsFilterType[] = [];

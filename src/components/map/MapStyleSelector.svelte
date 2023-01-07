@@ -42,16 +42,14 @@
 	};
 </script>
 
-<section class="card h-fit scale-in-center p-4">
-	{#each mapStyleList as mapStyleItem}
-		<div>
-			<input
-				value={mapStyleItem.name}
-				type="radio"
-				checked={mapStyle === mapStyleItem.value}
-				on:click={() => toggleStyle(mapStyleItem.value)}
-			/>
-			<label class="ml-2" for={mapStyleItem.name}>{mapStyleItem.name}</label>
-		</div>
-	{/each}
-</section>
+{#each mapStyleList as mapStyleItem}
+	<div>
+		<input
+			value={mapStyleItem.name}
+			type="radio"
+			checked={mapStyle === mapStyleItem.value}
+			on:click={() => toggleStyle(mapStyleItem.value)}
+		/>
+		<label class="ml-2" for={mapStyleItem.name}>{mapStyleItem.name}</label>
+	</div>
+{/each}

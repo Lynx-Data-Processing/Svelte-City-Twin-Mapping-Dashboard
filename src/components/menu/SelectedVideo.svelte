@@ -7,6 +7,7 @@
 
 	const updateVideoUrl = async () => {
 		try {
+			if (!selectedEvent) return;
 			const selectedEventId = selectedEvent?.data.EventId;
 			const videos = videoArray.filter((o) => o.eventId === selectedEventId);
 			videoUrl = videos.length ? videos[0].videoUrl! : '';
@@ -14,8 +15,6 @@
 			console.log(e);
 		}
 	};
-
-	$: selectedEvent && updateVideoUrl();
 
 	$: selectedEvent && updateVideoUrl();
 </script>

@@ -1,6 +1,6 @@
 <script>
-	import { onMount } from 'svelte/internal';
 	import { onDestroy } from 'svelte';
+	import { onMount } from 'svelte/internal';
 
 	let streetViewObject = null;
 	let streetViewContainer = null;
@@ -19,7 +19,7 @@
 		}
 	};
 
-	const onLocationChange = (poi) => {
+	const updateStreetView = (poi) => {
 		try {
 			if (streetViewObject === null) {
 				initializeStreetView(poi);
@@ -39,7 +39,7 @@
 		}
 	});
 
-	$: selectedPOI && onLocationChange(selectedPOI);
+	$: selectedPOI && updateStreetView(selectedPOI);
 
 	onDestroy(() => {
 		try {
@@ -51,15 +51,12 @@
 	});
 </script>
 
-<section class="card h-fit slide-in-left w-[32rem]">
+<div class="flex flex-col">
 	{#if selectedPOI == null}
-		<div class="p-4">
-			<p class="my-1">Street View:</p>
-			<div class="alert alert-red my-1" role="alert">Select a point on the map.</div>
-		</div>
+		<div class="alert alert-red my-1" role="alert">Select a point on the map.</div>
 	{/if}
 	<div
 		bind:this={streetViewContainer}
 		class={`${selectedPOI == null ? 'h-0' : 'h-96'} w-full rounded-lg`}
 	/>
-</section>
+</div>

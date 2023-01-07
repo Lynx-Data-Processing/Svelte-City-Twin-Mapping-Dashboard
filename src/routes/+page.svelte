@@ -1,37 +1,39 @@
 <script lang="ts">
 	import type {
-		layerLisElementType,
 		dateTimeDictionaryType,
-		mapDetailsType,
-		selectedEventType,
-		videoType,
-		selectedPOIType,
 		eventType,
-		menuComponentsType
+		layerLisElementType,
+		mapDetailsType,
+		menuComponentsType,
+		selectedEventType,
+		selectedPOIType,
+		videoType
 	} from '../types/types';
 
 	import { GeojsonEnum } from '../types/enums';
 
-	import Map from '../components/map/Map.svelte';
-	import DateTime from '../components/menu/SearchDateTime.svelte';
+	import Card from '../components/menu/Card.svelte';
+
 	import Layers from '../components/map/Layers.svelte';
-	import MapStyleSelector from '../components/map/MapStyleSelector.svelte';
-	import StreetView from '../components/menu/StreetView.svelte';
-	import { findVideo } from '../utils/popup/video-finder';
-	import {
-		rawSmarterAIGPSDataToGeojson,
-		rawGPSDataToGeojsonData
-	} from '../utils/geojson/geojson-utils.js';
-	import { getGPSSensorDataFromEventFiles } from '../utils/geojson/gpsData-utils';
-	import { getAllEvents } from '../service/smarter-api';
-	import MapLoadingSpinner from '../components/map/MapLoadingSpinner.svelte';
+	import Map from '../components/map/Map.svelte';
 	import MapError from '../components/map/MapError.svelte';
-	import RecordingsTable from '../components/RecordingsTable.svelte';
-	import SelectedVideo from '../components/menu/SelectedVideo.svelte';
+	import MapLoadingSpinner from '../components/map/MapLoadingSpinner.svelte';
+	import MapStyleSelector from '../components/map/MapStyleSelector.svelte';
 	import AddGeojson from '../components/menu/AddGeojson.svelte';
+	import DateTime from '../components/menu/SearchData.svelte';
+	import SelectedVideo from '../components/menu/SelectedVideo.svelte';
 	import SelectionMenu from '../components/menu/SelectionMenu.svelte';
 	import SpeedView from '../components/menu/SpeedView.svelte';
-	
+	import StreetView from '../components/menu/StreetView.svelte';
+	import RecordingsTable from '../components/RecordingsTable.svelte';
+	import { getAllEvents } from '../service/smarter-api';
+	import {
+		rawGPSDataToGeojsonData,
+		rawSmarterAIGPSDataToGeojson
+	} from '../utils/geojson/geojson-utils.js';
+	import { getGPSSensorDataFromEventFiles } from '../utils/geojson/gpsData-utils';
+	import { findVideo } from '../utils/popup/video-finder';
+
 	//* Set Initial Map Details
 	let mapStyle: string = 'outdoors-v11';
 	let mapDetails: mapDetailsType = {
@@ -63,13 +65,8 @@
 	let isError = false;
 	let gpsData: any[] = [];
 
-
 	let videoArray: videoType[] = [];
 	let eventList: eventType[] = [];
-
-
-
-	
 
 	const updateMapCenter = (coordinates: number[]) => {
 		mapDetails = {
@@ -80,8 +77,6 @@
 			bearing: -17.6
 		};
 	};
-
-	
 
 	/**
 	 * Retrieves GPS sensor data and video URLs from a list of events and updates the `eventList`, `gpsData`, and `videoArray` arrays.
@@ -216,35 +211,38 @@
 
 		<div class="absolute top-2 left-2 flex flex-row gap-4 z-100">
 			<div class={`flex flex-col gap-4`}>
-				<Layers bind:layerList />
+				<Card title="Layers">
+					<Layers bind:layerList />
+				</Card>
 				{#if selectedMenu.id === 0}
-					<DateTime bind:dateTimeDictionary {fetchEventsData} />
+					<Card title="Search Data">
+						<DateTime bind:dateTimeDictionary {fetchEventsData} />
+					</Card>
 				{:else if selectedMenu.id === 1}
-					<StreetView bind:selectedPOI />
+					<Card title="Street View">
+						<StreetView bind:selectedPOI />
+					</Card>
 				{:else if selectedMenu.id === 2}
 					<SelectedVideo bind:selectedEvent bind:videoArray />
 				{:else if selectedMenu.id === 3}
-					<AddGeojson {addGeojsonData} />
+					<Card title="Add GeoJSON">
+						<AddGeojson {addGeojsonData} />
+					</Card>
 				{/if}
 			</div>
-			
 		</div>
 
 		<div class="absolute top-16 right-2 flex flex-row gap-4 z-100">
-
 			<div class={`flex flex-col gap-4`}>
+				<Card title="Map Style" width="w-[15rem]">
+					<MapStyleSelector bind:mapStyle />
+				</Card>
 
-			<div class="h-fit">
-				<MapStyleSelector bind:mapStyle />
-			</div>
-
-			<div class="h-fit">
-				<SpeedView  bind:gpsData/>
-			</div>
-
+				<Card title="Speed Legend" width="w-[15rem]">
+					<SpeedView bind:gpsData />
+				</Card>
 			</div>
 		</div>
-
 	</div>
 </main>
 

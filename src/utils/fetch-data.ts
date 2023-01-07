@@ -1,18 +1,15 @@
 import axios from 'axios';
 import {
-  setupCache,
-  buildWebStorage,
-  defaultKeyGenerator,
-  defaultHeaderInterpreter,
+  buildWebStorage, defaultHeaderInterpreter, defaultKeyGenerator, setupCache
 } from 'axios-cache-interceptor';
 
 //* Simple utility function for axios.
 //* Used by smarter-api, and loading city data
-export const axiosUtility = async (config : object) => {
+export const axiosUtility = async (config: object) => {
   try {
     const promise = await axios(config);
     return promise;
-  } catch (error : any) {
+  } catch (error: any) {
     if (error.response) {
       return error.response.status;
     } if (error.request) {
@@ -22,34 +19,34 @@ export const axiosUtility = async (config : object) => {
   }
 };
 
-export const axiosBlobUtility = async (url : string) =>{
+export const axiosBlobUtility = async (url: string) => {
 
-      var data = JSON.stringify({
-        "video_link": url
-      });
-  
-      
-      let config = {
-        method: 'post',
-        url: 'http://127.0.0.1:8000/machinelearning',
-        headers: { 
-          'Content-Type': 'application/json'
-        },
-        data : data
-      };
-      
-      return await axios(config)
-      .then((response) => {
-  
-  
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  var data = JSON.stringify({
+    "video_link": url
+  });
+
+
+  let config = {
+    method: 'post',
+    url: 'http://127.0.0.1:8000/machinelearning',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  };
+
+  return await axios(config)
+    .then((response) => {
+
+
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
 }
 
-export const axiosGetUtility = async (url : string) => {
+export const axiosGetUtility = async (url: string) => {
   try {
     const config = {
       method: 'get',
@@ -60,7 +57,7 @@ export const axiosGetUtility = async (url : string) => {
     };
     const promise = await axios(config);
     return promise;
-  } catch (error : any) {
+  } catch (error: any) {
     if (error.response) {
       return error.response.status;
     } if (error.request) {
@@ -70,7 +67,7 @@ export const axiosGetUtility = async (url : string) => {
   }
 };
 
-export const axiosCacheGetUtility = async (url : string) => {
+export const axiosCacheGetUtility = async (url: string) => {
   const call = setupCache(
     // axios instance
     axios.create(),
@@ -95,9 +92,9 @@ export const axiosCacheGetUtility = async (url : string) => {
   );
 
   const response = await call.get(url, {
-  // All per-request options lives under the `cache` property.
+    // All per-request options lives under the `cache` property.
     cache: {
-    // The time until the cached value is expired in milliseconds.
+      // The time until the cached value is expired in milliseconds.
       ttl: 1000 * 60 * 60 * 24 * 10,
 
       // If the request should configure the cache based on some standard cache headers, Like
