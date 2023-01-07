@@ -57,14 +57,14 @@ html {
 }
 .btn-error:hover {
   color: white;
-  background-color: rgb(255, 90, 95);
+  background-color: rgb(254, 226, 226);
 }
 .btn-green {
   background-color: rgb(83, 165, 72);
 }
 .btn-green:hover {
   color: white;
-  background-color: rgb(69, 144, 59);
+  background-color: rgb(220, 252, 231);
 }
 .btn-black-outline {
   color: rgb(37, 37, 37);
@@ -131,12 +131,12 @@ html {
 
 .alert-red {
   color: rgb(180, 41, 41);
-  background-color: rgb(255, 90, 95);
+  background-color: rgb(254, 226, 226);
 }
 
 .alert-green {
   color: rgb(83, 165, 72);
-  background-color: rgb(69, 144, 59);
+  background-color: rgb(220, 252, 231);
 }
 
 .img-icon {
@@ -309,7 +309,7 @@ html {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   font-size: 0.875rem;
   line-height: 1.25rem;
-  background-color: var(--white);
+  background-color: rgb(255, 255, 255);
   border-width: 1px;
   border-style: solid;
 }
@@ -320,7 +320,7 @@ html {
   width: 100%;
   border-radius: 0.5rem;
   border-width: 1px;
-  border-color: rgb(250, 250, 250);
+  border-color: rgb(37, 37, 37);
   border-style: solid;
 }
 
@@ -339,17 +339,17 @@ html {
 }
 
 .table tr:nth-child(even) {
-  background-color: var(--smoke);
+  background-color: rgb(250, 250, 250);
 }
 
 .table tr:hover {
-  background-color: var(--smoke);
+  background-color: rgb(250, 250, 250);
 }
 
 .table th {
   padding: 1rem;
   text-align: center;
-  background-color: var(--dark);
+  background-color: rgb(37, 37, 37);
   color: white;
 }
 

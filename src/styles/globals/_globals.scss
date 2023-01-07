@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 
+
 html {
     scroll-behavior: smooth;
 }
@@ -17,10 +18,10 @@ $gray: rgb(116, 116, 116);
 $primary-color: rgb(20, 45, 80);
 $primary-color-light: rgb(32, 58, 136);
 $success-color: rgb(83, 165, 72);
-$success-color-light: rgb(69, 144, 59);
+$success-color-light: rgb(220, 252, 231);
 
 $error-color: rgb(180, 41, 41);
-$error-color-light: rgb(255, 90, 95);
+$error-color-light: rgb(254, 226, 226);
 
 $btn-default: rgb(247, 247, 247);
 $btn-default-light: rgb(219, 219, 219);
