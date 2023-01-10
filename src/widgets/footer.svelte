@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getDevicon } from '../utils/devicon-icons';
+	import { getDevicon } from '../utils/icons/devicon-icons';
 
 	const PROGRAMMING_TOOLS = [
 		'nextjs',

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { eventType } from '../../types/types';
-	import { getDevicon } from '../../utils/devicon-icons';
+	import { getDevicon } from '../../utils/icons/devicon-icons';
 
 	const PROGRAMMING_TOOLS = ['googlecloud'];
 	export let paginatedEvents: eventType[] = [];
