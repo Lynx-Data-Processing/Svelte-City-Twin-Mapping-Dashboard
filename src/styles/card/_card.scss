@@ -1,9 +1,33 @@
 .card {
   border-radius: $radius-lg;
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  box-shadow: $box-shadow;
+  font-size: $font-size-md;
+  line-height: $line-height-md;
   background-color: $white;
-  border-width: 1px;
+  border-width: $border-width;
   border-style: solid;
+  transition: all $speed-md;
+
+  &:hover {
+    transform: scale(1.01);
+  }
+
+  &-header {
+    padding: $paddings-md;
+    border-bottom-width: $border-width;
+    border-bottom-style: solid;
+    border-bottom-color: $dark;
+  }
+
+  &-body {
+    padding: $paddings-md;
+  }
+
+  &-footer {
+    padding: $paddings-md;
+    border-top-width: $border-width;
+    border-top-style: solid;
+    border-top-color: $dark;
+  }
+
 }

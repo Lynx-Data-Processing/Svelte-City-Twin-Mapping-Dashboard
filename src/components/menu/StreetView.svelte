@@ -53,7 +53,7 @@
 
 <div class="flex flex-col">
 	{#if selectedPOI == null}
-		<div class="alert alert-red my-1" role="alert">Select a point on the map.</div>
+		<div class="alert alert-error my-1" role="alert">Select a point on the map.</div>
 	{/if}
 	<div
 		bind:this={streetViewContainer}

@@ -1,12 +1,19 @@
 .map-style {
-  transition: all 0.5s;
+  transition: all $speed-md;
+
+  &:hover {
+    cursor: pointer;
+    color: $black;
+    background-color: $btn-default-light;
+  }
+
+  &-selected {
+    border-color: var(--primary-color);
+  }
 }
 
-.map-style:hover {
-  border-color: $primary-color;
-}
 
-.map-loading {
+.map-state {
 
   color: white;
   opacity: 0.9;
@@ -14,24 +21,19 @@
   place-items: center;
   height: 100%;
   width: 100%;
-}
 
-.map-error {
-  background-color: $error-color;
-  color: white;
-  opacity: 0.9;
-  display: grid;
-  place-items: center;
-  height: 100%;
-  width: 100%;
-}
+  &-loading {
+    background-color: $primary-color;
+  }
 
-.map-style-selected {
-  border-color: var(--primary-color);
+  &-error {
+    background-color: $error-color;
+  }
 }
 
 
-.mapboxgl-popup-close-button {
+
+.map-style .mapboxgl-popup-close-button {
   padding: 1rem !important;
   font-size: x-large !important;
   color: $error-color;

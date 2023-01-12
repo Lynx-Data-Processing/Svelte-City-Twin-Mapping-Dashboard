@@ -31,6 +31,6 @@
 			><track src="captions_en.vtt" kind="captions" srclang="en" label="english_captions" />
 		</video>
 	{:else}
-		<div class="alert alert-red my-1" role="alert">No Video selected.</div>
+		<div class="alert alert-error my-1" role="alert">No Video selected.</div>
 	{/if}
 </div>

@@ -41,6 +41,6 @@
 			Reset All Filters
 		</button>
 	{:else}
-		<div class="alert alert-red my-1" role="alert">GPS Data has not been loaded.</div>
+		<div class="alert alert-error my-1" role="alert">GPS Data has not been loaded.</div>
 	{/if}
 </div>

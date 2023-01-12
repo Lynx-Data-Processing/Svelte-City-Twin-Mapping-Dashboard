@@ -1,5 +1,5 @@
 .img-icon {
-	transition: all 0.5s;
+	transition: all $speed-md;
 
 	&:hover {
 		transform: rotate(10deg) scale(1.2);

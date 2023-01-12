@@ -57,6 +57,6 @@
 			{setPaginationPage}
 		/>
 	{:else}
-		<div class="alert alert-red my-1" role="alert">No Events Found.</div>
+		<div class="alert alert-error my-1" role="alert">No Events Found.</div>
 	{/if}
 </div>

@@ -56,7 +56,7 @@
 			><i class="fa-solid fa-plus " /> Add Geojson Data
 		</button>
 	{:else}
-		<div class="alert alert-red my-1" role="alert">
+		<div class="alert alert-error my-1" role="alert">
 			Add a name, select a color, and add GEOJSON Data
 		</div>
 	{/if}

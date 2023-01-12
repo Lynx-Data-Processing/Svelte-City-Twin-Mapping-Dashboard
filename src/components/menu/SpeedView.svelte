@@ -17,6 +17,6 @@
 			</p>
 		</div>
 	{:else}
-		<div class="alert alert-red my-1 w-full" role="alert">No GPS Data Selected.</div>
+		<div class="alert alert-error my-1 w-full" role="alert">No GPS Data Selected.</div>
 	{/if}
 </div>

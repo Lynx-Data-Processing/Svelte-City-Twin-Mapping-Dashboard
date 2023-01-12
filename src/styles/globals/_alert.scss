@@ -1,15 +1,22 @@
 .alert {
-  padding: 1rem;
+  padding: $paddings-lg;
   text-align: left;
   border-radius: $radius-lg;
-}
 
-.alert-red {
-  color: $error-color;
-  background-color: $error-color-light;
-}
+  &-error {
+    color: $error-color;
+    background-color: $error-color-light;
+  }
 
-.alert-green {
-  color: $success-color;
-  background-color: $success-color-light;
+  &-success {
+    color: $success-color;
+    background-color: $success-color-light;
+  }
+
+  &-info {
+    color: $primary-color;
+    background-color: $primary-color-light;
+  }
+
+
 }
