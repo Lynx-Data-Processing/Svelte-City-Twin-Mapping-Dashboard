@@ -21,6 +21,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+.text-sm {
+    font-size: 0.875rem;
+}
+
 
 .text-error {
     color: $error-color;
