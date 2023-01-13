@@ -22,6 +22,8 @@
 		dataType = GeojsonEnum.Point,
 		color = 'Red'
 	) => {
+		if (input === '') return;
+
 		try {
 			gpsData = [rawGPSDataToGeojsonData(input, name, dataType, color)];
 		} catch (error) {

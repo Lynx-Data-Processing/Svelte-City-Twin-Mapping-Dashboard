@@ -33,6 +33,13 @@ export type videoType = {
     videoUrl?: string
 }
 
+export interface IMapStyle {
+    id: number,
+    name: string,
+    value: string,
+    img: string
+}
+
 
 export type mediaRecordingType = {
     startTimestamp: number,

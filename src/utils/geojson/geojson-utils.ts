@@ -1,36 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
-import { SPEED_COLORS } from '../../constants';
 
-import { GeojsonEnum, GeojsonDataEnum } from '../../types/enums';
-import type { geojsonFeatureType , geojsonType} from '../../types/types';
+import { GeojsonDataEnum, GeojsonEnum } from '../../types/enums';
+import type { geojsonFeatureType, geojsonType } from '../../types/types';
 
-//* Get a color for every 10km/h
-//* Example: 0-9Km/h, 10-19km/h
-export const getVehicleSpeedColor = (speed : number) => {
-
-  const rangeSize = 10;
-  let speedIndex = Math.floor(speed / rangeSize);
-  speedIndex = speedIndex >= SPEED_COLORS.length ? SPEED_COLORS.length - 1 : speedIndex;
-  return SPEED_COLORS[speedIndex];
-};
-
-//* Get the speed from the properties object
-//* Speed is sometimes not found in the object, in that case, return 0
-const getSpeed = (properties: object) => {
-  let speed = 0;
-  for (const [key, value] of Object.entries(properties)) {
-    const lowerKey = key.toLowerCase();
-    if (lowerKey.includes('speed')) {
-      speed = parseInt(value, 10);;
-    }
-  }
-  return speed;
-};
+import { getSpeed, getVehicleSpeedColor } from '../vehicle-speed';
 
 //* Example
 //* { 'AlexDashcam' : [{point1}, {point2}, {point3}], 'AmirDashcam: [{point1}, {point2}, {point3}]}
 //* Group the data by the deviceId key
-const groupByKey = (array : any[], key: any) => {
+const groupByKey = (array: any[], key: any) => {
   const groupedArray = array.reduce((result, currentValue) => {
     (result[currentValue[key]] = result[currentValue[key]] || []).push(
       currentValue,
@@ -43,7 +21,7 @@ const groupByKey = (array : any[], key: any) => {
 
 //* To use the data on mapbox, the data must be in GEOJSON format
 //* Because all the data are points, we'll be creating point sets
-export const rawSmarterAIGPSDataToGeojson = (rawData : any) => {
+export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
   const groupedArray = groupByKey(rawData, 'deviceId');
   const geoJsonArray = [];
 
@@ -56,7 +34,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData : any) => {
       const dataType = rawData.dataType || GeojsonEnum.Point;
       const hasFilter = rawData.hasFilter || true;
       //* Create Geojson feature collection
-      const geoJson : geojsonType = {
+      const geoJson: geojsonType = {
         type: 'FeatureCollection',
         dataName,
         dateTime,
@@ -78,15 +56,15 @@ export const rawSmarterAIGPSDataToGeojson = (rawData : any) => {
           properties.Color = getVehicleSpeedColor(getSpeed(properties));
 
           //* Create the final feature config and push it to the feature array
-          const feature : geojsonFeatureType = { type: 'Feature', geometry: { type: GeojsonEnum.Point, coordinates }, properties };
+          const feature: geojsonFeatureType = { type: 'Feature', geometry: { type: GeojsonEnum.Point, coordinates }, properties };
           geoJson.features.push(feature);
-          
+
         }
-       
+
       }
 
       //* Push the geojson element to the array if it has features
-      if(geoJson.features.length > 0){
+      if (geoJson.features.length > 0) {
         geoJsonArray.push(geoJson);
       }
     }
@@ -98,7 +76,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData : any) => {
 };
 
 
-export const rawGPSDataToGeojsonData = (rawData : any, name = 'General', geojsonDataType = GeojsonEnum.Point, color= 'Blue') => {
+export const rawGPSDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType = GeojsonEnum.Point, color = 'Blue') => {
   try {
 
     rawData = JSON.parse(rawData)
@@ -109,7 +87,7 @@ export const rawGPSDataToGeojsonData = (rawData : any, name = 'General', geojson
     const dataType = rawData.dataType || geojsonDataType;
     const hasFilter = rawData.hasFilter || false;
     //* Create Geojson feature collection
-    const geoJson : geojsonType = {
+    const geoJson: geojsonType = {
       type: 'FeatureCollection',
       dataName,
       dateTime,
@@ -130,7 +108,7 @@ export const rawGPSDataToGeojsonData = (rawData : any, name = 'General', geojson
       properties.Color = color;
 
       //* Create the final feature config and add the feature id for the ability to hover
-      const feature : geojsonFeatureType = {
+      const feature: geojsonFeatureType = {
         type: 'Feature', geometry: { type: geojsonDataType, coordinates }, properties,
       };
       geoJson.features.push(feature);

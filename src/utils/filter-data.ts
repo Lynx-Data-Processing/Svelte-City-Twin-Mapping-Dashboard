@@ -1,4 +1,4 @@
-export const getListOfObjectWhereKeyContainsString = (listOfObjects: any[], key: string, value: string) => {
+export const getListOfObjectWhereKeyContainsString = (listOfObjects: any[], key: string, value: any) => {
   const filteredList = listOfObjects.filter((object) => {
     const objectKey = object[key];
     return objectKey.includes(value);
@@ -14,7 +14,7 @@ export const getObjectsWhereKeyAnyValidStrings = (listOfObjects: any[], key: str
   return filteredList;
 };
 
-export const getObjectsWhereKeyEqualsValue = (listOfObjects: any[], key: string, value: string) => {
+export const getObjectsWhereKeyEqualsValue = (listOfObjects: any[], key: string, value: any) => {
   const filteredList = listOfObjects.filter((object) => {
     const objectKey = object[key];
     return objectKey === value;
@@ -22,7 +22,7 @@ export const getObjectsWhereKeyEqualsValue = (listOfObjects: any[], key: string,
   return filteredList;
 };
 
-export const checkIfElementExists = (listOfObjects: any[], key: string, value: string) => {
+export const checkIfElementExists = (listOfObjects: any[], key: string, value: any) => {
   const filteredList = listOfObjects.filter((object) => {
     const objectKey = object[key];
     return objectKey === value;
@@ -33,7 +33,7 @@ export const checkIfElementExists = (listOfObjects: any[], key: string, value: s
   return false;
 };
 
-export const removeObjectWhereValueEqualsString = (listOfObjects: any[], key: string, value: string) => {
+export const removeObjectWhereValueEqualsString = (listOfObjects: any[], key: string, value: any) => {
   const filteredList = listOfObjects.filter((object) => {
     const objectKey = object[key];
     return objectKey !== value;
