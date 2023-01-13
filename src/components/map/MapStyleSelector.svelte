@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { IMapStyle } from '../../types/types';
 	export let mapStyle: string;
 
-	const mapStyleList = [
+	const mapStyleList: IMapStyle[] = [
 		{
 			id: 0,
 			name: 'Streets',
