@@ -11,13 +11,5 @@
 
 			<h1 class="text-2xl font-light my-auto">Mapping Dashboard</h1>
 		</div>
-		<div class="flex flex-row ">
-			<a
-				class="hover:underline  my-auto"
-				href="https://geojson.io/#map=10.9/44.2456/-76.5014"
-				target="_blank"
-				rel="noreferrer">About</a
-			>
-		</div>
 	</div>
 </navbar>

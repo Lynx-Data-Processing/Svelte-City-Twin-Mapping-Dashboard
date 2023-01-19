@@ -1,3 +1,5 @@
+import type { GeojsonEnum } from "./enums"
+
 
 export type dateTimeDictionaryType = {
     startDateTime: string,
@@ -16,11 +18,13 @@ export type gpsFilterType = {
 export type layerLisElementType = {
     id: number,
     icon: string,
-    type: string,
+    type: GeojsonEnum,
     isShown: boolean,
     layerName: string,
     hasFilter: boolean,
     sourceName: string,
+    initialCoordinates: number[],
+    color: string,
     data: any,
 }
 
@@ -118,7 +122,7 @@ export type geojsonType = {
     type: string,
     dataName: string,
     dateTime: string,
-    dataType: string,
+    dataType: GeojsonEnum,
     hasFilter: boolean,
     features: geojsonFeatureType[]
 }

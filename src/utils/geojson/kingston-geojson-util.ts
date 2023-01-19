@@ -4,13 +4,13 @@ import { GeojsonDataEnum } from './../../types/enums';
 /* eslint-disable dot-notation */
 /* eslint-disable no-restricted-syntax */
 import { v4 as uuidv4 } from 'uuid';
-import type { geojsonFeatureType , geojsonType} from '../../types/types';
 import { GeojsonEnum } from '../../types/enums';
+import type { geojsonFeatureType, geojsonType } from '../../types/types';
 
 //* The Kingston API Json data needs to be cleaned
 //* To use the data on mapbox, the data must be in GEOJSON format
 //* All neighbourhoods are polygons
-export const rawKingstonGPSDataToGeojsonNeighbourhoods = (rawData : any) => {
+export const rawKingstonGPSDataToGeojsonNeighbourhoods = (rawData: any) => {
   //* Set initial Geojson element details
   const dataName = rawData.dataName ? rawData.dataName : GeojsonDataEnum.Neighbourhoods;
   const dateTime = rawData.dateTime ? rawData.dateTime : uuidv4();
@@ -18,7 +18,7 @@ export const rawKingstonGPSDataToGeojsonNeighbourhoods = (rawData : any) => {
   const hasFilter = rawData.hasFilter || false;
 
   //* Create Geojson feature collection
-  const geoJson : geojsonType = {
+  const geoJson: geojsonType = {
     type: 'FeatureCollection',
     dataName,
     dateTime,
@@ -29,11 +29,11 @@ export const rawKingstonGPSDataToGeojsonNeighbourhoods = (rawData : any) => {
   //* For every bigquery row create a GEOJSON GPS element
   for (const gpsElement of rawData) {
 
-        //* Add a color to the polygon. Needs to be in hex #000000 format
-        let polygonColor = (Math.floor(Math.random() * 16777215).toString(16)).toString();
-        if (polygonColor.length !== 6) {
-          polygonColor = polygonColor.padEnd(6, '0');
-        }
+    //* Add a color to the polygon. Needs to be in hex #000000 format
+    let polygonColor = (Math.floor(Math.random() * 16777215).toString(16)).toString();
+    if (polygonColor.length !== 6) {
+      polygonColor = polygonColor.padEnd(6, '0');
+    }
 
     const coordinates = gpsElement.fields.geojson.coordinates;
     const properties = {
@@ -42,13 +42,13 @@ export const rawKingstonGPSDataToGeojsonNeighbourhoods = (rawData : any) => {
       Name: gpsElement.fields.name ? gpsElement.fields.name : 'N/A',
       Time: gpsElement.record_timestamp ? gpsElement.record_timestamp : '0000',
       UTCTime: new Date(gpsElement.record_timestamp).toUTCString(),
-      Color : `#${polygonColor}`,
+      Color: `#${polygonColor}`,
     };
 
-    
+
 
     //* Create the final feature config and add the feature id for the ability to hover
-    const feature : geojsonFeatureType = {
+    const feature: geojsonFeatureType = {
       type: 'Feature', geometry: { type: GeojsonEnum.Polygon, coordinates }, properties,
     };
     geoJson.features.push(feature);
@@ -57,7 +57,7 @@ export const rawKingstonGPSDataToGeojsonNeighbourhoods = (rawData : any) => {
 };
 
 // trees
-export const rawKingstonTreeDataToGeojsonTrees = (rawData : any) => {
+export const rawKingstonTreeDataToGeojsonTrees = (rawData: any) => {
   //* Set initial Geojson element details
   const dataName = rawData.dataName || GeojsonDataEnum.Trees;
   const dateTime = rawData.dateTime || uuidv4();
@@ -65,7 +65,7 @@ export const rawKingstonTreeDataToGeojsonTrees = (rawData : any) => {
   const hasFilter = rawData.hasFilter || false;
 
   //* Create Geojson feature collection
-  const geoJson : geojsonType = {
+  const geoJson: geojsonType = {
     type: 'FeatureCollection',
     dataName,
     dateTime,
@@ -82,11 +82,11 @@ export const rawKingstonTreeDataToGeojsonTrees = (rawData : any) => {
       Scientific_Name: gpsElement.fields.scientific_name || 'N/A',
       Trunk_Diameter: gpsElement.trunk_diameter || '0000',
       Number_Of_Stems: gpsElement.number_of_stems || 1,
-      Color : 'Green',
-      Size : gpsElement.trunk_diameter || 1,
+      Color: 'Green',
+      Size: gpsElement.trunk_diameter || 1,
     };
     // Make the tree points green
- 
+
 
     //* Create the final feature config and add the feature id for the ability to hover
     const feature = {
@@ -98,7 +98,7 @@ export const rawKingstonTreeDataToGeojsonTrees = (rawData : any) => {
 };
 
 
-export const rawKingstonDataToGeojsonData = (rawData : any, name = 'General', geojsonDataType = GeojsonEnum.Point, color= 'Random') => {
+export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType = GeojsonEnum.Point, color = 'Random') => {
   try {
     //* Set initial Geojson element details
     const dataName = rawData.dataName || name;
@@ -107,7 +107,7 @@ export const rawKingstonDataToGeojsonData = (rawData : any, name = 'General', ge
     const hasFilter = rawData.hasFilter || false;
 
     //* Create Geojson feature collection
-    const geoJson : geojsonType = {
+    const geoJson: geojsonType = {
       type: 'FeatureCollection',
       dataName,
       dateTime,
@@ -117,26 +117,40 @@ export const rawKingstonDataToGeojsonData = (rawData : any, name = 'General', ge
     };
     //* For every bigquery row create a GEOJSON GPS element
     for (const gpsElement of rawData) {
-      let coordinates = gpsElement.fields.geojson.coordinates || gpsElement.geometry.coordinates;
+
+      try {
+        let coordinates = gpsElement.fields.geojson.coordinates;
+        if (coordinates.length >= 2) {
+          coordinates = coordinates.slice(0, 2);
+        }
 
 
-      const properties = gpsElement.fields;
-      properties.Size = 1;
+        const properties = gpsElement.fields;
+        properties.Size = 1;
+        properties.geojson = undefined;
+        properties.geo_point_2d = undefined;
 
-      //* If a color was not specified, generate a random color
-      if(color === 'Random'){
-        let elementColor = (Math.floor(Math.random() * 16777215).toString(16)).toString();
-        properties.Color = elementColor.length !== 6 ?   elementColor.padEnd(6, '0')  :`#${elementColor}`;        
+        //* If a color was not specified, generate a random color
+        if (color === 'Random') {
+          let elementColor = (Math.floor(Math.random() * 16777215).toString(16)).toString();
+          properties.Color = elementColor.length !== 6 ? elementColor.padEnd(6, '0') : `#${elementColor}`;
+        }
+        else {
+          properties.Color = color;
+        }
+
+        //* Create the final feature config and add the feature id for the ability to hover
+        const feature = {
+          type: 'Feature', geometry: { type: geojsonDataType, coordinates }, properties,
+        };
+        geoJson.features.push(feature);
       }
-      else{
-        properties.Color = color;
+      catch (err) {
+        console.log(`Error in rawKingstonDataToGeojsonData ${name}`);
+        console.log(gpsElement);
+
+        continue;
       }
-    
-      //* Create the final feature config and add the feature id for the ability to hover
-      const feature = {
-        type: 'Feature', geometry: { type: geojsonDataType, coordinates }, properties,
-      };
-      geoJson.features.push(feature);
     }
 
     return geoJson;

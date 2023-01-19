@@ -21,6 +21,9 @@
 	import {
 		PUBLIC_MAPBOX_KEY,
 		PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
+		PUBLIC_PLANNING_LINE_URL,
+		PUBLIC_PLANNING_POINT_URL,
+		PUBLIC_SIDEWALK_POLYGON_URL,
 		PUBLIC_TREES_URL
 	} from '$env/static/public';
 
@@ -55,11 +58,12 @@
 	const createLayerListElement = (
 		layerName: string,
 		sourceName: string,
-		type: string,
+		type: GeojsonEnum,
 		isShown: boolean,
 		faIcon: string,
 		hasFilter: boolean,
-		data: any
+		dataColor: string,
+		cleanData: any
 	): layerLisElementType => {
 		let tempLayerList = layerList;
 		const hasElement = checkIfElementExists(tempLayerList, 'layerName', layerName);
@@ -70,6 +74,22 @@
 				map.removeSource(sourceName);
 			}
 		}
+
+		let coordinates = mapDetails.center;
+		if (cleanData) {
+			switch (type) {
+				case GeojsonEnum.Point:
+					coordinates = cleanData.features[0].geometry.coordinates;
+					break;
+				case GeojsonEnum.Polygon:
+					coordinates = cleanData.features[0].geometry.coordinates[0][0];
+					break;
+				case GeojsonEnum.LineString:
+					coordinates = cleanData.features[0].geometry.coordinates[0];
+					break;
+			}
+		}
+
 		//Create the new element and change the layer list
 		const element: layerLisElementType = {
 			id: uuidv4(),
@@ -79,11 +99,16 @@
 			layerName: layerName,
 			hasFilter: hasFilter,
 			sourceName: sourceName,
-			data: data
+			initialCoordinates: coordinates,
+			color: dataColor,
+			data: cleanData
 		};
+
+		console.log(element);
 
 		tempLayerList.push(element);
 		layerList = tempLayerList;
+
 		return element;
 	};
 
@@ -92,7 +117,7 @@
 		layerName: string,
 		showOnLoad = false,
 		dataType = GeojsonEnum.Point,
-		dataColor = 'Random',
+		dataColor = 'White',
 		dataIcon = 'fa-border-all',
 		hasFilter = false
 	) => {
@@ -103,6 +128,7 @@
 				if (!rawData.length) return;
 
 				const cleanData = rawKingstonDataToGeojsonData(rawData, layerName, dataType, dataColor);
+
 				createLayerListElement(
 					layerName,
 					`${layerName}Source`,
@@ -110,6 +136,7 @@
 					showOnLoad,
 					dataIcon,
 					hasFilter,
+					dataColor,
 					cleanData
 				);
 			} else {
@@ -121,40 +148,67 @@
 	};
 
 	const fetchInitialMapData = async () => {
-		try {
-			createLayerListElement(
-				'3D-Buildings',
-				'composite',
-				'Other',
-				false,
-				'fa-building',
-				false,
-				null
-			);
+		createLayerListElement(
+			'3D-Buildings',
+			'composite',
+			GeojsonEnum.Feature,
+			false,
+			'fa-building',
+			false,
+			'Black',
+			null
+		);
 
-			await fetchDataFromAPIAndCreateLayer(
-				PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
-				'Neighbourhoods',
-				false,
-				GeojsonEnum.Polygon,
-				'Random',
-				'fa-border-all',
-				false
-			);
-			await fetchDataFromAPIAndCreateLayer(
-				PUBLIC_TREES_URL,
-				'Trees',
-				true,
-				GeojsonEnum.Point,
-				'Green',
-				'fa-border-all',
-				false
-			);
+		await fetchDataFromAPIAndCreateLayer(
+			PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
+			'Neighborhoods',
+			false,
+			GeojsonEnum.Polygon,
+			'Random',
+			'fa-border-all',
+			false
+		);
+		await fetchDataFromAPIAndCreateLayer(
+			PUBLIC_TREES_URL,
+			'Trees',
+			true,
+			GeojsonEnum.Point,
+			'Green',
+			'fa-border-all',
+			false
+		);
 
-			isInitialDataLoaded = true;
-		} catch (err) {
-			console.error(err);
-		}
+		await fetchDataFromAPIAndCreateLayer(
+			PUBLIC_PLANNING_POINT_URL,
+			'Road Construction (Point)',
+			true,
+			GeojsonEnum.Point,
+			'#7B48FF',
+			'fa-road',
+			false
+		);
+
+		await fetchDataFromAPIAndCreateLayer(
+			PUBLIC_SIDEWALK_POLYGON_URL,
+			'Sidewalk Construction (Polygon)',
+			true,
+			GeojsonEnum.Polygon,
+			'#F5B514',
+			'fa-person',
+			false
+		);
+
+		await fetchDataFromAPIAndCreateLayer(
+			PUBLIC_PLANNING_LINE_URL,
+			'Road Construction (Line)',
+			true,
+			GeojsonEnum.LineString,
+			'#16C97B',
+			'fa-road',
+			false
+		);
+
+		isInitialDataLoaded = true;
 	};
 
 	const checkIfMapSourceExists = (sourceName: string) => {
@@ -186,11 +240,15 @@
 	const addMapSource = (layerListElement: layerLisElementType) => {
 		try {
 			const sourceExists = checkIfMapSourceExists(layerListElement.sourceName);
-			if (sourceExists) return;
-			map.addSource(layerListElement.sourceName, {
-				type: 'geojson',
-				data: layerListElement.data
-			});
+
+			if (!sourceExists) {
+				map.addSource(layerListElement.sourceName, {
+					type: 'geojson',
+					data: layerListElement.data
+				});
+			} else {
+				map.getSource(layerListElement.sourceName).setData(layerListElement.data);
+			}
 		} catch (err) {}
 	};
 
@@ -200,19 +258,25 @@
 			//* Add the additional layers
 			layerList.forEach(function (gpsElement) {
 				const { layerName, type } = gpsElement;
+
 				//Add the buildings layer
 				if (layerName.includes('Buildings')) {
 					addBuildingLayer(gpsElement);
 				}
 
-				if (type === 'Polygon') {
+				if (type === GeojsonEnum.Polygon) {
 					addMapSource(gpsElement);
 					addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
 				}
 
-				if (type === 'Point') {
+				if (type === GeojsonEnum.Point) {
 					addMapSource(gpsElement);
 					addPointLayer(gpsElement, 'Size', ['get', 'Color']);
+				}
+
+				if (type === GeojsonEnum.LineString) {
+					addMapSource(gpsElement);
+					addLineLayer(gpsElement, 8, ['get', 'Color']);
 				}
 			});
 
@@ -287,7 +351,7 @@
 			let description = '';
 			const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
 			for (const [key, value] of Object.entries(sliced)) {
-				description += `<span class="block ">${key}</span><span class="block">${value}</span>`;
+				description += `<span class="block font-bold">${key}</span><span class="block">${value}</span>`;
 			}
 			smallPopup.setLngLat(e.lngLat).setHTML(description).addTo(map);
 		});
@@ -301,35 +365,39 @@
 		});
 	};
 	const addLineLayer = (layerElement: layerLisElementType, lineWidth = 4, color = ['red']) => {
-		map.addLayer({
-			id: layerElement.layerName,
-			type: 'line',
-			source: layerElement.sourceName,
-			layout: {
-				'line-join': 'round',
-				'line-cap': 'round'
-			},
-			paint: {
-				'line-color': color,
-				'line-width': lineWidth
-			}
-		});
-		map.on('click', layerElement.layerName, (e: any) => {
-			let description = '';
-			const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
-			for (const [key, value] of Object.entries(sliced)) {
-				description += `<span class="block ">${key}</span><span class="block">${value}</span>`;
-			}
-			smallPopup.setLngLat(e.lngLat).setHTML(description).addTo(map);
-		});
-		// Change the cursor to a pointer when the mouse is over the places layer.
-		map.on('mouseenter', layerElement.layerName, () => {
-			map.getCanvas().style.cursor = 'pointer';
-		});
-		// Change it back to a pointer when it leaves.
-		map.on('mouseleave', layerElement.layerName, () => {
-			map.getCanvas().style.cursor = '';
-		});
+		try {
+			map.addLayer({
+				id: layerElement.layerName,
+				type: 'line',
+				source: layerElement.sourceName,
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round'
+				},
+				paint: {
+					'line-color': color,
+					'line-width': lineWidth
+				}
+			});
+			map.on('click', layerElement.layerName, (e: any) => {
+				let description = '';
+				const sliced = Object.fromEntries(Object.entries(e.features[0].properties).slice(0, 4));
+				for (const [key, value] of Object.entries(sliced)) {
+					description += `<span class="block font-bold">${key}</span><span class="block">${value}</span>`;
+				}
+				smallPopup.setLngLat(e.lngLat).setHTML(description).addTo(map);
+			});
+			// Change the cursor to a pointer when the mouse is over the places layer.
+			map.on('mouseenter', layerElement.layerName, () => {
+				map.getCanvas().style.cursor = 'pointer';
+			});
+			// Change it back to a pointer when it leaves.
+			map.on('mouseleave', layerElement.layerName, () => {
+				map.getCanvas().style.cursor = '';
+			});
+		} catch (e) {
+			console.log(e);
+		}
 	};
 	const addPointLayer = (
 		layerElement: layerLisElementType,
@@ -409,17 +477,24 @@
 		if (map === null || layerList.length <= 0) return;
 
 		layerList.forEach((gpsElement) => {
-			if (gpsElement.layerName !== '3D-Buildings') {
+			if (gpsElement.layerName === '3D-Buildings') return;
+
+			try {
 				addMapSource(gpsElement);
 
 				const doesLayerExist = checkIfMapLayerExists(gpsElement.layerName);
 				if (doesLayerExist) map.removeLayer(gpsElement.layerName);
 
-				if (gpsElement.type === 'Point') {
+				if (gpsElement.type === GeojsonEnum.Point) {
 					addPointLayer(gpsElement, 'Count', ['get', 'Color']);
-				} else if (gpsElement.type === 'Polygon') {
+				} else if (gpsElement.type === GeojsonEnum.Polygon) {
 					addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
+				} else if (gpsElement.type === GeojsonEnum.LineString) {
+					addLineLayer(gpsElement, 4, ['get', 'Color']);
 				}
+			} catch (e) {
+				console.log(e);
+				return;
 			}
 		});
 	};
@@ -438,16 +513,19 @@
 				true,
 				'fa-road',
 				hasFilter,
+				'Random',
 				rawGpsElement
 			);
 
 			if (gpsElement === null) return;
 
 			addMapSource(gpsElement);
-			if (gpsElement.type === 'Point') {
+			if (gpsElement.type === GeojsonEnum.Point) {
 				addPointLayer(gpsElement, 'Count', ['get', 'Color']);
-			} else if (gpsElement.type === 'Polygon') {
+			} else if (gpsElement.type === GeojsonEnum.Polygon) {
 				addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
+			} else if (gpsElement.type === GeojsonEnum.LineString) {
+				addLineLayer(gpsElement, 4, ['get', 'Color']);
 			}
 		});
 	};

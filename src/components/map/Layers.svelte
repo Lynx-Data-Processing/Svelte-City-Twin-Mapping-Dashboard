@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
+	import { FontAwesomeIconGivenGeojsonEnum } from '../../types/enums';
 	import type { layerLisElementType } from '../../types/types';
+
+	export let updateMapCenter: Function;
 	export let layerList: layerLisElementType[] = [];
 	let visibleLayers: layerLisElementType[] = layerList;
 	let searchText: String = '';
@@ -115,14 +118,25 @@
 
 		<div class="flex flex-col ">
 			{#each visibleLayers as layer}
-				<div class="flex flex-row gap-4" in:fade out:fly={{ x: 100 }}>
+				<div class="flex flex-row gap-4  my-1" in:fade out:fly={{ x: 100 }}>
 					<button
 						on:click={() => toggleLayer(layer)}
-						class={`btn w-full ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} my-1 `}
+						class={`btn w-full ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} `}
 					>
 						<i class="fa-solid {layer.icon} " />
 						{layer.layerName}
 					</button>
+
+					<button
+						on:click={() => {
+							updateMapCenter(layer.initialCoordinates);
+						}}
+						class="btn btn-black-outline"
+						><i
+							class={`${FontAwesomeIconGivenGeojsonEnum[layer.type]} icon-color`}
+							style={`--sent-color: ${layer.color}`}
+						/></button
+					>
 				</div>
 			{/each}
 		</div>
@@ -130,3 +144,9 @@
 		<div class="alert alert-green my-1" role="alert">Loading Data.</div>
 	{/if}
 </div>
+
+<style>
+	.icon-color {
+		color: var(--sent-color);
+	}
+</style>
