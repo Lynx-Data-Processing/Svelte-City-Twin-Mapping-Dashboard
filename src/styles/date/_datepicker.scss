@@ -5,9 +5,9 @@
   width: 100%;
   border-radius: $radius-lg;
   border-width: $border-width;
-  border-color: $dark;
+  border-color: $btn-default-light;
   border-style: solid;
-  background-color: $btn-default;
+  transition: all $speed-md;
 
   &:hover {
     cursor: pointer;

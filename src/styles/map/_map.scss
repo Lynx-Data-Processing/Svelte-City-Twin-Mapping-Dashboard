@@ -33,7 +33,8 @@
 
 
 
-.map-style .mapboxgl-popup-close-button {
+.mapboxgl-popup-close-button {
+
   padding: 1rem !important;
   font-size: x-large !important;
   color: $error-color;
@@ -41,6 +42,7 @@
 
 .mapboxgl-popup-content {
   border-radius: $radius-lg;
+
 }
 
 

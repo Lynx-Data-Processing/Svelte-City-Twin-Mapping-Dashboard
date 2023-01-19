@@ -1,21 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Tangsa&display=swap');
+
 
 html {
     scroll-behavior: smooth;
+    font-size: small;
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: $dark;
-    text-align: left;
+    font-family: 'Noto Sans Tangsa', sans-serif;
+
+
+
     background-color: $white;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -25,6 +25,9 @@ body {
     font-size: 0.875rem;
 }
 
+.text-primary {
+    color: $primary-color;
+}
 
 .text-error {
     color: $error-color;
@@ -37,19 +40,21 @@ body {
 
 
 .btn {
-    color: white;
+
     padding: $paddings-lg;
     text-align: left;
-    transition: all 200ms;
+    transition: all $speed-md;
     border-radius: $radius-lg;
     border-width: 1px;
-    border-style: solid;
-    width: 100%;
+
+    background-color: white;
+
 
     &:hover {
         cursor: pointer;
         color: $black;
         background-color: $btn-default-light;
+        padding-left: $paddings-xl;
     }
 
 
@@ -65,6 +70,7 @@ body {
 
     &-primary {
         background-color: $primary-color;
+        color: white;
 
         &:hover {
             color: white;
@@ -74,6 +80,7 @@ body {
 
     &-error {
         background-color: $error-color;
+        color: white;
 
         &:hover {
             color: white;
@@ -83,6 +90,7 @@ body {
 
     &-green {
         background-color: $success-color;
+        color: white;
 
         &:hover {
             color: white;
@@ -92,7 +100,7 @@ body {
 
     &-black-outline {
         color: $dark;
-        border-color: $dark;
+        border-color: $btn-default-light;
 
         &:hover {
 
@@ -110,23 +118,7 @@ body {
         }
     }
 
-    &-gray-sm {
-        background-color: $btn-default;
-        border-color: $btn-default-light;
 
-        &:hover {
-            background-color: $btn-default-light;
-        }
-    }
-
-    &-pagination-primary-sm {
-        background-color: $primary-color;
-        color: white;
-
-        &:hover {
-            background-color: $primary-color-light;
-        }
-    }
 }
 
 .dot {

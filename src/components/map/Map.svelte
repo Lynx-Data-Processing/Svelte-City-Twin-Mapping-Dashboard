@@ -37,7 +37,6 @@
 	export let mapStyle: string;
 	export let mapDetails: mapDetailsType;
 	export let selectedPOI: selectedPOIType | null;
-	export let selectedEvent: selectedEventType | null;
 	export let gpsData: any;
 	export let selectedMenu: menuComponentsType;
 	let map: any = null;
@@ -362,12 +361,7 @@
 			map.setLayoutProperty(layerElement.layerName, 'visibility', 'none');
 			map.moveLayer(layerElement.layerName);
 			map.on('click', layerElement.layerName, async (e: any) => {
-				if (layerElement.layerName.includes('GPS')) {
-					selectedEvent = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
-					selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
-				} else {
-					selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
-				}
+				selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
 
 				smallPopup
 					.setLngLat(e.lngLat)
@@ -551,4 +545,6 @@
 	});
 </script>
 
-<div class="h-96 md:h-screen scale-in-center"><div class="h-full" id="map" /></div>
+<div class="h-96 md:h-screen scale-in-center rounded-lg">
+	<div class="h-full rounded-lg" id="map" />
+</div>

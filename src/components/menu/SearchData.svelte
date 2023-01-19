@@ -34,10 +34,6 @@
 	</div>
 
 	{#if dateTimeDictionary.startDateTime && dateTimeDictionary.endDateTime}
-		<div class="alert alert-success my-1" role="alert">
-			{dateTimeDictionary.startDateTime} to {dateTimeDictionary.endDateTime}
-		</div>
-
 		<button class={`btn btn-primary my-1`} on:click={() => fetchEventsData()}
 			><i class="fa-solid fa-database " /> Search Data
 		</button>

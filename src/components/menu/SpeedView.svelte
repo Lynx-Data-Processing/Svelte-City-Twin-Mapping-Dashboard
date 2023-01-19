@@ -5,15 +5,15 @@
 
 <div class="flex flex-row">
 	{#if gpsData.length}
-		<div class="overflow-auto h-fit">
+		<div class="overflow-auto h-fit w-full">
 			{#each SPEED_COLORS as speedColor, i}
-				<p class="list-item my-2">
+				<div class="btn my-1 w-full">
 					<i class="dot" style={`--color:${speedColor}`} />
-					{i * 10} - {(i + 1) * 10 - 1}
-				</p>
+					{i * 10} - {(i + 1) * 10 - 1} Km/h
+				</div>
 			{/each}
-			<p class="list-item my-2">
-				<i class="dot" style={`--color:${SPEED_COLORS[SPEED_COLORS.length - 1]}`} /> 100+
+			<p class="btn my-1 w-full">
+				<i class="dot" style={`--color:${SPEED_COLORS[SPEED_COLORS.length - 1]}`} /> 100+ Km/h
 			</p>
 		</div>
 	{:else}

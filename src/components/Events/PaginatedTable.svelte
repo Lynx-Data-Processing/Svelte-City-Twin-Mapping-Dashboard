@@ -46,8 +46,6 @@
 	{#if paginatedEvents.length}
 		<EventTable {paginatedEvents} />
 
-		<hr class="my-4" />
-
 		<PaginationButtons
 			{paginationFrom}
 			{paginationTo}

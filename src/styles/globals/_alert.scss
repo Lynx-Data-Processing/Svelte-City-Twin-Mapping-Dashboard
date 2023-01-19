@@ -1,6 +1,6 @@
 .alert {
   padding: $paddings-lg;
-  text-align: left;
+
   border-radius: $radius-lg;
 
   &-error {
@@ -14,8 +14,8 @@
   }
 
   &-info {
-    color: $primary-color;
-    background-color: $primary-color-light;
+
+    background-color: $btn-default-light;
   }
 
 

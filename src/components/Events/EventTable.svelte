@@ -9,39 +9,47 @@
 <table class="table w-full rounded-lg">
 	<thead>
 		<tr>
-			<th>Video (Road)</th>
-			<th>Video (Inside)</th>
+			<th>Id</th>
+
+			<th>Road</th>
+			<th>Inside</th>
 			<th>Device Id</th>
 			<th>Device Label</th>
+
 			<th>Start Time</th>
 			<th>End Time</th>
 			<th>Saved On</th>
-			<th>Trigger ID</th>
-			<th>Trigger Name</th>
+			<th>Trigger Id</th>
+
 			<th>Has GPS Data</th>
 		</tr>
 	</thead>
 	<tbody>
 		{#each paginatedEvents as event}
 			<tr>
+				<td>{event.id}</td>
+
 				<td class="w-32">
 					<img
+						class="w-32 h-16 overflow-hidden rounded-lg"
+						height="auto"
+						width="100%"
+						alt="Dashcam"
 						src={event.snapshots[0].downloadUrl}
-						alt="Dashcam"
-						class="h-full w-auto object-cover rounded-lg"
 					/>
 				</td>
 
 				<td class="w-32">
 					<img
-						src={event.snapshots[1].downloadUrl}
+						class="w-32 h-16 overflow-hidden rounded-lg"
+						height="100%"
+						width="100%"
 						alt="Dashcam"
-						class="h-full w-auto object-cover rounded-lg"
+						src={event.snapshots[1].downloadUrl}
 					/>
 				</td>
-
 				<td>{event.deviceId}</td>
-				<td>{event.deviceLabel}</td>
+				<td class="text-primary">{event.deviceLabel}</td>
 
 				<td>{event.recordingStartTimestamp}</td>
 				<td>{event.recordingEndTimestamp}</td>
@@ -60,13 +68,27 @@
 						{/each}
 					</div>
 				</td>
-				<td>{event.eventTriggerId}</td>
-				<td>{event.triggerName}</td>
+				<td>
+					{#if event.eventTriggerId === 'EMERGENCY_RECORD'}
+						<div class={`alert alert-error w-full text-center`} role="alert">
+							{event.eventTriggerId}
+						</div>
+					{:else}
+						<div class={`alert alert-info w-full text-center`} role="alert">
+							{event.eventTriggerId}
+						</div>
+					{/if}
+				</td>
+
 				<td>
 					{#if event.snapshots[2]}
-						<i class="fa-solid fa-check text-success fa-lg" />
+						<div class={`alert alert-success w-full text-center`} role="alert">
+							<i class="fa-solid fa-check  fa-lg" />
+						</div>
 					{:else}
-						<i class="fa-solid fa-x text-error fa-lg" />
+						<div class={`alert alert-error w-full text-center`} role="alert">
+							<i class="fa-solid fa-x  fa-lg" />
+						</div>
 					{/if}
 				</td>
 			</tr>

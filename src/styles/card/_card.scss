@@ -8,9 +8,7 @@
   border-style: solid;
   transition: all $speed-md;
 
-  &:hover {
-    transform: scale(1.01);
-  }
+
 
   &-header {
     padding: $paddings-md;

@@ -34,13 +34,12 @@
 	let mapDetails: mapDetailsType = {
 		id: 0,
 		center: [-76.491143, 44.231689],
-		zoom: 12,
-		pitch: 0,
+		zoom: 15,
+		pitch: 30,
 		bearing: -17.6
 	};
 	//* Polygon and point of interest details
 	let layerList: layerLisElementType[] = [];
-	let selectedEvent: selectedEventType | null = null;
 	let selectedPOI: selectedPOIType | null = null;
 	let selectedPolygon: object | null = null;
 
@@ -122,6 +121,23 @@
 		videoArray = tempVideoArray;
 	};
 
+	function shuffle(array: any) {
+		let currentIndex = array.length,
+			randomIndex;
+
+		// While there remain elements to shuffle.
+		while (currentIndex != 0) {
+			// Pick a remaining element.
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex--;
+
+			// And swap it with the current element.
+			[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+		}
+
+		return array;
+	}
+
 	/**
 	 * Fetches event data and calls `getMediaEventsFromAllSmarterAIFiles()` to process the data.
 	 */
@@ -141,7 +157,41 @@
 			}
 
 			const rawEventList = response.data.eventList;
-			const tempGpsData = await getMediaEventsFromAllSmarterAIFiles(rawEventList);
+
+			let newEventList = rawEventList.reduce(function (
+				res: any,
+				current: any,
+				index: any,
+				array: any
+			) {
+				return res.concat([
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current,
+					current
+				]);
+			},
+			[]);
+
+			newEventList = shuffle(newEventList);
+
+			const tempGpsData = await getMediaEventsFromAllSmarterAIFiles(newEventList);
 			await getVideosFromGpsData(tempGpsData);
 		} catch (error) {
 			alert(error);
@@ -154,8 +204,35 @@
 
 <SelectionMenu bind:selectedMenu bind:menuComponents />
 <main>
-	<div class="grid grid-cols-1 gap-4 lg:grid-cols-12 ">
-		<div class={`col-span-1 lg:col-span-12 relative`}>
+	<div class="grid grid-cols-1 md:grid-cols-1  lg:grid-cols-12 ">
+		<div class="col-span-1 md:col-span-1 lg:col-span-2 flex flex-col gap-4 p-2">
+			<Card title="Layers" showOnLoad={true}>
+				<Layers bind:layerList />
+			</Card>
+			{#if selectedMenu.id === 0}
+				<Card title="Search Data" showOnLoad={true}>
+					<SearchData bind:dateTimeDictionary {fetchEventsData} />
+				</Card>
+			{:else if selectedMenu.id === 1}
+				<Card title="Street View">
+					<StreetView bind:selectedPOI />
+				</Card>
+			{:else if selectedMenu.id === 2}
+				<Card title="Video Player">
+					<SelectedVideo bind:selectedPOI bind:videoArray />
+				</Card>
+			{:else if selectedMenu.id === 3}
+				<Card title="Add GeoJSON">
+					<AddGeojson bind:gpsData {updateMapCenter} />
+				</Card>
+			{/if}
+
+			<Card title="Speed Legend (Km/h)">
+				<SpeedView {gpsData} />
+			</Card>
+		</div>
+
+		<div class={`col-span-1 md:col-span-1 lg:col-span-10 relative  p-2`}>
 			<Map
 				bind:videoArray
 				{mapDetails}
@@ -163,7 +240,6 @@
 				bind:layerList
 				bind:mapStyle
 				bind:selectedPOI
-				bind:selectedEvent
 				bind:selectedMenu
 			/>
 
@@ -173,39 +249,10 @@
 				<MapError />
 			{/if}
 
-			<div class="absolute top-2 left-2 flex flex-row gap-4 z-100">
-				<div class={`flex flex-col gap-4`}>
-					<Card title="Layers" showOnLoad={true}>
-						<Layers bind:layerList />
-					</Card>
-					{#if selectedMenu.id === 0}
-						<Card title="Search Data" showOnLoad={true}>
-							<SearchData bind:dateTimeDictionary {fetchEventsData} />
-						</Card>
-					{:else if selectedMenu.id === 1}
-						<Card title="Street View">
-							<StreetView bind:selectedPOI />
-						</Card>
-					{:else if selectedMenu.id === 2}
-						<Card title="Video Player">
-							<SelectedVideo bind:selectedEvent bind:videoArray />
-						</Card>
-					{:else if selectedMenu.id === 3}
-						<Card title="Add GeoJSON">
-							<AddGeojson bind:gpsData {updateMapCenter} />
-						</Card>
-					{/if}
-				</div>
-			</div>
-
-			<div class="absolute top-16 right-2 flex flex-row gap-4 z-100">
+			<div class="absolute top-16 right-2 flex flex-row gap-4 z-100 p-2">
 				<div class={`flex flex-col gap-4`}>
 					<Card title="Map Style" width="w-[15rem]">
 						<MapStyleSelector bind:mapStyle />
-					</Card>
-
-					<Card title="Speed Legend" width="w-[15rem]">
-						<SpeedView bind:gpsData />
 					</Card>
 				</div>
 			</div>

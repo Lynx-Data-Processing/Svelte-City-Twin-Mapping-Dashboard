@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { selectedEventType, videoType } from '../../types/types';
 
-	export let selectedEvent: selectedEventType | null = null;
+	export let selectedPOI: selectedEventType | null = null;
 	export let videoArray: videoType[];
 	let videoUrl: string = '';
 
 	const updateVideoUrl = async () => {
 		try {
-			if (!selectedEvent) return;
-			const selectedEventId = selectedEvent?.data.EventId;
+			if (!selectedPOI) return;
+			const selectedEventId = selectedPOI?.data.EventId;
 			const videos = videoArray.filter((o) => o.eventId === selectedEventId);
 			videoUrl = videos.length ? videos[0].videoUrl! : '';
 		} catch (e) {
@@ -16,17 +16,17 @@
 		}
 	};
 
-	$: selectedEvent && updateVideoUrl();
+	$: selectedPOI && updateVideoUrl();
 </script>
 
 <div class="flex flex-col">
-	{#if selectedEvent && videoUrl}
+	{#if selectedPOI && videoUrl}
 		<video
-			class="h-96 w-full overflow-hidden rounded-lg"
+			class="w-full overflow-hidden rounded-lg"
 			controls
 			height="100%"
 			width="100%"
-			title={`${selectedEvent.data.EventId}`}
+			title={`${selectedPOI.data.EventId}`}
 			src={videoUrl}
 			><track src="captions_en.vtt" kind="captions" srclang="en" label="english_captions" />
 		</video>
