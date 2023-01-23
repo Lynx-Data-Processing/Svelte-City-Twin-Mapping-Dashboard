@@ -166,28 +166,7 @@
 				index: any,
 				array: any
 			) {
-				return res.concat([
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current,
-					current
-				]);
+				return res.concat([current]);
 			},
 			[]);
 

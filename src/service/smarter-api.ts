@@ -83,7 +83,7 @@ export const getAllEvents = async (fromDateTime: string, toDateTime: string) => 
   try {
     let config = {
       method: 'get',
-      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=2000&tenantId=${PUBLIC_TENANT_ID}`,
+      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=100&tenantId=${PUBLIC_TENANT_ID}`,
       headers: {}
     };
     const promise = await axios(config);
