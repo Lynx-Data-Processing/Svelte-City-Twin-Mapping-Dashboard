@@ -3,7 +3,7 @@
 import { PUBLIC_API_KEY, PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL, PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL, PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID, PUBLIC_TENANT_ID } from '$env/static/public';
 import axios from 'axios';
 
-//* Fetch all devices under the Geotab Tenant key
+//* Fetch all devices under the Tenant key
 export const getListOfDevicesUnderTenant = async () => {
 
   try {
@@ -83,7 +83,7 @@ export const getAllEvents = async (fromDateTime: string, toDateTime: string) => 
   try {
     let config = {
       method: 'get',
-      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=100&tenantId=${PUBLIC_TENANT_ID}`,
+      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=100&tenantId=${PUBLIC_TENANT_ID}&deviceId=a3169769`,
       headers: {}
     };
     const promise = await axios(config);

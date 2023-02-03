@@ -4,7 +4,7 @@
 
 	export let selectedPOI: selectedEventType | null = null;
 	export let videoArray: videoType[];
-	let videoUrl: string = '';
+	let selectedVideo: videoType | null;
 
 	let processingVideo: boolean = false;
 	let processedVideoUrl: string = '';
@@ -15,7 +15,7 @@
 			if (!selectedPOI) return;
 			const selectedEventId = selectedPOI?.data.EventId;
 			const videos = videoArray.filter((o) => o.eventId === selectedEventId);
-			videoUrl = videos.length ? videos[0].videoUrl! : '';
+			selectedVideo = videos.length ? videos[0] : null;
 
 			if (videoProcessed) {
 				URL.revokeObjectURL(processedVideoUrl);
@@ -29,8 +29,10 @@
 
 	async function getVideo() {
 		try {
+			if (!selectedVideo) return;
 			processingVideo = true;
-			const localProcessedVideoUrl = await processVideoWithMachineLearning(videoUrl);
+
+			const localProcessedVideoUrl = await processVideoWithMachineLearning(selectedVideo);
 
 			if (localProcessedVideoUrl) {
 				processedVideoUrl = localProcessedVideoUrl;
@@ -47,7 +49,7 @@
 </script>
 
 <div class="flex flex-col gap-4">
-	{#if selectedPOI && videoUrl}
+	{#if selectedPOI && selectedVideo?.videoUrl}
 		<div class="video-container relative">
 			<video
 				class="w-full overflow-hidden rounded-lg"
@@ -55,7 +57,7 @@
 				height="100%"
 				width="100%"
 				title={`processedVideoUrl`}
-				src={processedVideoUrl || videoUrl}
+				src={processedVideoUrl || selectedVideo?.videoUrl}
 				><track src="captions_en.vtt" kind="captions" srclang="en" label="english_captions" />
 			</video>
 

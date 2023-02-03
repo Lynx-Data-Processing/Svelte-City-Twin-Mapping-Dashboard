@@ -1,10 +1,13 @@
 
 import axios from 'axios';
+import type { videoType } from '../types/types';
 
-export async function processVideoWithMachineLearning(videoLink: string) {
+export async function processVideoWithMachineLearning(selectedVideo: videoType) {
     try {
         let data = JSON.stringify({
-            video_link: videoLink
+            video_id: selectedVideo?.eventId,
+            device_id: selectedVideo?.deviceId,
+            video_link: selectedVideo?.videoUrl
         });
 
         let config = {
