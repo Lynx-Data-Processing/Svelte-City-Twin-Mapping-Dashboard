@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { processVideoWithMachineLearning } from '../../service/machinelearning-api';
+	import { processVideoWithMachineLearning, pingMachineLearningAPI } from '../../service/machinelearning-api';
 	import type { selectedEventType, videoType } from '../../types/types';
 
 	export let selectedPOI: selectedEventType | null = null;
@@ -29,6 +29,11 @@
 
 	async function getVideo() {
 		try {
+
+			const machineLearningAPIStatus = await pingMachineLearningAPI();
+
+			if (!machineLearningAPIStatus) return;
+
 			if (!selectedVideo) return;
 			processingVideo = true;
 

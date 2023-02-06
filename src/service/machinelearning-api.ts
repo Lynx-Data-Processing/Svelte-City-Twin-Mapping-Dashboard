@@ -2,6 +2,25 @@
 import axios from 'axios';
 import type { videoType } from '../types/types';
 
+export async function pingMachineLearningAPI() {
+    try {
+        let config = {
+            method: 'get',
+            url: 'http://127.0.0.1:8000/dashcam',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        };
+
+        let response = await fetch(config.url, config);
+
+        return response.status == 200;
+
+    } catch(error) {
+        console.log(error);
+    }
+}
+
 export async function processVideoWithMachineLearning(selectedVideo: videoType) {
     try {
         let data = JSON.stringify({
