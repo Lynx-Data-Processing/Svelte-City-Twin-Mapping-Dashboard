@@ -2,7 +2,7 @@
 	import type {
 		dateTimeDictionaryType,
 		eventType,
-		layerLisElementType,
+		layerListElementType,
 		mapDetailsType,
 		menuComponentsType,
 		selectedEventType,
@@ -40,7 +40,7 @@
 		bearing: -17.6
 	};
 	//* Polygon and point of interest details
-	let layerList: layerLisElementType[] = [];
+	let layerList: layerListElementType[] = [];
 	let selectedPOI: selectedPOIType | null = null;
 	let selectedPolygon: object | null = null;
 
