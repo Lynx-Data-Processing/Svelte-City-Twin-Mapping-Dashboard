@@ -6,15 +6,11 @@
 		layerLisElementType,
 		mapDetailsType,
 		menuComponentsType,
-		selectedEventType,
 		selectedPOIType,
 		videoType
 	} from '../../types/types';
 	import { axiosCacheGetUtility } from '../../utils/fetch-data';
-	import {
-		checkIfElementExists,
-		removeObjectWhereValueEqualsString
-	} from '../../utils/filter-data.js';
+
 	import { rawKingstonDataToGeojsonData } from '../../utils/geojson/kingston-geojson-util';
 	import { buildPopup } from '../../utils/popup/popup-builder';
 
@@ -35,11 +31,13 @@
 	import { v4 as uuidv4 } from 'uuid';
 
 	import {
+		checkIfElementExistsAndRemove,
 		checkIfMapLayerExists,
 		checkIfMapSourceExists,
 		getInitialCoordinates
 	} from '../../utils/map/map-utils';
 
+	// ------------------ Mapbox ------------------
 	export let layerList: layerLisElementType[];
 	export let selectedPolygon = null;
 	export let videoArray: videoType[];
@@ -61,21 +59,6 @@
 		defaultMode: 'simple_select'
 	});
 
-	const checkIfElementExistsAndRemove = (
-		tempLayerList: layerLisElementType[],
-		layerName: string
-	) => {
-		const hasElement = checkIfElementExists(tempLayerList, 'layerName', layerName);
-		if (hasElement) {
-			tempLayerList = removeObjectWhereValueEqualsString(tempLayerList, 'layerName', layerName);
-			if (map.getLayer(layerName)) {
-				map.removeLayer(layerName);
-				map.removeSource(layerName);
-			}
-		}
-		return tempLayerList;
-	};
-
 	const createLayerListElement = (
 		layerName: string,
 		sourceName: string,
@@ -87,7 +70,7 @@
 		cleanData: any
 	): layerLisElementType => {
 		let tempLayerList = layerList;
-		tempLayerList = checkIfElementExistsAndRemove(tempLayerList, layerName);
+		tempLayerList = checkIfElementExistsAndRemove(tempLayerList, layerName, map);
 		const initialCoordinates = getInitialCoordinates(cleanData);
 
 		//Create the new element and change the layer list
