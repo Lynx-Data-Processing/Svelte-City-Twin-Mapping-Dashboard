@@ -34,6 +34,12 @@
 	import mapboxgl from 'mapbox-gl';
 	import { v4 as uuidv4 } from 'uuid';
 
+	import {
+		checkIfMapLayerExists,
+		checkIfMapSourceExists,
+		getInitialCoordinates
+	} from '../../utils/map/map-utils';
+
 	export let layerList: layerLisElementType[];
 	export let selectedPolygon = null;
 	export let videoArray: videoType[];
@@ -55,6 +61,21 @@
 		defaultMode: 'simple_select'
 	});
 
+	const checkIfElementExistsAndRemove = (
+		tempLayerList: layerLisElementType[],
+		layerName: string
+	) => {
+		const hasElement = checkIfElementExists(tempLayerList, 'layerName', layerName);
+		if (hasElement) {
+			tempLayerList = removeObjectWhereValueEqualsString(tempLayerList, 'layerName', layerName);
+			if (map.getLayer(layerName)) {
+				map.removeLayer(layerName);
+				map.removeSource(layerName);
+			}
+		}
+		return tempLayerList;
+	};
+
 	const createLayerListElement = (
 		layerName: string,
 		sourceName: string,
@@ -66,29 +87,8 @@
 		cleanData: any
 	): layerLisElementType => {
 		let tempLayerList = layerList;
-		const hasElement = checkIfElementExists(tempLayerList, 'layerName', layerName);
-		if (hasElement) {
-			tempLayerList = removeObjectWhereValueEqualsString(tempLayerList, 'layerName', layerName);
-			if (map.getLayer(layerName)) {
-				map.removeLayer(layerName);
-				map.removeSource(sourceName);
-			}
-		}
-
-		let coordinates = mapDetails.center;
-		if (cleanData) {
-			switch (type) {
-				case GeojsonEnum.Point:
-					coordinates = cleanData.features[0].geometry.coordinates;
-					break;
-				case GeojsonEnum.Polygon:
-					coordinates = cleanData.features[0].geometry.coordinates[0][0];
-					break;
-				case GeojsonEnum.LineString:
-					coordinates = cleanData.features[0].geometry.coordinates[0];
-					break;
-			}
-		}
+		tempLayerList = checkIfElementExistsAndRemove(tempLayerList, layerName);
+		const initialCoordinates = getInitialCoordinates(cleanData);
 
 		//Create the new element and change the layer list
 		const element: layerLisElementType = {
@@ -99,12 +99,10 @@
 			layerName: layerName,
 			hasFilter: hasFilter,
 			sourceName: sourceName,
-			initialCoordinates: coordinates,
+			initialCoordinates: initialCoordinates,
 			color: dataColor,
 			data: cleanData
 		};
-
-		console.log(element);
 
 		tempLayerList.push(element);
 		layerList = tempLayerList;
@@ -211,35 +209,9 @@
 		isInitialDataLoaded = true;
 	};
 
-	const checkIfMapSourceExists = (sourceName: string) => {
-		try {
-			const source = map.getSource(sourceName);
-			if (source) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (err) {
-			return false;
-		}
-	};
-
-	const checkIfMapLayerExists = (layerName: string) => {
-		try {
-			const layer = map.getLayer(layerName);
-			if (layer) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (err) {
-			return false;
-		}
-	};
-
 	const addMapSource = (layerListElement: layerLisElementType) => {
 		try {
-			const sourceExists = checkIfMapSourceExists(layerListElement.sourceName);
+			const sourceExists = checkIfMapSourceExists(layerListElement.sourceName, map);
 
 			if (!sourceExists) {
 				map.addSource(layerListElement.sourceName, {
@@ -482,7 +454,7 @@
 			try {
 				addMapSource(gpsElement);
 
-				const doesLayerExist = checkIfMapLayerExists(gpsElement.layerName);
+				const doesLayerExist = checkIfMapLayerExists(gpsElement.layerName, map);
 				if (doesLayerExist) map.removeLayer(gpsElement.layerName);
 
 				if (gpsElement.type === GeojsonEnum.Point) {
