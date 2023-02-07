@@ -1,5 +1,6 @@
+import { v4 as uuidv4 } from 'uuid';
 import { GeojsonEnum } from '../../types/enums';
-import type { layerLisElementType } from '../../types/types';
+import type { layerListElementType } from '../../types/types';
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from '../filter-data';
 
 
@@ -45,7 +46,7 @@ export const checkIfMapLayerExists = (layerName: string, map: any) => {
 
 
 export const checkIfElementExistsAndRemove = (
-    tempLayerList: layerLisElementType[],
+    tempLayerList: layerListElementType[],
     layerName: string,
     map: any
 ) => {
@@ -60,7 +61,7 @@ export const checkIfElementExistsAndRemove = (
     return tempLayerList;
 };
 
-export const addMapSource = (layerListElement: layerLisElementType, map: any) => {
+export const addMapSource = (layerListElement: layerListElementType, map: any) => {
     try {
         const sourceExists = checkIfMapSourceExists(layerListElement.sourceName, map);
 
@@ -73,4 +74,32 @@ export const addMapSource = (layerListElement: layerLisElementType, map: any) =>
             map.getSource(layerListElement.sourceName).setData(layerListElement.data);
         }
     } catch (err) { }
+};
+
+
+export const createLayerListElement = (
+    layerName: string,
+    sourceName: string,
+    type: GeojsonEnum,
+    isShown: boolean,
+    faIcon: string,
+    hasFilter: boolean,
+    dataColor: string,
+    cleanData: any
+): layerListElementType => {
+    //Create the new element and change the layer list
+    const element: layerListElementType = {
+        id: Math.floor(Math.random() * 100),
+        icon: faIcon,
+        type: type,
+        isShown: isShown,
+        layerName: layerName,
+        hasFilter: hasFilter,
+        sourceName: sourceName,
+        initialCoordinates: getInitialCoordinates(type, cleanData),
+        color: dataColor,
+        data: cleanData
+    };
+
+    return element;
 };

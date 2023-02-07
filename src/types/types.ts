@@ -15,7 +15,7 @@ export type gpsFilterType = {
     selected: number[]
 }
 
-export type layerLisElementType = {
+export type layerListElementType = {
     id: number,
     icon: string,
     type: GeojsonEnum,

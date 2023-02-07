@@ -3,7 +3,7 @@
 	import { GeojsonEnum } from '../../types/enums';
 	import type {
 		geojsonType,
-		layerLisElementType,
+		layerListElementType,
 		mapDetailsType,
 		menuComponentsType,
 		selectedPOIType,
@@ -28,17 +28,16 @@
 	import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 	import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 	import mapboxgl from 'mapbox-gl';
-	import { v4 as uuidv4 } from 'uuid';
 
 	import {
 		addMapSource,
 		checkIfElementExistsAndRemove,
 		checkIfMapLayerExists,
-		getInitialCoordinates
+		createLayerListElement
 	} from '../../utils/map/map-utils';
 
 	// ------------------ Mapbox ------------------
-	export let layerList: layerLisElementType[];
+	export let layerList: layerListElementType[];
 	export let selectedPolygon = null;
 	export let videoArray: videoType[];
 	export let mapStyle: string;
@@ -59,37 +58,12 @@
 		defaultMode: 'simple_select'
 	});
 
-	const createLayerListElement = (
-		layerName: string,
-		sourceName: string,
-		type: GeojsonEnum,
-		isShown: boolean,
-		faIcon: string,
-		hasFilter: boolean,
-		dataColor: string,
-		cleanData: any
-	): layerLisElementType => {
+	const addLayerListElement = (layerListElement: layerListElementType): layerListElementType => {
 		let tempLayerList = layerList;
-		tempLayerList = checkIfElementExistsAndRemove(tempLayerList, layerName, map);
-
-		//Create the new element and change the layer list
-		const element: layerLisElementType = {
-			id: uuidv4(),
-			icon: faIcon,
-			type: type,
-			isShown: isShown,
-			layerName: layerName,
-			hasFilter: hasFilter,
-			sourceName: sourceName,
-			initialCoordinates: getInitialCoordinates(type, cleanData),
-			color: dataColor,
-			data: cleanData
-		};
-
-		tempLayerList.push(element);
+		tempLayerList = checkIfElementExistsAndRemove(tempLayerList, layerListElement.layerName, map);
+		tempLayerList.push(layerListElement);
 		layerList = tempLayerList;
-
-		return element;
+		return layerListElement;
 	};
 
 	const fetchDataFromAPIAndCreateLayer = async (
@@ -109,7 +83,7 @@
 
 				const cleanData = rawKingstonDataToGeojsonData(rawData, layerName, dataType, dataColor);
 
-				createLayerListElement(
+				const layerLisElement: layerListElementType = createLayerListElement(
 					layerName,
 					`${layerName}Source`,
 					dataType,
@@ -119,6 +93,7 @@
 					dataColor,
 					cleanData
 				);
+				addLayerListElement(layerLisElement);
 			} else {
 				console.log(`Unable to load data for ${layerName}`);
 			}
@@ -128,7 +103,7 @@
 	};
 
 	const fetchInitialMapData = async () => {
-		createLayerListElement(
+		const buildingLayerListElement: layerListElementType = createLayerListElement(
 			'3D-Buildings',
 			'composite',
 			GeojsonEnum.Feature,
@@ -138,6 +113,7 @@
 			'Black',
 			null
 		);
+		addLayerListElement(buildingLayerListElement);
 
 		await fetchDataFromAPIAndCreateLayer(
 			PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
@@ -211,7 +187,7 @@
 			}
 		});
 	};
-	const addBuildingLayer = (layerElement: layerLisElementType, opacity = 1, color = '#dee7e7') => {
+	const addBuildingLayer = (layerElement: layerListElementType, opacity = 1, color = '#dee7e7') => {
 		map.addLayer({
 			id: layerElement.layerName,
 			source: layerElement.sourceName,
@@ -244,7 +220,7 @@
 		});
 	};
 
-	const addPolygonLayer = (layerElement: layerLisElementType, opacity = 0.5, color = ['red']) => {
+	const addPolygonLayer = (layerElement: layerListElementType, opacity = 0.5, color = ['red']) => {
 		map.addLayer({
 			id: layerElement.layerName,
 			type: 'fill',
@@ -272,7 +248,7 @@
 			map.getCanvas().style.cursor = '';
 		});
 	};
-	const addLineLayer = (layerElement: layerLisElementType, lineWidth = 4, color = ['red']) => {
+	const addLineLayer = (layerElement: layerListElementType, lineWidth = 4, color = ['red']) => {
 		try {
 			map.addLayer({
 				id: layerElement.layerName,
@@ -308,7 +284,7 @@
 		}
 	};
 	const addPointLayer = (
-		layerElement: layerLisElementType,
+		layerElement: layerListElementType,
 		pointSizeName = 'Size',
 		color = ['Blue']
 	) => {
@@ -360,10 +336,10 @@
 			console.log(err);
 		}
 	};
-	// ------------------ Mapbox Map adding Layers ------------------ //
+	// ------------------ Map Layer functions ------------------ //
 
 	// ------------------ Map Layer functions ------------------ //
-	const addLayerListElementSourceAndLayer = (layerListElement: layerLisElementType) => {
+	const addLayerListElementSourceAndLayer = (layerListElement: layerListElementType) => {
 		const { layerName, type } = layerListElement;
 
 		const doesLayerExist = checkIfMapLayerExists(layerListElement.layerName, map);
@@ -421,6 +397,7 @@
 				'Random',
 				rawGpsElement
 			);
+			addLayerListElement(layerLisElement);
 
 			addLayerListElementSourceAndLayer(layerLisElement);
 		});

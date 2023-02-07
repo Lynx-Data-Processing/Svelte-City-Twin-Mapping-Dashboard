@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
 	import { FontAwesomeIconGivenGeojsonEnum } from '../../types/enums';
-	import type { layerLisElementType } from '../../types/types';
+	import type { layerListElementType } from '../../types/types';
 
 	export let updateMapCenter: Function;
-	export let layerList: layerLisElementType[] = [];
-	let visibleLayers: layerLisElementType[] = layerList;
+	export let layerList: layerListElementType[] = [];
+	let visibleLayers: layerListElementType[] = layerList;
 	let searchText: String = '';
 
 	let showAllLayers = false;
@@ -23,7 +23,7 @@
 			filterLayersBySearch();
 		} catch (e) {}
 	};
-	const toggleLayer = (selectedLayer: layerLisElementType) => {
+	const toggleLayer = (selectedLayer: layerListElementType) => {
 		try {
 			// Get the object from the list and toggle the is shown
 			let tempCollection = layerList;
