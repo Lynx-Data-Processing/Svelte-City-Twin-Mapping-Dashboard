@@ -31,9 +31,9 @@
 	import { v4 as uuidv4 } from 'uuid';
 
 	import {
+		addMapSource,
 		checkIfElementExistsAndRemove,
 		checkIfMapLayerExists,
-		checkIfMapSourceExists,
 		getInitialCoordinates
 	} from '../../utils/map/map-utils';
 
@@ -71,7 +71,6 @@
 	): layerLisElementType => {
 		let tempLayerList = layerList;
 		tempLayerList = checkIfElementExistsAndRemove(tempLayerList, layerName, map);
-		const initialCoordinates = getInitialCoordinates(cleanData);
 
 		//Create the new element and change the layer list
 		const element: layerLisElementType = {
@@ -82,7 +81,7 @@
 			layerName: layerName,
 			hasFilter: hasFilter,
 			sourceName: sourceName,
-			initialCoordinates: initialCoordinates,
+			initialCoordinates: getInitialCoordinates(type, cleanData),
 			color: dataColor,
 			data: cleanData
 		};
@@ -192,53 +191,7 @@
 		isInitialDataLoaded = true;
 	};
 
-	const addMapSource = (layerListElement: layerLisElementType) => {
-		try {
-			const sourceExists = checkIfMapSourceExists(layerListElement.sourceName, map);
-
-			if (!sourceExists) {
-				map.addSource(layerListElement.sourceName, {
-					type: 'geojson',
-					data: layerListElement.data
-				});
-			} else {
-				map.getSource(layerListElement.sourceName).setData(layerListElement.data);
-			}
-		} catch (err) {}
-	};
-
-	const addInitialMapDataSources = () => {
-		try {
-			addTerrainLayer();
-			//* Add the additional layers
-			layerList.forEach(function (gpsElement) {
-				const { layerName, type } = gpsElement;
-
-				//Add the buildings layer
-				if (layerName.includes('Buildings')) {
-					addBuildingLayer(gpsElement);
-				}
-
-				if (type === GeojsonEnum.Polygon) {
-					addMapSource(gpsElement);
-					addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
-				}
-
-				if (type === GeojsonEnum.Point) {
-					addMapSource(gpsElement);
-					addPointLayer(gpsElement, 'Size', ['get', 'Color']);
-				}
-
-				if (type === GeojsonEnum.LineString) {
-					addMapSource(gpsElement);
-					addLineLayer(gpsElement, 8, ['get', 'Color']);
-				}
-			});
-
-			isInitialDataLoaded = true;
-		} catch (e) {}
-	};
-
+	// ------------------ Mapbox Map adding Layers ------------------ //
 	const addTerrainLayer = () => {
 		map.addSource('mapbox-dem', {
 			type: 'raster-dem',
@@ -407,51 +360,48 @@
 			console.log(err);
 		}
 	};
-	//Update the polygon using the features property
-	const updatePolygon = ({}) => {
-		try {
-			const data = draw.getAll();
-			if (data.features.length > 0) {
-				selectedPolygon = data.features[0];
-			}
-		} catch (err) {
-			console.log(err);
+	// ------------------ Mapbox Map adding Layers ------------------ //
+
+	// ------------------ Map Layer functions ------------------ //
+	const addLayerListElementSourceAndLayer = (layerListElement: layerLisElementType) => {
+		const { layerName, type } = layerListElement;
+
+		const doesLayerExist = checkIfMapLayerExists(layerListElement.layerName, map);
+		if (doesLayerExist) map.removeLayer(layerListElement.layerName);
+
+		//Add the buildings layer
+		if (layerName.includes('Buildings')) {
+			addBuildingLayer(layerListElement);
 		}
-	};
-	//Remove the selected polygon
-	const clearPolygon = () => {
-		try {
-			draw.deleteAll();
-			selectedPolygon = null;
-		} catch (err) {
-			console.log(err);
+
+		if (type === GeojsonEnum.Polygon) {
+			addMapSource(layerListElement, map);
+			addPolygonLayer(layerListElement, 0.5, ['get', 'Color']);
+		}
+
+		if (type === GeojsonEnum.Point) {
+			addMapSource(layerListElement, map);
+			addPointLayer(layerListElement, 'Size', ['get', 'Color']);
+		}
+
+		if (type === GeojsonEnum.LineString) {
+			addMapSource(layerListElement, map);
+			addLineLayer(layerListElement, 8, ['get', 'Color']);
 		}
 	};
 
 	const addExistingDynamicGPSElements = () => {
 		if (map === null || layerList.length <= 0) return;
 
-		layerList.forEach((gpsElement) => {
-			if (gpsElement.layerName === '3D-Buildings') return;
+		try {
+			addTerrainLayer();
+			//* Add the additional layers
+			layerList.forEach(function (layerLisElement) {
+				addLayerListElementSourceAndLayer(layerLisElement);
+			});
 
-			try {
-				addMapSource(gpsElement);
-
-				const doesLayerExist = checkIfMapLayerExists(gpsElement.layerName, map);
-				if (doesLayerExist) map.removeLayer(gpsElement.layerName);
-
-				if (gpsElement.type === GeojsonEnum.Point) {
-					addPointLayer(gpsElement, 'Count', ['get', 'Color']);
-				} else if (gpsElement.type === GeojsonEnum.Polygon) {
-					addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
-				} else if (gpsElement.type === GeojsonEnum.LineString) {
-					addLineLayer(gpsElement, 4, ['get', 'Color']);
-				}
-			} catch (e) {
-				console.log(e);
-				return;
-			}
-		});
+			isInitialDataLoaded = true;
+		} catch (e) {}
 	};
 
 	const addNewDynamicGPSElements = () => {
@@ -461,7 +411,7 @@
 			const { dataName, dataType, hasFilter } = rawGpsElement;
 			const dataSourceName = `${dataName}Source`;
 
-			const gpsElement = createLayerListElement(
+			const layerLisElement = createLayerListElement(
 				dataName,
 				dataSourceName,
 				dataType,
@@ -472,19 +422,12 @@
 				rawGpsElement
 			);
 
-			if (gpsElement === null) return;
-
-			addMapSource(gpsElement);
-			if (gpsElement.type === GeojsonEnum.Point) {
-				addPointLayer(gpsElement, 'Count', ['get', 'Color']);
-			} else if (gpsElement.type === GeojsonEnum.Polygon) {
-				addPolygonLayer(gpsElement, 0.5, ['get', 'Color']);
-			} else if (gpsElement.type === GeojsonEnum.LineString) {
-				addLineLayer(gpsElement, 4, ['get', 'Color']);
-			}
+			addLayerListElementSourceAndLayer(layerLisElement);
 		});
 	};
-	//Switch the map style only if the map exists and the map is ready for switching styles
+	// ------------------ Map Layer functions ------------------ //
+
+	// ------------------ Map Style functions ------------------ //
 	const switchStyle = () => {
 		if (map === null || isInitialDataLoaded === false) return;
 		try {
@@ -526,6 +469,29 @@
 			console.log(err);
 		}
 	};
+
+	//Update the polygon using the features property
+	const updatePolygon = ({}) => {
+		try {
+			const data = draw.getAll();
+			if (data.features.length > 0) {
+				selectedPolygon = data.features[0];
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+	//Remove the selected polygon
+	const clearPolygon = () => {
+		try {
+			draw.deleteAll();
+			selectedPolygon = null;
+		} catch (err) {
+			console.log(err);
+		}
+	};
+	// ------------------ Map Style functions ------------------ //
+
 	$: map && selectedMenu && resizeMap();
 	$: map && mapStyle && switchStyle();
 	$: map && gpsData && addNewDynamicGPSElements();
@@ -553,7 +519,7 @@
 		map.addControl(new mapboxgl.FullscreenControl(), 'bottom-right');
 		map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 		map.on('style.load', function () {
-			addInitialMapDataSources();
+			addExistingDynamicGPSElements();
 			if (gpsData) addExistingDynamicGPSElements();
 		});
 		// Mapboxs normal way to show and hide layers. This calls the filter every second

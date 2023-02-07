@@ -4,13 +4,13 @@ import { checkIfElementExists, removeObjectWhereValueEqualsString } from '../fil
 
 
 
-export const getInitialCoordinates = (data: any) => {
+export const getInitialCoordinates = (type: GeojsonEnum, data: any) => {
     if (!data) return;
-    if (data.type === GeojsonEnum.Point) {
+    if (type === GeojsonEnum.Point) {
         return data.features[0].geometry.coordinates;
-    } else if (data.type === GeojsonEnum.Polygon) {
+    } else if (type === GeojsonEnum.Polygon) {
         return data.features[0].geometry.coordinates[0][0];
-    } else if (data.type === GeojsonEnum.LineString) {
+    } else if (type === GeojsonEnum.LineString) {
         return data.features[0].geometry.coordinates[0];
     } else {
         return [0, 0];
@@ -58,4 +58,19 @@ export const checkIfElementExistsAndRemove = (
         }
     }
     return tempLayerList;
+};
+
+export const addMapSource = (layerListElement: layerLisElementType, map: any) => {
+    try {
+        const sourceExists = checkIfMapSourceExists(layerListElement.sourceName, map);
+
+        if (!sourceExists) {
+            map.addSource(layerListElement.sourceName, {
+                type: 'geojson',
+                data: layerListElement.data
+            });
+        } else {
+            map.getSource(layerListElement.sourceName).setData(layerListElement.data);
+        }
+    } catch (err) { }
 };
