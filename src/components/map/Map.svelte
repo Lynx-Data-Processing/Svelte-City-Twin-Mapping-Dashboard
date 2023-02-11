@@ -38,7 +38,6 @@
 
 	import {
 		addBuildingLayer,
-		addLineLayer,
 		addPolygonLayer,
 		addTerrainLayer
 	} from '../../utils/map/map-layers-utils';
@@ -175,6 +174,54 @@
 	};
 
 	// ------------------ Mapbox Map adding Layers ------------------ //
+	export const addLineLayer = (
+		map: any,
+		smallPopup: any,
+		layerElement: layerListElementType,
+		lineWidth = 4,
+		color = ['red']
+	) => {
+		try {
+			map.addLayer({
+				id: layerElement.layerName,
+				type: 'line',
+				source: layerElement.sourceName,
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round'
+				},
+				paint: {
+					'line-color': color,
+					'line-width': lineWidth
+				}
+			});
+
+			map.on('click', layerElement.layerName, async (e: any) => {
+				selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
+
+				smallPopup
+					.setLngLat(e.lngLat)
+					.setHTML(
+						e?.features
+							? await buildPopup(e.features[0], layerElement.layerName, videoArray)
+							: '<div>Properties do not exist</div>'
+					)
+					.addTo(map);
+			});
+
+			// Change the cursor to a pointer when the mouse is over the places layer.
+			map.on('mouseenter', layerElement.layerName, () => {
+				map.getCanvas().style.cursor = 'pointer';
+			});
+			// Change it back to a pointer when it leaves.
+			map.on('mouseleave', layerElement.layerName, () => {
+				map.getCanvas().style.cursor = '';
+			});
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
 	export const addPointLayer = (
 		map: any,
 		smallPopup: any,

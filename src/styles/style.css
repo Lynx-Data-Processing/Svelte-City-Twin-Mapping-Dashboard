@@ -20,7 +20,6 @@ body {
 
 .btn {
   padding: 1rem;
-  border-width: 1px;
   text-align: left;
   transition: all 0.25s;
   background-color: white;
@@ -90,6 +89,7 @@ body {
 .btn-black-outline {
   color: #2B2B2B;
   border-color: rgb(219, 219, 219);
+  border-width: 1px;
 }
 .btn-black-outline:hover {
   background-color: rgb(219, 219, 219);
@@ -97,6 +97,7 @@ body {
 .btn-error-outline {
   color: rgb(180, 41, 41);
   border-color: rgb(180, 41, 41);
+  border-width: 1px;
 }
 .btn-error-outline:hover {
   color: white;

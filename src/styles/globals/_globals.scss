@@ -36,7 +36,7 @@ body {
 .btn {
 
     padding: $paddings-lg;
-    border-width: 1px;
+
     text-align: left;
     transition: all $speed-sm;
 
@@ -129,6 +129,7 @@ body {
 
         color: $dark;
         border-color: $btn-default-light;
+        border-width: 1px;
 
         &:hover {
 
@@ -140,6 +141,7 @@ body {
 
         color: $error-color;
         border-color: $error-color;
+        border-width: 1px;
 
         &:hover {
             color: white;

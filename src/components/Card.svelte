@@ -10,11 +10,9 @@
 	};
 </script>
 
-<section in:fade out:fly={{ x: 200 }} class="card shadow-md h-fit  {width} p-4">
+<section in:fly={{ x: -200 }} class="card shadow-md h-fit  {width} p-4">
 	<div class="flex flow-row justify-between my-1">
-		<div>
-			<h4 class="text-md">{title}</h4>
-		</div>
+		<h4 class="text-md">{title}</h4>
 
 		{#if !disableToggle}
 			<div>
@@ -32,7 +30,7 @@
 	</div>
 
 	{#if showTerms || disableToggle}
-		<div transition:slide={{ duration: 400 }}>
+		<div>
 			<slot />
 		</div>
 	{/if}

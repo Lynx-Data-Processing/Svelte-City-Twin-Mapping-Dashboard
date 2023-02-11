@@ -9,6 +9,7 @@
 			value: 'streets-v11',
 			img: 'https://assets.website-files.com/5e83362767d71ffd59a0c8a9/5ea01b977fb48a501b898a93_ipad-map%20streets.png'
 		},
+
 		{
 			id: 1,
 			name: 'Dark',
@@ -32,6 +33,12 @@
 			name: 'Dark - Traffic',
 			value: 'navigation-night-v1',
 			img: 'https://assets.website-files.com/5e83362767d71ffd59a0c8a9/5ea01810f9a5b1c55841ee6f_ipad-map%20dark.png'
+		},
+		{
+			id: 5,
+			name: 'Light - Traffic',
+			value: 'navigation-day-v1',
+			img: 'https://assets.website-files.com/5e83362767d71ffd59a0c8a9/5ea01b977fb48a501b898a93_ipad-map%20streets.png'
 		}
 	];
 	const toggleStyle = (mapStyleValue: string) => {

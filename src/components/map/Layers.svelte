@@ -118,7 +118,7 @@
 
 		<div class="flex flex-col ">
 			{#each visibleLayers as layer}
-				<div class="flex flex-row gap-4  my-1" in:fade out:fly={{ x: 100 }}>
+				<div class="flex flex-row gap-4  my-1">
 					<button
 						on:click={() => toggleLayer(layer)}
 						class={`btn w-full ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} `}

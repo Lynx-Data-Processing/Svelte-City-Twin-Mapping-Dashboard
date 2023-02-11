@@ -78,21 +78,15 @@
 	export const ABOUT_LIST: footerElementType[] = [
 		{
 			id: 0,
-			name: 'Linkedin',
-			url: 'https://www.linkedin.com/in/alex-canales',
+			name: 'About Us',
+			url: '#',
 			icon: 'fab fa-linkedin'
 		},
 		{
 			id: 1,
-			name: 'Github',
-			url: 'https://github.com/canaleal',
-			icon: 'fab fa-github'
-		},
-		{
-			id: 2,
-			name: 'Bitbucket',
-			url: 'https://bitbucket.org/Canaleal/',
-			icon: 'fab fa-bitbucket'
+			name: 'Our Data',
+			url: '#',
+			icon: 'fab fa-linkedin'
 		}
 	];
 </script>
@@ -118,7 +112,7 @@
 			{/each}
 		</div>
 		<div class="col-span-1 py-2">
-			<p class="font-bold">Links</p>
+			<p class="font-bold">Information</p>
 			{#each ABOUT_LIST as item}
 				<div class="my-2">
 					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
@@ -129,7 +123,7 @@
 
 	<div class="grid grid-cols-1 sm:grid-cols-3 py-8">
 		<div class="col-span-1 py-2">
-			<p class="font-bold">Disclaimer</p>
+			<p class="font-bold text-2xl"><i class="fa-solid fa-location-arrow" /> LYNX</p>
 			<p class="text-sm my-2">
 				The City promotes and fosters open government principles of participation, innovation,
 				transparency and accountability. The data catalogue supports these principles and is the
@@ -143,9 +137,11 @@
 		<div class="col-span-1 py-2">
 			<p class="font-bold">Terms</p>
 
-			<p class="text-xs my-2">
+			<p class="text-sm my-2">
 				Application uses MAPBOX to display Geojson data. Interactive, thoroughly customizable maps
-				in the browser, powered by vector tiles and WebGL.
+				in the browser, powered by vector tiles and WebGL. Mapbox is a location data platform for
+				mobile and web applications. We provide building blocks to add location features like maps,
+				search, and navigation into any experience you create.
 			</p>
 
 			<div class="flex flex-wrap ">
