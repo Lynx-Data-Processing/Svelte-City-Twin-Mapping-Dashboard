@@ -8,7 +8,7 @@
 
 <div class="flex flex-col">
 	<div class="datepicker form-floating my-1  w-full" data-mdb-toggle-button="false">
-		<label for="floatingInput">Select Start date</label>
+		<label for="floatingInput">Start date</label>
 		<input
 			type="datetime-local"
 			class="form-control date-picker p-2"
@@ -21,7 +21,7 @@
 	</div>
 
 	<div class="datepicker form-floating my-1 w-full" data-mdb-toggle-button="false">
-		<label for="floatingInput">Select End date</label>
+		<label for="floatingInput">End date</label>
 		<input
 			type="datetime-local"
 			class="form-control date-picker p-2"
@@ -35,7 +35,7 @@
 
 	{#if dateTimeDictionary.startDateTime && dateTimeDictionary.endDateTime}
 		<button class={`btn btn-primary my-1`} on:click={() => fetchEventsData()}
-			><i class="fa-solid fa-database " /> Search Data
+			><i class="fa-solid fa-database " /><span>Search Data</span>
 		</button>
 	{:else}
 		<div class="alert alert-error my-1" role="alert">Select a Date and Time before Searching.</div>

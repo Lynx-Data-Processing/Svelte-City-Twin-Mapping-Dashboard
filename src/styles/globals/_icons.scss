@@ -1,8 +1,17 @@
 .img-icon {
-	transition: all $speed-md;
+	transition: all $speed-sm ease;
+	filter: grayscale(100%) opacity(0.5) saturate(50%);
+
+	&-color {
+		filter: grayscale(0%) opacity(1) saturate(150%);
+	}
 
 	&:hover {
 		transform: rotate(10deg) scale(1.2);
-		filter: opacity(1) saturate(150%);
+		filter: grayscale(0%) opacity(1) saturate(150%);
 	}
+}
+
+.icon-color {
+	color: var(--sent-color);
 }

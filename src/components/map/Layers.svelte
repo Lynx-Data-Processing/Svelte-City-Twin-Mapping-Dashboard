@@ -76,7 +76,7 @@
 	{#if layerList.length}
 		<button
 			on:click={toggleLayers}
-			class={`btn   ${showAllLayers ? 'btn-green' : 'btn-error-outline'}  my-1 `}
+			class={`btn   ${showAllLayers ? 'btn-primary' : 'btn-error-outline'}  my-1 `}
 		>
 			{showAllLayers ? 'Show All' : 'Disable All'}
 		</button>
@@ -104,14 +104,14 @@
 					on:change={filterLayersBySearch}
 					type="search"
 					id="default-search"
-					class="block w-full p-4 pl-10  border border-gray-300 rounded-lg  focus:ring-blue-500 focus:border-blue-500  "
+					class="block w-full p-4 pl-10  border   focus:ring-blue-500 focus:border-blue-500  "
 					placeholder="Search Layers"
 					bind:value={searchText}
 					required
 				/>
 			</div>
 
-			<button on:click={clearSearch} class="btn btn-black-outline"
+			<button on:click={clearSearch} class="btn btn-black-outline w-16 btn-text-center"
 				><i class="fa-solid fa-trash " /></button
 			>
 		</div>
@@ -124,14 +124,14 @@
 						class={`btn w-full ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} `}
 					>
 						<i class="fa-solid {layer.icon} " />
-						{layer.layerName}
+						<span>{layer.layerName}</span>
 					</button>
 
 					<button
 						on:click={() => {
 							updateMapCenter(layer.initialCoordinates);
 						}}
-						class="btn btn-black-outline"
+						class="btn btn-black-outline w-16 btn-text-center"
 						><i
 							class={`${FontAwesomeIconGivenGeojsonEnum[layer.type]} icon-color`}
 							style={`--sent-color: ${layer.color}`}
@@ -144,9 +144,3 @@
 		<div class="alert alert-green my-1" role="alert">Loading Data.</div>
 	{/if}
 </div>
-
-<style>
-	.icon-color {
-		color: var(--sent-color);
-	}
-</style>

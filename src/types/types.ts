@@ -15,6 +15,13 @@ export type gpsFilterType = {
     selected: number[]
 }
 
+export interface footerElementType {
+    id: number,
+    name: string,
+    url: string,
+    icon: string | null
+}
+
 export type layerListElementType = {
     id: number,
     icon: string,

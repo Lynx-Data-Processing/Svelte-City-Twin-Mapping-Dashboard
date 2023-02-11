@@ -9,11 +9,13 @@
 			{#each SPEED_COLORS as speedColor, i}
 				<div class="btn my-1 w-full">
 					<i class="dot" style={`--color:${speedColor}`} />
-					{i * 10} - {(i + 1) * 10 - 1} Km/h
+					<span>{i * 10} - {(i + 1) * 10 - 1} Km/h</span>
 				</div>
 			{/each}
 			<p class="btn my-1 w-full">
-				<i class="dot" style={`--color:${SPEED_COLORS[SPEED_COLORS.length - 1]}`} /> 100+ Km/h
+				<i class="dot" style={`--color:${SPEED_COLORS[SPEED_COLORS.length - 1]}`} /><span
+					>100+ Km/h</span
+				>
 			</p>
 		</div>
 	{:else}

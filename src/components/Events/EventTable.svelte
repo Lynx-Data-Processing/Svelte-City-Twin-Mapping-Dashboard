@@ -6,7 +6,7 @@
 	export let paginatedEvents: eventType[] = [];
 </script>
 
-<table class="table w-full rounded-lg">
+<table class="table w-full ">
 	<thead>
 		<tr>
 			<th>Id</th>
@@ -31,7 +31,7 @@
 
 				<td class="w-32">
 					<img
-						class="w-32 h-16 overflow-hidden rounded-lg"
+						class="w-32 h-16 overflow-hidden "
 						height="auto"
 						width="100%"
 						alt="Dashcam"
@@ -41,7 +41,7 @@
 
 				<td class="w-32">
 					<img
-						class="w-32 h-16 overflow-hidden rounded-lg"
+						class="w-32 h-16 overflow-hidden "
 						height="100%"
 						width="100%"
 						alt="Dashcam"

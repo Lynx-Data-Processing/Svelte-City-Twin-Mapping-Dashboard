@@ -144,7 +144,7 @@
 		await fetchDataFromAPIAndCreateLayer(
 			PUBLIC_PLANNING_POINT_URL,
 			'Road Construction (Point)',
-			true,
+			false,
 			GeojsonEnum.Point,
 			'#7B48FF',
 			'fa-road',
@@ -154,7 +154,7 @@
 		await fetchDataFromAPIAndCreateLayer(
 			PUBLIC_SIDEWALK_POLYGON_URL,
 			'Sidewalk Construction (Polygon)',
-			true,
+			false,
 			GeojsonEnum.Polygon,
 			'#F5B514',
 			'fa-person',
@@ -164,7 +164,7 @@
 		await fetchDataFromAPIAndCreateLayer(
 			PUBLIC_PLANNING_LINE_URL,
 			'Road Construction (Line)',
-			true,
+			false,
 			GeojsonEnum.LineString,
 			'#16C97B',
 			'fa-road',
@@ -416,6 +416,6 @@
 	});
 </script>
 
-<div class="h-96 md:h-screen scale-in-center rounded-lg">
-	<div class="h-full rounded-lg" id="map" />
+<div class="h-96 md:h-screen scale-in-center">
+	<div class="h-full" id="map" />
 </div>

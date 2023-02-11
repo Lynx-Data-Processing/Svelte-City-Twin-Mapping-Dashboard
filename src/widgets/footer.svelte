@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { footerElementType } from '../types/types';
 	import { getDevicon } from '../utils/icons/devicon-icons';
 
 	const PROGRAMMING_TOOLS = [
@@ -11,15 +12,125 @@
 		'docker',
 		'googlecloud'
 	];
+
+	export const MAIN_LIST: footerElementType[] = [
+		{
+			id: 0,
+			name: 'Animista',
+			url: 'https://animista.net/play/basic',
+			icon: 'fas fa-palette'
+		},
+
+		{
+			id: 1,
+			name: 'Developer Icons',
+			url: 'https://devicon.dev/',
+			icon: 'fas fa-code'
+		},
+		{
+			id: 2,
+			name: 'Color Designer',
+			url: 'https://colordesigner.io/tools',
+			icon: 'fas fa-palette'
+		}
+	];
+
+	export const APPLICATION_LIST: footerElementType[] = [
+		{
+			id: 0,
+			name: 'Animista',
+			url: 'https://animista.net/play/basic',
+			icon: 'fas fa-palette'
+		},
+
+		{
+			id: 1,
+			name: 'Developer Icons',
+			url: 'https://devicon.dev/',
+			icon: 'fas fa-code'
+		},
+		{
+			id: 2,
+			name: 'Color Designer',
+			url: 'https://colordesigner.io/tools',
+			icon: 'fas fa-palette'
+		},
+		{
+			id: 3,
+			name: 'Font Awesome',
+			url: 'https://fontawesome.com/',
+			icon: 'fas fa-font'
+		},
+		{
+			id: 4,
+			name: 'Cool Backgrounds',
+			url: 'https://coolbackgrounds.io/',
+			icon: 'fas fa-images'
+		},
+		{
+			id: 5,
+			name: 'Gradient Generator',
+			url: 'https://cssgradient.io/',
+			icon: 'fas fa-palette'
+		}
+	];
+
+	export const ABOUT_LIST: footerElementType[] = [
+		{
+			id: 0,
+			name: 'Linkedin',
+			url: 'https://www.linkedin.com/in/alex-canales',
+			icon: 'fab fa-linkedin'
+		},
+		{
+			id: 1,
+			name: 'Github',
+			url: 'https://github.com/canaleal',
+			icon: 'fab fa-github'
+		},
+		{
+			id: 2,
+			name: 'Bitbucket',
+			url: 'https://bitbucket.org/Canaleal/',
+			icon: 'fab fa-bitbucket'
+		}
+	];
 </script>
 
-<footer class="bg-smoke  py-8 px-8">
-	<div class="grid grid-cols-1 sm:grid-cols-3 ">
-		<div class="col-span-1">
-			<p>© USARs. All rights reserved.</p>
-			<p class="text-xs my-2">Website Terms and Policies</p>
+<footer class="mt-auto py-8 px-8 md:px-32 lg:px-32">
+	<div class="grid grid-cols-1 sm:grid-cols-3 pb-8">
+		<div class="col-span-1 py-2">
+			<p class="font-bold">GIS Mapping</p>
 
-			<p class="text-xs my-2">
+			{#each MAIN_LIST as item}
+				<div class="my-2">
+					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
+				</div>
+			{/each}
+		</div>
+
+		<div class="col-span-1 py-2">
+			<p class="font-bold">Tools</p>
+			{#each APPLICATION_LIST as item}
+				<div class="my-2">
+					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
+				</div>
+			{/each}
+		</div>
+		<div class="col-span-1 py-2">
+			<p class="font-bold">Links</p>
+			{#each ABOUT_LIST as item}
+				<div class="my-2">
+					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
+				</div>
+			{/each}
+		</div>
+	</div>
+
+	<div class="grid grid-cols-1 sm:grid-cols-3 py-8">
+		<div class="col-span-1 py-2">
+			<p class="font-bold">Disclaimer</p>
+			<p class="text-sm my-2">
 				The City promotes and fosters open government principles of participation, innovation,
 				transparency and accountability. The data catalogue supports these principles and is the
 				first step in making it easier to view, obtain and use the information the City has
@@ -29,8 +140,8 @@
 
 		<div class="col-span-1 py-2 " />
 
-		<div class="col-span-1">
-			<p>License Terms</p>
+		<div class="col-span-1 py-2">
+			<p class="font-bold">Terms</p>
 
 			<p class="text-xs my-2">
 				Application uses MAPBOX to display Geojson data. Interactive, thoroughly customizable maps

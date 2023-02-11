@@ -3,55 +3,58 @@
 @tailwind utilities;
 
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Tangsa&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap");
+
+
+
+
+:root {
+    font-family: 'Quicksand', sans-serif;
+}
+
 
 
 html {
     scroll-behavior: smooth;
-    font-size: small;
+
 }
 
 body {
-    font-family: 'Noto Sans Tangsa', sans-serif;
 
+    margin: 0;
+    padding: 0;
+    font-size: $font-size-sm;
+    line-height: $line-height-md;
+    letter-spacing: 0;
 
-
-    background-color: $white;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 
-.text-primary {
-    color: $primary-color;
-}
-
-.text-error {
-    color: $error-color;
-}
-
-.text-success {
-    color: $success-color;
-}
 
 
 
 .btn {
 
     padding: $paddings-lg;
-    text-align: left;
-    transition: all $speed-md;
-    border-radius: $radius-lg;
     border-width: 1px;
+    text-align: left;
+    transition: all $speed-sm;
 
     background-color: white;
 
+    span {
+        margin-left: $paddings-md;
+    }
 
     &:hover {
         cursor: pointer;
         color: $black;
         background-color: $btn-default-light;
-        padding-left: $paddings-xl;
+
+    }
+
+    &-text-center {
+        text-align: center;
     }
 
 
@@ -64,9 +67,36 @@ body {
         border-radius: 0;
     }
 
+    &-dark {
+        border: $btn-dark;
+        background-color: $btn-dark;
+        color: white;
+
+        &:hover {
+            cursor: pointer;
+            color: white;
+            background-color: $btn-dark;
+        }
+
+    }
+
+    &-dark-light {
+        border: $btn-dark-light;
+        background-color: $btn-dark-light;
+        color: white;
+
+        &:hover {
+            cursor: pointer;
+            color: white;
+            background-color: $btn-dark;
+        }
+    }
+
 
     &-primary {
+
         background-color: $primary-color;
+        border-color: $primary-color;
         color: white;
 
         &:hover {
@@ -96,6 +126,7 @@ body {
     }
 
     &-black-outline {
+
         color: $dark;
         border-color: $btn-default-light;
 
@@ -106,6 +137,7 @@ body {
     }
 
     &-error-outline {
+
         color: $error-color;
         border-color: $error-color;
 

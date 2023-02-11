@@ -44,7 +44,7 @@
 </script>
 
 <div class="flex flex-col">
-	<input class="border w-full my-1 rounded-lg p-2" placeholder="GEOJSON Name" bind:value={name} />
+	<input class="border w-full my-1  p-2" placeholder="GEOJSON Name" bind:value={name} />
 	<p>Data Color:</p>
 	<input class="my-1" type="color" id="head" name="head" bind:value={color} />
 	<textarea class="border my-1 p-2" placeholder="Add GEOJSON Data" bind:value />

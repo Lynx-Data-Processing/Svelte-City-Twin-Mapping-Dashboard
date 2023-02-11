@@ -31,7 +31,7 @@
 	import { findVideo } from '../utils/video-finder';
 
 	//* Set Initial Map Details
-	let mapStyle: string = 'outdoors-v11';
+	let mapStyle: string = 'dark-v10';
 	let mapDetails: mapDetailsType = {
 		id: 0,
 		center: [-76.491143, 44.231689],
@@ -211,13 +211,9 @@
 					<About />
 				</Card>
 			{/if}
-
-			<Card title="Speed Legend (Km/h)">
-				<SpeedView {gpsData} />
-			</Card>
 		</div>
 
-		<div class={`col-span-1 md:col-span-1 lg:col-span-10 relative  p-2`}>
+		<div class={`col-span-1 md:col-span-1 lg:col-span-10 relative p-2`}>
 			<Map
 				bind:videoArray
 				{mapDetails}
@@ -238,6 +234,10 @@
 				<div class={`flex flex-col gap-4`}>
 					<Card title="Map Style" width="w-[15rem]">
 						<MapStyleSelector bind:mapStyle />
+					</Card>
+
+					<Card title="Speed Legend (Km/h)">
+						<SpeedView {gpsData} />
 					</Card>
 				</div>
 			</div>

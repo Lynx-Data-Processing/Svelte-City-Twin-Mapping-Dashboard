@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { processVideoWithMachineLearning, pingMachineLearningAPI } from '../../service/machinelearning-api';
+	import {
+		pingMachineLearningAPI,
+		processVideoWithMachineLearning
+	} from '../../service/machinelearning-api';
 	import type { selectedEventType, videoType } from '../../types/types';
 
 	export let selectedPOI: selectedEventType | null = null;
@@ -29,7 +32,6 @@
 
 	async function getVideo() {
 		try {
-
 			const machineLearningAPIStatus = await pingMachineLearningAPI();
 
 			if (!machineLearningAPIStatus) return;
@@ -57,7 +59,7 @@
 	{#if selectedPOI && selectedVideo?.videoUrl}
 		<div class="video-container relative">
 			<video
-				class="w-full overflow-hidden rounded-lg"
+				class="w-full overflow-hidden "
 				controls
 				height="100%"
 				width="100%"
@@ -74,7 +76,9 @@
 		</div>
 
 		{#if !videoProcessed && processingVideo == false}
-			<button on:click={getVideo} class={`btn w-full btn-black-outline `}> Process Video </button>
+			<button on:click={getVideo} class={`btn w-full btn-black-outline `}
+				><span>Process Video</span>
+			</button>
 		{/if}
 	{:else}
 		<div class="alert alert-error my-1" role="alert">No Video selected.</div>

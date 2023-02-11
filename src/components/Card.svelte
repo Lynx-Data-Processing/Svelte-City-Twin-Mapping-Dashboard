@@ -10,10 +10,10 @@
 	};
 </script>
 
-<section in:fade out:fly={{ x: 200 }} class="card h-fit  {width} p-4">
+<section in:fade out:fly={{ x: 200 }} class="card shadow-md h-fit  {width} p-4">
 	<div class="flex flow-row justify-between my-1">
 		<div>
-			<p class="text-lg font-bold">{title}</p>
+			<h4 class="text-md">{title}</h4>
 		</div>
 
 		{#if !disableToggle}
