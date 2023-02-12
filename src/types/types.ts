@@ -86,7 +86,8 @@ export type eventType = {
     triggerName: string,
     snapshots: snapshotType[],
     lastUpdatedTime: number,
-    version: number
+    version: number,
+    coordinates?: number[],
 
 };
 

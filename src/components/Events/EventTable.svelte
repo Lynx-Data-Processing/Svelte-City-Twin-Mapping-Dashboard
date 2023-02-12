@@ -3,7 +3,12 @@
 	import { getDevicon } from '../../utils/icons/devicon-icons';
 
 	const PROGRAMMING_TOOLS = ['googlecloud'];
+	export let updateMapCenter: Function;
 	export let paginatedEvents: eventType[] = [];
+
+	function goTop() {
+		document.body.scrollIntoView();
+	}
 </script>
 
 <table class="table w-full ">
@@ -82,9 +87,16 @@
 
 				<td>
 					{#if event.snapshots[2]}
-						<div class={`alert alert-success w-full text-center`} role="alert">
-							<i class="fa-solid fa-check  fa-lg" />
-						</div>
+						<button
+							class="btn btn-primary"
+							on:click={() => {
+								updateMapCenter(event.coordinates);
+								goTop();
+							}}
+						>
+							<i class="fa-solid fa-map-marker-alt" />
+							<span>View on Map</span>
+						</button>
 					{:else}
 						<div class={`alert alert-error w-full text-center`} role="alert">
 							<i class="fa-solid fa-x  fa-lg" />

@@ -255,7 +255,7 @@
 		<div class="grid grid-cols-1 gap-4 lg:grid-cols-12 p-4">
 			<div class={`col-span-1 lg:col-span-12 relative`}>
 				<Card title="Recordings" width="w-full" disableToggle={true}>
-					<PaginatedTable bind:eventList />
+					<PaginatedTable bind:eventList {updateMapCenter} />
 				</Card>
 			</div>
 		</div>
