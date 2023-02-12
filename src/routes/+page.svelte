@@ -13,8 +13,9 @@
 	import Card from '../components/Card.svelte';
 
 	import { default as PaginatedTable } from '../components/Events/PaginatedTable.svelte';
+
 	import Layers from '../components/map/Layers.svelte';
-	import Map from '../components/map/Map.svelte';
+	import MapboxMap from '../components/map/MapboxMap.svelte';
 	import MapError from '../components/map/MapError.svelte';
 	import MapLoadingSpinner from '../components/map/MapLoadingSpinner.svelte';
 	import MapStyleSelector from '../components/map/MapStyleSelector.svelte';
@@ -31,7 +32,7 @@
 	import { findVideo } from '../utils/video-finder';
 
 	//* Set Initial Map Details
-	let mapStyle: string = 'dark-v10';
+	let mapStyle: string = 'mapbox://styles/canaleal/cle0l6bpx004501qotbnxa4wr';
 	let mapDetails: mapDetailsType = {
 		id: 0,
 		center: [-76.491143, 44.231689],
@@ -221,7 +222,7 @@
 				selectedMenu.id === -1 ? 'lg:col-span-12' : 'lg:col-span-10'
 			}  relative`}
 		>
-			<Map
+			<MapboxMap
 				bind:videoArray
 				{mapDetails}
 				bind:gpsData
@@ -230,6 +231,8 @@
 				bind:selectedPOI
 				bind:selectedMenu
 			/>
+
+			<!-- <HighResMap /> -->
 
 			{#if isLoading === true}
 				<MapLoadingSpinner />

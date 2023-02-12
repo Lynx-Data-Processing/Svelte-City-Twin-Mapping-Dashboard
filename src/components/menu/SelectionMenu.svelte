@@ -15,12 +15,7 @@
 		</button>
 	{/each}
 
-	<a
-		class="btn  btn-dark-light md:ml-auto"
-		href="https://geojson.io/#map=10.9/44.2456/-76.5014"
-		target="_blank"
-		rel="noreferrer"
-	>
-		<i class="fa-solid fa-map " /><span>Create GEOJSON</span></a
+	<a class="btn  btn-dark-light md:ml-auto" href="/arc" target="_blank" rel="noreferrer">
+		<i class="fa-solid fa-map " /><span>High Resolution Map</span></a
 	>
 </div>
