@@ -3,6 +3,8 @@
 	let view;
 
 	onMount(async () => {
+		// Load the modules for the ArcGIS API for JavaScript
+		// They cannot be loaded using ES modules because they are in common JS format and conflict with VITE
 		require([
 			'esri/config',
 			'esri/Map',
@@ -32,12 +34,10 @@
 			FeatureLayer,
 			ElevationLayer
 		) => {
-			const layer = new TileLayer({
-				url: 'https://api.cityofkingston.ca/gis_unfed/rest/services/Imagery/Ortho2019/MapServer'
-			});
-
 			esriConfig.apiKey =
 				'AAPKbea54d6e0f934faf9cb77de8921ba694gZ63JjIx0LPPgLf6SkuldGEniwqC3tZ1nCoDxo7CWtTN0W2oSyhMywv5Sza3VggT';
+
+			//* Create the map
 			const map = new Map({
 				ground: {
 					layers: [
@@ -46,7 +46,11 @@
 						})
 					]
 				},
-				layers: [layer],
+				layers: [
+					new TileLayer({
+						url: 'https://api.cityofkingston.ca/gis_unfed/rest/services/Imagery/Ortho2019/MapServer'
+					})
+				],
 				basemap: 'arcgis-navigation'
 			});
 			view = new SceneView({
@@ -64,6 +68,7 @@
 				}
 			});
 
+			// Add widgets
 			const homeBtn = new Home({
 				view: view
 			});
