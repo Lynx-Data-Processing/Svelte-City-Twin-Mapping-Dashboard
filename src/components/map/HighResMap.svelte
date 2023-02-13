@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	let view;
+	import { esriAPIConfig, esriMapConfig } from '../../utils/highResMap/highResMap-utils';
 
 	onMount(async () => {
 		// Load the modules for the ArcGIS API for JavaScript
@@ -34,89 +34,25 @@
 			FeatureLayer,
 			ElevationLayer
 		) => {
-			esriConfig.apiKey =
-				'AAPKbea54d6e0f934faf9cb77de8921ba694gZ63JjIx0LPPgLf6SkuldGEniwqC3tZ1nCoDxo7CWtTN0W2oSyhMywv5Sza3VggT';
 
-			//* Create the map
-			const map = new Map({
-				ground: {
-					layers: [
-						new ElevationLayer({
-							url: 'https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer'
-						})
-					]
-				},
-				layers: [
-					new TileLayer({
-						url: 'https://api.cityofkingston.ca/gis_unfed/rest/services/Imagery/Ortho2019/MapServer'
-					})
-				],
-				basemap: 'arcgis-navigation'
-			});
-			view = new SceneView({
-				container: 'viewDiv',
-				map: map,
-				zoom: 10, // scale: 72223.819286
-
-				camera: {
-					position: {
-						x: -76.491143, //Longitude
-						y: 44.231689, //Latitude
-						z: 2000 //Meters
-					},
-					tilt: 40
-				}
-			});
-
-			// Add widgets
-			const homeBtn = new Home({
-				view: view
-			});
-
-			const scaleBar = new ScaleBar({
-				view: view,
-				unit: 'dual'
-			});
-
-			const layerList = new LayerList({
-				view: view
-			});
-
-			const legend = new Legend({
-				view: view
-			});
-
-			const layerListExpand = new Expand({
-				view: view,
-				content: layerList,
-				expanded: false,
-				expandTooltip: 'Expand LayerList'
-			});
-
-			const legendExpand = new Expand({
-				view: view,
-				content: legend,
-				expandTooltip: 'Expand Legend',
-				expanded: false
-			});
-
-			const compass = new Compass({
-				view: view,
-				visible: false
-			});
-
-			view.ui.add(homeBtn, 'top-left');
-			view.ui.add(scaleBar, 'bottom-right');
-			view.ui.add(layerListExpand, 'top-right');
-			view.ui.add(legendExpand, 'bottom-left');
-			view.ui.add(compass, 'top-left');
-
-			// load the Compass only when the view is rotated
-			view.watch('rotation', function (rotation) {
-				if (rotation && !compass.visible) {
-					compass.visible = true;
-				}
-			});
+			//* Config esri API key
+			esriAPIConfig(esriConfig);
+			
+			//* Create esri map
+			esriMapConfig(
+				Map,
+				MapView,
+				Home,
+				ScaleBar,
+				LayerList,
+				Legend,
+				Expand,
+				Compass,
+				TileLayer,
+				SceneView,
+				FeatureLayer,
+				ElevationLayer
+			);
 		});
 	});
 </script>
