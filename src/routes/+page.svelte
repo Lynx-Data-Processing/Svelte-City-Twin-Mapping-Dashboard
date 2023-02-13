@@ -20,7 +20,6 @@
 	import MapLoadingSpinner from '../components/map/MapLoadingSpinner.svelte';
 	import MapStyleSelector from '../components/map/MapStyleSelector.svelte';
 	import About from '../components/menu/About.svelte';
-	import AddGeojson from '../components/menu/AddGeojson.svelte';
 	import SearchData from '../components/menu/SearchData.svelte';
 	import SelectedVideo from '../components/menu/SelectedVideo.svelte';
 	import SelectionMenu from '../components/menu/SelectionMenu.svelte';
@@ -55,8 +54,7 @@
 		{ id: 0, title: 'Search Data', icon: 'fa-database' },
 		{ id: 1, title: 'Street View', icon: 'fa-road' },
 		{ id: 2, title: 'Video Player', icon: 'fa-video' },
-		{ id: 3, title: 'Add Geojson', icon: 'fa-map' },
-		{ id: 4, title: 'About', icon: 'fa-info-circle' }
+		{ id: 3, title: 'About', icon: 'fa-info-circle' }
 	];
 	let selectedMenu: menuComponentsType = menuComponents[1];
 	let isLoading = false;
@@ -206,10 +204,6 @@
 						<SelectedVideo bind:selectedPOI bind:videoArray />
 					</Card>
 				{:else if selectedMenu.id === 3}
-					<Card title="Add GeoJSON">
-						<AddGeojson bind:gpsData {updateMapCenter} />
-					</Card>
-				{:else if selectedMenu.id === 4}
 					<Card title="About">
 						<About />
 					</Card>
