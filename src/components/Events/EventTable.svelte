@@ -23,10 +23,10 @@
 
 			<th>Start Time</th>
 			<th>End Time</th>
-			<th>Saved On</th>
-			<th>Trigger Id</th>
+			<th class="hidden md:table-cell">Saved On</th>
+			<th class="hidden md:table-cell">Trigger Id</th>
 
-			<th>Has GPS Data</th>
+			<th class="hidden md:table-cell">Has GPS Data</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -58,7 +58,7 @@
 
 				<td>{event.recordingStartTimestamp}</td>
 				<td>{event.recordingEndTimestamp}</td>
-				<td>
+				<td class="hidden md:table-cell">
 					<div class="flex flex-wrap justify-center  ">
 						{#each PROGRAMMING_TOOLS as icon}
 							<img
@@ -73,7 +73,7 @@
 						{/each}
 					</div>
 				</td>
-				<td>
+				<td class="hidden md:table-cell">
 					{#if event.eventTriggerId === 'EMERGENCY_RECORD'}
 						<div class={`alert alert-error w-full text-center`} role="alert">
 							{event.eventTriggerId}
@@ -85,7 +85,7 @@
 					{/if}
 				</td>
 
-				<td>
+				<td class="hidden md:table-cell">
 					{#if event.snapshots[2]}
 						<button
 							class="btn btn-primary"
