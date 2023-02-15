@@ -1,35 +1,19 @@
-import { 
+import {
     PUBLIC_ESRI_CONFIG_KEY,
     PUBLIC_ESRI_ELEVATION_LAYER_URL,
     PUBLIC_ESRI_TILE_LAYER_URL
 } from "$env/static/public";
 
-let view;
 
 // TODO: esri types
 
 // Config esri API
 
-export const esriAPIConfig = (esriConfig) => { 
+export const esriAPIConfig = (esriConfig) => {
     esriConfig.apiKey = PUBLIC_ESRI_CONFIG_KEY;
 }
 
-// Create esri high res map
-
-export const esriMapConfig = (
-    Map,
-    MapView,
-    Home,
-    ScaleBar,
-    LayerList,
-    Legend,
-    Expand,
-    Compass,
-    TileLayer,
-    SceneView,
-    FeatureLayer,
-    ElevationLayer
-) => {
+export const createMapAndSceneView = (Map, SceneView, ElevationLayer, TileLayer) => {
     const map = new Map({
         ground: {
             layers: [
@@ -45,7 +29,7 @@ export const esriMapConfig = (
         ],
         basemap: 'arcgis-navigation'
     });
-    view = new SceneView({
+    let view = new SceneView({
         container: 'viewDiv',
         map: map,
         zoom: 10, // scale: 72223.819286
@@ -59,6 +43,23 @@ export const esriMapConfig = (
             tilt: 40
         }
     });
+
+    return [map, view];
+}
+
+
+// Create esri high res map
+
+export const createMapWidgets = (
+    view,
+    Home,
+    ScaleBar,
+    LayerList,
+    Legend,
+    Expand,
+    Compass
+) => {
+
 
     // Add widgets
     const homeBtn = new Home({
@@ -109,5 +110,41 @@ export const esriMapConfig = (
             compass.visible = true;
         }
     });
+
 }
 
+export const createBaseMapToggle = (view, BasemapToggle, BasemapGallery) => {
+    const basemapToggle = new BasemapToggle({
+        view: view,
+        nextBasemap: "arcgis-imagery"
+    });
+
+    view.ui.add(basemapToggle, "bottom-right");
+
+    const basemapGallery = new BasemapGallery({
+        view: view,
+        source: {
+            query: {
+                title: '"World Basemaps for Developers" AND owner:esri'
+            }
+        }
+    });
+
+}
+
+
+export const addTileLayer = (map, TileLayer, url) => {
+    const tileLayer = new TileLayer({
+        url: url
+    });
+
+    map.add(tileLayer);
+}
+
+export const addFeatureLayer = (map, FeatureLayer, url) => {
+    const featureLayer = new FeatureLayer({
+        url: url
+    });
+
+    map.add(featureLayer);
+}
