@@ -7,25 +7,21 @@ import { checkIfElementExists, removeObjectWhereValueEqualsString } from '../fil
 
 export const getInitialCoordinates = (type: GeojsonEnum, data: any) => {
     if (!data) return;
-    if (type === GeojsonEnum.Point) {
-        return data.features[0].geometry.coordinates;
-    } else if (type === GeojsonEnum.Polygon) {
-        return data.features[0].geometry.coordinates[0][0];
-    } else if (type === GeojsonEnum.LineString) {
-        return data.features[0].geometry.coordinates[0];
-    } else {
-        return [0, 0];
+    switch (type) {
+        case GeojsonEnum.Point:
+            return data.features[0].geometry.coordinates;
+        case GeojsonEnum.Polygon:
+            return data.features[0].geometry.coordinates[0][0];
+        case GeojsonEnum.LineString:
+            return data.features[0].geometry.coordinates[0];
+        default:
+            return [0, 0];
     }
 };
 
 export const checkIfMapSourceExists = (sourceName: string, map: any) => {
     try {
-        const source = map.getSource(sourceName);
-        if (source) {
-            return true;
-        } else {
-            return false;
-        }
+        return !!map.getSource(sourceName);
     } catch (err) {
         return false;
     }
@@ -33,12 +29,7 @@ export const checkIfMapSourceExists = (sourceName: string, map: any) => {
 
 export const checkIfMapLayerExists = (layerName: string, map: any) => {
     try {
-        const layer = map.getLayer(layerName);
-        if (layer) {
-            return true;
-        } else {
-            return false;
-        }
+        return !!map.getLayer(layerName);
     } catch (err) {
         return false;
     }

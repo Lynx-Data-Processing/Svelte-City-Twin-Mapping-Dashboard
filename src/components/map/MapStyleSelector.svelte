@@ -42,11 +42,7 @@
 		}
 	];
 	const toggleStyle = (mapStyleValue: string) => {
-		try {
-			mapStyle = mapStyleValue;
-		} catch (e) {
-			console.log('Unable to toggle Map Style');
-		}
+		mapStyle = mapStyleValue;
 	};
 </script>
 
@@ -54,7 +50,7 @@
 	{#each mapStyleList as mapStyleItem}
 		<div>
 			<input
-				value={mapStyleItem.name}
+				value={mapStyleItem.value}
 				type="radio"
 				checked={mapStyle === mapStyleItem.value}
 				on:click={() => toggleStyle(mapStyleItem.value)}

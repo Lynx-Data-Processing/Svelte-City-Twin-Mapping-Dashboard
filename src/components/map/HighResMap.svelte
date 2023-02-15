@@ -34,10 +34,9 @@
 			FeatureLayer,
 			ElevationLayer
 		) => {
-
 			//* Config esri API key
 			esriAPIConfig(esriConfig);
-			
+
 			//* Create esri map
 			esriMapConfig(
 				Map,
