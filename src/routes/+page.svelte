@@ -234,7 +234,7 @@
 				<MapError />
 			{/if}
 
-			<div class="absolute top-16 right-2 flex flex-col gap-4 z-100 pt-2 pr-1">
+			<div class="absolute top-2 right-2 flex flex-col gap-4 z-100 pt-2 pr-1">
 				<Card title="Map Style" width="w-[15rem]">
 					<MapStyleSelector bind:mapStyle />
 				</Card>

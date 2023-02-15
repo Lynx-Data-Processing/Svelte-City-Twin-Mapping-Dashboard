@@ -25,8 +25,7 @@
 
 	import MapboxDraw from '@mapbox/mapbox-gl-draw';
 	import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
-	import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-	import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+
 	import mapboxgl from 'mapbox-gl';
 
 	import {
@@ -437,12 +436,7 @@
 		// Get the initial Data
 		await fetchInitialMapData();
 		mapboxMap.addControl(draw, 'bottom-left');
-		mapboxMap.addControl(
-			new MapboxGeocoder({
-				accessToken: mapboxgl.accessToken,
-				mapboxgl: mapboxgl
-			})
-		);
+
 		mapboxMap.addControl(new mapboxgl.FullscreenControl(), 'bottom-right');
 		mapboxMap.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 		mapboxMap.on('style.load', function () {
