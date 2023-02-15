@@ -1,6 +1,7 @@
 import { getGeojsonDataFromFile } from './../../service/smarter-api';
 import type { eventType } from './../../types/types';
 
+
 export const getGPSSensorDataFromEventFiles = async (rawEventList: eventType[]) => {
 
     let tempGPSList = [];
@@ -22,6 +23,7 @@ export const getGPSSensorDataFromEventFiles = async (rawEventList: eventType[]) 
                     gpsRawData['endpointId'] = event.endpointId;
                     gpsRawData['recordingStartTimestamp'] = event.recordingStartTimestamp;
                     gpsRawData['recordingEndTimestamp'] = event.recordingEndTimestamp;
+                    event['coordinates'] = [gpsRawData.GEO_LOCATION.longitude, gpsRawData.GEO_LOCATION.latitude];
                     tempGPSList.push(gpsRawData);
                     tempEventList.push(event);
                 }
@@ -33,6 +35,6 @@ export const getGPSSensorDataFromEventFiles = async (rawEventList: eventType[]) 
         }
     }
 
-    return [ tempGPSList, tempEventList ];
+    return [tempGPSList, tempEventList];
 
 };

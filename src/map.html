@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>ArcGIS API for JavaScript: Imagery/Ortho2019</title>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+<!-- Favorite Bookmark Icon -->
+<link rel="shortcut icon" type="image/ico" href="//www.esri.com/favicon.ico" />
+<link rel="icon" type="image/ico" href="//www.esri.com/favicon.ico" />
+<!-- End Favorite Bookmark Icon --> 
+<link href="/gis_unfed/rest/static/jsapi-template-main.css" rel="stylesheet" type="text/css"/>
+<link href="https://js.arcgis.com/4.14/esri/css/main.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="https://js.arcgis.com/4.14/"></script>
+<style>
+html,
+body,
+#viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 97.5%;
+  width: 100%;
+}
+</style>
+<script type="text/javascript">
+require([
+  "esri/Map",
+  "esri/views/MapView",
+  "esri/widgets/Home",
+  "esri/widgets/ScaleBar",
+  "esri/widgets/LayerList",
+  "esri/widgets/Legend",
+  "esri/widgets/Expand",
+  "esri/widgets/Compass",
+  "esri/layers/TileLayer"
+], (
+  Map, MapView, Home, ScaleBar, LayerList, Legend,
+  Expand, Compass, TileLayer
+) => {
+  const layer = new TileLayer({ url: "https://api.cityofkingston.ca/gis_unfed/rest/services/Imagery/Ortho2019/MapServer" });
+  const map = new Map({ layers: [layer] });
+  const view = new MapView({
+    container: "viewDiv",
+    map: map
+  });
+
+  const homeBtn = new Home({
+    view: view
+  });
+
+  const scaleBar = new ScaleBar({
+    view: view,
+    unit: "dual"
+  });
+
+  const layerList = new LayerList({
+    view: view
+  });
+
+  const legend = new Legend({
+    view: view
+  });
+
+  const layerListExpand = new Expand({
+    view: view,
+    content: layerList,
+    expanded: false,
+    expandTooltip: "Expand LayerList"
+  });
+
+  const legendExpand = new Expand({
+    view: view,
+    content: legend,
+    expandTooltip: "Expand Legend",
+    expanded: false
+  });
+
+  const compass = new Compass({
+    view: view,
+    visible: false
+  });
+
+  view.ui.add(homeBtn, "top-left");
+  view.ui.add(scaleBar, "bottom-right");
+  view.ui.add(layerListExpand, "top-right");
+  view.ui.add(legendExpand, "bottom-left");
+  view.ui.add(compass, "top-left");
+
+  // load the Compass only when the view is rotated
+  view.watch('rotation', function (rotation) {
+    if (rotation && !compass.visible) {
+      compass.visible = true;
+    }
+  });
+
+});
+</script>
+</head>
+<body>
+  <div class="grid-container">
+    <div class="item1">
+      <p>ArcGIS JavaScript API: Imagery/Ortho2019 (MapServer)</p>
+    </div>
+    <div class="item2">
+      <p>Built using the <a class="breadcrumb" href="https://developers.arcgis.com/javascript/" target="sdkView">ArcGIS API for JavaScript</a></p>
+    </div>
+  </div>
+  <div id="viewDiv"></div>
+</body>
+</html>

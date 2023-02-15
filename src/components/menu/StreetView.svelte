@@ -55,8 +55,5 @@
 	{#if selectedPOI == null}
 		<div class="alert alert-error my-1" role="alert">Select a point on the map.</div>
 	{/if}
-	<div
-		bind:this={streetViewContainer}
-		class={`${selectedPOI == null ? 'h-0' : 'h-96'} w-full rounded-lg`}
-	/>
+	<div bind:this={streetViewContainer} class={`${selectedPOI == null ? 'h-0' : 'h-96'} w-full `} />
 </div>

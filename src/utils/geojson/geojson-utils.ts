@@ -19,6 +19,31 @@ const groupByKey = (array: any[], key: any) => {
 };
 
 
+function generateCoordinates(lat: number, lng: number, heading: number): number[][] {
+  const d = 5; // Distance along the line in meters
+  const brng = (90 - heading) * Math.PI / 180; // Convert heading to radians
+
+  const result = [[lng, lat]];
+  if (heading === 0) {
+    for (let i = 0; i < 4; i++) {
+      lng = lng + (d * (Math.random() - 0.5)) / (111.319 * 1000);
+      lat = lat + (d * (Math.random() - 0.5)) / (111.132 * 1000);
+
+      result.push([lng, lat]);
+    }
+  } else {
+    for (let i = 0; i < 4; i++) {
+      lng = lng + (d * Math.cos(brng)) / (111.319 * 1000);
+      lat = lat + (d * Math.sin(brng)) / (111.132 * 1000);
+
+      result.push([lng, lat]);
+    }
+  }
+
+  return result;
+}
+
+
 //* To use the data on mapbox, the data must be in GEOJSON format
 //* Because all the data are points, we'll be creating point sets
 export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
@@ -31,7 +56,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
       //* Set initial Geojson element details
       const dataName = rawData.dataName || `${GeojsonDataEnum.GPS} - ${deviceId}`;
       const dateTime = rawData.dateTime || uuidv4();
-      const dataType = rawData.dataType || GeojsonEnum.Point;
+      const dataType = rawData.dataType || GeojsonEnum.LineString;
       const hasFilter = rawData.hasFilter || true;
       //* Create Geojson feature collection
       const geoJson: geojsonType = {
@@ -45,8 +70,11 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
 
       for (const point of (innerArray as any)) {
         if (point.GEO_LOCATION) {
-          const coordinates = [parseFloat(point.GEO_LOCATION.longitude), parseFloat(point.GEO_LOCATION.latitude)];
+          let coordinates = generateCoordinates(parseFloat(point.GEO_LOCATION.latitude), parseFloat(point.GEO_LOCATION.longitude), parseFloat(point.GEO_LOCATION.heading));
+          console.log(coordinates);
           const properties = point.GEO_LOCATION;
+
+          console.log(properties);
           properties.EventId = point.id;
           properties.DeviceId = point.deviceId;
           properties.Speed = getSpeed(properties);
@@ -56,7 +84,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
           properties.Color = getVehicleSpeedColor(getSpeed(properties));
 
           //* Create the final feature config and push it to the feature array
-          const feature: geojsonFeatureType = { type: 'Feature', geometry: { type: GeojsonEnum.Point, coordinates }, properties };
+          const feature: geojsonFeatureType = { type: 'Feature', geometry: { type: GeojsonEnum.LineString, coordinates }, properties };
           geoJson.features.push(feature);
 
         }

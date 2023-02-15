@@ -3,10 +3,15 @@
 	import { getDevicon } from '../../utils/icons/devicon-icons';
 
 	const PROGRAMMING_TOOLS = ['googlecloud'];
+	export let updateMapCenter: Function;
 	export let paginatedEvents: eventType[] = [];
+
+	function goTop() {
+		document.body.scrollIntoView();
+	}
 </script>
 
-<table class="table w-full rounded-lg">
+<table class="table w-full ">
 	<thead>
 		<tr>
 			<th>Id</th>
@@ -18,10 +23,10 @@
 
 			<th>Start Time</th>
 			<th>End Time</th>
-			<th>Saved On</th>
-			<th>Trigger Id</th>
+			<th class="hidden md:table-cell">Saved On</th>
+			<th class="hidden md:table-cell">Trigger Id</th>
 
-			<th>Has GPS Data</th>
+			<th class="hidden md:table-cell">Has GPS Data</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -31,7 +36,7 @@
 
 				<td class="w-32">
 					<img
-						class="w-32 h-16 overflow-hidden rounded-lg"
+						class="w-32 h-16 overflow-hidden "
 						height="auto"
 						width="100%"
 						alt="Dashcam"
@@ -41,7 +46,7 @@
 
 				<td class="w-32">
 					<img
-						class="w-32 h-16 overflow-hidden rounded-lg"
+						class="w-32 h-16 overflow-hidden "
 						height="100%"
 						width="100%"
 						alt="Dashcam"
@@ -53,7 +58,7 @@
 
 				<td>{event.recordingStartTimestamp}</td>
 				<td>{event.recordingEndTimestamp}</td>
-				<td>
+				<td class="hidden md:table-cell">
 					<div class="flex flex-wrap justify-center  ">
 						{#each PROGRAMMING_TOOLS as icon}
 							<img
@@ -68,7 +73,7 @@
 						{/each}
 					</div>
 				</td>
-				<td>
+				<td class="hidden md:table-cell">
 					{#if event.eventTriggerId === 'EMERGENCY_RECORD'}
 						<div class={`alert alert-error w-full text-center`} role="alert">
 							{event.eventTriggerId}
@@ -80,11 +85,18 @@
 					{/if}
 				</td>
 
-				<td>
+				<td class="hidden md:table-cell">
 					{#if event.snapshots[2]}
-						<div class={`alert alert-success w-full text-center`} role="alert">
-							<i class="fa-solid fa-check  fa-lg" />
-						</div>
+						<button
+							class="btn btn-primary"
+							on:click={() => {
+								updateMapCenter(event.coordinates);
+								goTop();
+							}}
+						>
+							<i class="fa-solid fa-map-marker-alt" />
+							<span>View on Map</span>
+						</button>
 					{:else}
 						<div class={`alert alert-error w-full text-center`} role="alert">
 							<i class="fa-solid fa-x  fa-lg" />

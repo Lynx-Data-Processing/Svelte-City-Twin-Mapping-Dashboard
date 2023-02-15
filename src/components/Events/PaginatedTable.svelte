@@ -3,6 +3,7 @@
 	import EventTable from './EventTable.svelte';
 	import PaginationButtons from './PaginationButtons.svelte';
 	export let eventList: any;
+	export let updateMapCenter: Function;
 
 	let totalNumberOfItems = eventList.length;
 	let paginatedEvents: any = [];
@@ -44,7 +45,7 @@
 
 <div class="flex flex-col">
 	{#if paginatedEvents.length}
-		<EventTable {paginatedEvents} />
+		<EventTable {paginatedEvents} {updateMapCenter} />
 
 		<PaginationButtons
 			{paginationFrom}
