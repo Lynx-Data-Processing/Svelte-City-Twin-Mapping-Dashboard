@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { GeojsonDataEnum, GeojsonEnum } from '../../types/enums';
-import type { geojsonFeatureType, geojsonType } from '../../types/types';
+import type { geojsonFeatureType, geojsonType } from '../../types/geosjonTypes';
 
 import { getSpeed, getVehicleSpeedColor } from '../vehicle-speed';
 

@@ -1,14 +1,7 @@
 <script lang="ts">
-	import type {
-		dateTimeDictionaryType,
-		eventType,
-		layerListElementType,
-		mapDetailsType,
-		menuComponentsType,
-		selectedEventType,
-		selectedPOIType,
-		videoType
-	} from '../types/types';
+	import type { eventType, selectedPOIType, videoType } from '../types/eventTypes';
+	import type { layerListElementType, mapDetailsType } from '../types/mapTypes';
+	import type { dateTimeDictionaryType, menuComponentsType } from '../types/types';
 
 	import Card from '../components/Card.svelte';
 
@@ -218,12 +211,11 @@
 		>
 			<MapboxMap
 				bind:videoArray
-				{mapDetails}
+				bind:mapDetails
 				bind:gpsData
 				bind:layerList
 				bind:mapStyle
 				bind:selectedPOI
-				bind:selectedMenu
 			/>
 
 			<!-- <HighResMap /> -->
@@ -234,24 +226,23 @@
 				<MapError />
 			{/if}
 
-			<div class="absolute top-2 right-2 flex flex-col gap-4 z-100 pt-2 pr-1">
+			<div class="absolute top-2 right-2 flex flex-col gap-4 z-100  ">
 				<Card title="Map Style" width="w-[15rem]">
 					<MapStyleSelector bind:mapStyle />
 				</Card>
 
 				<Card title="Speed Legend (Km/h)">
-					<SpeedView {gpsData} />
+					<SpeedView />
 				</Card>
 			</div>
 		</div>
 	</div>
-	{#if eventList.length}
-		<div class="grid grid-cols-1 gap-4 lg:grid-cols-12 p-4">
-			<div class={`col-span-1 lg:col-span-12 relative`}>
-				<Card title="Recordings" width="w-full" disableToggle={true}>
-					<PaginatedTable bind:eventList {updateMapCenter} />
-				</Card>
-			</div>
-		</div>
-	{/if}
 </main>
+
+{#if eventList.length}
+	<div class="p-4">
+		<Card title="Recordings" width="w-full" disableToggle={true}>
+			<PaginatedTable bind:eventList {updateMapCenter} />
+		</Card>
+	</div>
+{/if}

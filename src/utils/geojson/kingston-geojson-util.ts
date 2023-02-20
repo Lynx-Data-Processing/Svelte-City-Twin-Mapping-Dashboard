@@ -5,7 +5,7 @@ import { GeojsonDataEnum } from './../../types/enums';
 /* eslint-disable no-restricted-syntax */
 import { v4 as uuidv4 } from 'uuid';
 import { GeojsonEnum } from '../../types/enums';
-import type { geojsonFeatureType, geojsonType } from '../../types/types';
+import type { geojsonFeatureType, geojsonType } from '../../types/geosjonTypes';
 
 //* The Kingston API Json data needs to be cleaned
 //* To use the data on mapbox, the data must be in GEOJSON format

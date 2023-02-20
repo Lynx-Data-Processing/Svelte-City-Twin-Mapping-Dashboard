@@ -9,7 +9,7 @@
 >
 	{#each menuComponents as menuItem}
 		<button
-			class={`btn  ${selectedMenu.id == menuItem.id ? 'btn-primary' : 'btn-dark-light'} `}
+			class={`btn  ${selectedMenu == menuItem ? 'btn-primary' : 'btn-dark-light'} `}
 			on:click={() => (selectedMenu = menuItem)}
 			><i class="fa-solid {menuItem.icon} " /><span>{menuItem.title}</span>
 		</button>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { IMapStyle } from '../../types/types';
+	import type { IMapStyle } from '../../types/mapTypes';
 	export let mapStyle: string;
 
 	const mapStyleList: IMapStyle[] = [
@@ -41,8 +41,8 @@
 			img: 'https://assets.website-files.com/5e83362767d71ffd59a0c8a9/5ea01b977fb48a501b898a93_ipad-map%20streets.png'
 		}
 	];
-	const toggleStyle = (mapStyleValue: string) => {
-		mapStyle = mapStyleValue;
+	const toggleStyle = (mapStyleItem: IMapStyle) => {
+		mapStyle = mapStyleItem.value;
 	};
 </script>
 
@@ -52,8 +52,8 @@
 			<input
 				value={mapStyleItem.value}
 				type="radio"
-				checked={mapStyle === mapStyleItem.value}
-				on:click={() => toggleStyle(mapStyleItem.value)}
+				checked={mapStyleItem.value === mapStyle}
+				on:click={() => toggleStyle(mapStyleItem)}
 			/>
 			<label class="ml-2" for={mapStyleItem.name}>{mapStyleItem.name}</label>
 		</div>

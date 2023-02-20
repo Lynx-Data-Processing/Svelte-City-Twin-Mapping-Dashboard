@@ -3,9 +3,9 @@
 		pingMachineLearningAPI,
 		processVideoWithMachineLearning
 	} from '../../service/machinelearning-api';
-	import type { selectedEventType, videoType } from '../../types/types';
+	import type { selectedPOIType, videoType } from '../../types/eventTypes';
 
-	export let selectedPOI: selectedEventType | null = null;
+	export let selectedPOI: selectedPOIType | null = null;
 	export let videoArray: videoType[];
 	let selectedVideo: videoType | null;
 

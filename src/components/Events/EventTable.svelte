@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { eventType } from '../../types/types';
+	import type { eventType } from '../../types/eventTypes';
 	import { getDevicon } from '../../utils/icons/devicon-icons';
 
 	const PROGRAMMING_TOOLS = ['googlecloud'];

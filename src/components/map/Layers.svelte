@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { FontAwesomeIconGivenGeojsonEnum } from '../../types/enums';
-	import type { layerListElementType } from '../../types/types';
+	import type { layerListElementType } from '../../types/mapTypes';
 	import SearchBar from '../../widgets/SearchBar.svelte';
 
 	export let updateMapCenter: Function;

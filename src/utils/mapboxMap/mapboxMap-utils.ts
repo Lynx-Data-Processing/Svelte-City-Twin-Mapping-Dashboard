@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { GeojsonEnum } from '../../types/enums';
-import type { layerListElementType } from '../../types/types';
+import type { layerListElementType } from '../../types/mapTypes';
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from '../filter-data';
 
 

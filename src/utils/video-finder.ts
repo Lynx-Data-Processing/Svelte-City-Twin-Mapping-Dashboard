@@ -1,7 +1,7 @@
 import { getAllVideoRecordingsFromDevice } from '../service/smarter-api';
 import type {
   mediaRecordingType
-} from '../types/types';
+} from '../types/eventTypes';
 
 export const findVideo = async (StartTime: string, EndTime: string, deviceId: string) => {
   return getAllVideoRecordingsFromDevice(
