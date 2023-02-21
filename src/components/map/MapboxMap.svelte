@@ -45,6 +45,7 @@
 	export let mapStyle: string;
 	export let mapDetails: mapDetailsType;
 	export let selectedPOI: selectedPOIType | null;
+	export let selectedMenu: menuComponentsType | null;
 	export let gpsData: any;
 
 	let mapboxMap: any = null;
@@ -77,7 +78,7 @@
 		layerName: string,
 		showOnLoad = false,
 		dataType = GeojsonEnum.Point,
-		dataColor = 'White',
+		dataColor: string | null = null,
 		dataIcon = 'fa-border-all',
 		hasFilter = false
 	) => {
@@ -126,7 +127,7 @@
 			'Neighborhoods',
 			false,
 			GeojsonEnum.Polygon,
-			'Random',
+			null,
 			'fa-border-all',
 			false
 		);
@@ -394,9 +395,15 @@
 	};
 	// ------------------ Map Style functions ------------------ //
 
+	const resizeMap = () => {
+		if (!mapboxMap) return;
+		mapboxMap.resize();
+	};
+
 	$: mapboxMap && mapStyle && switchStyle();
 	$: mapboxMap && gpsData && addNewDynamicGPSElements();
 	$: mapboxMap && mapDetails && updateMapCenter();
+	$: mapboxMap && selectedMenu && resizeMap();
 
 	onMount(async () => {
 		mapboxgl.accessToken = PUBLIC_MAPBOX_KEY;

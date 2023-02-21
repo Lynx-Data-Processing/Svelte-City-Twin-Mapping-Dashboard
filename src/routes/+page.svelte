@@ -18,10 +18,9 @@
 	import SelectionMenu from '../components/menu/SelectionMenu.svelte';
 	import SpeedView from '../components/menu/SpeedView.svelte';
 	import StreetView from '../components/menu/StreetView.svelte';
-	import { getAllEvents } from '../service/smarter-api';
+	import { getAllEvents, getVideosFromGpsData } from '../service/smarter-api';
 	import { rawSmarterAIGPSDataToGeojson } from '../utils/geojson/geojson-utils.js';
 	import { getGPSSensorDataFromEventFiles } from '../utils/geojson/gpsData-utils';
-	import { findVideo } from '../utils/video-finder';
 
 	//* Set Initial Map Details
 	let mapStyle: string = 'mapbox://styles/canaleal/cle0l6bpx004501qotbnxa4wr';
@@ -43,11 +42,11 @@
 		endDateTime: '2022-12-23T00:00'
 	};
 	let menuComponents: menuComponentsType[] = [
-		{ id: -1, title: 'No Menu', icon: 'fa-times' },
-		{ id: 0, title: 'Search Data', icon: 'fa-database' },
-		{ id: 1, title: 'Street View', icon: 'fa-road' },
-		{ id: 2, title: 'Video Player', icon: 'fa-video' },
-		{ id: 3, title: 'About', icon: 'fa-info-circle' }
+		{ id: 0, title: 'No Menu', icon: 'fa-times' },
+		{ id: 1, title: 'Search Data', icon: 'fa-database' },
+		{ id: 2, title: 'Street View', icon: 'fa-road' },
+		{ id: 3, title: 'Video Player', icon: 'fa-video' },
+		{ id: 4, title: 'About', icon: 'fa-info-circle' }
 	];
 	let selectedMenu: menuComponentsType = menuComponents[1];
 	let isLoading = false;
@@ -68,72 +67,6 @@
 	};
 
 	/**
-	 * Retrieves GPS sensor data and video URLs from a list of events and updates the `eventList`, `gpsData`, and `videoArray` arrays.
-	 * @param rawEventList The list of raw events.
-	 */
-	const getMediaEventsFromAllSmarterAIFiles = async (rawEventList: eventType[]) => {
-		const [tempGPSList, tempEventList] = await getGPSSensorDataFromEventFiles(rawEventList);
-		eventList = tempEventList;
-		if (!tempGPSList.length) return;
-
-		//* If data exists, create the GPS Geojson layer
-		const tempGeojsonData = rawSmarterAIGPSDataToGeojson(tempGPSList);
-		if (!tempGeojsonData) return;
-		gpsData = tempGeojsonData;
-		updateMapCenter(gpsData[0].features[0].geometry.coordinates[0]);
-		return gpsData;
-	};
-
-	/**
-	 * Retrieves video URLs for each GPS element in the given GeoJSON data and updates the `videoArray` array.
-	 * @param gpsData The GeoJSON data containing GPS elements.
-	 */
-	const getVideosFromGpsData = async (gpsData: any) => {
-		let tempVideoArray: videoType[] = [];
-		for (const geojson of gpsData) {
-			for (const gpsElement of geojson.features) {
-				try {
-					const videoLink: string = await findVideo(
-						gpsElement.properties.StartTime,
-						gpsElement.properties.EndTime,
-						gpsElement.properties.EndpointId
-					);
-					const video: videoType = {
-						eventId: gpsElement.properties.EventId,
-						deviceId: gpsElement.properties.DeviceId,
-						endpointId: gpsElement.properties.EndpointId,
-						startTimestamp: gpsElement.properties.StartTime,
-						endTimestamp: gpsElement.properties.EndTime,
-						videoUrl: videoLink
-					};
-
-					tempVideoArray.push(video);
-				} catch (error) {
-					console.error(`Error retrieving video URL: ${error}`);
-				}
-			}
-		}
-		videoArray = tempVideoArray;
-	};
-
-	function shuffle(array: any) {
-		let currentIndex = array.length,
-			randomIndex;
-
-		// While there remain elements to shuffle.
-		while (currentIndex != 0) {
-			// Pick a remaining element.
-			randomIndex = Math.floor(Math.random() * currentIndex);
-			currentIndex--;
-
-			// And swap it with the current element.
-			[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-		}
-
-		return array;
-	}
-
-	/**
 	 * Fetches event data and calls `getMediaEventsFromAllSmarterAIFiles()` to process the data.
 	 */
 	const fetchEventsData = async () => {
@@ -146,27 +79,19 @@
 				dateTimeDictionary.endDateTime
 			);
 
-			if (!response || response.status !== 200 || !response.data) {
-				alert('No GPS Events found');
-				return;
-			}
+			if (response.status !== 200 || !response.data || !response.data.eventList) return;
 
-			const rawEventList = response.data.eventList;
+			const [tempGPSList, tempEventList] = await getGPSSensorDataFromEventFiles(
+				response.data.eventList
+			);
+			if (!tempGPSList.length) return;
+			eventList = tempEventList;
 
-			let newEventList = rawEventList.reduce(function (
-				res: any,
-				current: any,
-				index: any,
-				array: any
-			) {
-				return res.concat([current]);
-			},
-			[]);
-
-			newEventList = shuffle(newEventList);
-
-			const tempGpsData = await getMediaEventsFromAllSmarterAIFiles(newEventList);
-			await getVideosFromGpsData(tempGpsData);
+			const tempGpsData = rawSmarterAIGPSDataToGeojson(tempGPSList);
+			if (!tempGpsData) return;
+			gpsData = tempGpsData;
+			updateMapCenter(gpsData[0].features[0].geometry.coordinates[0]);
+			videoArray = await getVideosFromGpsData(tempGpsData);
 		} catch (error) {
 			alert(error);
 			isError = true;
@@ -179,24 +104,24 @@
 <SelectionMenu bind:selectedMenu bind:menuComponents />
 <main>
 	<div class="grid grid-cols-1 md:grid-cols-1  lg:grid-cols-12 ">
-		{#if selectedMenu.id != -1}
-			<div class="col-span-1 md:col-span-1 lg:col-span-2 flex flex-col gap-4 p-2">
+		{#if selectedMenu.id != 0}
+			<div class="col-span-1 lg:col-span-2 flex flex-col gap-4 p-2">
 				<Card title="Layers" showOnLoad={true}>
 					<Layers bind:layerList {updateMapCenter} />
 				</Card>
-				{#if selectedMenu.id === 0}
+				{#if selectedMenu.id === 1}
 					<Card title="Search Data" showOnLoad={true}>
 						<SearchData bind:dateTimeDictionary {fetchEventsData} />
 					</Card>
-				{:else if selectedMenu.id === 1}
+				{:else if selectedMenu.id === 2}
 					<Card title="Street View">
 						<StreetView bind:selectedPOI />
 					</Card>
-				{:else if selectedMenu.id === 2}
+				{:else if selectedMenu.id === 3}
 					<Card title="Video Player">
 						<SelectedVideo bind:selectedPOI bind:videoArray />
 					</Card>
-				{:else if selectedMenu.id === 3}
+				{:else if selectedMenu.id === 4}
 					<Card title="About">
 						<About />
 					</Card>
@@ -204,11 +129,7 @@
 			</div>
 		{/if}
 
-		<div
-			class={`col-span-1 md:col-span-1 ${
-				selectedMenu.id === -1 ? 'lg:col-span-12' : 'lg:col-span-10'
-			}  relative`}
-		>
+		<div class={`col-span-1   ${selectedMenu.id === 0 ? 'col-span-12' : 'col-span-10'}  relative`}>
 			<MapboxMap
 				bind:videoArray
 				bind:mapDetails
@@ -216,6 +137,7 @@
 				bind:layerList
 				bind:mapStyle
 				bind:selectedPOI
+				bind:selectedMenu
 			/>
 
 			<!-- <HighResMap /> -->

@@ -71,10 +71,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
       for (const point of (innerArray as any)) {
         if (point.GEO_LOCATION) {
           let coordinates = generateCoordinates(parseFloat(point.GEO_LOCATION.latitude), parseFloat(point.GEO_LOCATION.longitude), parseFloat(point.GEO_LOCATION.heading));
-          console.log(coordinates);
           const properties = point.GEO_LOCATION;
-
-          console.log(properties);
           properties.EventId = point.id;
           properties.DeviceId = point.deviceId;
           properties.Speed = getSpeed(properties);

@@ -2,6 +2,8 @@
 
 import { PUBLIC_API_KEY, PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL, PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL, PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID, PUBLIC_TENANT_ID } from '$env/static/public';
 import axios from 'axios';
+import type { mediaRecordingType, videoType } from '../types/eventTypes';
+
 
 //* Fetch all devices under the Tenant key
 export const getListOfDevicesUnderTenant = async () => {
@@ -123,4 +125,45 @@ export const getGeojsonDataFromFile = async (url: string) => {
 
 }
 
-export default getListOfDevicesUnderTenant;
+
+export const findVideo = async (StartTime: string, EndTime: string, deviceId: string) => {
+  return getAllVideoRecordingsFromDevice(
+    deviceId,
+    StartTime,
+    EndTime,
+  ).then((result) => {
+    const videos: mediaRecordingType[] = result.data.mediaEventRecordings.filter((res: mediaRecordingType) => res.type === 'VIDEO'); // && res.endTimestamp > timestamp && res.startTimestamp < timestamp
+    return videos.length ? videos[0].url : '';
+  });
+};
+
+
+export const getVideosFromGpsData = async (gpsData: any[]) => {
+  if (!gpsData.length) return [];
+  let tempVideoArray: videoType[] = [];
+  for (const geojson of gpsData) {
+    for (const gpsElement of geojson.features) {
+      try {
+        const videoLink: string = await findVideo(
+          gpsElement.properties.StartTime,
+          gpsElement.properties.EndTime,
+          gpsElement.properties.EndpointId
+        );
+        const video: videoType = {
+          eventId: gpsElement.properties.EventId,
+          deviceId: gpsElement.properties.DeviceId,
+          endpointId: gpsElement.properties.EndpointId,
+          startTimestamp: gpsElement.properties.StartTime,
+          endTimestamp: gpsElement.properties.EndTime,
+          videoUrl: videoLink
+        };
+
+        tempVideoArray.push(video);
+      } catch (error) {
+        console.error(`Error retrieving video URL: ${error}`);
+      }
+    }
+  }
+
+  return tempVideoArray;
+};

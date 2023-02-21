@@ -40,3 +40,14 @@ export const removeObjectWhereValueEqualsString = (listOfObjects: any[], key: st
   });
   return filteredList;
 };
+
+
+export const getObjectWhereKeyEqualsGivenValue = (listOfObjects: any[], key: string, value: any) => {
+  const filteredList = listOfObjects.filter((object) => {
+    return object[key] === value;
+  });
+  if (filteredList.length >= 1) {
+    return filteredList[0];
+  }
+  return null;
+}

@@ -75,7 +75,7 @@ export const createLayerListElement = (
     isShown: boolean,
     faIcon: string,
     hasFilter: boolean,
-    dataColor: string,
+    dataColor: string | null,
     cleanData: any
 ): layerListElementType => {
     //Create the new element and change the layer list
@@ -88,7 +88,7 @@ export const createLayerListElement = (
         hasFilter: hasFilter,
         sourceName: sourceName,
         initialCoordinates: getInitialCoordinates(type, cleanData),
-        color: dataColor,
+        color: dataColor ? dataColor : 'red',
         data: cleanData
     };
 
