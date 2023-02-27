@@ -1,9 +1,11 @@
 <script>
-	import { fade, slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import '../styles/style.css';
 	import Footer from '../widgets/Footer.svelte';
 	import Navbar from '../widgets/Navbar.svelte';
 </script>
+
+<svelte:head><title>Lynx City Twin</title></svelte:head>
 
 <div class="app" transition:fade>
 	<Navbar />

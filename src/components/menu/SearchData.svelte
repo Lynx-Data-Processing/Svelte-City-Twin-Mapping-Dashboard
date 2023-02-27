@@ -8,8 +8,10 @@
 
 <div class="flex flex-col">
 	<div class="datepicker form-floating my-1  w-full" data-mdb-toggle-button="false">
-		<label for="floatingInput">Start date</label>
+		<label for="start_date">Start date</label>
 		<input
+			name="start_date"
+			id="start_date"
 			type="datetime-local"
 			class="form-control date-picker p-2"
 			placeholder="Select a date"
@@ -21,8 +23,10 @@
 	</div>
 
 	<div class="datepicker form-floating my-1 w-full" data-mdb-toggle-button="false">
-		<label for="floatingInput">End date</label>
+		<label for="end_date">End date</label>
 		<input
+			name="end_date"
+			id="end_date"
 			type="datetime-local"
 			class="form-control date-picker p-2"
 			placeholder="Select End Date Time"
