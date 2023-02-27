@@ -153,7 +153,7 @@
 						width="auto"
 						title={tool}
 						class={`img-icon w-8 mx-2 py-2`}
-						alt=""
+						alt={tool}
 						src={getDevicon(tool)}
 						loading="lazy"
 					/>
