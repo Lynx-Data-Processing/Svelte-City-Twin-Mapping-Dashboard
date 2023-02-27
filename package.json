@@ -55,10 +55,7 @@
     "type": "module",
     "dependencies": {
         "@mapbox/mapbox-gl-geocoder": "^2.3.0",
-<<<<<<< HEAD
         "@sveltejs/adapter-auto": "^2.0.0",
-=======
->>>>>>> 9fa99cdfc2e6cd13ef72c9659d93e75bac14e6fe
         "mapbox-gl": "^2.11.0",
         "svelte-range-slider-pips": "^2.1.0"
     }
