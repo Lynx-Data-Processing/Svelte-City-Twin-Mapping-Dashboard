@@ -85,7 +85,7 @@ export const getAllEvents = async (fromDateTime: string, toDateTime: string) => 
   try {
     let config = {
       method: 'get',
-      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=100&tenantId=${PUBLIC_TENANT_ID}&deviceId=a3169769`,
+      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=100&tenantId=${PUBLIC_TENANT_ID}&deviceId=CK20520033`,
       headers: {}
     };
     const promise = await axios(config);
@@ -167,3 +167,36 @@ export const getVideosFromGpsData = async (gpsData: any[]) => {
 
   return tempVideoArray;
 };
+
+
+export async function callAndProcessAPI() {
+  const baseUrl = 'https://api.anyconnect.com/v2/event-messaging/events';
+  const params = new URLSearchParams({
+    secretToken: '19IHZBSWMJM5IRALLXHZXHFSOX0ROBRCQQWMRZ0I3RYYSXLKHVFPVJVGNTYYS0EKK9JTSO4UYWUMMTRTAQTZM5N75NVG1GXQCRFKAUWSW9M5AYQG3N52HMVF0BPYNJ05',
+    endpointId: '4326',
+    pageSize: '100',
+    tenantId: 'e218aacc-de10-4e61-bde2-e5966b1722dc'
+  });
+  
+  const results = [];
+  
+  for (let i = 0; i < 5; i++) {
+    try {
+      const response = await axios.get(`${baseUrl}?${params.toString()}`);
+      const eventList = response.data.eventList;
+      const lastObject = eventList[eventList.length - 1];
+      
+      params.set('lastMaxEventId', lastObject.id);
+      params.set('lastMaxEventTimestamp', lastObject.eventTimestamp);
+      
+      results.push(eventList);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  const flattenedResults = results.flat();
+  console.log(flattenedResults);
+  return flattenedResults;
+}
+

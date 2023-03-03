@@ -18,7 +18,7 @@
 	import SelectionMenu from '../components/menu/SelectionMenu.svelte';
 	import SpeedView from '../components/menu/SpeedView.svelte';
 	import StreetView from '../components/menu/StreetView.svelte';
-	import { getAllEvents, getVideosFromGpsData } from '../service/smarter-api';
+	import { callAndProcessAPI, getAllEvents, getVideosFromGpsData } from '../service/smarter-api';
 	import { rawSmarterAIGPSDataToGeojson } from '../utils/geojson/geojson-utils.js';
 	import { getGPSSensorDataFromEventFiles } from '../utils/geojson/gpsData-utils';
 
@@ -74,15 +74,18 @@
 		isError = false;
 
 		try {
-			const response = await getAllEvents(
-				dateTimeDictionary.startDateTime,
-				dateTimeDictionary.endDateTime
-			);
+			// const response = await getAllEvents(
+			// 	dateTimeDictionary.startDateTime,
+			// 	dateTimeDictionary.endDateTime
+			// );
 
-			if (response.status !== 200 || !response.data || !response.data.eventList) return;
+			// if (response.status !== 200 || !response.data || !response.data.eventList) return;
+
+			const rawEventList = await callAndProcessAPI();
+			if(!rawEventList || !rawEventList.length) return;
 
 			const [tempGPSList, tempEventList] = await getGPSSensorDataFromEventFiles(
-				response.data.eventList
+				rawEventList
 			);
 			if (!tempGPSList.length) return;
 			eventList = tempEventList;
@@ -99,6 +102,8 @@
 
 		isLoading = false;
 	};
+
+
 </script>
 
 <SelectionMenu bind:selectedMenu bind:menuComponents />
