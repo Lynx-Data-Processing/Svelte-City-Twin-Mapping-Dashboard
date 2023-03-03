@@ -4,7 +4,7 @@ import { TimeStampFormatEnum } from "../types/enums";
 export const formatDateTime = (timeStamp: number, dateFormat: TimeStampFormatEnum) => {
     try {
         // Check if timeStamp is null or less than 0
-        if (timeStamp < 0) { throw new Error('timeStamp cannot be negative.')}
+        if (timeStamp < 0) { throw new Error('timeStamp cannot be negative.') }
         if (timeStamp == null) { throw new Error('timeStamp cannot be null.') }
 
         // Convert timeStamp to date object (includes leading zeros)
@@ -15,10 +15,10 @@ export const formatDateTime = (timeStamp: number, dateFormat: TimeStampFormatEnu
             year: dateStrip[3],
             month: {
                 monthStr: dateStrip[2],
-                monthInt: ('0' + (date.getMonth()+1)).slice(-2),
+                monthInt: ('0' + (date.getMonth() + 1)).slice(-2),
             },
             day: {
-                dayStr: dateStrip[0].slice(0,-1),
+                dayStr: dateStrip[0].slice(0, -1),
                 dayInt: dateStrip[1],
             },
             time: dateStrip[4]
@@ -29,23 +29,23 @@ export const formatDateTime = (timeStamp: number, dateFormat: TimeStampFormatEnu
 
         // Slice date-time string according to dateFormat
         switch (dateFormat) {
-            case(TimeStampFormatEnum.YYYY_MM_DD_hh_mm_ss):
+            case (TimeStampFormatEnum.YYYY_MM_DD_hh_mm_ss):
                 return dateComplex;
-            case(TimeStampFormatEnum.YY_MM_DD_hh_mm_ss):
+            case (TimeStampFormatEnum.YY_MM_DD_hh_mm_ss):
                 return dateComplex.slice(2,);
-            case(TimeStampFormatEnum.YYYY_MM_DD_hh_mm):
-                return dateComplex.slice(0,-3);
-            case(TimeStampFormatEnum.YY_MM_DD_hh_mm):
-                return dateComplex.slice(2,-3);
-            case(TimeStampFormatEnum.DateFull):
+            case (TimeStampFormatEnum.YYYY_MM_DD_hh_mm):
+                return dateComplex.slice(0, -3);
+            case (TimeStampFormatEnum.YY_MM_DD_hh_mm):
+                return dateComplex.slice(2, -3);
+            case (TimeStampFormatEnum.DateFull):
                 return dateClean;
-            case(TimeStampFormatEnum.DateSimple):
-                return dateClean.slice(4,-7);
+            case (TimeStampFormatEnum.DateSimple):
+                return dateClean.slice(4, -7);
             default:
                 throw new Error('Invalid dateFormat.');
-        } 
-        
-    } catch(e) {
+        }
+
+    } catch (e) {
         console.log(e);
         return e;
     }

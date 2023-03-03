@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import type { videoType } from '../types/types';
+import type { videoType } from '../types/eventTypes';
 
 export async function pingMachineLearningAPI() {
     try {
@@ -16,7 +16,7 @@ export async function pingMachineLearningAPI() {
 
         return response.status == 200;
 
-    } catch(error) {
+    } catch (error) {
         console.log(error);
     }
 }

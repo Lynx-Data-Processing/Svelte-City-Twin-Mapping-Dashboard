@@ -2,7 +2,6 @@
 	import type { dateTimeDictionaryType } from '../../types/types';
 
 	export let dateTimeDictionary: dateTimeDictionaryType;
-
 	export let fetchEventsData: Function;
 </script>
 

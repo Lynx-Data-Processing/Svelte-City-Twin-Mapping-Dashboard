@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { GeojsonEnum } from '../../types/enums';
-	import type {
-		geojsonType,
-		layerListElementType,
-		mapDetailsType,
-		menuComponentsType,
-		selectedPOIType,
-		videoType
-	} from '../../types/types';
+	import type { selectedPOIType, videoType } from '../../types/eventTypes';
+	import type { geojsonType } from '../../types/geosjonTypes';
+	import type { layerListElementType, mapDetailsType } from '../../types/mapTypes';
+	import type { menuComponentsType } from '../../types/types';
+
 	import { axiosCacheGetUtility } from '../../utils/fetch-data';
 
 	import { rawKingstonDataToGeojsonData } from '../../utils/geojson/kingston-geojson-util';
@@ -48,8 +45,9 @@
 	export let mapStyle: string;
 	export let mapDetails: mapDetailsType;
 	export let selectedPOI: selectedPOIType | null;
+	export let selectedMenu: menuComponentsType | null;
 	export let gpsData: any;
-	export let selectedMenu: menuComponentsType;
+
 	let mapboxMap: any = null;
 	let isInitialDataLoaded = false;
 
@@ -80,7 +78,7 @@
 		layerName: string,
 		showOnLoad = false,
 		dataType = GeojsonEnum.Point,
-		dataColor = 'White',
+		dataColor: string | null = null,
 		dataIcon = 'fa-border-all',
 		hasFilter = false
 	) => {
@@ -129,7 +127,7 @@
 			'Neighborhoods',
 			false,
 			GeojsonEnum.Polygon,
-			'Random',
+			null,
 			'fa-border-all',
 			false
 		);
@@ -172,8 +170,6 @@
 			'fa-road',
 			false
 		);
-
-		isInitialDataLoaded = true;
 	};
 
 	// ------------------ Mapbox Map adding Layers ------------------ //
@@ -286,34 +282,32 @@
 
 	// ------------------ Map Layer functions ------------------ //
 	const addLayerListElementSourceAndLayer = (layerListElement: layerListElementType) => {
-		const { layerName, type } = layerListElement;
-
 		const doesLayerExist = checkIfMapLayerExists(layerListElement.layerName, mapboxMap);
 		if (doesLayerExist) mapboxMap.removeLayer(layerListElement.layerName);
 
 		//Add the buildings layer
-		if (layerName.includes('Buildings')) {
+		if (layerListElement.layerName.includes('Buildings')) {
 			addBuildingLayer(mapboxMap, layerListElement);
 		}
 
-		if (type === GeojsonEnum.Polygon) {
+		if (layerListElement.type === GeojsonEnum.Polygon) {
 			addMapSource(layerListElement, mapboxMap);
 			addPolygonLayer(mapboxMap, smallPopup, layerListElement, 0.5, ['get', 'Color']);
 		}
 
-		if (type === GeojsonEnum.Point) {
+		if (layerListElement.type === GeojsonEnum.Point) {
 			addMapSource(layerListElement, mapboxMap);
 			addPointLayer(mapboxMap, smallPopup, layerListElement, 'Size', ['get', 'Color']);
 		}
 
-		if (type === GeojsonEnum.LineString) {
+		if (layerListElement.type === GeojsonEnum.LineString) {
 			addMapSource(layerListElement, mapboxMap);
 			addLineLayer(mapboxMap, smallPopup, layerListElement, 8, ['get', 'Color']);
 		}
 	};
 
 	const addExistingDynamicGPSElements = () => {
-		if (mapboxMap === null || layerList.length <= 0) return;
+		if (!mapboxMap || !layerList.length) return;
 
 		try {
 			addTerrainLayer(mapboxMap);
@@ -326,7 +320,7 @@
 	};
 
 	const addNewDynamicGPSElements = () => {
-		if (mapboxMap === null || gpsData.length <= 0) return;
+		if (!mapboxMap || !gpsData.length) return;
 
 		gpsData.forEach((rawGpsElement: geojsonType) => {
 			const { dataName, dataType, hasFilter } = rawGpsElement;
@@ -351,22 +345,14 @@
 
 	// ------------------ Map Style functions ------------------ //
 	const switchStyle = () => {
-		if (mapboxMap === null || isInitialDataLoaded === false) return;
-		try {
-			mapboxMap.setStyle(mapStyle);
-		} catch (err) {
-			console.log(err);
-		}
+		if (!mapboxMap || !isInitialDataLoaded) return;
+		mapboxMap.setStyle(mapStyle);
 	};
 
 	const addMapLayerVisibility = () => {
-		// If mapboxMap not loaded or layers not loaded, return
-		if (mapboxMap === null || !layerList.every((layer) => mapboxMap.getLayer(layer.layerName))) {
-			return;
-		}
+		if (!mapboxMap || !layerList) return;
 
 		try {
-			// Set layer visibility based on isShown flag
 			layerList.forEach((layer) => {
 				mapboxMap.setLayoutProperty(
 					layer.layerName,
@@ -379,21 +365,12 @@
 		}
 	};
 
-	const resizeMap = () => {
-		try {
-			mapboxMap.resize();
-		} catch (err) {}
-	};
 	const updateMapCenter = () => {
-		if (mapboxMap === null) return;
-		try {
-			mapboxMap.flyTo({
-				center: mapDetails.center,
-				zoom: mapDetails.zoom
-			});
-		} catch (err) {
-			console.log(err);
-		}
+		if (!mapboxMap) return;
+		mapboxMap.flyTo({
+			center: mapDetails.center,
+			zoom: mapDetails.zoom
+		});
 	};
 
 	//Update the polygon using the features property
@@ -418,10 +395,16 @@
 	};
 	// ------------------ Map Style functions ------------------ //
 
-	$: mapboxMap && selectedMenu && resizeMap();
+	const resizeMap = () => {
+		if (!mapboxMap) return;
+		mapboxMap.resize();
+	};
+
 	$: mapboxMap && mapStyle && switchStyle();
 	$: mapboxMap && gpsData && addNewDynamicGPSElements();
 	$: mapboxMap && mapDetails && updateMapCenter();
+	$: mapboxMap && selectedMenu && resizeMap();
+
 	onMount(async () => {
 		mapboxgl.accessToken = PUBLIC_MAPBOX_KEY;
 		mapboxMap = new mapboxgl.Map({
@@ -446,7 +429,6 @@
 		// Mapboxs normal way to show and hide layers. This calls the filter every second
 		mapboxMap.on('idle', () => {
 			addMapLayerVisibility();
-			resizeMap();
 		});
 
 		mapboxMap.on('draw.create', updatePolygon);
@@ -455,13 +437,11 @@
 		mapboxMap.on('contextmenu', clearPolygon);
 	});
 	onDestroy(() => {
-		try {
-			layerList.forEach(({ layerName, sourceName }) => {
-				mapboxMap.removeLayer(layerName);
-				mapboxMap.removeSource(sourceName);
-			});
-			mapboxMap = null;
-		} catch (e) {}
+		layerList.forEach(({ layerName, sourceName }) => {
+			mapboxMap.removeLayer(layerName);
+			mapboxMap.removeSource(sourceName);
+		});
+		mapboxMap = null;
 	});
 </script>
 

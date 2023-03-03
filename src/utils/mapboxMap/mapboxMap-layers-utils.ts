@@ -1,4 +1,4 @@
-import type { layerListElementType } from '../../types/types';
+import type { layerListElementType } from '../../types/mapTypes';
 
 
 export const addTerrainLayer = (map: any) => {

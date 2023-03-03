@@ -1,6 +1,6 @@
 import type {
   videoType
-} from '../../types/types';
+} from '../../types/eventTypes';
 
 
 function separateCaps(str: string) {
