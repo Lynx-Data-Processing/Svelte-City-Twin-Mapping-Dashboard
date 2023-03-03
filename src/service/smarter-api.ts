@@ -2,6 +2,8 @@
 
 import { PUBLIC_API_KEY, PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL, PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL, PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID, PUBLIC_TENANT_ID } from '$env/static/public';
 import axios from 'axios';
+import type { mediaRecordingType, videoType } from '../types/eventTypes';
+
 
 //* Fetch all devices under the Tenant key
 export const getListOfDevicesUnderTenant = async () => {
@@ -83,7 +85,7 @@ export const getAllEvents = async (fromDateTime: string, toDateTime: string) => 
   try {
     let config = {
       method: 'get',
-      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=100&tenantId=${PUBLIC_TENANT_ID}&deviceId=a3169769`,
+      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=100&tenantId=${PUBLIC_TENANT_ID}&deviceId=CK20520033`,
       headers: {}
     };
     const promise = await axios(config);
@@ -123,4 +125,78 @@ export const getGeojsonDataFromFile = async (url: string) => {
 
 }
 
-export default getListOfDevicesUnderTenant;
+
+export const findVideo = async (StartTime: string, EndTime: string, deviceId: string) => {
+  return getAllVideoRecordingsFromDevice(
+    deviceId,
+    StartTime,
+    EndTime,
+  ).then((result) => {
+    const videos: mediaRecordingType[] = result.data.mediaEventRecordings.filter((res: mediaRecordingType) => res.type === 'VIDEO'); // && res.endTimestamp > timestamp && res.startTimestamp < timestamp
+    return videos.length ? videos[0].url : '';
+  });
+};
+
+
+export const getVideosFromGpsData = async (gpsData: any[]) => {
+  if (!gpsData.length) return [];
+  let tempVideoArray: videoType[] = [];
+  for (const geojson of gpsData) {
+    for (const gpsElement of geojson.features) {
+      try {
+        const videoLink: string = await findVideo(
+          gpsElement.properties.StartTime,
+          gpsElement.properties.EndTime,
+          gpsElement.properties.EndpointId
+        );
+        const video: videoType = {
+          eventId: gpsElement.properties.EventId,
+          deviceId: gpsElement.properties.DeviceId,
+          endpointId: gpsElement.properties.EndpointId,
+          startTimestamp: gpsElement.properties.StartTime,
+          endTimestamp: gpsElement.properties.EndTime,
+          videoUrl: videoLink
+        };
+
+        tempVideoArray.push(video);
+      } catch (error) {
+        console.error(`Error retrieving video URL: ${error}`);
+      }
+    }
+  }
+
+  return tempVideoArray;
+};
+
+
+export async function callAndProcessAPI() {
+  const baseUrl = 'https://api.anyconnect.com/v2/event-messaging/events';
+  const params = new URLSearchParams({
+    secretToken: '19IHZBSWMJM5IRALLXHZXHFSOX0ROBRCQQWMRZ0I3RYYSXLKHVFPVJVGNTYYS0EKK9JTSO4UYWUMMTRTAQTZM5N75NVG1GXQCRFKAUWSW9M5AYQG3N52HMVF0BPYNJ05',
+    endpointId: '4326',
+    pageSize: '100',
+    tenantId: 'e218aacc-de10-4e61-bde2-e5966b1722dc'
+  });
+  
+  const results = [];
+  
+  for (let i = 0; i < 5; i++) {
+    try {
+      const response = await axios.get(`${baseUrl}?${params.toString()}`);
+      const eventList = response.data.eventList;
+      const lastObject = eventList[eventList.length - 1];
+      
+      params.set('lastMaxEventId', lastObject.id);
+      params.set('lastMaxEventTimestamp', lastObject.eventTimestamp);
+      
+      results.push(eventList);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  const flattenedResults = results.flat();
+  console.log(flattenedResults);
+  return flattenedResults;
+}
+
