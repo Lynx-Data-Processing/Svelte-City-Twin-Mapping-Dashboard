@@ -52,8 +52,10 @@
 			<input
 				value={mapStyleItem.value}
 				type="radio"
-				checked={mapStyleItem.value === mapStyle}
-				on:click={() => toggleStyle(mapStyleItem)}
+				checked={mapStyle === mapStyleItem.value}
+				on:click={() => toggleStyle(mapStyleItem.value)}
+				name={mapStyleItem.name}
+				id={mapStyleItem.name}
 			/>
 			<label class="ml-2" for={mapStyleItem.name}>{mapStyleItem.name}</label>
 		</div>

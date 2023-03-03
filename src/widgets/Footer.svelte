@@ -123,7 +123,9 @@
 
 	<div class="grid grid-cols-1 sm:grid-cols-3 py-8">
 		<div class="col-span-1 py-2">
-			<p class="font-bold text-2xl"><i class="fa-solid fa-location-arrow" /> LYNX</p>
+			<h1 class="font-bold text-2xl uppercase">
+				<i class="fa-solid fa-location-arrow mr-1" />lynx
+			</h1>
 			<p class="text-sm my-2">
 				The City promotes and fosters open government principles of participation, innovation,
 				transparency and accountability. The data catalogue supports these principles and is the
@@ -151,7 +153,7 @@
 						width="auto"
 						title={tool}
 						class={`img-icon w-8 mx-2 py-2`}
-						alt=""
+						alt={tool}
 						src={getDevicon(tool)}
 						loading="lazy"
 					/>
