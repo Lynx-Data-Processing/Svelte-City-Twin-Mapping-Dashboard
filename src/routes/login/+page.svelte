@@ -5,6 +5,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+
 	$: {
 		const redirectTo = $page.url.searchParams.get('redirect');
 

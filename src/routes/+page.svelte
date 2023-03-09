@@ -2,16 +2,11 @@
 	import '../styles/style.css';
 	import { Auth } from '@supabase/auth-ui-svelte';
 	import { ThemeSupa } from '@supabase/auth-ui-shared';
-	import login from '$lib/images/login.png';
 
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 </script>
-
-<svelte:head>
-	<title>Login</title>
-</svelte:head>
 
 <main>
 	<div class="w-screen h-screen flex flex-col items-center justify-center">
