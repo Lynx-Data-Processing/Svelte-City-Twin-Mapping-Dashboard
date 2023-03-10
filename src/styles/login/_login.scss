@@ -30,26 +30,12 @@
 }
 
 .learn-more-visible {
-    position: absolute;
-    bottom: 25vh;
-    left: 50%;
-
-    width: 40vw;
-    height: 10%;
-    padding: 20px;
     text-align: center;
     font-size: small;
     animation: fadeIn .5s;
 }
 
 .learn-more-invisible {
-    position: absolute;
-    bottom: 25vh;
-    left: 50%;
-
-    width: 40vw;
-    height: 10%;
-    padding: 20px;
     text-align: center;
     font-size: small;
     animation: fadeOut .5s;

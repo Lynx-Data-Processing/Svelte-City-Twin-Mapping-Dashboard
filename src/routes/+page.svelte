@@ -25,7 +25,7 @@
 		</div>
 		<div class="login-info">
 			<!-- <a href="/" class="mb-auto text-right text-gray-800 hover:underline">Need Help?</a> -->
-			<h1 class="font-sans text-4xl">Sign Up</h1>
+			<h1 class="mt-16 font-sans text-4xl">Sign In</h1>
 			<Auth
 				supabaseClient={data.supabase}
 				view="magic_link"
@@ -39,9 +39,8 @@
 			>
 			Why a link? Learn More
 			</button>
+		<span class="{learnMoreVisible ? 'learn-more-visible':'learn-more-invisible'}">The magic link grants authorized users access to the application without the need for a password.</span>
 		</div>
-		<span class="{learnMoreVisible ? 'learn-more-visible':'learn-more-invisible'}">The magic link is used to access the mapping application after the authentication verifies the user has access to the application. The link grants access to an account or application without the need for a password.</span>
 		<div class="bottom-block"/>
-		
 	</div>
 </main>
