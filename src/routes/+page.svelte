@@ -10,8 +10,9 @@
 	// "Why a link? Learn More" [Visibility]
 	let learnMoreVisible = false;
 
-	function toggleLearnMore() {
+	const toggleLearnMore = () => {
 		learnMoreVisible = !learnMoreVisible;
+		console.log(learnMoreVisible);
 	}
 
 </script>
@@ -38,8 +39,9 @@
 			>
 			Why a link? Learn More
 			</button>
-			<p class="mt-10 text-center opacity-{learnMoreVisible ? '1':'0'}">The magic link is used to access the mapping application after the authentication verifies the user has access to the application. The link grants access to an account or application without the need for a password.</p>
 		</div>
+		<span class="{learnMoreVisible ? 'learn-more-visible':'learn-more-invisible'}">The magic link is used to access the mapping application after the authentication verifies the user has access to the application. The link grants access to an account or application without the need for a password.</span>
 		<div class="bottom-block"/>
+		
 	</div>
 </main>
