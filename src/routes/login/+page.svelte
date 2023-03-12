@@ -7,6 +7,7 @@
 
 	export let data: PageData;
 
+	// loading screen while verifying user
 	$: {
 		const redirectTo = $page.url.searchParams.get('redirect');
 

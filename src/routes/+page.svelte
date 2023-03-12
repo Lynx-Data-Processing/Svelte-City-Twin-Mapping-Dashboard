@@ -7,7 +7,7 @@
 
 	export let data: PageData;
 
-	// "Why a link? Learn More" [Visibility]
+	// Learn more visibility
 	let learnMoreVisible = false;
 
 	const toggleLearnMore = () => {
