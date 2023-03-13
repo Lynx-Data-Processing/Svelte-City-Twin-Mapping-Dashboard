@@ -16,6 +16,11 @@
 	{/each}
 
 	<a class="btn  btn-dark-light md:ml-auto" href="/arc" target="_blank" rel="noreferrer">
-		<i class="fa-solid fa-map " /><span>High Resolution Map</span></a
-	>
+		<i class="fa-solid fa-map " /><span>High Resolution Map</span>
+	</a>
+	<form action="/logout" method="POST">
+		<button type="submit" class="btn  btn-dark-light">
+			<i class="fa-solid fa-right-from-bracket " /><span>Logout</span>
+		</button>
+	</form>
 </div>
