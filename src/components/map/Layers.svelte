@@ -73,7 +73,7 @@
 
 					<button
 						on:click={() => {
-							updateMapCenter(layer.initialCoordinates);
+							updateMapCenter(layer.initialCoordinates, layer.type);
 						}}
 						class="btn btn-black-outline w-16 btn-text-center"
 						><i
