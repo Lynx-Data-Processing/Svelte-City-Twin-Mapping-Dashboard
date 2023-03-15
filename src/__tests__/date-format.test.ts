@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { TimeStampFormatEnum } from "../types/enums";
-import { formatDateTime } from '../utils/date-format';
+import { dateTimeToMillisecondUnix, formatDateTime, millisecondUnixToDateTime } from '../utils/date-format';
 
 describe('formatDateTime function', () => {
     it('should format timestamp with format YYYY_MM_DD_hh_mm_ss', () => {
@@ -51,4 +51,27 @@ describe('formatDateTime function', () => {
       const result = formatDateTime(timestamp, TimeStampFormatEnum.YYYY_MM_DD_hh_mm_ss);
       expect(result).toEqual(expectedOutput);
     });
+});
+
+
+describe('dateTimeToMillisecondUnix', () => {
+  test('should return the correct millisecond unix value for a valid date string', () => {
+    const dateTime = '2022-01-01T00:00:00.000Z';
+    const expectedMillis = 1640995200000;
+    expect(dateTimeToMillisecondUnix(dateTime)).toEqual(expectedMillis);
+  });
+
+  test('should throw an error when an invalid date string is provided', () => {
+    const dateTime = 'invalid date string';
+    expect(() => dateTimeToMillisecondUnix(dateTime)).toThrow('Invalid dateTime');
+  });
+});
+
+describe('millisecondUnixToDateTime', () => {
+  test('should return the correct UTC string for a valid millisecond unix value', () => {
+    const millis = 1640995200000;
+    const expectedDateTime = 'Sat, 01 Jan 2022 00:00:00 GMT';
+    expect(millisecondUnixToDateTime(millis)).toEqual(expectedDateTime);
+  });
+
 });

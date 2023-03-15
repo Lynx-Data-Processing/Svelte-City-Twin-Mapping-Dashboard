@@ -1,8 +1,10 @@
+import { dateTimeToMillisecondUnix } from './../utils/date-format';
 /* eslint-disable no-console */
 
 import { PUBLIC_API_KEY, PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL, PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL, PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID, PUBLIC_TENANT_ID } from '$env/static/public';
 import axios from 'axios';
 import type { mediaRecordingType, videoType } from '../types/eventTypes';
+import type { dateTimeDictionaryType } from '../types/types';
 
 
 //* Fetch all devices under the Tenant key
@@ -169,18 +171,20 @@ export const getVideosFromGpsData = async (gpsData: any[]) => {
 };
 
 
-export async function callAndProcessAPI() {
+export async function callAndProcessAPI(dateTimeDictionary: dateTimeDictionaryType) {
   const baseUrl = 'https://api.anyconnect.com/v2/event-messaging/events';
   const params = new URLSearchParams({
-    secretToken: '19IHZBSWMJM5IRALLXHZXHFSOX0ROBRCQQWMRZ0I3RYYSXLKHVFPVJVGNTYYS0EKK9JTSO4UYWUMMTRTAQTZM5N75NVG1GXQCRFKAUWSW9M5AYQG3N52HMVF0BPYNJ05',
+    secretToken: PUBLIC_API_KEY,
     endpointId: '4326',
     pageSize: '100',
-    tenantId: 'e218aacc-de10-4e61-bde2-e5966b1722dc'
+    tenantId: PUBLIC_TENANT_ID,
+    startTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.startDateTime).toString(),
+    endTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.endDateTime).toString(),
   });
   
   const results = [];
   
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 1; i++) {
     try {
       const response = await axios.get(`${baseUrl}?${params.toString()}`);
       const eventList = response.data.eventList;
@@ -195,8 +199,6 @@ export async function callAndProcessAPI() {
     }
   }
   
-  const flattenedResults = results.flat();
-  console.log(flattenedResults);
-  return flattenedResults;
+  return results.flat();
 }
 

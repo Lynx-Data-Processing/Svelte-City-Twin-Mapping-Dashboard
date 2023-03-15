@@ -19,6 +19,7 @@
 	import SpeedView from '../../components/menu/SpeedView.svelte';
 	import StreetView from '../../components/menu/StreetView.svelte';
 	import { callAndProcessAPI, getAllEvents, getVideosFromGpsData } from '../../service/smarter-api';
+	import { GeojsonEnum } from '../../types/enums';
 	import { rawSmarterAIGPSDataToGeojson } from '../../utils/geojson/geojson-utils.js';
 	import { getGPSSensorDataFromEventFiles } from '../../utils/geojson/gpsData-utils';
 
@@ -56,11 +57,22 @@
 	let videoArray: videoType[] = [];
 	let eventList: eventType[] = [];
 
-	const updateMapCenter = (coordinates: number[]) => {
+	const updateMapCenter = (
+		coordinates: number[],
+		dataType?: GeojsonEnum,
+		zoomLevel?: number,
+	) => {
+		let updatedZoomLevel = zoomLevel;
+		if (dataType === GeojsonEnum.Point || dataType === GeojsonEnum.LineString) {
+			updatedZoomLevel = 19;
+		} else {
+			updatedZoomLevel = 15;
+		}
+
 		mapDetails = {
 			id: 0,
 			center: coordinates,
-			zoom: 15,
+			zoom: updatedZoomLevel,
 			pitch: 0,
 			bearing: -17.6
 		};
@@ -74,19 +86,11 @@
 		isError = false;
 
 		try {
-			// const response = await getAllEvents(
-			// 	dateTimeDictionary.startDateTime,
-			// 	dateTimeDictionary.endDateTime
-			// );
 
-			// if (response.status !== 200 || !response.data || !response.data.eventList) return;
+			const rawEventList = await callAndProcessAPI(dateTimeDictionary);
+			if (!rawEventList || !rawEventList.length) return;
 
-			const rawEventList = await callAndProcessAPI();
-			if(!rawEventList || !rawEventList.length) return;
-
-			const [tempGPSList, tempEventList] = await getGPSSensorDataFromEventFiles(
-				rawEventList
-			);
+			const [tempGPSList, tempEventList] = await getGPSSensorDataFromEventFiles(rawEventList);
 			if (!tempGPSList.length) return;
 			eventList = tempEventList;
 
@@ -102,8 +106,6 @@
 
 		isLoading = false;
 	};
-
-
 </script>
 
 <SelectionMenu bind:selectedMenu bind:menuComponents />
