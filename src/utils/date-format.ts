@@ -51,21 +51,29 @@ export const formatDateTime = (timeStamp: number, dateFormat: TimeStampFormatEnu
     }
 };
 
-
 export const dateTimeToMillisecondUnix = (dateTime: string) => {
-    try {
-        return new Date(dateTime).getTime();
-    } catch (e) {
-        console.log(e);
-        return e;
+    if (!dateTime) {
+      throw new Error('dateTime is required');
     }
-}
-
-export const millisecondUnixToDateTime = (millisecondUnix: number) => {
-    try {
-        return new Date(millisecondUnix).toUTCString();;
-    } catch (e) {
-        console.log(e);
-        return e;
+  
+    const parsedDate = new Date(dateTime);
+    if (isNaN(parsedDate.getTime())) {
+      throw new Error('Invalid dateTime');
     }
-}
+  
+    return parsedDate.getTime();
+  };
+  
+  export const millisecondUnixToDateTime = (millisecondUnix: number) => {
+    if (!millisecondUnix && millisecondUnix !== 0) {
+      throw new Error('millisecondUnix is required');
+    }
+  
+    const parsedDate = new Date(millisecondUnix);
+    if (isNaN(parsedDate.getTime())) {
+      throw new Error('Invalid millisecondUnix');
+    }
+  
+    return parsedDate.toUTCString();
+  };
+  

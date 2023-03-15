@@ -178,8 +178,8 @@ export async function callAndProcessAPI(dateTimeDictionary: dateTimeDictionaryTy
     endpointId: '4326',
     pageSize: '100',
     tenantId: PUBLIC_TENANT_ID,
-    startTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.startDateTime) as string,
-    endTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.endDateTime) as string,
+    startTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.startDateTime).toString(),
+    endTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.endDateTime).toString(),
   });
   
   const results = [];
