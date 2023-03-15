@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { menuComponentsType } from '../../types/types';
+	import type { menuComponentsType } from '$lib/types/types';
 	export let selectedMenu: menuComponentsType;
 	export let menuComponents: menuComponentsType[];
 </script>
@@ -15,7 +15,7 @@
 		</button>
 	{/each}
 
-	<a class="btn  btn-dark-light md:ml-auto" href="/arc" target="_blank" rel="noreferrer">
+	<a class="btn  btn-dark-light md:ml-auto" href="/lynx-city-twin/arc" target="_blank" rel="noreferrer">
 		<i class="fa-solid fa-map " /><span>High Resolution Map</span>
 	</a>
 	<form action="/logout" method="POST">

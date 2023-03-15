@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { dateTimeDictionaryType } from '../../types/types';
+	import type { dateTimeDictionaryType } from '$lib/types/types';
 
 	export let dateTimeDictionary: dateTimeDictionaryType;
 	export let fetchEventsData: Function;

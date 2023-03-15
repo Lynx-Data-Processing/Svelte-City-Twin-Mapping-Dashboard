@@ -1,6 +1,6 @@
+import { GeojsonEnum } from '$lib/types/enums';
+import type { layerListElementType } from '$lib/types/mapTypes';
 import { v4 as uuidv4 } from 'uuid';
-import { GeojsonEnum } from '../../types/enums';
-import type { layerListElementType } from '../../types/mapTypes';
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from '../filter-data';
 
 

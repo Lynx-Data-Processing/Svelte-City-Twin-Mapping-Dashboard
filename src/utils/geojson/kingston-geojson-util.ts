@@ -1,5 +1,5 @@
-import { GeojsonEnum } from '../../types/enums';
-import type { geojsonType } from '../../types/geosjonTypes';
+import { GeojsonEnum } from '$lib/types/enums';
+import type { geojsonType } from '$lib/types/geosjonTypes';
 
 const getCoordinates = (coordinates: any) => {
   if (coordinates.length >= 2) {

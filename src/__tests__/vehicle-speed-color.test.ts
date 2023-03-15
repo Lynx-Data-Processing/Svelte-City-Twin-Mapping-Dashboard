@@ -1,5 +1,5 @@
 
-import { SPEED_COLORS } from '../constants';
+import { SPEED_COLORS } from '../lib/constants';
 
 import { getSpeed, getVehicleSpeedColor } from '../utils/vehicle-speed';
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { SPEED_COLORS } from '../../constants';
+	import { SPEED_COLORS } from '$lib/constants';
 </script>
 
 <div class="flex flex-col ">

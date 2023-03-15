@@ -2,8 +2,8 @@
 	import {
 		pingMachineLearningAPI,
 		processVideoWithMachineLearning
-	} from '../../service/machinelearning-api';
-	import type { selectedPOIType, videoType } from '../../types/eventTypes';
+	} from '$lib/service/machinelearning-api';
+	import type { selectedPOIType, videoType } from '$lib/types/eventTypes';
 
 	export let selectedPOI: selectedPOIType | null = null;
 	export let videoArray: videoType[];

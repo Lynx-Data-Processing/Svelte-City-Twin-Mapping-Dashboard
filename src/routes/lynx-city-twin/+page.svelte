@@ -1,12 +1,14 @@
 <script lang="ts">
-	import type { eventType, selectedPOIType, videoType } from '../../types/eventTypes';
-	import type { layerListElementType, mapDetailsType } from '../../types/mapTypes';
-	import type { dateTimeDictionaryType, menuComponentsType } from '../../types/types';
+	import type { eventType, selectedPOIType, videoType } from '$lib/types/eventTypes';
+	import type { layerListElementType, mapDetailsType } from '$lib/types/mapTypes';
+	import type { dateTimeDictionaryType, menuComponentsType } from '$lib/types/types';
 
 	import Card from '../../components/Card.svelte';
 
 	import { default as PaginatedTable } from '../../components/Events/PaginatedTable.svelte';
 
+	import { callAndProcessAPI, getVideosFromGpsData } from '$lib/service/smarter-api';
+	import { GeojsonEnum } from '$lib/types/enums';
 	import Layers from '../../components/map/Layers.svelte';
 	import MapboxMap from '../../components/map/MapboxMap.svelte';
 	import MapError from '../../components/map/MapError.svelte';
@@ -18,8 +20,6 @@
 	import SelectionMenu from '../../components/menu/SelectionMenu.svelte';
 	import SpeedView from '../../components/menu/SpeedView.svelte';
 	import StreetView from '../../components/menu/StreetView.svelte';
-	import { callAndProcessAPI, getAllEvents, getVideosFromGpsData } from '../../service/smarter-api';
-	import { GeojsonEnum } from '../../types/enums';
 	import { rawSmarterAIGPSDataToGeojson } from '../../utils/geojson/geojson-utils.js';
 	import { getGPSSensorDataFromEventFiles } from '../../utils/geojson/gpsData-utils';
 
@@ -57,11 +57,7 @@
 	let videoArray: videoType[] = [];
 	let eventList: eventType[] = [];
 
-	const updateMapCenter = (
-		coordinates: number[],
-		dataType?: GeojsonEnum,
-		zoomLevel?: number,
-	) => {
+	const updateMapCenter = (coordinates: number[], dataType?: GeojsonEnum, zoomLevel?: number) => {
 		let updatedZoomLevel = zoomLevel;
 		if (dataType === GeojsonEnum.Point || dataType === GeojsonEnum.LineString) {
 			updatedZoomLevel = 19;
@@ -86,7 +82,6 @@
 		isError = false;
 
 		try {
-
 			const rawEventList = await callAndProcessAPI(dateTimeDictionary);
 			if (!rawEventList || !rawEventList.length) return;
 
@@ -107,6 +102,8 @@
 		isLoading = false;
 	};
 </script>
+
+<svelte:head><title>Lynx City Twin</title></svelte:head>
 
 <SelectionMenu bind:selectedMenu bind:menuComponents />
 <main>

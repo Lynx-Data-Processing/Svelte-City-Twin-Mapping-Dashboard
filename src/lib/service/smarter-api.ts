@@ -1,10 +1,10 @@
-import { dateTimeToMillisecondUnix } from './../utils/date-format';
+import { dateTimeToMillisecondUnix } from '../../utils/date-format';
 /* eslint-disable no-console */
 
 import { PUBLIC_API_KEY, PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL, PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL, PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID, PUBLIC_TENANT_ID } from '$env/static/public';
+import type { mediaRecordingType, videoType } from '$lib/types/eventTypes';
+import type { dateTimeDictionaryType } from '$lib/types/types';
 import axios from 'axios';
-import type { mediaRecordingType, videoType } from '../types/eventTypes';
-import type { dateTimeDictionaryType } from '../types/types';
 
 
 //* Fetch all devices under the Tenant key

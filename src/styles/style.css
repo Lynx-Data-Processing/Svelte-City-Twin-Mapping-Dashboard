@@ -62,13 +62,13 @@ body {
   background-color: #151515;
 }
 .btn-primary {
-  background-color: #394EEE;
-  border-color: #394EEE;
+  background-color: #315ee7;
+  border-color: #315ee7;
   color: white;
 }
 .btn-primary:hover {
   color: white;
-  background-color: rgb(16, 55, 110);
+  background-color: #10376e;
 }
 .btn-error {
   background-color: rgb(180, 41, 41);
@@ -113,7 +113,7 @@ body {
 }
 
 .bg-primary {
-  background-color: #394EEE;
+  background-color: #315ee7;
   color: white;
 }
 
@@ -320,13 +320,13 @@ body {
   transition: all 0.5s;
 }
 .table th:first-child {
-  background-color: #394EEE;
+  background-color: #315ee7;
   color: white;
 }
 .table th:first-child:hover {
   cursor: pointer;
   color: white;
-  background-color: rgb(16, 55, 110);
+  background-color: #10376e;
 }
 .table th:nth-child(n+2) {
   background-color: #2B2B2B;
@@ -357,12 +357,12 @@ body {
   border-radius: 0;
 }
 .paginated-btn-primary {
-  background-color: #394EEE;
+  background-color: #315ee7;
   color: white;
 }
 .paginated-btn-primary:hover {
   color: white;
-  background-color: rgb(16, 55, 110);
+  background-color: #10376e;
 }
 .paginated-btn-error {
   background-color: rgb(180, 41, 41);
@@ -417,7 +417,7 @@ body {
   width: 100%;
 }
 .map-state-loading {
-  background-color: #394EEE;
+  background-color: #315ee7;
 }
 .map-state-error {
   background-color: rgb(180, 41, 41);
@@ -454,29 +454,13 @@ body {
   width: 100vw;
   height: 100vh;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
   background: linear-gradient(90deg, #315ee7 50%, #ffffff 50%);
 }
 
 .login-info {
-  width: 40%;
-  height: 80%;
-  padding: 30px 130px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.5);
-}
-
-.bottom-block {
-  position: absolute;
-  bottom: 10vh;
-  left: 50%;
-  width: 40vw;
-  height: 10%;
-  background-color: #2B2B2B;
 }
 
 .learn-more-visible {
@@ -485,7 +469,7 @@ body {
   animation: fadeIn 0.5s;
 }
 
-.learn-more-invisible {
+.learn-more-hidden {
   text-align: center;
   font-size: small;
   animation: fadeOut 0.5s;

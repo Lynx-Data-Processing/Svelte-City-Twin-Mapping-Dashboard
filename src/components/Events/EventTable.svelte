@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { eventType } from '../../types/eventTypes';
+	import type { eventType } from '$lib/types/eventTypes';
 	import { millisecondUnixToDateTime } from '../../utils/date-format';
-	import { getDevicon } from '../../utils/icons/devicon-icons';
+	import { getDevicon } from '../../utils/devicon-icons';
 
 	const PROGRAMMING_TOOLS = ['googlecloud'];
 	export let updateMapCenter: Function;

@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { TimeStampFormatEnum } from "../types/enums";
+import { TimeStampFormatEnum } from "../lib/types/enums";
 import { dateTimeToMillisecondUnix, formatDateTime, millisecondUnixToDateTime } from '../utils/date-format';
 
 describe('formatDateTime function', () => {

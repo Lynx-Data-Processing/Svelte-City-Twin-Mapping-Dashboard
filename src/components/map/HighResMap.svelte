@@ -1,6 +1,6 @@
 <script>
+	import { GeojsonEnum } from '$lib/types/enums';
 	import { onMount } from 'svelte';
-	import { GeojsonEnum } from '../../types/enums';
 	import { axiosCacheGetUtility } from '../../utils/fetch-data';
 	import {
 		addFeatureLayer,

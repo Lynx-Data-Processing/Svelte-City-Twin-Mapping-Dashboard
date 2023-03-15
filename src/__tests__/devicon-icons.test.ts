@@ -1,7 +1,7 @@
 
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/svelte";
-import { getDevicon } from "../utils/icons/devicon-icons";
+import { getDevicon } from "../utils/devicon-icons";
 
 describe("getDevicon", () => {
     it("should return the correct devicon URL for the provided tool string", () => {

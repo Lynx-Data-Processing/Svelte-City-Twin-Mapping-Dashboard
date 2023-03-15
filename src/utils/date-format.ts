@@ -1,4 +1,4 @@
-import { TimeStampFormatEnum } from "../types/enums";
+import { TimeStampFormatEnum } from "../lib/types/enums";
 
 
 export const formatDateTime = (timeStamp: number, dateFormat: TimeStampFormatEnum) => {

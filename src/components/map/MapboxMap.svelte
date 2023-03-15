@@ -1,15 +1,15 @@
 <script lang="ts">
+	import { GeojsonEnum } from '$lib/types/enums';
+	import type { selectedPOIType, videoType } from '$lib/types/eventTypes';
+	import type { geojsonType } from '$lib/types/geosjonTypes';
+	import type { layerListElementType, mapDetailsType } from '$lib/types/mapTypes';
+	import type { menuComponentsType } from '$lib/types/types';
 	import { onDestroy, onMount } from 'svelte';
-	import { GeojsonEnum } from '../../types/enums';
-	import type { selectedPOIType, videoType } from '../../types/eventTypes';
-	import type { geojsonType } from '../../types/geosjonTypes';
-	import type { layerListElementType, mapDetailsType } from '../../types/mapTypes';
-	import type { menuComponentsType } from '../../types/types';
 
 	import { axiosCacheGetUtility } from '../../utils/fetch-data';
 
 	import { rawKingstonDataToGeojsonData } from '../../utils/geojson/kingston-geojson-util';
-	import { buildPopup } from '../../utils/popup/popup-builder';
+	import { buildPopup } from '../../utils/popup-builder';
 
 	import {
 		PUBLIC_MAPBOX_KEY,

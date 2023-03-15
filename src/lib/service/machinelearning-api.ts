@@ -1,6 +1,6 @@
 
+import type { videoType } from '$lib/types/eventTypes';
 import axios from 'axios';
-import type { videoType } from '../types/eventTypes';
 
 export async function pingMachineLearningAPI() {
     try {

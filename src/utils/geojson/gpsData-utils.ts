@@ -1,5 +1,5 @@
-import { getGeojsonDataFromFile } from './../../service/smarter-api';
-import type { eventType } from './../../types/eventTypes';
+import { getGeojsonDataFromFile } from '$lib/service/smarter-api';
+import type { eventType } from '$lib/types/eventTypes';
 import { getObjectWhereKeyEqualsGivenValue } from './../filter-data';
 
 export const getGPSSensorDataFromEventFiles = async (eventList: eventType[]) => {
