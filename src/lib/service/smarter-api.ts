@@ -2,8 +2,8 @@ import { dateTimeToMillisecondUnix } from '../utils/date-format';
 /* eslint-disable no-console */
 
 import { PUBLIC_API_KEY, PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL, PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL, PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID, PUBLIC_TENANT_ID } from '$env/static/public';
-import type { mediaRecordingType, videoType } from '$lib/types/eventTypes';
-import type { dateTimeDictionaryType } from '$lib/types/types';
+import type { IMediaRecordingType, IVideoType } from '$lib/types/eventTypes';
+import type { IDateTimeDictionaryType } from '$lib/types/types';
 import axios from 'axios';
 
 
@@ -134,7 +134,7 @@ export const findVideo = async (StartTime: string, EndTime: string, deviceId: st
     StartTime,
     EndTime,
   ).then((result) => {
-    const videos: mediaRecordingType[] = result.data.mediaEventRecordings.filter((res: mediaRecordingType) => res.type === 'VIDEO'); // && res.endTimestamp > timestamp && res.startTimestamp < timestamp
+    const videos: IMediaRecordingType[] = result.data.mediaEventRecordings.filter((res: IMediaRecordingType) => res.type === 'VIDEO'); // && res.endTimestamp > timestamp && res.startTimestamp < timestamp
     return videos.length ? videos[0].url : '';
   });
 };
@@ -142,7 +142,7 @@ export const findVideo = async (StartTime: string, EndTime: string, deviceId: st
 
 export const getVideosFromGpsData = async (gpsData: any[]) => {
   if (!gpsData.length) return [];
-  let tempVideoArray: videoType[] = [];
+  let tempVideoArray: IVideoType[] = [];
   for (const geojson of gpsData) {
     for (const gpsElement of geojson.features) {
       try {
@@ -151,7 +151,7 @@ export const getVideosFromGpsData = async (gpsData: any[]) => {
           gpsElement.properties.EndTime,
           gpsElement.properties.EndpointId
         );
-        const video: videoType = {
+        const video: IVideoType = {
           eventId: gpsElement.properties.EventId,
           deviceId: gpsElement.properties.DeviceId,
           endpointId: gpsElement.properties.EndpointId,
@@ -171,7 +171,7 @@ export const getVideosFromGpsData = async (gpsData: any[]) => {
 };
 
 
-export async function callAndProcessAPI(dateTimeDictionary: dateTimeDictionaryType) {
+export async function callAndProcessAPI(dateTimeDictionary: IDateTimeDictionaryType) {
   const baseUrl = 'https://api.anyconnect.com/v2/event-messaging/events';
   const params = new URLSearchParams({
     secretToken: PUBLIC_API_KEY,

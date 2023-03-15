@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { footerElementType } from '$lib/types/types';
+	import type { IFooterElementType } from '$lib/types/types';
 	import { getDevicon } from '$lib/utils/devicon-icons';
 
 	const PROGRAMMING_TOOLS = [
@@ -13,7 +13,7 @@
 		'googlecloud'
 	];
 
-	export const MAIN_LIST: footerElementType[] = [
+	export const MAIN_LIST: IFooterElementType[] = [
 		{
 			id: 0,
 			name: 'Animista',
@@ -35,7 +35,7 @@
 		}
 	];
 
-	export const APPLICATION_LIST: footerElementType[] = [
+	export const APPLICATION_LIST: IFooterElementType[] = [
 		{
 			id: 0,
 			name: 'Animista',
@@ -75,7 +75,7 @@
 		}
 	];
 
-	export const ABOUT_LIST: footerElementType[] = [
+	export const ABOUT_LIST: IFooterElementType[] = [
 		{
 			id: 0,
 			name: 'About Us',

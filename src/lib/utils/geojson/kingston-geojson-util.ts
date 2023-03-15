@@ -1,5 +1,5 @@
 import { GeojsonEnum } from '$lib/types/enums';
-import type { geojsonType } from '$lib/types/geosjonTypes';
+import type { IGeojsonType } from '$lib/types/geosjonTypes';
 
 const getCoordinates = (coordinates: any) => {
   if (coordinates.length >= 2) {
@@ -25,7 +25,7 @@ export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geo
     const hasFilter = rawData.hasFilter || false;
 
     //* Create Geojson feature collection
-    const geoJson: geojsonType = {
+    const geoJson: IGeojsonType = {
       type: 'FeatureCollection',
       dataName,
       dateTime,

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { GeojsonEnum } from '$lib/types/enums';
-	import type { selectedPOIType, videoType } from '$lib/types/eventTypes';
-	import type { geojsonType } from '$lib/types/geosjonTypes';
-	import type { layerListElementType, mapDetailsType } from '$lib/types/mapTypes';
-	import type { menuComponentsType } from '$lib/types/types';
+	import type { ISelectedPOIType, IVideoType } from '$lib/types/eventTypes';
+	import type { IGeojsonType } from '$lib/types/geosjonTypes';
+	import type { ILayerListElementType, IMapDetailsType } from '$lib/types/mapTypes';
+	import type { IMenuComponentsType } from '$lib/types/types';
 	import { onDestroy, onMount } from 'svelte';
 
 	import { axiosCacheGetUtility } from '$lib/utils/fetch-data';
@@ -38,13 +38,13 @@
 	} from '$lib/utils/mapboxMap/mapboxMap-layers-utils';
 
 	// ------------------ Mapbox ------------------
-	export let layerList: layerListElementType[];
+	export let layerList: ILayerListElementType[];
 	export let selectedPolygon = null;
-	export let videoArray: videoType[];
+	export let videoArray: IVideoType[];
 	export let mapStyle: string;
-	export let mapDetails: mapDetailsType;
-	export let selectedPOI: selectedPOIType | null;
-	export let selectedMenu: menuComponentsType | null;
+	export let mapDetails: IMapDetailsType;
+	export let selectedPOI: ISelectedPOIType | null;
+	export let selectedMenu: IMenuComponentsType | null;
 	export let gpsData: any;
 
 	let mapboxMap: any = null;
@@ -60,7 +60,7 @@
 		defaultMode: 'simple_select'
 	});
 
-	const addLayerListElement = (layerListElement: layerListElementType): layerListElementType => {
+	const addLayerListElement = (layerListElement: ILayerListElementType): ILayerListElementType => {
 		let tempLayerList = layerList;
 		tempLayerList = checkIfElementExistsAndRemove(
 			tempLayerList,
@@ -89,7 +89,7 @@
 
 				const cleanData = rawKingstonDataToGeojsonData(rawData, layerName, dataType, dataColor);
 
-				const layerLisElement: layerListElementType = createLayerListElement(
+				const layerLisElement: ILayerListElementType = createLayerListElement(
 					layerName,
 					`${layerName}Source`,
 					dataType,
@@ -109,7 +109,7 @@
 	};
 
 	const fetchInitialMapData = async () => {
-		const buildingLayerListElement: layerListElementType = createLayerListElement(
+		const buildingLayerListElement: ILayerListElementType = createLayerListElement(
 			'3D-Buildings',
 			'composite',
 			GeojsonEnum.Feature,
@@ -175,7 +175,7 @@
 	export const addLineLayer = (
 		mapboxMap: any,
 		smallPopup: any,
-		layerElement: layerListElementType,
+		layerElement: ILayerListElementType,
 		lineWidth = 4,
 		color = ['red']
 	) => {
@@ -223,7 +223,7 @@
 	export const addPointLayer = (
 		mapboxMap: any,
 		smallPopup: any,
-		layerElement: layerListElementType,
+		layerElement: ILayerListElementType,
 		pointSizeName = 'Size',
 		color = ['Blue']
 	) => {
@@ -280,7 +280,7 @@
 	// ------------------ Map Layer functions ------------------ //
 
 	// ------------------ Map Layer functions ------------------ //
-	const addLayerListElementSourceAndLayer = (layerListElement: layerListElementType) => {
+	const addLayerListElementSourceAndLayer = (layerListElement: ILayerListElementType) => {
 		const doesLayerExist = checkIfMapLayerExists(layerListElement.layerName, mapboxMap);
 		if (doesLayerExist) mapboxMap.removeLayer(layerListElement.layerName);
 
@@ -321,7 +321,7 @@
 	const addNewDynamicGPSElements = () => {
 		if (!mapboxMap || !gpsData.length) return;
 
-		gpsData.forEach((rawGpsElement: geojsonType) => {
+		gpsData.forEach((rawGpsElement: IGeojsonType) => {
 			const { dataName, dataType, hasFilter } = rawGpsElement;
 			const dataSourceName = `${dataName}Source`;
 

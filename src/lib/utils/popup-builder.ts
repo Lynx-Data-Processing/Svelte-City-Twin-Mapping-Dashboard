@@ -1,5 +1,5 @@
 import type {
-  videoType
+  IVideoType
 } from '$lib/types/eventTypes';
 
 
@@ -17,7 +17,7 @@ function shortenString(str: string) {
   return str;
 }
 
-export const buildPopup = async (features: any, layerName: string, videoLinks: videoType[]) => {
+export const buildPopup = async (features: any, layerName: string, videoLinks: IVideoType[]) => {
   const container = document.createElement('div');
 
   // Get the first 8 properties

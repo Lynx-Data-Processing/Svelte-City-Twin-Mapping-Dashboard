@@ -9,7 +9,7 @@ export interface IMapStyle {
 }
 
 
-export type mapDetailsType = {
+export interface IMapDetailsType  {
     id: number,
     center: number[],
     zoom: number,
@@ -18,7 +18,7 @@ export type mapDetailsType = {
 };
 
 
-export type layerListElementType = {
+export interface ILayerListElementType  {
     id: number,
     icon: string,
     type: GeojsonEnum,

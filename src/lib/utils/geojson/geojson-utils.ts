@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { GeojsonDataEnum, GeojsonEnum } from '$lib/types/enums';
-import type { geojsonFeatureType, geojsonType } from '$lib/types/geosjonTypes';
+import type { IGeojsonFeatureType, IGeojsonType } from '$lib/types/geosjonTypes';
 
 import { getSpeed, getVehicleSpeedColor } from '$lib/utils/vehicle-speed';
 
@@ -59,7 +59,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
       const dataType = rawData.dataType || GeojsonEnum.LineString;
       const hasFilter = rawData.hasFilter || true;
       //* Create Geojson feature collection
-      const geoJson: geojsonType = {
+      const geoJson: IGeojsonType = {
         type: 'FeatureCollection',
         dataName,
         dateTime,
@@ -81,7 +81,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
           properties.Color = getVehicleSpeedColor(getSpeed(properties));
 
           //* Create the final feature config and push it to the feature array
-          const feature: geojsonFeatureType = { type: 'Feature', geometry: { type: GeojsonEnum.LineString, coordinates }, properties };
+          const feature: IGeojsonFeatureType = { type: 'Feature', geometry: { type: GeojsonEnum.LineString, coordinates }, properties };
           geoJson.features.push(feature);
 
         }
@@ -112,7 +112,7 @@ export const rawGPSDataToGeojsonData = (rawData: any, name = 'General', geojsonD
     const dataType = rawData.dataType || geojsonDataType;
     const hasFilter = rawData.hasFilter || false;
     //* Create Geojson feature collection
-    const geoJson: geojsonType = {
+    const geoJson: IGeojsonType = {
       type: 'FeatureCollection',
       dataName,
       dateTime,
@@ -133,7 +133,7 @@ export const rawGPSDataToGeojsonData = (rawData: any, name = 'General', geojsonD
       properties.Color = color;
 
       //* Create the final feature config and add the feature id for the ability to hover
-      const feature: geojsonFeatureType = {
+      const feature: IGeojsonFeatureType = {
         type: 'Feature', geometry: { type: geojsonDataType, coordinates }, properties,
       };
       geoJson.features.push(feature);

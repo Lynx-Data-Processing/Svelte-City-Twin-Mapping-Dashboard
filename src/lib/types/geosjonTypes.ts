@@ -1,6 +1,6 @@
 import type { GeojsonEnum } from "./enums"
 
-export type gpsFilterType = {
+export interface IGpsFilterType  {
     id: string,
     name: string,
     default: number[],
@@ -10,16 +10,16 @@ export type gpsFilterType = {
 }
 
 
-export type geojsonType = {
+export interface IGeojsonType {
     type: string,
     dataName: string,
     dateTime: string,
     dataType: GeojsonEnum,
     hasFilter: boolean,
-    features: geojsonFeatureType[]
+    features: IGeojsonFeatureType[]
 }
 
-export type geojsonFeatureType = {
+export interface IGeojsonFeatureType {
     type: string,
     geometry: object,
     properties: object

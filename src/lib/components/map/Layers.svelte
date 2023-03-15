@@ -1,11 +1,11 @@
 <script lang="ts">
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import { FontAwesomeIconGivenGeojsonEnum } from '$lib/types/enums';
-	import type { layerListElementType } from '$lib/types/mapTypes';
+	import type { ILayerListElementType } from '$lib/types/mapTypes';
 
 	export let updateMapCenter: Function;
-	export let layerList: layerListElementType[] = [];
-	let visibleLayers: layerListElementType[] = layerList;
+	export let layerList: ILayerListElementType[] = [];
+	let visibleLayers: ILayerListElementType[] = layerList;
 	let searchText: String = '';
 
 	let showAllLayers = false;
@@ -18,7 +18,7 @@
 			console.log(error);
 		}
 	};
-	const toggleLayer = (selectedLayer: layerListElementType) => {
+	const toggleLayer = (selectedLayer: ILayerListElementType) => {
 		try {
 			const index = layerList.findIndex((layer) => layer.layerName === selectedLayer.layerName);
 			layerList[index].isShown = !layerList[index].isShown;

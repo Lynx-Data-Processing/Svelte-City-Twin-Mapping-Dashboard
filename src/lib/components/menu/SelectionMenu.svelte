@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { menuComponentsType } from '$lib/types/types';
-	export let selectedMenu: menuComponentsType;
-	export let menuComponents: menuComponentsType[];
+	import type { IMenuComponentsType } from '$lib/types/types';
+	export let selectedMenu: IMenuComponentsType;
+	export let menuComponents: IMenuComponentsType[];
 </script>
 
 <div

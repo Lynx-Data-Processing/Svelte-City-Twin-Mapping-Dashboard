@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { eventType } from '$lib/types/eventTypes';
+	import type { IEventType } from '$lib/types/eventTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { getDevicon } from '$lib/utils/devicon-icons';
 
 	const PROGRAMMING_TOOLS = ['googlecloud'];
 	export let updateMapCenter: Function;
-	export let paginatedEvents: eventType[] = [];
+	export let paginatedEvents: IEventType[] = [];
 
 	function goTop() {
 		document.body.scrollIntoView();

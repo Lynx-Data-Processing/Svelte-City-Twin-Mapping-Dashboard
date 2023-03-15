@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { dateTimeDictionaryType } from '$lib/types/types';
+	import type { IDateTimeDictionaryType } from '$lib/types/types';
 
-	export let dateTimeDictionary: dateTimeDictionaryType;
+	export let dateTimeDictionary: IDateTimeDictionaryType;
 	export let fetchEventsData: Function;
 
 	let isEndDateBeforeStartDate = false;

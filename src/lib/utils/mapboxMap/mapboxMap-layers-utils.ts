@@ -1,4 +1,4 @@
-import type { layerListElementType } from '$lib/types/mapTypes';
+import type { ILayerListElementType } from '$lib/types/mapTypes';
 
 
 export const addTerrainLayer = (map: any) => {
@@ -29,7 +29,7 @@ export const addTerrainLayer = (map: any) => {
     });
 };
 
-export const addBuildingLayer = (map: any, layerElement: layerListElementType, opacity = 1, color = '#dee7e7') => {
+export const addBuildingLayer = (map: any, layerElement: ILayerListElementType, opacity = 1, color = '#dee7e7') => {
     map.addLayer({
         id: layerElement.layerName,
         source: layerElement.sourceName,
@@ -64,7 +64,7 @@ export const addBuildingLayer = (map: any, layerElement: layerListElementType, o
 
 
 
-export const addPolygonLayer = (map: any, smallPopup: any, layerElement: layerListElementType, opacity = 0.5, color = ['red']) => {
+export const addPolygonLayer = (map: any, smallPopup: any, layerElement: ILayerListElementType, opacity = 0.5, color = ['red']) => {
     map.addLayer({
         id: layerElement.layerName,
         type: 'fill',

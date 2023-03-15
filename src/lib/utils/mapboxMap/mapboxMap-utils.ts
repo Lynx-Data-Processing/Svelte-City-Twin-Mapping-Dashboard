@@ -1,5 +1,5 @@
 import { GeojsonEnum } from '$lib/types/enums';
-import type { layerListElementType } from '$lib/types/mapTypes';
+import type { ILayerListElementType } from '$lib/types/mapTypes';
 import { v4 as uuidv4 } from 'uuid';
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from '../filter-data';
 
@@ -37,7 +37,7 @@ export const checkIfMapLayerExists = (layerName: string, map: any) => {
 
 
 export const checkIfElementExistsAndRemove = (
-    tempLayerList: layerListElementType[],
+    tempLayerList: ILayerListElementType[],
     layerName: string,
     map: any
 ) => {
@@ -52,7 +52,7 @@ export const checkIfElementExistsAndRemove = (
     return tempLayerList;
 };
 
-export const addMapSource = (layerListElement: layerListElementType, map: any) => {
+export const addMapSource = (layerListElement: ILayerListElementType, map: any) => {
     try {
         const sourceExists = checkIfMapSourceExists(layerListElement.sourceName, map);
 
@@ -77,9 +77,9 @@ export const createLayerListElement = (
     hasFilter: boolean,
     dataColor: string | null,
     cleanData: any
-): layerListElementType => {
+): ILayerListElementType => {
     //Create the new element and change the layer list
-    const element: layerListElementType = {
+    const element: ILayerListElementType = {
         id: Math.floor(Math.random() * 100),
         icon: faIcon,
         type: type,

@@ -1,11 +1,11 @@
 
-export type dateTimeDictionaryType = {
+export type IDateTimeDictionaryType = {
     startDateTime: string,
     endDateTime: string,
 }
 
 
-export interface footerElementType {
+export interface IFooterElementType {
     id: number,
     name: string,
     url: string,
@@ -14,7 +14,7 @@ export interface footerElementType {
 
 
 
-export type menuComponentsType = {
+export interface IMenuComponentsType  {
     id: number,
     title: string,
     icon: string,

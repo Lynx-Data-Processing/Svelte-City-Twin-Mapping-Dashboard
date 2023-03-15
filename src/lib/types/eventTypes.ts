@@ -1,5 +1,5 @@
 
-export type videoType = {
+export interface IVideoType {
     eventId: number
     deviceId: number
     endpointId: number,
@@ -9,7 +9,7 @@ export type videoType = {
 }
 
 
-export type mediaRecordingType = {
+export interface IMediaRecordingType {
     startTimestamp: number,
     endTimestamp: number,
     source: string,
@@ -19,7 +19,7 @@ export type mediaRecordingType = {
     available: boolean
 }
 
-export type snapshotType = {
+export interface ISnapshotType {
     source: string,
     fileContainer: string,
     filePath: string,
@@ -28,7 +28,7 @@ export type snapshotType = {
     downloadUrlExpirationTime: number
 }
 
-export type eventType = {
+export interface IEventType  {
     id: number,
     tenantId: string,
     deviceId: string,
@@ -41,27 +41,27 @@ export type eventType = {
     eventSources: any[],
     eventTriggerId: string,
     triggerName: string,
-    snapshots: snapshotType[],
+    snapshots: ISnapshotType[],
     lastUpdatedTime: number,
     version: number,
     coordinates?: number[],
 
 };
 
-export type eventGeojsonType = {
+export interface IEventGeojsonType  {
     ACCELEROMETER: object,
     GYROSCOPE: object,
     GEO_LOCATION: object,
     VIDEO_META: object
 }
 
-export type selectedPOIType = {
+export interface ISelectedPOIType  {
     lat: number,
     lng: number,
     data: any,
 }
 
-export type selectedEventType = {
+export interface ISelectedEventType  {
     lat: number,
     lng: number,
     data: any,

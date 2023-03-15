@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { eventType, selectedPOIType, videoType } from '$lib/types/eventTypes';
-	import type { layerListElementType, mapDetailsType } from '$lib/types/mapTypes';
-	import type { dateTimeDictionaryType, menuComponentsType } from '$lib/types/types';
+	import type { IEventType, ISelectedPOIType, IVideoType } from '$lib/types/eventTypes';
+	import type { ILayerListElementType, IMapDetailsType } from '$lib/types/mapTypes';
+	import type { IDateTimeDictionaryType, IMenuComponentsType } from '$lib/types/types';
 
 	import Card from '$lib/components/Card.svelte';
 
@@ -25,7 +25,7 @@
 
 	//* Set Initial Map Details
 	let mapStyle: string = 'mapbox://styles/canaleal/cle0l6bpx004501qotbnxa4wr';
-	let mapDetails: mapDetailsType = {
+	let mapDetails: IMapDetailsType = {
 		id: 0,
 		center: [-76.491143, 44.231689],
 		zoom: 15,
@@ -33,29 +33,29 @@
 		bearing: -17.6
 	};
 	//* Polygon and point of interest details
-	let layerList: layerListElementType[] = [];
-	let selectedPOI: selectedPOIType | null = null;
+	let layerList: ILayerListElementType[] = [];
+	let selectedPOI: ISelectedPOIType | null = null;
 	let selectedPolygon: object | null = null;
 
 	//* Set Payload details for fetching
-	let dateTimeDictionary: dateTimeDictionaryType = {
+	let dateTimeDictionary: IDateTimeDictionaryType = {
 		startDateTime: '2022-10-23T00:00',
 		endDateTime: '2022-12-23T00:00'
 	};
-	let menuComponents: menuComponentsType[] = [
+	let menuComponents: IMenuComponentsType[] = [
 		{ id: 0, title: 'No Menu', icon: 'fa-times' },
 		{ id: 1, title: 'Search Data', icon: 'fa-database' },
 		{ id: 2, title: 'Street View', icon: 'fa-road' },
 		{ id: 3, title: 'Video Player', icon: 'fa-video' },
 		{ id: 4, title: 'About', icon: 'fa-info-circle' }
 	];
-	let selectedMenu: menuComponentsType = menuComponents[1];
+	let selectedMenu: IMenuComponentsType = menuComponents[1];
 	let isLoading = false;
 	let isError = false;
 	let gpsData: any[] = [];
 
-	let videoArray: videoType[] = [];
-	let eventList: eventType[] = [];
+	let videoArray: IVideoType[] = [];
+	let eventList: IEventType[] = [];
 
 	const updateMapCenter = (coordinates: number[], dataType?: GeojsonEnum, zoomLevel?: number) => {
 		let updatedZoomLevel = zoomLevel;

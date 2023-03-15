@@ -1,5 +1,5 @@
 
-import type { videoType } from '$lib/types/eventTypes';
+import type { IVideoType } from '$lib/types/eventTypes';
 import axios from 'axios';
 
 export async function pingMachineLearningAPI() {
@@ -21,7 +21,7 @@ export async function pingMachineLearningAPI() {
     }
 }
 
-export async function processVideoWithMachineLearning(selectedVideo: videoType) {
+export async function processVideoWithMachineLearning(selectedVideo: IVideoType) {
     try {
         let data = JSON.stringify({
             video_id: selectedVideo?.eventId,
