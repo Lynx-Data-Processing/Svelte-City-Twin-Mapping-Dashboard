@@ -1,6 +1,6 @@
+import { TimeStampFormatEnum } from "$lib/types/enums";
+import { dateTimeToMillisecondUnix, formatDateTime, millisecondUnixToDateTime } from '$lib/utils/date-format';
 import "@testing-library/jest-dom";
-import { TimeStampFormatEnum } from "../lib/types/enums";
-import { dateTimeToMillisecondUnix, formatDateTime, millisecondUnixToDateTime } from '../utils/date-format';
 
 describe('formatDateTime function', () => {
     it('should format timestamp with format YYYY_MM_DD_hh_mm_ss', () => {

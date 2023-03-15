@@ -6,10 +6,9 @@
 	import type { menuComponentsType } from '$lib/types/types';
 	import { onDestroy, onMount } from 'svelte';
 
-	import { axiosCacheGetUtility } from '../../utils/fetch-data';
-
-	import { rawKingstonDataToGeojsonData } from '../../utils/geojson/kingston-geojson-util';
-	import { buildPopup } from '../../utils/popup-builder';
+	import { axiosCacheGetUtility } from '$lib/utils/fetch-data';
+	import { rawKingstonDataToGeojsonData } from '$lib/utils/geojson/kingston-geojson-util';
+	import { buildPopup } from '$lib/utils/popup-builder';
 
 	import {
 		PUBLIC_MAPBOX_KEY,
@@ -30,13 +29,13 @@
 		checkIfElementExistsAndRemove,
 		checkIfMapLayerExists,
 		createLayerListElement
-	} from '../../utils/mapboxMap/mapboxMap-utils';
+	} from '$lib/utils/mapboxMap/mapboxMap-utils';
 
 	import {
 		addBuildingLayer,
 		addPolygonLayer,
 		addTerrainLayer
-	} from '../../utils/mapboxMap/mapboxMap-layers-utils';
+	} from '$lib/utils/mapboxMap/mapboxMap-layers-utils';
 
 	// ------------------ Mapbox ------------------
 	export let layerList: layerListElementType[];

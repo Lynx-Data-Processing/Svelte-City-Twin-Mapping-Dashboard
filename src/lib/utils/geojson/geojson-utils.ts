@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { GeojsonDataEnum, GeojsonEnum } from '$lib/types/enums';
 import type { geojsonFeatureType, geojsonType } from '$lib/types/geosjonTypes';
 
-import { getSpeed, getVehicleSpeedColor } from '../vehicle-speed';
+import { getSpeed, getVehicleSpeedColor } from '$lib/utils/vehicle-speed';
 
 //* Example
 //* { 'AlexDashcam' : [{point1}, {point2}, {point3}], 'AmirDashcam: [{point1}, {point2}, {point3}]}

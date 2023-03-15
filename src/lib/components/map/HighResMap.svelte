@@ -1,7 +1,6 @@
 <script>
 	import { GeojsonEnum } from '$lib/types/enums';
-	import { onMount } from 'svelte';
-	import { axiosCacheGetUtility } from '../../utils/fetch-data';
+	import { axiosCacheGetUtility } from '$lib/utils/fetch-data';
 	import {
 		addFeatureLayer,
 		addTileLayer,
@@ -9,7 +8,8 @@
 		createMapAndSceneView,
 		createMapWidgets,
 		esriAPIConfig
-	} from '../../utils/highResMap/highResMap-utils';
+	} from '$lib/utils/highResMap/highResMap-utils';
+	import { onMount } from 'svelte';
 
 	import {
 		PUBLIC_MAPBOX_KEY,

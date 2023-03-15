@@ -1,4 +1,4 @@
-import { SPEED_COLORS } from '../lib/constants';
+import { SPEED_COLORS } from '$lib/constants';
 
 
 //* Get a color for every 10km/h

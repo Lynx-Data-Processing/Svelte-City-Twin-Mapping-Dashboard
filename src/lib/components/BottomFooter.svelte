@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { footerElementType } from '$lib/types/types';
-	import { getDevicon } from '../../utils/devicon-icons';
+	import { getDevicon } from '$lib/utils/devicon-icons';
 
 	const PROGRAMMING_TOOLS = [
 		'nextjs',

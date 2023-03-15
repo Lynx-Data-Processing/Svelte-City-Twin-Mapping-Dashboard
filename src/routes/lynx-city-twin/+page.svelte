@@ -3,25 +3,25 @@
 	import type { layerListElementType, mapDetailsType } from '$lib/types/mapTypes';
 	import type { dateTimeDictionaryType, menuComponentsType } from '$lib/types/types';
 
-	import Card from '../../components/Card.svelte';
+	import Card from '$lib/components/Card.svelte';
 
-	import { default as PaginatedTable } from '../../components/Events/PaginatedTable.svelte';
+	import PaginatedTable from '$lib/components/Events/PaginatedTable.svelte';
 
+	import Layers from '$lib/components/map/Layers.svelte';
+	import MapboxMap from '$lib/components/map/MapboxMap.svelte';
+	import MapError from '$lib/components/map/MapError.svelte';
+	import MapLoadingSpinner from '$lib/components/map/MapLoadingSpinner.svelte';
+	import MapStyleSelector from '$lib/components/map/MapStyleSelector.svelte';
+	import About from '$lib/components/menu/About.svelte';
+	import SearchData from '$lib/components/menu/SearchData.svelte';
+	import SelectedVideo from '$lib/components/menu/SelectedVideo.svelte';
+	import SelectionMenu from '$lib/components/menu/SelectionMenu.svelte';
+	import SpeedView from '$lib/components/menu/SpeedView.svelte';
+	import StreetView from '$lib/components/menu/StreetView.svelte';
 	import { callAndProcessAPI, getVideosFromGpsData } from '$lib/service/smarter-api';
 	import { GeojsonEnum } from '$lib/types/enums';
-	import Layers from '../../components/map/Layers.svelte';
-	import MapboxMap from '../../components/map/MapboxMap.svelte';
-	import MapError from '../../components/map/MapError.svelte';
-	import MapLoadingSpinner from '../../components/map/MapLoadingSpinner.svelte';
-	import MapStyleSelector from '../../components/map/MapStyleSelector.svelte';
-	import About from '../../components/menu/About.svelte';
-	import SearchData from '../../components/menu/SearchData.svelte';
-	import SelectedVideo from '../../components/menu/SelectedVideo.svelte';
-	import SelectionMenu from '../../components/menu/SelectionMenu.svelte';
-	import SpeedView from '../../components/menu/SpeedView.svelte';
-	import StreetView from '../../components/menu/StreetView.svelte';
-	import { rawSmarterAIGPSDataToGeojson } from '../../utils/geojson/geojson-utils.js';
-	import { getGPSSensorDataFromEventFiles } from '../../utils/geojson/gpsData-utils';
+	import { rawSmarterAIGPSDataToGeojson } from '$lib/utils/geojson/geojson-utils.js';
+	import { getGPSSensorDataFromEventFiles } from '$lib/utils/geojson/gpsData-utils';
 
 	//* Set Initial Map Details
 	let mapStyle: string = 'mapbox://styles/canaleal/cle0l6bpx004501qotbnxa4wr';

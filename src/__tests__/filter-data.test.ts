@@ -2,7 +2,7 @@
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/svelte";
 
-import { checkIfElementExists, getListOfObjectWhereKeyContainsString, getObjectsWhereKeyAnyValidStrings, getObjectsWhereKeyEqualsValue } from "../utils/filter-data";
+import { checkIfElementExists, getListOfObjectWhereKeyContainsString, getObjectsWhereKeyAnyValidStrings, getObjectsWhereKeyEqualsValue } from "$lib/utils/filter-data";
 
 describe("getListOfObjectWhereKeyContainsString", () => {
     it("should return a list of objects where the specified key contains the specified value", () => {
