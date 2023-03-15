@@ -86,14 +86,8 @@
 		isError = false;
 
 		try {
-			// const response = await getAllEvents(
-			// 	dateTimeDictionary.startDateTime,
-			// 	dateTimeDictionary.endDateTime
-			// );
 
-			// if (response.status !== 200 || !response.data || !response.data.eventList) return;
-
-			const rawEventList = await callAndProcessAPI();
+			const rawEventList = await callAndProcessAPI(dateTimeDictionary);
 			if (!rawEventList || !rawEventList.length) return;
 
 			const [tempGPSList, tempEventList] = await getGPSSensorDataFromEventFiles(rawEventList);

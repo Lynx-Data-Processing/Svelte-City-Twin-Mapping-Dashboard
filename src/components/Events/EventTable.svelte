@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { eventType } from '../../types/eventTypes';
+	import { millisecondUnixToDateTime } from '../../utils/date-format';
 	import { getDevicon } from '../../utils/icons/devicon-icons';
 
 	const PROGRAMMING_TOOLS = ['googlecloud'];
@@ -56,8 +57,8 @@
 				<td>{event.deviceId}</td>
 				<td class="text-primary">{event.deviceLabel}</td>
 
-				<td>{event.recordingStartTimestamp}</td>
-				<td>{event.recordingEndTimestamp}</td>
+				<td>{millisecondUnixToDateTime(event.recordingStartTimestamp)}</td>
+				<td>{millisecondUnixToDateTime(event.recordingEndTimestamp)}</td>
 				<td class="hidden md:table-cell">
 					<div class="flex flex-wrap justify-center  ">
 						{#each PROGRAMMING_TOOLS as icon}

@@ -51,3 +51,21 @@ export const formatDateTime = (timeStamp: number, dateFormat: TimeStampFormatEnu
     }
 };
 
+
+export const dateTimeToMillisecondUnix = (dateTime: string) => {
+    try {
+        return new Date(dateTime).getTime();
+    } catch (e) {
+        console.log(e);
+        return e;
+    }
+}
+
+export const millisecondUnixToDateTime = (millisecondUnix: number) => {
+    try {
+        return new Date(millisecondUnix).toUTCString();;
+    } catch (e) {
+        console.log(e);
+        return e;
+    }
+}
