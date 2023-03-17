@@ -36,26 +36,9 @@ export const checkIfMapLayerExists = (layerName: string, map: any) => {
 };
 
 
-export const checkIfElementExistsAndRemove = (
-    tempLayerList: ILayerListElementType[],
-    layerName: string,
-    map: any
-) => {
-    const hasElement = checkIfElementExists(tempLayerList, 'layerName', layerName);
-    if (hasElement) {
-        tempLayerList = removeObjectWhereValueEqualsString(tempLayerList, 'layerName', layerName);
-        if (map.getLayer(layerName)) {
-            map.removeLayer(layerName);
-            map.removeSource(layerName);
-        }
-    }
-    return tempLayerList;
-};
-
 export const addMapSource = (layerListElement: ILayerListElementType, map: any) => {
     try {
         const sourceExists = checkIfMapSourceExists(layerListElement.sourceName, map);
-
         if (!sourceExists) {
             map.addSource(layerListElement.sourceName, {
                 type: 'geojson',

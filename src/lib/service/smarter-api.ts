@@ -140,7 +140,28 @@ export const getGeojsonDataFromFile = async (url: string) => {
 }
 
 
+
+const HOUR_IN_MILLISECONDS = 3600000;
+
 export async function callAndProcessAPI(dateTimeDictionary: IDateTimeDictionaryType) {
+  const storageKey = 'apiResults';
+  const storageExpiryKey = 'apiResultsExpiry';
+  const storageDateTimeDictionaryKey = 'storedDateTimeDictionary';
+
+  const now = new Date().getTime();
+  const storedExpiry = localStorage.getItem(storageExpiryKey);
+  const storedDateTimeDictionary = localStorage.getItem(storageDateTimeDictionaryKey);
+
+  // Check if the results are still valid and return them
+  if (storedExpiry && now < Number(storedExpiry)) {
+    const storedResults = localStorage.getItem(storageKey);
+
+    // If stored DateTimeDictionary is the same as the new one, return the stored results
+    if (storedResults && storedDateTimeDictionary === JSON.stringify(dateTimeDictionary)) {
+      return JSON.parse(storedResults);
+    }
+  }
+
   const baseUrl = 'https://api.anyconnect.com/v2/event-messaging/events';
   const params = new URLSearchParams({
     secretToken: PUBLIC_API_KEY,
@@ -150,24 +171,34 @@ export async function callAndProcessAPI(dateTimeDictionary: IDateTimeDictionaryT
     startTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.startDateTime).toString(),
     endTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.endDateTime).toString(),
   });
-  
+
   const results = [];
-  
+
   for (let i = 0; i < 1; i++) {
     try {
       const response = await axios.get(`${baseUrl}?${params.toString()}`);
       const eventList = response.data.eventList;
       const lastObject = eventList[eventList.length - 1];
-      
+
+      if(!lastObject) {
+        break;
+      }
+
       params.set('lastMaxEventId', lastObject.id);
       params.set('lastMaxEventTimestamp', lastObject.eventTimestamp);
-      
+
       results.push(eventList);
     } catch (error) {
       console.error(error);
     }
   }
-  
-  return results.flat();
-}
 
+  const flatResults = results.flat();
+
+  // Save the results to local storage with an expiry time and the dateTimeDictionary
+  localStorage.setItem(storageKey, JSON.stringify(flatResults));
+  localStorage.setItem(storageExpiryKey, (now + HOUR_IN_MILLISECONDS).toString());
+  localStorage.setItem(storageDateTimeDictionaryKey, JSON.stringify(dateTimeDictionary));
+
+  return flatResults;
+}

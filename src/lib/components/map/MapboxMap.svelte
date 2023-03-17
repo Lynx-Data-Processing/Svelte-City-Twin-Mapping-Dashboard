@@ -26,11 +26,10 @@
 
 	import {
 		addMapSource,
-		checkIfElementExistsAndRemove,
-		checkIfMapLayerExists,
 		createLayerListElement
 	} from '$lib/utils/mapboxMap/mapboxMap-utils';
 
+	import { checkIfElementExists, removeObjectWhereValueEqualsString } from '$lib/utils/filter-data';
 	import {
 		addBuildingLayer,
 		addPolygonLayer,
@@ -59,13 +58,22 @@
 		defaultMode: 'simple_select'
 	});
 
-	const addLayerListElement = (layerListElement: ILayerListElementType): ILayerListElementType => {
+	const removeLayerAndSource = (layerName: string, sourceName: string) => {
+		if (mapboxMap.getLayer(layerName)) {
+			mapboxMap.removeLayer(layerName);
+		}
+
+		if (mapboxMap.getSource(sourceName)) {
+			mapboxMap.removeSource(sourceName);
+		}
+	};
+
+	const addLayerListElementToLayerList = (layerListElement: ILayerListElementType): ILayerListElementType => {
 		let tempLayerList = layerList;
-		tempLayerList = checkIfElementExistsAndRemove(
-			tempLayerList,
-			layerListElement.layerName,
-			mapboxMap
-		);
+		const hasElement = checkIfElementExists(tempLayerList, 'layerName', layerListElement.layerName);
+		if (hasElement) {
+			tempLayerList = removeObjectWhereValueEqualsString(tempLayerList, 'layerName', layerListElement.layerName);
+		}
 		tempLayerList.push(layerListElement);
 		layerList = tempLayerList;
 		return layerListElement;
@@ -98,7 +106,8 @@
 					dataColor,
 					cleanData
 				);
-				addLayerListElement(layerLisElement);
+				removeLayerAndSource(layerLisElement.layerName, layerLisElement.sourceName);
+				addLayerListElementToLayerList(layerLisElement);
 			} else {
 				console.log(`Unable to load data for ${layerName}`);
 			}
@@ -118,7 +127,7 @@
 			'Black',
 			null
 		);
-		addLayerListElement(buildingLayerListElement);
+		addLayerListElementToLayerList(buildingLayerListElement);
 
 		await fetchDataFromAPIAndCreateLayer(
 			PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
@@ -148,26 +157,6 @@
 			'fa-road',
 			false
 		);
-
-		// await fetchDataFromAPIAndCreateLayer(
-		// 	PUBLIC_SIDEWALK_POLYGON_URL,
-		// 	'Sidewalk Construction (Polygon)',
-		// 	false,
-		// 	GeojsonEnum.Polygon,
-		// 	'#F5B514',
-		// 	'fa-person',
-		// 	false
-		// );
-
-		// await fetchDataFromAPIAndCreateLayer(
-		// 	PUBLIC_PLANNING_LINE_URL,
-		// 	'Road Construction (Line)',
-		// 	false,
-		// 	GeojsonEnum.LineString,
-		// 	'#16C97B',
-		// 	'fa-road',
-		// 	false
-		// );
 	};
 
 	// ------------------ Mapbox Map adding Layers ------------------ //
@@ -280,9 +269,7 @@
 
 	// ------------------ Map Layer functions ------------------ //
 	const addLayerListElementSourceAndLayer = (layerListElement: ILayerListElementType) => {
-		const doesLayerExist = checkIfMapLayerExists(layerListElement.layerName, mapboxMap);
-		if (doesLayerExist) mapboxMap.removeLayer(layerListElement.layerName);
-
+	
 		//Add the buildings layer
 		if (layerListElement.layerName.includes('Buildings')) {
 			addBuildingLayer(mapboxMap, layerListElement);
@@ -334,7 +321,8 @@
 				'Random',
 				rawGpsElement
 			);
-			addLayerListElement(layerLisElement);
+			removeLayerAndSource(layerLisElement.layerName, layerLisElement.sourceName)
+			addLayerListElementToLayerList(layerLisElement);
 
 			addLayerListElementSourceAndLayer(layerLisElement);
 		});
@@ -443,6 +431,6 @@
 	});
 </script>
 
-<div class="h-96 md:h-screen scale-in-center">
+<div class="h-screen scale-in-center">
 	<div class="h-full" id="mapboxMap" />
 </div>
