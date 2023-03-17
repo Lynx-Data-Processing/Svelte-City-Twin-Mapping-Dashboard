@@ -17,7 +17,8 @@ function shortenString(str: string) {
   return str;
 }
 
-export const buildPopup = async (features: any, layerName: string, videoLinks: IVideoType[]) => {
+
+export const buildPopup = async (features: any, layerName: string, videoLinks?: IVideoType[]) => {
   const container = document.createElement('div');
 
   // Get the first 8 properties
@@ -35,7 +36,7 @@ export const buildPopup = async (features: any, layerName: string, videoLinks: I
   }
 
   // If the layer is GPS, add the video
-  if (layerName.includes('GPS')) {
+  if (layerName.includes('GPS') && videoLinks) {
 
     const videos = videoLinks.filter(o => o.eventId === features.properties.EventId);
     let src = videos.length ? videos[0].videoUrl! : '';

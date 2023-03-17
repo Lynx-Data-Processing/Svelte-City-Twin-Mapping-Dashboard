@@ -18,7 +18,7 @@
 	import SelectionMenu from '$lib/components/menu/SelectionMenu.svelte';
 	import SpeedView from '$lib/components/menu/SpeedView.svelte';
 	import StreetView from '$lib/components/menu/StreetView.svelte';
-	import { callAndProcessAPI, getVideosFromGpsData } from '$lib/service/smarter-api';
+	import { callAndProcessAPI } from '$lib/service/smarter-api';
 	import { GeojsonEnum } from '$lib/types/enums';
 	import { rawSmarterAIGPSDataToGeojson } from '$lib/utils/geojson/geojson-utils.js';
 	import { getGPSSensorDataFromEventFiles } from '$lib/utils/geojson/gpsData-utils';
@@ -54,7 +54,6 @@
 	let isError = false;
 	let gpsData: any[] = [];
 
-	let videoArray: IVideoType[] = [];
 	let eventList: IEventType[] = [];
 
 	const updateMapCenter = (coordinates: number[], dataType?: GeojsonEnum, zoomLevel?: number) => {
@@ -93,7 +92,7 @@
 			if (!tempGpsData) return;
 			gpsData = tempGpsData;
 			updateMapCenter(gpsData[0].features[0].geometry.coordinates[0]);
-			videoArray = await getVideosFromGpsData(tempGpsData);
+			
 		} catch (error) {
 			alert(error);
 			isError = true;
@@ -123,7 +122,7 @@
 					</Card>
 				{:else if selectedMenu.id === 3}
 					<Card title="Video Player">
-						<SelectedVideo bind:selectedPOI bind:videoArray />
+						<SelectedVideo bind:selectedPOI />
 					</Card>
 				{:else if selectedMenu.id === 4}
 					<Card title="About">
@@ -134,8 +133,7 @@
 		{/if}
 
 		<div class={`col-span-1   ${selectedMenu.id === 0 ? 'col-span-12' : 'col-span-10'}  relative`}>
-			<MapboxMap
-				bind:videoArray
+			<MapboxMap	
 				bind:mapDetails
 				bind:gpsData
 				bind:layerList

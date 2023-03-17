@@ -2,7 +2,7 @@
 import type { IVideoType } from '$lib/types/eventTypes';
 import axios from 'axios';
 
-export async function pingMachineLearningAPI() {
+export const pingMachineLearningAPIWithAxios = async () => {
     try {
         let config = {
             method: 'get',
@@ -12,21 +12,25 @@ export async function pingMachineLearningAPI() {
             },
         };
 
-        let response = await fetch(config.url, config);
+        const promise = await axios(config);
+        return promise;
 
-        return response.status == 200;
-
-    } catch (error) {
-        console.log(error);
+    } catch (error: any) {
+        if (error.response) {
+            return error.response.status;
+        } if (error.request) {
+            return error.request;
+        }
+        return error.message;
     }
 }
 
-export async function processVideoWithMachineLearning(selectedVideo: IVideoType) {
+export async function processVideoWithMachineLearning(eventId: number, deviceId: number, videoUrl: string) {
     try {
         let data = JSON.stringify({
-            video_id: selectedVideo?.eventId,
-            device_id: selectedVideo?.deviceId,
-            video_link: selectedVideo?.videoUrl
+            video_id: eventId,
+            device_id: deviceId,
+            video_link: videoUrl
         });
 
         let config = {

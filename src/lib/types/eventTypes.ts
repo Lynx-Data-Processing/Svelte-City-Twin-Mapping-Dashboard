@@ -5,7 +5,7 @@ export interface IVideoType {
     endpointId: number,
     startTimestamp: number,
     endTimestamp: number,
-    videoUrl?: string
+    videoUrl: string
 }
 
 

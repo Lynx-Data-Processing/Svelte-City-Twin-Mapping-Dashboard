@@ -58,20 +58,32 @@ export const getDeviceDetails = async (deviceId: string) => {
 //* Fetch all videos from the device, all videos are in MP4 format
 //* The api returns video meta data and videos together
 //* API ONLY loads videos saved on the cloud
-export const getAllVideoRecordingsFromDevice = async (deviceId: string, fromDateTime: string, toDateTime: string) => {
+export const getVideo = async (gpsElement: any) => {
 
   try {
     const config = {
       method: 'get',
-      url: `${PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL}?endpointId=${deviceId}&fromTime=${fromDateTime}&toTime=${toDateTime}`,
+      url: `${PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL}?endpointId=${gpsElement.EndpointId}&fromTime=${gpsElement.StartTime}&toTime=${ gpsElement.EndTime}`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `${PUBLIC_API_KEY}`,
       },
     };
 
-    const promise = await axios(config);
-    return promise;
+    const result = await axios(config);
+    const videos: IMediaRecordingType[] = result.data.mediaEventRecordings.filter((res: IMediaRecordingType) => res.type === 'VIDEO'); // && res.endTimestamp > timestamp && res.startTimestamp < timestamp
+    const videoLink = videos.length ? videos[0].url : '';
+
+    const video: IVideoType = {
+      eventId: gpsElement.EventId,
+      deviceId: gpsElement.DeviceId,
+      endpointId: gpsElement.EndpointId,
+      startTimestamp: gpsElement.StartTime,
+      endTimestamp: gpsElement.EndTime,
+      videoUrl: videoLink
+    };
+    return video;
+   
   } catch (error: any) {
     if (error.response) {
       return error.response.status;
@@ -126,49 +138,6 @@ export const getGeojsonDataFromFile = async (url: string) => {
   }
 
 }
-
-
-export const findVideo = async (StartTime: string, EndTime: string, deviceId: string) => {
-  return getAllVideoRecordingsFromDevice(
-    deviceId,
-    StartTime,
-    EndTime,
-  ).then((result) => {
-    const videos: IMediaRecordingType[] = result.data.mediaEventRecordings.filter((res: IMediaRecordingType) => res.type === 'VIDEO'); // && res.endTimestamp > timestamp && res.startTimestamp < timestamp
-    return videos.length ? videos[0].url : '';
-  });
-};
-
-
-export const getVideosFromGpsData = async (gpsData: any[]) => {
-  if (!gpsData.length) return [];
-  let tempVideoArray: IVideoType[] = [];
-  for (const geojson of gpsData) {
-    for (const gpsElement of geojson.features) {
-      try {
-        const videoLink: string = await findVideo(
-          gpsElement.properties.StartTime,
-          gpsElement.properties.EndTime,
-          gpsElement.properties.EndpointId
-        );
-        const video: IVideoType = {
-          eventId: gpsElement.properties.EventId,
-          deviceId: gpsElement.properties.DeviceId,
-          endpointId: gpsElement.properties.EndpointId,
-          startTimestamp: gpsElement.properties.StartTime,
-          endTimestamp: gpsElement.properties.EndTime,
-          videoUrl: videoLink
-        };
-
-        tempVideoArray.push(video);
-      } catch (error) {
-        console.error(`Error retrieving video URL: ${error}`);
-      }
-    }
-  }
-
-  return tempVideoArray;
-};
 
 
 export async function callAndProcessAPI(dateTimeDictionary: IDateTimeDictionaryType) {

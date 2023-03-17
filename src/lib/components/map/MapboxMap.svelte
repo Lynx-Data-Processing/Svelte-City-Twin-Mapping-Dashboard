@@ -40,7 +40,6 @@
 	// ------------------ Mapbox ------------------
 	export let layerList: ILayerListElementType[];
 	export let selectedPolygon = null;
-	export let videoArray: IVideoType[];
 	export let mapStyle: string;
 	export let mapDetails: IMapDetailsType;
 	export let selectedPOI: ISelectedPOIType | null;
@@ -150,25 +149,25 @@
 			false
 		);
 
-		await fetchDataFromAPIAndCreateLayer(
-			PUBLIC_SIDEWALK_POLYGON_URL,
-			'Sidewalk Construction (Polygon)',
-			false,
-			GeojsonEnum.Polygon,
-			'#F5B514',
-			'fa-person',
-			false
-		);
+		// await fetchDataFromAPIAndCreateLayer(
+		// 	PUBLIC_SIDEWALK_POLYGON_URL,
+		// 	'Sidewalk Construction (Polygon)',
+		// 	false,
+		// 	GeojsonEnum.Polygon,
+		// 	'#F5B514',
+		// 	'fa-person',
+		// 	false
+		// );
 
-		await fetchDataFromAPIAndCreateLayer(
-			PUBLIC_PLANNING_LINE_URL,
-			'Road Construction (Line)',
-			false,
-			GeojsonEnum.LineString,
-			'#16C97B',
-			'fa-road',
-			false
-		);
+		// await fetchDataFromAPIAndCreateLayer(
+		// 	PUBLIC_PLANNING_LINE_URL,
+		// 	'Road Construction (Line)',
+		// 	false,
+		// 	GeojsonEnum.LineString,
+		// 	'#16C97B',
+		// 	'fa-road',
+		// 	false
+		// );
 	};
 
 	// ------------------ Mapbox Map adding Layers ------------------ //
@@ -201,7 +200,7 @@
 					.setLngLat(e.lngLat)
 					.setHTML(
 						e?.features
-							? await buildPopup(e.features[0], layerElement.layerName, videoArray)
+							? await buildPopup(e.features[0], layerElement.layerName)
 							: '<div>Properties do not exist</div>'
 					)
 					.addTo(mapboxMap);
@@ -259,7 +258,7 @@
 					.setLngLat(e.lngLat)
 					.setHTML(
 						e?.features
-							? await buildPopup(e.features[0], layerElement.layerName, videoArray)
+							? await buildPopup(e.features[0], layerElement.layerName)
 							: '<div>Properties do not exist</div>'
 					)
 					.addTo(mapboxMap);

@@ -23,7 +23,7 @@
   width: 100%;
 
   &-loading {
-    background-color: $primary-color;
+    background-color: white
   }
 
   &-error {
@@ -54,14 +54,3 @@
 
 
 
-.configurable-application--loading {
-  text-align: center;
-  display: block;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  background-color: #fff;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-image: url(https://www.arcgis.com/apps/instant/interactivelegend/assets/loader-ie9.gif);
-}
