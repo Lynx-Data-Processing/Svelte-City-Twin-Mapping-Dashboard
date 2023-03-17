@@ -43,11 +43,12 @@
 		endDateTime: '2022-12-23T00:00'
 	};
 	let menuComponents: IMenuComponentsType[] = [
-		{ id: 0, title: 'No Menu', icon: 'fa-times' },
+		{ id: 0, title: 'Only Map', icon: 'fa-times' },
 		{ id: 1, title: 'Search Data', icon: 'fa-database' },
 		{ id: 2, title: 'Street View', icon: 'fa-road' },
 		{ id: 3, title: 'Video Player', icon: 'fa-video' },
-		{ id: 4, title: 'About', icon: 'fa-info-circle' }
+		{ id: 4, title: 'About', icon: 'fa-info-circle' },
+		{ id: 5, title: 'High Res Map', icon: 'fa-map', url: '/lynx-city-twin/arc' }
 	];
 	let selectedMenu: IMenuComponentsType = menuComponents[1];
 	let isLoading = false;
@@ -106,9 +107,9 @@
 
 <SelectionMenu bind:selectedMenu bind:menuComponents />
 <main>
-	<div class="grid grid-cols-1 md:grid-cols-1  lg:grid-cols-12 ">
+	<div class="grid grid-cols-1  2xl:grid-cols-12">
 		{#if selectedMenu.id != 0}
-			<div class="col-span-1 lg:col-span-2 flex flex-col gap-4 p-2">
+			<div class="col-span-1 2xl:col-span-2 flex flex-col sm:flex-row 2xl:flex-col gap-4 p-2">
 				<Card title="Layers" showOnLoad={true}>
 					<Layers bind:layerList {updateMapCenter} />
 				</Card>
@@ -132,7 +133,7 @@
 			</div>
 		{/if}
 
-		<div class={`col-span-1   ${selectedMenu.id === 0 ? 'col-span-12' : 'col-span-10'}  relative`}>
+		<div class={`col-span-1   ${selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'}  relative`}>
 			<MapboxMap	
 				bind:mapDetails
 				bind:gpsData
