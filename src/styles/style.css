@@ -42,24 +42,24 @@ body {
   border-radius: 0;
 }
 .btn-dark {
-  border: #151515;
-  background-color: #151515;
+  border: #282828;
+  background-color: #282828;
   color: white;
 }
 .btn-dark:hover {
   cursor: pointer;
   color: white;
-  background-color: #151515;
+  background-color: #282828;
 }
 .btn-dark-light {
-  border: #2B2B2B;
-  background-color: #2B2B2B;
+  border: #0F0F0F;
+  background-color: #0F0F0F;
   color: white;
 }
 .btn-dark-light:hover {
   cursor: pointer;
   color: white;
-  background-color: #151515;
+  background-color: #282828;
 }
 .btn-primary {
   background-color: #315ee7;
@@ -87,7 +87,7 @@ body {
   background-color: rgb(62, 133, 52);
 }
 .btn-black-outline {
-  color: #2B2B2B;
+  color: #0F0F0F;
   border-color: rgb(219, 219, 219);
   border-width: 1px;
 }
@@ -136,7 +136,7 @@ body {
 }
 
 .bg-dark {
-  background-color: #2B2B2B;
+  background-color: #0F0F0F;
   color: white;
 }
 
@@ -329,7 +329,7 @@ body {
   background-color: #10376e;
 }
 .table th:nth-child(n+2) {
-  background-color: #2B2B2B;
+  background-color: #0F0F0F;
   color: white;
 }
 .table th:nth-child(n+2):hover {
@@ -381,7 +381,7 @@ body {
   background-color: rgb(62, 133, 52);
 }
 .paginated-btn-black-outline {
-  color: #2B2B2B;
+  color: #0F0F0F;
   border-color: rgb(219, 219, 219);
 }
 .paginated-btn-black-outline:hover {

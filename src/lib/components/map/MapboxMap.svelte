@@ -121,7 +121,7 @@
 			'3D-Buildings',
 			'composite',
 			GeojsonEnum.Feature,
-			false,
+			true,
 			'fa-building',
 			false,
 			'Black',
