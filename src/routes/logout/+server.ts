@@ -8,7 +8,6 @@ export const POST: RequestHandler = async ({ locals }) => {
     const { error: err } = await locals.supabase.auth.signOut();
 
     if (err) {
-        console.log("Logout error.");
         throw error(500, "Something went wrong");
     }
 

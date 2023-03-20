@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Recaptcha from '$lib/components/ReCaptcha.svelte';
 	import { BRAND_COLOR, BRAND_COLOR_DARK } from '$lib/constants';
 	import { ThemeSupa } from '@supabase/auth-ui-shared';
 	import { Auth } from '@supabase/auth-ui-svelte';
@@ -16,6 +17,7 @@
 
 <svelte:head>
 	<title>Login</title>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </svelte:head>
 
 <main class="login-background ">
@@ -46,6 +48,7 @@
 						style: { input: 'color: #000', label: 'display: none' } 
 					}}
 				/>
+				<Recaptcha />
 				<button class="text-center hover:underline" on:click={toggleLearnMore}>
 					Why a link? Learn More
 				</button>

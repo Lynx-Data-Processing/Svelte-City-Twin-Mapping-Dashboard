@@ -20,3 +20,7 @@ export interface IMenuComponentsType  {
     icon: string,
     url?: string,
 }
+
+export interface Window {
+    handleCaptchaCallback: (token: string) => Promise<void>;
+}
