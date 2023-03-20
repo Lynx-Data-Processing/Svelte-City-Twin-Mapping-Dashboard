@@ -2,8 +2,14 @@
     import { PUBLIC_RECAPTCHA_URL } from '$env/static/public';
     import { onMount } from 'svelte';
 
+    export let recaptcha: Boolean;
+
     onMount(() => {
+        // Add reCaptcha callback to be read by recaptcha script
         window.handleCaptchaCallback = handleCaptchaCallback;
+
+        // Reset recaptcha on component mount
+        grecaptcha.reset();
     });
 
     const handleCaptchaCallback = async (token: string) => {
@@ -17,13 +23,17 @@
             })
         });
 
-        console.log(res.json());
+        const data = await res.json();
+
+        recaptcha = data.success;
     };
     
 </script>
 
+<!-- ***class must be 'g-recaptcha' to interact with recaptcha api*** -->
 <div 
     class="g-recaptcha" 
+    style="transform: scale(.75); align-self: center;"
     data-sitekey={PUBLIC_RECAPTCHA_URL}
     data-callback="handleCaptchaCallback"
 />

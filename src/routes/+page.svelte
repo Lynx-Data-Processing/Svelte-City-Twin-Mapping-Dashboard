@@ -8,6 +8,10 @@
 	import type { PageData } from './$types';
 	export let data: PageData;
 
+	// Recaptcha status for ReCaptcha component
+	let recaptcha = false;
+	$: recaptchaStatus = recaptcha;
+
 	// Learn more visibility
 	let learnMoreVisible = false;
 	const toggleLearnMore = () => {
@@ -48,7 +52,7 @@
 						style: { input: 'color: #000', label: 'display: none' } 
 					}}
 				/>
-				<Recaptcha />
+				<Recaptcha bind:recaptcha={recaptcha}/>
 				<button class="text-center hover:underline" on:click={toggleLearnMore}>
 					Why a link? Learn More
 				</button>

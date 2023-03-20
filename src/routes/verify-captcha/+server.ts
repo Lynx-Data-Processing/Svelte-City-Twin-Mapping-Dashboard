@@ -12,8 +12,14 @@ export const POST = async (event) => {
     const status: {success: boolean} = await res.json();
 
     if (!status.success) {
-        throw redirect(303, `${data.recaptchaToken}`);
+        return new Response(JSON.stringify({
+            status: 400,
+            success: false
+        }));
     } 
 
-    return new Response('success');
+    return new Response(JSON.stringify({
+        status: 200,
+        success: true
+    }));
 }
