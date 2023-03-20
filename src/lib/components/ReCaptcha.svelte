@@ -34,7 +34,7 @@
 <!-- ***class must be 'g-recaptcha' to interact with recaptcha api*** -->
 <div 
     class="g-recaptcha" 
-    style="transform: scale(.75); align-self: center;"
+    style="transform: scale(.75); align-self: center; margin: 1rem;"
     data-sitekey={PUBLIC_RECAPTCHA_URL}
     data-callback="handleCaptchaCallback"
 />

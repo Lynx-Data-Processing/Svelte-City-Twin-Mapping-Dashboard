@@ -34,25 +34,36 @@
 			<div class=" flex flex-col  my-auto px-16">
 				<!-- <a href="/" class="mb-auto text-right text-gray-800 hover:underline">Need Help?</a> -->
 				<h1 class="mt-16  text-4xl">Sign In</h1>
-				<Auth
-					supabaseClient={data.supabase}
-					view="magic_link"
-					redirectTo={`${data.url}/login?redirect=/lynx-city-twin`}
-					showLinks={false}
-					appearance={{
-						theme: ThemeSupa,
-						variables: {
-							default: {
-								colors: {
-									brand: BRAND_COLOR,
-									brandAccent: BRAND_COLOR_DARK
-								}
-							}
-						},
-						style: { input: 'color: #000', label: 'display: none', button: `display: ${recaptchaStatus ? 'block':'none'}` } 
-					}}
-				/>
-				<Recaptcha bind:recaptcha={recaptcha}/>
+
+				{#if recaptchaStatus}
+					<span in:fade={{ duration: 500 }}>
+						<Auth
+							supabaseClient={data.supabase}
+							view="magic_link"
+							redirectTo={`${data.url}/login?redirect=/lynx-city-twin`}
+							showLinks={false}
+							appearance={{
+								theme: ThemeSupa,
+								variables: {
+									default: {
+										colors: {
+											brand: BRAND_COLOR,
+											brandAccent: BRAND_COLOR_DARK
+										}
+									}
+								},
+								style: { input: 'color: #000', label: 'display: none' } 
+							}}
+						/>
+					</span>
+				{/if}
+
+				{#if !recaptchaStatus}
+					<span in:fade={{ duration: 500 }} class="flex flex-col">
+						<Recaptcha bind:recaptcha={recaptcha}/>
+					</span>
+				{/if}
+
 				<button class="text-center hover:underline" on:click={toggleLearnMore}>
 					Why a link? Learn More
 				</button>
