@@ -1,6 +1,6 @@
-import { redirect } from "@sveltejs/kit";
 import { PUBLIC_RECAPTCHA_KEY } from '$env/static/public';
 
+// Check recapcha token with google api
 export const POST = async (event) => {
     const data = await event.request.json();
 

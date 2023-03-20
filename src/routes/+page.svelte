@@ -49,7 +49,7 @@
 								}
 							}
 						},
-						style: { input: 'color: #000', label: 'display: none' } 
+						style: { input: 'color: #000', label: 'display: none', button: `display: ${recaptchaStatus ? 'block':'none'}` } 
 					}}
 				/>
 				<Recaptcha bind:recaptcha={recaptcha}/>

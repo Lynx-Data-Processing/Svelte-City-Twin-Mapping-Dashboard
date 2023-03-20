@@ -12,6 +12,7 @@
         grecaptcha.reset();
     });
 
+    // Callback function for recaptcha/google api (backend verification)
     const handleCaptchaCallback = async (token: string) => {
         const res = await fetch("verify-captcha", {
             method: 'POST',
