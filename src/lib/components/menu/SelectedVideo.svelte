@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_AWS_BUCKET_URL } from '$env/static/public';
+	import { PUBLIC_GCP_BUCKET_URL } from '$env/static/public';
 	import {
 		pingMachineLearningAPIWithAxios,
 		processVideoWithMachineLearning
@@ -18,32 +18,20 @@
 	// videoArray = await getVideosFromGpsData(tempGpsData);
 
 	onMount(async () => {
-		if (selectedPOI) {
+		if (processedVideoUrl === '') {
 			await updateVideoUrl();
 		}
 	});
 
-	import axios from 'axios';
-
-	async function checkUrlAvailability(url: string) {
-		try {
-			const response = await axios.get(url);
-			return true;
-		} catch (error) {
-			console.error(error);
-			return false;
-		}
-	}
 
 	const updateVideoUrl = async () => {
 		try {
 			if (!selectedPOI) return;
 			loadingVideo = true;
 			
-			// Check if in AWS S3 Bucket
-			const url = `${PUBLIC_AWS_BUCKET_URL}/${selectedPOI.data.DeviceId}/${selectedPOI.data.DeviceId}-${selectedPOI.data.EventId}.mp4`;
-			const isUrlAvailable = await checkUrlAvailability(url);
-			if (isUrlAvailable) {
+			const url = `${PUBLIC_GCP_BUCKET_URL}/${selectedPOI.data.DeviceId}/${selectedPOI.data.DeviceId}-${selectedPOI.data.EventId}.mp4`;
+			const useGCP = false;
+			if (useGCP) {
 				processedVideoUrl = url;
 			} else {
 				video = await getVideo(selectedPOI.data);

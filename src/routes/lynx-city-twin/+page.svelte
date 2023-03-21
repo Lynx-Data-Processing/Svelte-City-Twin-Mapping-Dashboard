@@ -22,6 +22,7 @@
 	import { GeojsonEnum } from '$lib/types/enums';
 	import { rawSmarterAIGPSDataToGeojson } from '$lib/utils/geojson/geojson-utils.js';
 	import { getGPSSensorDataFromEventFiles } from '$lib/utils/geojson/gpsData-utils';
+	import { onMount } from 'svelte';
 
 	//* Set Initial Map Details
 	let mapStyle: string = 'mapbox://styles/canaleal/cle0l6bpx004501qotbnxa4wr';
@@ -101,6 +102,11 @@
 
 		isLoading = false;
 	};
+
+	onMount(() => {
+		fetchEventsData();
+	});
+
 </script>
 
 <svelte:head><title>Lynx City Twin</title></svelte:head>
