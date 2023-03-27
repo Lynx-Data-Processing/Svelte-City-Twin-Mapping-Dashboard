@@ -1,31 +1,32 @@
 <script lang="ts">
-	import type { eventType, selectedPOIType, videoType } from '../../types/eventTypes';
-	import type { layerListElementType, mapDetailsType } from '../../types/mapTypes';
-	import type { dateTimeDictionaryType, menuComponentsType } from '../../types/types';
+	import type { IEventType, ISelectedPOIType, IVideoType } from '$lib/types/eventTypes';
+	import type { ILayerListElementType, IMapDetailsType } from '$lib/types/mapTypes';
+	import type { IDateTimeDictionaryType, IMenuComponentsType } from '$lib/types/types';
 
-	import Card from '../../components/Card.svelte';
+	import Card from '$lib/components/Card.svelte';
 
-	import { default as PaginatedTable } from '../../components/Events/PaginatedTable.svelte';
+	import PaginatedTable from '$lib/components/Events/PaginatedTable.svelte';
 
-	import Layers from '../../components/map/Layers.svelte';
-	import MapboxMap from '../../components/map/MapboxMap.svelte';
-	import MapError from '../../components/map/MapError.svelte';
-	import MapLoadingSpinner from '../../components/map/MapLoadingSpinner.svelte';
-	import MapStyleSelector from '../../components/map/MapStyleSelector.svelte';
-	import About from '../../components/menu/About.svelte';
-	import SearchData from '../../components/menu/SearchData.svelte';
-	import SelectedVideo from '../../components/menu/SelectedVideo.svelte';
-	import SelectionMenu from '../../components/menu/SelectionMenu.svelte';
-	import SpeedView from '../../components/menu/SpeedView.svelte';
-	import StreetView from '../../components/menu/StreetView.svelte';
-	import { callAndProcessAPI, getAllEvents, getVideosFromGpsData } from '../../service/smarter-api';
-	import { GeojsonEnum } from '../../types/enums';
-	import { rawSmarterAIGPSDataToGeojson } from '../../utils/geojson/geojson-utils.js';
-	import { getGPSSensorDataFromEventFiles } from '../../utils/geojson/gpsData-utils';
+	import Layers from '$lib/components/map/Layers.svelte';
+	import MapboxMap from '$lib/components/map/MapboxMap.svelte';
+	import MapError from '$lib/components/map/MapError.svelte';
+	import MapLoadingSpinner from '$lib/components/map/MapLoadingSpinner.svelte';
+	import MapStyleSelector from '$lib/components/map/MapStyleSelector.svelte';
+	import About from '$lib/components/menu/About.svelte';
+	import SearchData from '$lib/components/menu/SearchData.svelte';
+	import SelectedVideo from '$lib/components/menu/SelectedVideo.svelte';
+	import SelectionMenu from '$lib/components/menu/SelectionMenu.svelte';
+	import SpeedView from '$lib/components/menu/SpeedView.svelte';
+	import StreetView from '$lib/components/menu/StreetView.svelte';
+	import { callAndProcessAPI } from '$lib/service/smarter-api';
+	import { GeojsonEnum } from '$lib/types/enums';
+	import { rawSmarterAIGPSDataToGeojson } from '$lib/utils/geojson/geojson-utils.js';
+	import { getGPSSensorDataFromEventFiles } from '$lib/utils/geojson/gpsData-utils';
+	import { onMount } from 'svelte';
 
 	//* Set Initial Map Details
 	let mapStyle: string = 'mapbox://styles/canaleal/cle0l6bpx004501qotbnxa4wr';
-	let mapDetails: mapDetailsType = {
+	let mapDetails: IMapDetailsType = {
 		id: 0,
 		center: [-76.491143, 44.231689],
 		zoom: 15,
@@ -33,35 +34,31 @@
 		bearing: -17.6
 	};
 	//* Polygon and point of interest details
-	let layerList: layerListElementType[] = [];
-	let selectedPOI: selectedPOIType | null = null;
+	let layerList: ILayerListElementType[] = [];
+	let selectedPOI: ISelectedPOIType | null = null;
 	let selectedPolygon: object | null = null;
 
 	//* Set Payload details for fetching
-	let dateTimeDictionary: dateTimeDictionaryType = {
+	let dateTimeDictionary: IDateTimeDictionaryType = {
 		startDateTime: '2022-10-23T00:00',
 		endDateTime: '2022-12-23T00:00'
 	};
-	let menuComponents: menuComponentsType[] = [
-		{ id: 0, title: 'No Menu', icon: 'fa-times' },
+	let menuComponents: IMenuComponentsType[] = [
+		{ id: 0, title: 'Only Map', icon: 'fa-times' },
 		{ id: 1, title: 'Search Data', icon: 'fa-database' },
 		{ id: 2, title: 'Street View', icon: 'fa-road' },
 		{ id: 3, title: 'Video Player', icon: 'fa-video' },
-		{ id: 4, title: 'About', icon: 'fa-info-circle' }
+		{ id: 4, title: 'About', icon: 'fa-info-circle' },
+		{ id: 5, title: 'High Res Map', icon: 'fa-map', url: '/lynx-city-twin/arc' }
 	];
-	let selectedMenu: menuComponentsType = menuComponents[1];
+	let selectedMenu: IMenuComponentsType = menuComponents[1];
 	let isLoading = false;
 	let isError = false;
 	let gpsData: any[] = [];
 
-	let videoArray: videoType[] = [];
-	let eventList: eventType[] = [];
+	let eventList: IEventType[] = [];
 
-	const updateMapCenter = (
-		coordinates: number[],
-		dataType?: GeojsonEnum,
-		zoomLevel?: number,
-	) => {
+	const updateMapCenter = (coordinates: number[], dataType?: GeojsonEnum, zoomLevel?: number) => {
 		let updatedZoomLevel = zoomLevel;
 		if (dataType === GeojsonEnum.Point || dataType === GeojsonEnum.LineString) {
 			updatedZoomLevel = 19;
@@ -86,7 +83,6 @@
 		isError = false;
 
 		try {
-
 			const rawEventList = await callAndProcessAPI(dateTimeDictionary);
 			if (!rawEventList || !rawEventList.length) return;
 
@@ -98,7 +94,7 @@
 			if (!tempGpsData) return;
 			gpsData = tempGpsData;
 			updateMapCenter(gpsData[0].features[0].geometry.coordinates[0]);
-			videoArray = await getVideosFromGpsData(tempGpsData);
+			
 		} catch (error) {
 			alert(error);
 			isError = true;
@@ -106,13 +102,20 @@
 
 		isLoading = false;
 	};
+
+	onMount(() => {
+		fetchEventsData();
+	});
+
 </script>
+
+<svelte:head><title>Lynx City Twin</title></svelte:head>
 
 <SelectionMenu bind:selectedMenu bind:menuComponents />
 <main>
-	<div class="grid grid-cols-1 md:grid-cols-1  lg:grid-cols-12 ">
+	<div class="grid grid-cols-1  2xl:grid-cols-12">
 		{#if selectedMenu.id != 0}
-			<div class="col-span-1 lg:col-span-2 flex flex-col gap-4 p-2">
+			<div class="col-span-1 2xl:col-span-2 flex flex-col sm:flex-row 2xl:flex-col gap-4 p-2">
 				<Card title="Layers" showOnLoad={true}>
 					<Layers bind:layerList {updateMapCenter} />
 				</Card>
@@ -126,7 +129,7 @@
 					</Card>
 				{:else if selectedMenu.id === 3}
 					<Card title="Video Player">
-						<SelectedVideo bind:selectedPOI bind:videoArray />
+						<SelectedVideo bind:selectedPOI />
 					</Card>
 				{:else if selectedMenu.id === 4}
 					<Card title="About">
@@ -136,9 +139,8 @@
 			</div>
 		{/if}
 
-		<div class={`col-span-1   ${selectedMenu.id === 0 ? 'col-span-12' : 'col-span-10'}  relative`}>
-			<MapboxMap
-				bind:videoArray
+		<div class={`col-span-1   ${selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'}  relative`}>
+			<MapboxMap	
 				bind:mapDetails
 				bind:gpsData
 				bind:layerList

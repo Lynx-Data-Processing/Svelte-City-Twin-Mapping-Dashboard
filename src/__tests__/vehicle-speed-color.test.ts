@@ -1,7 +1,7 @@
 
-import { SPEED_COLORS } from '../constants';
+import { SPEED_COLORS } from '$lib/constants';
 
-import { getSpeed, getVehicleSpeedColor } from '../utils/vehicle-speed';
+import { getSpeed, getVehicleSpeedColor } from '$lib/utils/vehicle-speed';
 
 describe('getVehicleSpeedColor', () => {
     it('should return the correct color for the given speed', () => {

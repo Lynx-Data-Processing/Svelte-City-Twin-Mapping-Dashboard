@@ -42,33 +42,33 @@ body {
   border-radius: 0;
 }
 .btn-dark {
-  border: #151515;
-  background-color: #151515;
+  border: #282828;
+  background-color: #282828;
   color: white;
 }
 .btn-dark:hover {
   cursor: pointer;
   color: white;
-  background-color: #151515;
+  background-color: #282828;
 }
 .btn-dark-light {
-  border: #2B2B2B;
-  background-color: #2B2B2B;
+  border: #0F0F0F;
+  background-color: #0F0F0F;
   color: white;
 }
 .btn-dark-light:hover {
   cursor: pointer;
   color: white;
-  background-color: #151515;
+  background-color: #282828;
 }
 .btn-primary {
-  background-color: #394EEE;
-  border-color: #394EEE;
+  background-color: #315ee7;
+  border-color: #315ee7;
   color: white;
 }
 .btn-primary:hover {
   color: white;
-  background-color: rgb(16, 55, 110);
+  background-color: #10376e;
 }
 .btn-error {
   background-color: rgb(180, 41, 41);
@@ -87,7 +87,7 @@ body {
   background-color: rgb(62, 133, 52);
 }
 .btn-black-outline {
-  color: #2B2B2B;
+  color: #0F0F0F;
   border-color: rgb(219, 219, 219);
   border-width: 1px;
 }
@@ -113,7 +113,7 @@ body {
 }
 
 .bg-primary {
-  background-color: #394EEE;
+  background-color: #315ee7;
   color: white;
 }
 
@@ -136,7 +136,7 @@ body {
 }
 
 .bg-dark {
-  background-color: #2B2B2B;
+  background-color: #0F0F0F;
   color: white;
 }
 
@@ -320,16 +320,16 @@ body {
   transition: all 0.5s;
 }
 .table th:first-child {
-  background-color: #394EEE;
+  background-color: #315ee7;
   color: white;
 }
 .table th:first-child:hover {
   cursor: pointer;
   color: white;
-  background-color: rgb(16, 55, 110);
+  background-color: #10376e;
 }
 .table th:nth-child(n+2) {
-  background-color: #2B2B2B;
+  background-color: #0F0F0F;
   color: white;
 }
 .table th:nth-child(n+2):hover {
@@ -357,12 +357,12 @@ body {
   border-radius: 0;
 }
 .paginated-btn-primary {
-  background-color: #394EEE;
+  background-color: #315ee7;
   color: white;
 }
 .paginated-btn-primary:hover {
   color: white;
-  background-color: rgb(16, 55, 110);
+  background-color: #10376e;
 }
 .paginated-btn-error {
   background-color: rgb(180, 41, 41);
@@ -381,7 +381,7 @@ body {
   background-color: rgb(62, 133, 52);
 }
 .paginated-btn-black-outline {
-  color: #2B2B2B;
+  color: #0F0F0F;
   border-color: rgb(219, 219, 219);
 }
 .paginated-btn-black-outline:hover {
@@ -417,7 +417,7 @@ body {
   width: 100%;
 }
 .map-state-loading {
-  background-color: #394EEE;
+  background-color: white;
 }
 .map-state-error {
   background-color: rgb(180, 41, 41);
@@ -438,45 +438,17 @@ body {
   padding: 1rem !important;
 }
 
-.configurable-application--loading {
-  text-align: center;
-  display: block;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  background-color: #fff;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-image: url(https://www.arcgis.com/apps/instant/interactivelegend/assets/loader-ie9.gif);
-}
-
 .login-background {
   width: 100vw;
   height: 100vh;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
   background: linear-gradient(90deg, #315ee7 50%, #ffffff 50%);
 }
 
 .login-info {
-  width: 40%;
-  height: 80%;
-  padding: 30px 130px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.5);
-}
-
-.bottom-block {
-  position: absolute;
-  bottom: 10vh;
-  left: 50%;
-  width: 40vw;
-  height: 10%;
-  background-color: #2B2B2B;
 }
 
 .learn-more-visible {
@@ -485,7 +457,7 @@ body {
   animation: fadeIn 0.5s;
 }
 
-.learn-more-invisible {
+.learn-more-hidden {
   text-align: center;
   font-size: small;
   animation: fadeOut 0.5s;

@@ -1,5 +1,5 @@
-import type { PageLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
+import type { PageLoad } from './$types';
 
 
 // verify user is authentication

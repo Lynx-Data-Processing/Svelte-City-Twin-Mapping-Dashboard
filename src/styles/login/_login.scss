@@ -1,32 +1,17 @@
 
+
 .login-background {
     width: 100vw;
     height: 100vh;
     display: flex;
-    flex-direction: row;
+
     align-items: center;
     justify-content: center;
-    background: linear-gradient(90deg, #315ee7 50%, #ffffff 50%);
+    background: linear-gradient(90deg,$primary-color  50%, #ffffff 50%);
 }
 
 .login-info {
-    width: 40%;
-    height: 80%;
-    padding: 30px 130px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.5);
-}
-
-.bottom-block {
-    position: absolute;
-    bottom: 10vh;
-    left: 50%;
-
-    width: 40vw;
-    height: 10%;
-    background-color: #2B2B2B;
 }
 
 .learn-more-visible {
@@ -35,7 +20,7 @@
     animation: fadeIn .5s;
 }
 
-.learn-more-invisible {
+.learn-more-hidden {
     text-align: center;
     font-size: small;
     animation: fadeOut .5s;
