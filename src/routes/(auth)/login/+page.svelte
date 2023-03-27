@@ -2,7 +2,7 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import type { PageData } from './$types';
+	import type { PageData } from '../login/$types';
 	export let data: PageData;
 	$: {
 		const redirectTo = $page.url.searchParams.get('redirect');
