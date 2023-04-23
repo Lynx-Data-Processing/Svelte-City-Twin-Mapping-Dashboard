@@ -18,10 +18,10 @@
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import StreetView from '$lib/components/menu/StreetView.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
-	import { callAndProcessAPI } from '$lib/service/smarter-api';
+	import { getSmarterAiEvents } from '$lib/service/smarter-api';
 	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 	import { rawSmarterAIGPSDataToGeojson } from '$lib/utils/geojson/geojson-utils';
-	import { getGPSSensorDataFromEventFiles } from '$lib/utils/geojson/gpsData-utils';
+	import { getGPSDataForEachEvent } from '$lib/utils/geojson/gpsData-utils';
 	import { onMount } from 'svelte';
 
 	//* Set Initial Map Details
@@ -86,17 +86,27 @@
 		isError = false;
 
 		try {
-			const rawEventList = await callAndProcessAPI(dateTimeDictionary);
+			// Get all the events from the smarter ai api
+			const rawEventList = await getSmarterAiEvents(dateTimeDictionary);
 			if (!rawEventList || !rawEventList.length) return;
 
-			const [tempGPSList, tempEventList] = await getGPSSensorDataFromEventFiles(rawEventList);
-			if (!tempGPSList.length) return;
-			eventList = tempEventList;
+			// Get all the GPS data from each event
+			const tempGPSList = await getGPSDataForEachEvent(rawEventList);
+			if (!tempGPSList) return;
+			
 
 			const tempGpsData = rawSmarterAIGPSDataToGeojson(tempGPSList);
 			if (!tempGpsData) return;
 			gpsData = tempGpsData;
-			updateMapCenter(gpsData[0].features[0].geometry.coordinates[0]);
+
+			if(tempGpsData[0].dataType === "Point"){
+				updateMapCenter(gpsData[0].features[0].geometry.coordinates);
+			}
+			else{
+				updateMapCenter(gpsData[0].features[0].geometry.coordinates[0]);
+			}
+
+			
 		} catch (error) {
 			alert(error);
 			isError = true;
@@ -162,12 +172,12 @@
 				<LoadingError />
 			{/if}
 
-			<div class="absolute top-2 right-2 flex flex-col gap-4 z-100">
-				<Card title="Map Style" width="w-[15rem]">
+			<div class="absolute top-2 left-2 flex flex-col gap-4 z-100 align-right">
+				<Card title="Map Style" >
 					<MapStyleSelector bind:mapStyle />
 				</Card>
 
-				<Card title="Speed Legend (Km/h)">
+				<Card title="Speed Legend (Km/h)" showOnLoad={false} width="w-[15rem]">
 					<MapLegend />
 				</Card>
 			</div>

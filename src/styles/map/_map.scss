@@ -12,7 +12,40 @@
   }
 }
 
+.map-style-container{
 
+ 
+
+  .map-style-image{
+    width: 100%;
+    height: 100%;
+    border: 2px solid $dark;
+    border-radius: $radius-lg;
+    
+    //smooth border on hover
+    transition: all $speed-md;
+  }
+
+  .map-style-text{
+    color: $black;
+  }
+
+  &:hover{
+   
+    cursor: pointer;
+    
+    .map-style-image{
+      border: 2px solid $primary-color;
+    }
+
+    .map-style-text{
+      color: $primary-color;
+    }
+  }
+  
+
+
+}
 
 
 

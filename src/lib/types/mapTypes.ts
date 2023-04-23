@@ -5,7 +5,7 @@ export interface IMapStyle {
     id: number,
     name: string,
     value: string,
-    img: string
+    image: string
 }
 
 

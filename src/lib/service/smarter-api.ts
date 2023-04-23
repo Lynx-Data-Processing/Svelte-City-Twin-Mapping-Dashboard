@@ -143,7 +143,7 @@ export const getGeojsonDataFromFile = async (url: string) => {
 
 const HOUR_IN_MILLISECONDS = 3600000;
 
-export async function callAndProcessAPI(dateTimeDictionary: IDateTimeDictionaryType) {
+export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionaryType) {
   const storageKey = 'apiResults';
   const storageExpiryKey = 'apiResultsExpiry';
   const storageDateTimeDictionaryKey = 'storedDateTimeDictionary';

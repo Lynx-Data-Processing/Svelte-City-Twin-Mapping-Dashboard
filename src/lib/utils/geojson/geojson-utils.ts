@@ -49,13 +49,13 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
   const groupedArray = groupByKey(rawData, 'deviceId');
   const geoJsonArray = [];
 
-  for (const [deviceId, innerArray] of Object.entries(groupedArray)) {
+  for (const [deviceId, gpsElement] of Object.entries(groupedArray)) {
     try {
 
       //* Set initial Geojson element details
       const dataName = rawData.dataName || `GPS - ${deviceId}`;
       const dateTime = rawData.dateTime || uuidv4();
-      const dataType = rawData.dataType || "LineString";
+      const dataType = rawData.dataType || "Point";
       const hasFilter = rawData.hasFilter || true;
       const dataSourceName = rawData.dataSourceName || deviceId;
       //* Create Geojson feature collection
@@ -69,9 +69,9 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
         features: [],
       };
 
-      for (const point of (innerArray as any)) {
+      for (const point of (gpsElement as any)) {
         if (point.GEO_LOCATION) {
-          let coordinates = generateCoordinates(parseFloat(point.GEO_LOCATION.latitude), parseFloat(point.GEO_LOCATION.longitude), parseFloat(point.GEO_LOCATION.heading));
+          let coordinates = [point.GEO_LOCATION.longitude, point.GEO_LOCATION.latitude]
           const properties = point.GEO_LOCATION;
           properties.EventId = point.id;
           properties.DeviceId = point.deviceId;
@@ -82,7 +82,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
           properties.Color = getVehicleSpeedColor(getSpeed(properties));
 
           //* Create the final feature config and push it to the feature array
-          const feature: IGeojsonFeatureType = { type: 'Feature', geometry: { type: "LineString", coordinates }, properties };
+          const feature: IGeojsonFeatureType = { type: 'Feature', geometry: { type: "Point", coordinates }, properties };
           geoJson.features.push(feature);
 
         }
@@ -125,8 +125,6 @@ export const rawGPSDataToGeojsonData = (rawData: any, name = 'General', geojsonD
       features: [],
     };
 
-
-    console.log(rawData)
     //* For every bigquery row create a GEOJSON GPS element
     for (const gpsElement of rawData.features) {
 
