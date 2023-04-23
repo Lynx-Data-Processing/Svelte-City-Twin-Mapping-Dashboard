@@ -5,19 +5,19 @@
 
 	import Card from '$lib/components/Card.svelte';
 
-	import PaginatedTable from '$lib/components/Events/PaginatedTable.svelte';
+	import PaginatedTable from '$lib/components/table/PaginatedTable.svelte';
 
+	import Navbar from '$lib/components/Navbar.svelte';
+	import LoadingError from '$lib/components/loading/LoadingError.svelte';
+	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
 	import Layers from '$lib/components/map/Layers.svelte';
-	import MapboxMap from '$lib/components/map/MapboxMap.svelte';
-	import MapError from '$lib/components/map/MapError.svelte';
-	import MapLoadingSpinner from '$lib/components/map/MapLoadingSpinner.svelte';
+	import MapLegend from '$lib/components/map/MapLegend.svelte';
 	import MapStyleSelector from '$lib/components/map/MapStyleSelector.svelte';
+	import MapboxMap from '$lib/components/map/MapboxMap.svelte';
 	import About from '$lib/components/menu/About.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
-	import SelectedVideo from '$lib/components/menu/SelectedVideo.svelte';
-	import SelectionMenu from '$lib/components/menu/SelectionMenu.svelte';
-	import SpeedView from '$lib/components/menu/SpeedView.svelte';
 	import StreetView from '$lib/components/menu/StreetView.svelte';
+	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { callAndProcessAPI } from '$lib/service/smarter-api';
 	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 	import { rawSmarterAIGPSDataToGeojson } from '$lib/utils/geojson/geojson-utils';
@@ -43,7 +43,14 @@
 		startDateTime: '2022-10-23T00:00',
 		endDateTime: '2022-12-23T00:00'
 	};
-
+	let components: IMenuComponentsType[] = [
+		{ id: 0, title: 'Only Map', icon: 'fa-times' },
+		{ id: 1, title: 'Search Data', icon: 'fa-database' },
+		{ id: 2, title: 'Street View', icon: 'fa-road' },
+		{ id: 3, title: 'Video Player', icon: 'fa-video' },
+		{ id: 4, title: 'About', icon: 'fa-info-circle' }
+	];
+	let selectedMenu: IMenuComponentsType = components[1];
 	let isLoading = false;
 	let isError = false;
 	let gpsData: any[] = [];
@@ -102,60 +109,14 @@
 		fetchEventsData();
 	});
 
-	let components: IMenuComponentsType[] = [
-    {
-      id: 0,
-      title: 'Only Map',
-      component: Layers,
-      props: {
-        layerList: layerList,
-        updateMapCenter: updateMapCenter
-      },
-      icon: 'fa-times'
-    },
-    {
-      id: 1,
-      title: 'Search Data',
-      component: SearchData,
-      props: {
-        dateTimeDictionary: dateTimeDictionary,
-        fetchEventsData: fetchEventsData
-      },
-      icon: 'fa-database'
-    },
-    {
-      id: 2,
-      title: 'Street View',
-      component: StreetView,
-      props: {
-        selectedPOI: selectedPOI
-      },
-      icon: 'fa-road'
-    },
-    {
-      id: 3,
-      title: 'Video Player',
-      component: SelectedVideo,
-      props: {
-        selectedPOI: selectedPOI
-      },
-      icon: 'fa-video'
-    },
-    {
-      id: 4,
-      title: 'About',
-      component: About,
-      props: {},
-      icon: 'fa-info-circle'
-    }
-  ];
-
-	let selectedMenu = components[1];
+	const updateSelectedPOI = (poi: ISelectedPOIType) => {
+		selectedPOI = poi;
+	};
 </script>
 
 <svelte:head><title>Lynx City Twin</title></svelte:head>
 
-<SelectionMenu bind:selectedMenu bind:components />
+<Navbar bind:selectedMenu bind:components />
 <main>
 	<div class="grid grid-cols-1  2xl:grid-cols-12">
 		{#if selectedMenu.id != 0}
@@ -163,43 +124,51 @@
 				<Card title="Layers" showOnLoad={true}>
 					<Layers bind:layerList {updateMapCenter} />
 				</Card>
-				{#each components as component}
-					{#if component.id === selectedMenu.id}
-						<Card title={component.title}>
-							<svelte:component this={component.component} {...component.props} />
-						</Card>
-					{/if}
-				{/each}
+				{#if selectedMenu.id === 1}
+					<Card title="Search Data" showOnLoad={true}>
+						<SearchData bind:dateTimeDictionary {fetchEventsData} />
+					</Card>
+				{:else if selectedMenu.id === 2}
+					<Card title="Street View">
+						<StreetView bind:selectedPOI />
+					</Card>
+				{:else if selectedMenu.id === 3}
+					<Card title="Video Player">
+						<VideoPlayer bind:selectedPOI />
+					</Card>
+				{:else if selectedMenu.id === 4}
+					<Card title="About">
+						<About />
+					</Card>
+				{/if}
 			</div>
 		{/if}
 
 		<div
-			class={`col-span-1   ${
-				selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'
-			}  relative`}
+			class={`relative col-span-1   ${selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'}  `}
 		>
 			<MapboxMap
 				bind:mapDetails
 				bind:gpsData
 				bind:layerList
 				bind:mapStyle
-				bind:selectedPOI
 				bind:selectedMenu
+				{updateSelectedPOI}
 			/>
 
 			{#if isLoading === true}
-				<MapLoadingSpinner />
+				<LoadingSpinner />
 			{:else if isError === true}
-				<MapError />
+				<LoadingError />
 			{/if}
 
-			<div class="absolute top-2 right-2 flex flex-col gap-4 z-100  ">
+			<div class="absolute top-2 right-2 flex flex-col gap-4 z-100">
 				<Card title="Map Style" width="w-[15rem]">
 					<MapStyleSelector bind:mapStyle />
 				</Card>
 
 				<Card title="Speed Legend (Km/h)">
-					<SpeedView />
+					<MapLegend />
 				</Card>
 			</div>
 		</div>

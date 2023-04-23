@@ -30,6 +30,7 @@ export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geo
       dataName,
       dateTime,
       dataType,
+      dataSourceName: 'Kingston',
       hasFilter,
       features: [],
     };

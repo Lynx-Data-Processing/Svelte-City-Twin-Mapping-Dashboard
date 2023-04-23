@@ -274,6 +274,21 @@ body {
   background-image: url(https://www.arcgis.com/apps/instant/interactivelegend/assets/loader-ie9.gif);
 }
 
+.load {
+  color: white;
+  opacity: 0.9;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  width: 100%;
+}
+.load-loading {
+  background-color: white;
+}
+.load-error {
+  background-color: rgb(180, 41, 41);
+}
+
 .card {
   background-color: rgb(255, 255, 255);
   border-width: 1px;
@@ -406,21 +421,6 @@ body {
 }
 .map-style-selected {
   border-color: var(--primary-color);
-}
-
-.map-state {
-  color: white;
-  opacity: 0.9;
-  display: grid;
-  place-items: center;
-  height: 100%;
-  width: 100%;
-}
-.map-state-loading {
-  background-color: white;
-}
-.map-state-error {
-  background-color: rgb(180, 41, 41);
 }
 
 .mapboxgl-popup-close-button {

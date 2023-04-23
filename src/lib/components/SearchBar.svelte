@@ -1,6 +1,7 @@
 <script lang="ts">
 	export let onChangeFunction: Function;
 	export let searchText: String;
+	export let placeholder = 'Search';
 
 	const clearSearch = () => {
 		searchText = '';
@@ -31,7 +32,7 @@
 		type="search"
 		id="default-search"
 		class="block w-full p-4 pl-10  border   focus:ring-blue-500 focus:border-blue-500  "
-		placeholder="Search Layers"
+		placeholder={placeholder}
 		bind:value={searchText}
 		required
 	/>

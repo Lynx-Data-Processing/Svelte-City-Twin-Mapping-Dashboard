@@ -24,6 +24,7 @@ export interface IGeojsonType {
     dataName: string,
     dateTime: string,
     dataType: IGeojsonDataType,
+    dataSourceName: string,
     hasFilter: boolean,
     features: IGeojsonFeatureType[]
 }

@@ -1,38 +1,23 @@
 <script lang="ts">
 	import { PUBLIC_GCP_BUCKET_URL } from '$env/static/public';
-	import {
-		pingMachineLearningAPIWithAxios,
-		processVideoWithMachineLearning
-	} from '$lib/service/machinelearning-api';
+	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
 	import { getVideo } from '$lib/service/smarter-api';
 	import type { ISelectedPOIType, IVideoType } from '$lib/types/eventTypes';
-	import { onMount } from 'svelte';
-	import MapLoadingSpinner from '../map/MapLoadingSpinner.svelte';
-
+	
 	export let selectedPOI: ISelectedPOIType | null = null;
 	let video: IVideoType;
 
 	let loadingVideo: boolean = false;
 	let processedVideoUrl: string = '';
-
-	// videoArray = await getVideosFromGpsData(tempGpsData);
-
-	onMount(async () => {
-		if (processedVideoUrl === '') {
-			await updateVideoUrl();
-		}
-	});
-
-
 	const updateVideoUrl = async () => {
 		try {
+
 			if (!selectedPOI) return;
 			loadingVideo = true;
 			
-			const url = `${PUBLIC_GCP_BUCKET_URL}/${selectedPOI.data.DeviceId}/${selectedPOI.data.DeviceId}-${selectedPOI.data.EventId}.mp4`;
-			const useGCP = false;
+			const useGCP = true;
 			if (useGCP) {
-				processedVideoUrl = url;
+				processedVideoUrl =  `${PUBLIC_GCP_BUCKET_URL}/${selectedPOI.data.DeviceId}/${selectedPOI.data.DeviceId}-${selectedPOI.data.EventId}.mp4`;
 			} else {
 				video = await getVideo(selectedPOI.data);
 				processedVideoUrl = video.videoUrl;
@@ -60,7 +45,7 @@
 				><track src="captions_en.vtt" kind="captions" srclang="en" label="english_captions" />
 			</video>
 			{#if loadingVideo}
-				<MapLoadingSpinner />
+				<LoadingSpinner />
 			{/if}
 		</div>
 	{:else}

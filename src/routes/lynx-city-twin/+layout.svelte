@@ -1,7 +1,7 @@
 <script>
 
-	import BottomFooter from '$lib/components/BottomFooter.svelte';
-	import Navbar from '$lib/components/Navbar.svelte';
+	import Footer from '$lib/components/Footer.svelte';
+	import Header from '$lib/components/Header.svelte';
 	import { fade } from 'svelte/transition';
 	import '../../styles/style.css';
 </script>
@@ -9,9 +9,9 @@
 
 
 <div class="app" transition:fade>
-	<Navbar />
+	<Header />
 	<slot />
 
 	<div class="bg-dark py-8" />
-	<BottomFooter />
+	<Footer />
 </div>

@@ -57,12 +57,14 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
       const dateTime = rawData.dateTime || uuidv4();
       const dataType = rawData.dataType || "LineString";
       const hasFilter = rawData.hasFilter || true;
+      const dataSourceName = rawData.dataSourceName || deviceId;
       //* Create Geojson feature collection
       const geoJson: IGeojsonType = {
         type: 'FeatureCollection',
         dataName,
         dateTime,
         dataType,
+        dataSourceName,
         hasFilter,
         features: [],
       };
@@ -110,12 +112,15 @@ export const rawGPSDataToGeojsonData = (rawData: any, name = 'General', geojsonD
     const dateTime = rawData.dateTime || uuidv4();
     const dataType = rawData.dataType || geojsonDataType;
     const hasFilter = rawData.hasFilter || false;
+    const dataSourceName = rawData.dataSourceName || 'General';
+
     //* Create Geojson feature collection
     const geoJson: IGeojsonType = {
       type: 'FeatureCollection',
       dataName,
       dateTime,
       dataType,
+      dataSourceName,
       hasFilter,
       features: [],
     };
@@ -125,7 +130,6 @@ export const rawGPSDataToGeojsonData = (rawData: any, name = 'General', geojsonD
     //* For every bigquery row create a GEOJSON GPS element
     for (const gpsElement of rawData.features) {
 
-      console.log(gpsElement)
       let coordinates = gpsElement.geometry.coordinates;
       const properties = gpsElement.properties;
       properties.Size = 1;

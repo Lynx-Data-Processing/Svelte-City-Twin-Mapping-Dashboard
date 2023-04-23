@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ISelectedPOIType, IVideoType } from '$lib/types/eventTypes';
+	import type { ISelectedPOIType } from '$lib/types/eventTypes';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ILayerListElementType, IMapDetailsType } from '$lib/types/mapTypes';
 	import type { IMenuComponentsType } from '$lib/types/types';
@@ -12,9 +12,7 @@
 	import {
 		PUBLIC_MAPBOX_KEY,
 		PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
-		PUBLIC_PLANNING_LINE_URL,
 		PUBLIC_PLANNING_POINT_URL,
-		PUBLIC_SIDEWALK_POLYGON_URL,
 		PUBLIC_TREES_URL
 	} from '$env/static/public';
 
@@ -40,8 +38,8 @@
 	export let selectedPolygon = null;
 	export let mapStyle: string;
 	export let mapDetails: IMapDetailsType;
-	export let selectedPOI: ISelectedPOIType | null;
-	export let selectedMenu: IMenuComponentsType | null;
+	export let updateSelectedPOI: (selectedPOI: ISelectedPOIType) => void;
+	export let selectedMenu: IMenuComponentsType;
 	export let gpsData: any;
 
 	let mapboxMap: any = null;
@@ -67,7 +65,7 @@
 		}
 	};
 
-	const addLayerListElementToLayerList = (layerListElement: ILayerListElementType): ILayerListElementType => {
+	const addLayerListElementToLayerList = (layerListElement: ILayerListElementType) => {
 		let tempLayerList = layerList;
 		const hasElement = checkIfElementExists(tempLayerList, 'layerName', layerListElement.layerName);
 		if (hasElement) {
@@ -75,7 +73,6 @@
 		}
 		tempLayerList.push(layerListElement);
 		layerList = tempLayerList;
-		return layerListElement;
 	};
 
 	const fetchDataFromAPIAndCreateLayer = async (
@@ -181,7 +178,8 @@
 			});
 
 			mapboxMap.on('click', layerElement.layerName, async (e: any) => {
-				selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
+				
+				updateSelectedPOI({ lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties });
 
 				smallPopup
 					.setLngLat(e.lngLat)
@@ -239,7 +237,7 @@
 			mapboxMap.moveLayer(layerElement.layerName);
 
 			mapboxMap.on('click', layerElement.layerName, async (e: any) => {
-				selectedPOI = { lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties };
+				updateSelectedPOI({ lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties });
 
 				smallPopup
 					.setLngLat(e.lngLat)
@@ -306,8 +304,7 @@
 		if (!mapboxMap || !gpsData.length) return;
 
 		gpsData.forEach((rawGpsElement: IGeojsonType) => {
-			const { dataName, dataType, hasFilter } = rawGpsElement;
-			const dataSourceName = `${dataName}Source`;
+			const { dataName, dataType, hasFilter, dataSourceName } = rawGpsElement;
 
 			const layerLisElement = createLayerListElement(
 				dataName,

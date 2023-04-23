@@ -13,23 +13,6 @@
 }
 
 
-.map-state {
-
-  color: white;
-  opacity: 0.9;
-  display: grid;
-  place-items: center;
-  height: 100%;
-  width: 100%;
-
-  &-loading {
-    background-color: white
-  }
-
-  &-error {
-    background-color: $error-color;
-  }
-}
 
 
 

@@ -2,7 +2,7 @@
 	import type { IDateTimeDictionaryType } from '$lib/types/types';
 
 	export let dateTimeDictionary: IDateTimeDictionaryType;
-	export let fetchEventsData: Function;
+	export let fetchEventsData: () => void;
 
 	let isEndDateBeforeStartDate = false;
 	function checkEndDateBeforeStartDate() {

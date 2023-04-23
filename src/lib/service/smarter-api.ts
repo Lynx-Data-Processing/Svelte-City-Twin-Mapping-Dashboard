@@ -174,7 +174,7 @@ export async function callAndProcessAPI(dateTimeDictionary: IDateTimeDictionaryT
 
   const results = [];
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 5; i++) {
     try {
       const response = await axios.get(`${baseUrl}?${params.toString()}`);
       const eventList = response.data.eventList;
