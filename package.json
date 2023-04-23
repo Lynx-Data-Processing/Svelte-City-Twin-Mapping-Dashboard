@@ -63,7 +63,7 @@
         "@sveltejs/adapter-auto": "^2.0.0",
         "@types/grecaptcha": "^3.0.4",
         "install": "^0.13.0",
-        "mapbox-gl": "^2.11.0",
+        "mapbox-gl": "^2.14.1",
         "npm": "^9.6.0",
         "svelte-range-slider-pips": "^2.1.0"
     }

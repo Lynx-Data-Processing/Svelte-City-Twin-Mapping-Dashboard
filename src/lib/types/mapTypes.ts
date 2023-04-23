@@ -29,5 +29,6 @@ export interface ILayerListElementType  {
     initialCoordinates: number[],
     color: string,
     data: any,
+
 }
 

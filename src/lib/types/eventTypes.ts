@@ -1,3 +1,17 @@
+export interface ISensorData {
+    eventSource: string;
+    eventTimestamp: number;
+    latitude: number;
+    longitude: number;
+    altitude: number;
+  }
+  
+  export interface ISensorReading {
+    occurrenceTime: number;
+    sensorData: ISensorData;
+  }
+  
+
 
 export interface IVideoType {
     eventId: number

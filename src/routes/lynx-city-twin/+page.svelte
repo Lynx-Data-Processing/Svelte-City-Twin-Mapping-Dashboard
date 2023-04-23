@@ -19,9 +19,8 @@
 	import StreetView from '$lib/components/menu/StreetView.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { getSmarterAiEvents } from '$lib/service/smarter-api';
-	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
-	import { rawSmarterAIGPSDataToGeojson } from '$lib/utils/geojson/geojson-utils';
-	import { getGPSDataForEachEvent } from '$lib/utils/geojson/gpsData-utils';
+	import type {IGeojsonType, IGeojsonDataType } from '$lib/types/geojsonTypes';
+	import { getSmarterAiGPS } from '$lib/utils/geojson/geojson-utils';
 	import { onMount } from 'svelte';
 
 	//* Set Initial Map Details
@@ -53,8 +52,8 @@
 	let selectedMenu: IMenuComponentsType = components[1];
 	let isLoading = false;
 	let isError = false;
-	let gpsData: any[] = [];
-
+	
+	let gpsData: IGeojsonType[] = [];
 	let eventList: IEventType[] = [];
 
 	const updateMapCenter = (
@@ -87,26 +86,15 @@
 
 		try {
 			// Get all the events from the smarter ai api
-			const rawEventList = await getSmarterAiEvents(dateTimeDictionary);
-			if (!rawEventList || !rawEventList.length) return;
+			const tempEventList = await getSmarterAiEvents(dateTimeDictionary);
+			if (!tempEventList || !tempEventList.length) return;
 
-			// Get all the GPS data from each event
-			const tempGPSList = await getGPSDataForEachEvent(rawEventList);
-			if (!tempGPSList) return;
-			
+			console.log(tempEventList);
 
-			const tempGpsData = rawSmarterAIGPSDataToGeojson(tempGPSList);
-			if (!tempGpsData) return;
-			gpsData = tempGpsData;
-
-			if(tempGpsData[0].dataType === "Point"){
-				updateMapCenter(gpsData[0].features[0].geometry.coordinates);
-			}
-			else{
-				updateMapCenter(gpsData[0].features[0].geometry.coordinates[0]);
-			}
-
-			
+			const tempGpsData = await getSmarterAiGPS(tempEventList);
+			gpsData =  tempGpsData
+			eventList = tempEventList
+	
 		} catch (error) {
 			alert(error);
 			isError = true;

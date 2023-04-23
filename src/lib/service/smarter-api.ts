@@ -1,8 +1,8 @@
 import { dateTimeToMillisecondUnix } from '../utils/date-format';
 /* eslint-disable no-console */
 
-import { PUBLIC_API_KEY, PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL, PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL, PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID, PUBLIC_TENANT_ID } from '$env/static/public';
-import type { IMediaRecordingType, IVideoType } from '$lib/types/eventTypes';
+import { PUBLIC_API_SMARTER_AI_SENSOR_REPORT_URL, PUBLIC_API_KEY, PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL, PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL, PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID, PUBLIC_TENANT_ID } from '$env/static/public';
+import type { IEventType, IMediaRecordingType, IVideoType } from '$lib/types/eventTypes';
 import type { IDateTimeDictionaryType } from '$lib/types/types';
 import axios from 'axios';
 
@@ -94,29 +94,9 @@ export const getVideo = async (gpsElement: any) => {
   }
 };
 
-export const getAllEvents = async (fromDateTime: string, toDateTime: string) => {
 
-  try {
-    let config = {
-      method: 'get',
-      url: `${PUBLIC_API_SMARTER_AI_EVENTS_URL}?secretToken=${PUBLIC_API_KEY}&pageSize=100&tenantId=${PUBLIC_TENANT_ID}&deviceId=CK20520033`,
-      headers: {}
-    };
-    const promise = await axios(config);
-    return promise;
-  } catch (error: any) {
-    if (error.response) {
-      return error.response.status;
-    } if (error.request) {
-      return error.request;
-    }
-    return error.message;
-  }
-}
-
-
-
-export const getGeojsonDataFromFile = async (url: string) => {
+export const getSmarterAiSensorData = async (event: IEventType ,fromDateTime: number, toDateTime: number) => {
+  const url = `${PUBLIC_API_SMARTER_AI_SENSOR_REPORT_URL}?secretToken=${PUBLIC_API_KEY}&tenantId=${PUBLIC_TENANT_ID}&endpointId=${event.endpointId}&pageSize=20&continuationToken=&fromDate=${fromDateTime}&toDate=${toDateTime}&sensorReportType=GEO_LOCATION`
   try {
     const config = {
       method: 'get',
@@ -174,7 +154,7 @@ export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionary
 
   const results = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 1; i++) {
     try {
       const response = await axios.get(`${baseUrl}?${params.toString()}`);
       const eventList = response.data.eventList;

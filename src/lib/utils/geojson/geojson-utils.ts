@@ -1,8 +1,10 @@
+import { getSmarterAiSensorData } from './../../service/smarter-api';
 import { v4 as uuidv4 } from 'uuid';
 
-import type { IGeojsonData, IGeojsonDataType, IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
+import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
 
 import { getSpeed, getVehicleSpeedColor } from '$lib/utils/vehicle-speed';
+import type { IEventType, ISensorData, ISensorReading } from '$lib/types/eventTypes';
 
 //* Example
 //* { 'AlexDashcam' : [{point1}, {point2}, {point3}], 'AmirDashcam: [{point1}, {point2}, {point3}]}
@@ -18,47 +20,99 @@ const groupByKey = (array: any[], key: any) => {
 };
 
 
-function generateCoordinates(lat: number, lng: number, heading: number): number[][] {
-  const d = 5; // Distance along the line in meters
-  const brng = (90 - heading) * Math.PI / 180; // Convert heading to radians
 
-  const result = [[lng, lat]];
-  if (heading === 0) {
-    for (let i = 0; i < 4; i++) {
-      lng = lng + (d * (Math.random() - 0.5)) / (111.319 * 1000);
-      lat = lat + (d * (Math.random() - 0.5)) / (111.132 * 1000);
+function parseSensorData(sensorDataString: string): ISensorData {
+  const lines = sensorDataString.trim().split("\n");
+  const eventSource = lines[0].split("=")[1];
+  const eventTimestamp = parseInt(lines[1].split("=")[1]);
+  const latitude = parseFloat(lines[2].split("=")[1]);
+  const longitude = parseFloat(lines[3].split("=")[1]);
+  const altitude = parseFloat(lines[4].split("=")[1]);
 
-      result.push([lng, lat]);
-    }
-  } else {
-    for (let i = 0; i < 4; i++) {
-      lng = lng + (d * Math.cos(brng)) / (111.319 * 1000);
-      lat = lat + (d * Math.sin(brng)) / (111.132 * 1000);
+  return {
+    eventSource,
+    eventTimestamp,
+    latitude,
+    longitude,
+    altitude,
+  };
+}
 
-      result.push([lng, lat]);
-    }
+function parseSensorReadings(jsonData: { data: any[] }): ISensorReading[] {
+  const sensorReadings: ISensorReading[] = [];
+  for (const obj of jsonData.data) {
+    const occurrenceTime = obj.occurrenceTime;
+    const sensorData = parseSensorData(obj.sensorData);
+    const sensorReading = { occurrenceTime, sensorData };
+    sensorReadings.push(sensorReading);
   }
+  return sensorReadings;
+}
 
-  return result;
+const getCoordinatesFromSensorReadings = (sensorReadings: ISensorReading[]) => {
+  const coordinates = [];
+  for (const sensorReading of sensorReadings) {
+    coordinates.push([sensorReading.sensorData.longitude, sensorReading.sensorData.latitude]);
+  }
+  return coordinates;
+}
+
+
+const getSpeedFromSensorReadings = (sensorReadings: ISensorReading[]) => {
+  const speeds = [];
+  for (const sensorReading of sensorReadings) {
+    speeds.push(getSpeed(sensorReading.sensorData));
+  }
+  return speeds;
+}
+
+const generateRandomSpeedForEachSensorReading = (sensorReadings: ISensorReading[]) => {
+  const speeds = [];
+  for (const sensorReading of sensorReadings) {
+    speeds.push(Math.floor(Math.random() *  50));
+  }
+  return speeds;
+}
+
+const createLinearColorProgressUsingSpeed = (speeds: number[]) => {
+  const colorProgress : any[] = ['interpolate', ['linear'], ['line-progress']];
+
+  let speedIndex = 0;
+ 
+  for (const speed of speeds) {
+    colorProgress.push(speedIndex/speeds.length);
+    colorProgress.push(getVehicleSpeedColor(speed));
+    speedIndex += 1;
+    
+  }
+  return colorProgress;
+
+}
+
+const getAverageSpeed = (speeds: number[]) => {
+  let totalSpeed = 0;
+  for (const speed of speeds) {
+    totalSpeed += speed;
+  }
+  return totalSpeed/speeds.length;
 }
 
 
 //* To use the data on mapbox, the data must be in GEOJSON format
-//* Because all the data are points, we'll be creating point sets
-export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
-  const groupedArray = groupByKey(rawData, 'deviceId');
-  const geoJsonArray = [];
+export const getSmarterAiGPS = async (eventList: IEventType[]) => {
+  const groupedEvents = groupByKey(eventList, 'deviceId');
+  let geoJsonArray: IGeojsonType[] = [];
 
-  for (const [deviceId, gpsElement] of Object.entries(groupedArray)) {
+  for (const [deviceId, events] of Object.entries(groupedEvents)) {
     try {
 
       //* Set initial Geojson element details
-      const dataName = rawData.dataName || `GPS - ${deviceId}`;
-      const dateTime = rawData.dateTime || uuidv4();
-      const dataType = rawData.dataType || "Point";
-      const hasFilter = rawData.hasFilter || true;
-      const dataSourceName = rawData.dataSourceName || deviceId;
-      //* Create Geojson feature collection
+      const dataName = `GPS - ${deviceId}`;
+      const dateTime = uuidv4();
+      const dataType: IGeojsonDataType = "LineString";
+      const hasFilter = false;
+      const dataSourceName = deviceId;
+
       const geoJson: IGeojsonType = {
         type: 'FeatureCollection',
         dataName,
@@ -69,24 +123,33 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
         features: [],
       };
 
-      for (const point of (gpsElement as any)) {
-        if (point.GEO_LOCATION) {
-          let coordinates = [point.GEO_LOCATION.longitude, point.GEO_LOCATION.latitude]
-          const properties = point.GEO_LOCATION;
-          properties.EventId = point.id;
-          properties.DeviceId = point.deviceId;
-          properties.Speed = getSpeed(properties);
-          properties.EndpointId = point.endpointId;
-          properties.StartTime = point.recordingStartTimestamp;
-          properties.EndTime = point.recordingEndTimestamp;
-          properties.Color = getVehicleSpeedColor(getSpeed(properties));
+      // Loop through the events and get the GPS data for each event
+      for (const event of (events as IEventType[])) {
+
+        const response = await getSmarterAiSensorData(event, event.recordingStartTimestamp, event.recordingEndTimestamp);
+        if (response.status === 200 && response.data) {
+
+          const sensorData = parseSensorReadings(response.data);
+          const coordinates = getCoordinatesFromSensorReadings(sensorData);
+          const speeds = generateRandomSpeedForEachSensorReading(sensorData);
+          let properties = {
+            EventId: event.id,
+            DeviceId: event.deviceId,
+            EndpointId: event.endpointId,
+            StartTime: event.recordingStartTimestamp,
+            EndTime: event.recordingEndTimestamp,
+            Sensor: sensorData,
+            Speeds: speeds,
+            Color: getVehicleSpeedColor(getAverageSpeed(speeds)),
+            ColorLineGradient: createLinearColorProgressUsingSpeed(speeds),
+            Coordinates: coordinates
+          };
 
           //* Create the final feature config and push it to the feature array
-          const feature: IGeojsonFeatureType = { type: 'Feature', geometry: { type: "Point", coordinates }, properties };
+          const feature: IGeojsonFeatureType = { type: 'Feature', geometry: { type: "LineString", coordinates }, properties };
           geoJson.features.push(feature);
 
         }
-
       }
 
       //* Push the geojson element to the array if it has features
@@ -101,47 +164,3 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
   return geoJsonArray;
 };
 
-
-export const rawGPSDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType = "Point", color = 'Blue') => {
-  try {
-
-    rawData = JSON.parse(rawData)
-    rawData = rawData;
-    //* Set initial Geojson element details
-    const dataName = rawData.dataName || name;
-    const dateTime = rawData.dateTime || uuidv4();
-    const dataType = rawData.dataType || geojsonDataType;
-    const hasFilter = rawData.hasFilter || false;
-    const dataSourceName = rawData.dataSourceName || 'General';
-
-    //* Create Geojson feature collection
-    const geoJson: IGeojsonType = {
-      type: 'FeatureCollection',
-      dataName,
-      dateTime,
-      dataType,
-      dataSourceName,
-      hasFilter,
-      features: [],
-    };
-
-    //* For every bigquery row create a GEOJSON GPS element
-    for (const gpsElement of rawData.features) {
-
-      let coordinates = gpsElement.geometry.coordinates;
-      const properties = gpsElement.properties;
-      properties.Size = 1;
-      properties.Color = color;
-
-      //* Create the final feature config and add the feature id for the ability to hover
-      const feature: IGeojsonFeatureType = {
-        type: 'Feature', geometry: { type: geojsonDataType, coordinates }, properties,
-      };
-      geoJson.features.push(feature);
-    }
-    return geoJson;
-  }
-  catch (err) {
-    console.log(err);
-  }
-};

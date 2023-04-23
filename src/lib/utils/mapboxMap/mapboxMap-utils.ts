@@ -42,6 +42,7 @@ export const addMapSource = (layerListElement: ILayerListElementType, map: any) 
         if (!sourceExists) {
             map.addSource(layerListElement.sourceName, {
                 type: 'geojson',
+                lineMetrics: true,
                 data: layerListElement.data
             });
         } else {
@@ -59,7 +60,7 @@ export const createLayerListElement = (
     faIcon: string,
     hasFilter: boolean, 
     cleanData: any,
-    dataColor?: string,
+    color?: string,
 ): ILayerListElementType => {
     const element: ILayerListElementType = {
         id: Math.floor(Math.random() * 100),
@@ -70,8 +71,8 @@ export const createLayerListElement = (
         hasFilter: hasFilter,
         sourceName: sourceName,
         initialCoordinates: getInitialCoordinates(type, cleanData),
-        color: dataColor ? dataColor : 'red',
-        data: cleanData
+        color: color || 'red',
+        data: cleanData,
     };
 
     return element;

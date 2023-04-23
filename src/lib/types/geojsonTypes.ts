@@ -30,13 +30,13 @@ export interface IGeojsonType {
 }
 
 export interface IGeometryType {
-    type: string,
+    type: IGeojsonDataType,
     coordinates: number[] | number[][] | number[][][] | number[][][][]
 }
 
 export interface IGeojsonFeatureType {
     type: string,
     geometry: IGeometryType,
-    properties: object
+    properties: object 
 
 };

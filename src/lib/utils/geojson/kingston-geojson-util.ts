@@ -1,4 +1,4 @@
-import type { IGeojsonType } from '$lib/types/geojsonTypes';
+import type { IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
 import type { IGeojsonDataType } from './../../types/geojsonTypes';
 
 const getCoordinates = (coordinates: any) => {
@@ -16,7 +16,7 @@ const getColor = (color: string | null) => {
   return color;
 };
 
-export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType = "Point", color: string | null = null, time = '') => {
+export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType : IGeojsonDataType = "Point", color: string | null = null, time = '') => {
   try {
     //* Set initial Geojson element details
     const dataName = rawData.dataName || name;
@@ -46,7 +46,7 @@ export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geo
         properties.Color = getColor(color);
 
         //* Create the final feature config and add the feature id for the ability to hover
-        const feature = {
+        const feature : IGeojsonFeatureType = {
           type: 'Feature',
           geometry: { type: geojsonDataType, coordinates },
           properties,

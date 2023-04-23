@@ -21,10 +21,7 @@
 
 	import mapboxgl from 'mapbox-gl';
 
-	import {
-		addMapSource,
-		createLayerListElement
-	} from '$lib/utils/mapboxMap/mapboxMap-utils';
+	import { addMapSource, createLayerListElement } from '$lib/utils/mapboxMap/mapboxMap-utils';
 
 	import { checkIfElementExists, removeObjectWhereValueEqualsString } from '$lib/utils/filter-data';
 	import {
@@ -69,7 +66,11 @@
 		let tempLayerList = layerList;
 		const hasElement = checkIfElementExists(tempLayerList, 'layerName', layerListElement.layerName);
 		if (hasElement) {
-			tempLayerList = removeObjectWhereValueEqualsString(tempLayerList, 'layerName', layerListElement.layerName);
+			tempLayerList = removeObjectWhereValueEqualsString(
+				tempLayerList,
+				'layerName',
+				layerListElement.layerName
+			);
 		}
 		tempLayerList.push(layerListElement);
 		layerList = tempLayerList;
@@ -79,10 +80,10 @@
 		url: string,
 		layerName: string,
 		showOnLoad = false,
-		dataType : IGeojsonDataType = "Point",
+		dataType: IGeojsonDataType = 'Point',
 		dataIcon = 'fa-border-all',
 		hasFilter = false,
-		dataColor?: string,
+		dataColor?: string
 	) => {
 		try {
 			const response = await axiosCacheGetUtility(url);
@@ -101,7 +102,6 @@
 					hasFilter,
 					cleanData,
 					dataColor
-				
 				);
 				removeLayerAndSource(layerLisElement.layerName, layerLisElement.sourceName);
 				addLayerListElementToLayerList(layerLisElement);
@@ -117,7 +117,7 @@
 		const buildingLayerListElement: ILayerListElementType = createLayerListElement(
 			'3D-Buildings',
 			'composite',
-			"Feature",
+			'Feature',
 			true,
 			'fa-building',
 			false,
@@ -129,7 +129,7 @@
 			PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
 			'Neighborhoods',
 			false,
-			"Polygon",
+			'Polygon',
 			'fa-border-all',
 			false
 		);
@@ -137,17 +137,17 @@
 			PUBLIC_TREES_URL,
 			'Trees',
 			true,
-			"Point",
+			'Point',
 			'fa-border-all',
 			false,
-			'Green',
+			'Green'
 		);
 
 		await fetchDataFromAPIAndCreateLayer(
 			PUBLIC_PLANNING_POINT_URL,
 			'Road Construction (Point)',
 			false,
-			"Point",
+			'Point',
 			'fa-road',
 			false,
 			'#7B48FF'
@@ -163,6 +163,7 @@
 		color = ['red']
 	) => {
 		try {
+		
 			mapboxMap.addLayer({
 				id: layerElement.layerName,
 				type: 'line',
@@ -173,12 +174,12 @@
 				},
 				paint: {
 					'line-color': color,
-					'line-width': lineWidth
+					'line-width': lineWidth,
+					
 				}
 			});
 
 			mapboxMap.on('click', layerElement.layerName, async (e: any) => {
-				
 				updateSelectedPOI({ lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties });
 
 				smallPopup
@@ -265,25 +266,31 @@
 
 	// ------------------ Map Layer functions ------------------ //
 	const addLayerListElementSourceAndLayer = (layerListElement: ILayerListElementType) => {
-	
 		//Add the buildings layer
 		if (layerListElement.layerName.includes('Buildings')) {
 			addBuildingLayer(mapboxMap, layerListElement);
 		}
 
-		if (layerListElement.type === "Polygon") {
+		if (layerListElement.type === 'Polygon') {
 			addMapSource(layerListElement, mapboxMap);
 			addPolygonLayer(mapboxMap, smallPopup, layerListElement, 0.5, ['get', 'Color']);
 		}
 
-		if (layerListElement.type === "Point") {
+		if (layerListElement.type === 'Point') {
 			addMapSource(layerListElement, mapboxMap);
 			addPointLayer(mapboxMap, smallPopup, layerListElement, 'Size', ['get', 'Color']);
 		}
 
-		if (layerListElement.type === "LineString") {
+		if (layerListElement.type === 'LineString') {
 			addMapSource(layerListElement, mapboxMap);
-			addLineLayer(mapboxMap, smallPopup, layerListElement, 8, ['get', 'Color']);
+			addLineLayer(
+				mapboxMap,
+				smallPopup,
+				layerListElement,
+				8,
+				['get', 'Color']
+				
+			);
 		}
 	};
 
@@ -316,7 +323,7 @@
 				rawGpsElement,
 				'Random'
 			);
-			removeLayerAndSource(layerLisElement.layerName, layerLisElement.sourceName)
+			removeLayerAndSource(layerLisElement.layerName, layerLisElement.sourceName);
 			addLayerListElementToLayerList(layerLisElement);
 
 			addLayerListElementSourceAndLayer(layerLisElement);
