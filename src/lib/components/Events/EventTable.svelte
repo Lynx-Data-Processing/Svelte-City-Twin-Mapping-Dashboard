@@ -3,6 +3,7 @@
 	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { getDevicon } from '$lib/utils/devicon-icons';
+	import { exportJSONToFile } from '$lib/utils/download-utils';
 
 	const PROGRAMMING_TOOLS = ['googlecloud'];
 	export let updateMapCenter: Function;
@@ -13,23 +14,7 @@
 	}
 
 
-	function exportJSONToFile(jsonData: object, filename: string) {
-		const dataStr = JSON.stringify(jsonData, null, 2);
-		const dataBlob = new Blob([dataStr], { type: 'application/json;charset=utf-8' });
-		const url = URL.createObjectURL(dataBlob);
-
-		const link = document.createElement('a');
-		link.href = url;
-		link.download = filename;
-		link.style.display = 'none';
-
-		document.body.appendChild(link);
-		link.click();
-
-		// Remove the link and revoke the object URL
-		document.body.removeChild(link);
-		URL.revokeObjectURL(url);
-	}
+	
 </script>
 
 <table class="table w-full ">

@@ -9,7 +9,7 @@ export interface IFooterElementType {
     id: number,
     name: string,
     url: string,
-    icon: string | null
+    icon?: string
 }
 
 
@@ -17,6 +17,8 @@ export interface IFooterElementType {
 export interface IMenuComponentsType  {
     id: number,
     title: string,
+    component: any,
+    props: any,
     icon: string,
     url?: string,
 }

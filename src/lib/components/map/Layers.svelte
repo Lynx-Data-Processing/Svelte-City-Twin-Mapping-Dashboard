@@ -1,6 +1,5 @@
 <script lang="ts">
 	import SearchBar from '$lib/components/SearchBar.svelte';
-	import type { IFontAwesomeIconGivenGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 
 	export let updateMapCenter: Function;
@@ -77,7 +76,7 @@
 						}}
 						class="btn btn-black-outline w-16 btn-text-center"
 						><i
-							class={`${layer.type} icon-color`}
+							class={`fa-solid ${layer.icon} icon-color`}
 							style={`--sent-color: ${layer.color}`}
 						/></button
 					>

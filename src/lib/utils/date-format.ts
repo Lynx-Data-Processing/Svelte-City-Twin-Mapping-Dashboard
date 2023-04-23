@@ -1,7 +1,7 @@
-import { TimeStampFormatEnum } from "../types/enums";
+import type { IDateTimeFormat } from "../types/dateTimeTypes";
 
 
-export const formatDateTime = (timeStamp: number, dateFormat: TimeStampFormatEnum) => {
+export const formatDateTime = (timeStamp: number, dateFormat: IDateTimeFormat) => {
     try {
         // Check if timeStamp is null or less than 0
         if (timeStamp < 0) { throw new Error('timeStamp cannot be negative.') }
@@ -29,17 +29,17 @@ export const formatDateTime = (timeStamp: number, dateFormat: TimeStampFormatEnu
 
         // Slice date-time string according to dateFormat
         switch (dateFormat) {
-            case (TimeStampFormatEnum.YYYY_MM_DD_hh_mm_ss):
+            case ("yyyy-mm-dd hh:mm:ss"):
                 return dateComplex;
-            case (TimeStampFormatEnum.YY_MM_DD_hh_mm_ss):
+            case ("yy-mm-dd hh:mm:ss"):
                 return dateComplex.slice(2,);
-            case (TimeStampFormatEnum.YYYY_MM_DD_hh_mm):
+            case ("yyyy-mm-dd hh:mm"):
                 return dateComplex.slice(0, -3);
-            case (TimeStampFormatEnum.YY_MM_DD_hh_mm):
+            case ("yy-mm-dd hh:mm"):
                 return dateComplex.slice(2, -3);
-            case (TimeStampFormatEnum.DateFull):
+            case ("Day Month Date Year hh:mm:ss UTC"):
                 return dateClean;
-            case (TimeStampFormatEnum.DateSimple):
+            case ("Month Date Year hh:mm"):
                 return dateClean.slice(4, -7);
             default:
                 throw new Error('Invalid dateFormat.');

@@ -43,23 +43,20 @@
 		startDateTime: '2022-10-23T00:00',
 		endDateTime: '2022-12-23T00:00'
 	};
-	let menuComponents: IMenuComponentsType[] = [
-		{ id: 0, title: 'Only Map', icon: 'fa-times' },
-		{ id: 1, title: 'Search Data', icon: 'fa-database' },
-		{ id: 2, title: 'Street View', icon: 'fa-road' },
-		{ id: 3, title: 'Video Player', icon: 'fa-video' },
-		{ id: 4, title: 'About', icon: 'fa-info-circle' }
-	];
-	let selectedMenu: IMenuComponentsType = menuComponents[1];
+
 	let isLoading = false;
 	let isError = false;
 	let gpsData: any[] = [];
 
 	let eventList: IEventType[] = [];
 
-	const updateMapCenter = (coordinates: number[], dataType?: IGeojsonDataType, zoomLevel?: number) => {
+	const updateMapCenter = (
+		coordinates: number[],
+		dataType?: IGeojsonDataType,
+		zoomLevel?: number
+	) => {
 		let updatedZoomLevel = zoomLevel;
-		if (dataType === "Point" || dataType === "LineString") {
+		if (dataType === 'Point' || dataType === 'LineString') {
 			updatedZoomLevel = 19;
 		} else {
 			updatedZoomLevel = 15;
@@ -93,7 +90,6 @@
 			if (!tempGpsData) return;
 			gpsData = tempGpsData;
 			updateMapCenter(gpsData[0].features[0].geometry.coordinates[0]);
-			
 		} catch (error) {
 			alert(error);
 			isError = true;
@@ -106,11 +102,60 @@
 		fetchEventsData();
 	});
 
+	let components: IMenuComponentsType[] = [
+    {
+      id: 0,
+      title: 'Only Map',
+      component: Layers,
+      props: {
+        layerList: layerList,
+        updateMapCenter: updateMapCenter
+      },
+      icon: 'fa-times'
+    },
+    {
+      id: 1,
+      title: 'Search Data',
+      component: SearchData,
+      props: {
+        dateTimeDictionary: dateTimeDictionary,
+        fetchEventsData: fetchEventsData
+      },
+      icon: 'fa-database'
+    },
+    {
+      id: 2,
+      title: 'Street View',
+      component: StreetView,
+      props: {
+        selectedPOI: selectedPOI
+      },
+      icon: 'fa-road'
+    },
+    {
+      id: 3,
+      title: 'Video Player',
+      component: SelectedVideo,
+      props: {
+        selectedPOI: selectedPOI
+      },
+      icon: 'fa-video'
+    },
+    {
+      id: 4,
+      title: 'About',
+      component: About,
+      props: {},
+      icon: 'fa-info-circle'
+    }
+  ];
+
+	let selectedMenu = components[1];
 </script>
 
 <svelte:head><title>Lynx City Twin</title></svelte:head>
 
-<SelectionMenu bind:selectedMenu bind:menuComponents />
+<SelectionMenu bind:selectedMenu bind:components />
 <main>
 	<div class="grid grid-cols-1  2xl:grid-cols-12">
 		{#if selectedMenu.id != 0}
@@ -118,28 +163,22 @@
 				<Card title="Layers" showOnLoad={true}>
 					<Layers bind:layerList {updateMapCenter} />
 				</Card>
-				{#if selectedMenu.id === 1}
-					<Card title="Search Data" showOnLoad={true}>
-						<SearchData bind:dateTimeDictionary {fetchEventsData} />
-					</Card>
-				{:else if selectedMenu.id === 2}
-					<Card title="Street View">
-						<StreetView bind:selectedPOI />
-					</Card>
-				{:else if selectedMenu.id === 3}
-					<Card title="Video Player">
-						<SelectedVideo bind:selectedPOI />
-					</Card>
-				{:else if selectedMenu.id === 4}
-					<Card title="About">
-						<About />
-					</Card>
-				{/if}
+				{#each components as component}
+					{#if component.id === selectedMenu.id}
+						<Card title={component.title}>
+							<svelte:component this={component.component} {...component.props} />
+						</Card>
+					{/if}
+				{/each}
 			</div>
 		{/if}
 
-		<div class={`col-span-1   ${selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'}  relative`}>
-			<MapboxMap	
+		<div
+			class={`col-span-1   ${
+				selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'
+			}  relative`}
+		>
+			<MapboxMap
 				bind:mapDetails
 				bind:gpsData
 				bind:layerList
@@ -147,8 +186,6 @@
 				bind:selectedPOI
 				bind:selectedMenu
 			/>
-
-			<!-- <HighResMap /> -->
 
 			{#if isLoading === true}
 				<MapLoadingSpinner />
@@ -167,12 +204,12 @@
 			</div>
 		</div>
 	</div>
-</main>
 
-{#if eventList.length}
-	<div class="p-4">
-		<Card title="Recordings" width="w-full" disableToggle={true}>
-			<PaginatedTable bind:eventList {updateMapCenter} />
-		</Card>
-	</div>
-{/if}
+	{#if eventList.length}
+		<div class="p-4">
+			<Card title="Recordings" width="w-full" disableToggle={true}>
+				<PaginatedTable bind:eventList {updateMapCenter} />
+			</Card>
+		</div>
+	{/if}
+</main>

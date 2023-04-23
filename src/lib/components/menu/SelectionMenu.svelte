@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { IMenuComponentsType } from '$lib/types/types';
 	export let selectedMenu: IMenuComponentsType;
-	export let menuComponents: IMenuComponentsType[];
+	export let components: IMenuComponentsType[];
 
 	let isMenuOpen: boolean = true;
 	const toggleMenu = () => (isMenuOpen = !isMenuOpen);
@@ -14,7 +14,7 @@
 		</button>
 		<hr class="visible 2xl:hidden border-gray-300 my-2" />
 
-		{#each menuComponents as menuComponent}
+		{#each components as menuComponent}
 			{#if menuComponent.url}
 				<a class="btn  btn-dark-light " href={menuComponent.url} target="_blank" rel="noreferrer">
 					<i class="fa-solid {menuComponent.icon} " /><span>{menuComponent.title}</span>
