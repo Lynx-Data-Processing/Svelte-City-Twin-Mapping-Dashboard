@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { GeojsonEnum } from '$lib/types/enums';
 	import type { ISelectedPOIType, IVideoType } from '$lib/types/eventTypes';
-	import type { IGeojsonType } from '$lib/types/geosjonTypes';
+	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ILayerListElementType, IMapDetailsType } from '$lib/types/mapTypes';
 	import type { IMenuComponentsType } from '$lib/types/types';
 	import { onDestroy, onMount } from 'svelte';
@@ -83,10 +82,10 @@
 		url: string,
 		layerName: string,
 		showOnLoad = false,
-		dataType = GeojsonEnum.Point,
-		dataColor: string | null = null,
+		dataType : IGeojsonDataType = "Point",
 		dataIcon = 'fa-border-all',
-		hasFilter = false
+		hasFilter = false,
+		dataColor?: string,
 	) => {
 		try {
 			const response = await axiosCacheGetUtility(url);
@@ -103,8 +102,9 @@
 					showOnLoad,
 					dataIcon,
 					hasFilter,
-					dataColor,
-					cleanData
+					cleanData,
+					dataColor
+				
 				);
 				removeLayerAndSource(layerLisElement.layerName, layerLisElement.sourceName);
 				addLayerListElementToLayerList(layerLisElement);
@@ -120,12 +120,11 @@
 		const buildingLayerListElement: ILayerListElementType = createLayerListElement(
 			'3D-Buildings',
 			'composite',
-			GeojsonEnum.Feature,
+			"Feature",
 			true,
 			'fa-building',
 			false,
-			'Black',
-			null
+			'Black'
 		);
 		addLayerListElementToLayerList(buildingLayerListElement);
 
@@ -133,8 +132,7 @@
 			PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
 			'Neighborhoods',
 			false,
-			GeojsonEnum.Polygon,
-			null,
+			"Polygon",
 			'fa-border-all',
 			false
 		);
@@ -142,20 +140,20 @@
 			PUBLIC_TREES_URL,
 			'Trees',
 			true,
-			GeojsonEnum.Point,
-			'Green',
+			"Point",
 			'fa-border-all',
-			false
+			false,
+			'Green',
 		);
 
 		await fetchDataFromAPIAndCreateLayer(
 			PUBLIC_PLANNING_POINT_URL,
 			'Road Construction (Point)',
 			false,
-			GeojsonEnum.Point,
-			'#7B48FF',
+			"Point",
 			'fa-road',
-			false
+			false,
+			'#7B48FF'
 		);
 	};
 
@@ -275,17 +273,17 @@
 			addBuildingLayer(mapboxMap, layerListElement);
 		}
 
-		if (layerListElement.type === GeojsonEnum.Polygon) {
+		if (layerListElement.type === "Polygon") {
 			addMapSource(layerListElement, mapboxMap);
 			addPolygonLayer(mapboxMap, smallPopup, layerListElement, 0.5, ['get', 'Color']);
 		}
 
-		if (layerListElement.type === GeojsonEnum.Point) {
+		if (layerListElement.type === "Point") {
 			addMapSource(layerListElement, mapboxMap);
 			addPointLayer(mapboxMap, smallPopup, layerListElement, 'Size', ['get', 'Color']);
 		}
 
-		if (layerListElement.type === GeojsonEnum.LineString) {
+		if (layerListElement.type === "LineString") {
 			addMapSource(layerListElement, mapboxMap);
 			addLineLayer(mapboxMap, smallPopup, layerListElement, 8, ['get', 'Color']);
 		}
@@ -318,8 +316,8 @@
 				true,
 				'fa-road',
 				hasFilter,
-				'Random',
-				rawGpsElement
+				rawGpsElement,
+				'Random'
 			);
 			removeLayerAndSource(layerLisElement.layerName, layerLisElement.sourceName)
 			addLayerListElementToLayerList(layerLisElement);

@@ -19,8 +19,8 @@
 	import SpeedView from '$lib/components/menu/SpeedView.svelte';
 	import StreetView from '$lib/components/menu/StreetView.svelte';
 	import { callAndProcessAPI } from '$lib/service/smarter-api';
-	import { GeojsonEnum } from '$lib/types/enums';
-	import { rawSmarterAIGPSDataToGeojson } from '$lib/utils/geojson/geojson-utils.js';
+	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
+	import { rawSmarterAIGPSDataToGeojson } from '$lib/utils/geojson/geojson-utils';
 	import { getGPSSensorDataFromEventFiles } from '$lib/utils/geojson/gpsData-utils';
 	import { onMount } from 'svelte';
 
@@ -48,8 +48,7 @@
 		{ id: 1, title: 'Search Data', icon: 'fa-database' },
 		{ id: 2, title: 'Street View', icon: 'fa-road' },
 		{ id: 3, title: 'Video Player', icon: 'fa-video' },
-		{ id: 4, title: 'About', icon: 'fa-info-circle' },
-		{ id: 5, title: 'High Res Map', icon: 'fa-map', url: '/lynx-city-twin/arc' }
+		{ id: 4, title: 'About', icon: 'fa-info-circle' }
 	];
 	let selectedMenu: IMenuComponentsType = menuComponents[1];
 	let isLoading = false;
@@ -58,9 +57,9 @@
 
 	let eventList: IEventType[] = [];
 
-	const updateMapCenter = (coordinates: number[], dataType?: GeojsonEnum, zoomLevel?: number) => {
+	const updateMapCenter = (coordinates: number[], dataType?: IGeojsonDataType, zoomLevel?: number) => {
 		let updatedZoomLevel = zoomLevel;
-		if (dataType === GeojsonEnum.Point || dataType === GeojsonEnum.LineString) {
+		if (dataType === "Point" || dataType === "LineString") {
 			updatedZoomLevel = 19;
 		} else {
 			updatedZoomLevel = 15;

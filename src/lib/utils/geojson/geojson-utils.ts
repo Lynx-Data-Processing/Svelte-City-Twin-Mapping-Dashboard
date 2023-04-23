@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { GeojsonDataEnum, GeojsonEnum } from '$lib/types/enums';
-import type { IGeojsonFeatureType, IGeojsonType } from '$lib/types/geosjonTypes';
+import type { IGeojsonData, IGeojsonDataType, IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
 
 import { getSpeed, getVehicleSpeedColor } from '$lib/utils/vehicle-speed';
 
@@ -54,9 +53,9 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
     try {
 
       //* Set initial Geojson element details
-      const dataName = rawData.dataName || `${GeojsonDataEnum.GPS} - ${deviceId}`;
+      const dataName = rawData.dataName || `GPS - ${deviceId}`;
       const dateTime = rawData.dateTime || uuidv4();
-      const dataType = rawData.dataType || GeojsonEnum.LineString;
+      const dataType = rawData.dataType || "LineString";
       const hasFilter = rawData.hasFilter || true;
       //* Create Geojson feature collection
       const geoJson: IGeojsonType = {
@@ -81,7 +80,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
           properties.Color = getVehicleSpeedColor(getSpeed(properties));
 
           //* Create the final feature config and push it to the feature array
-          const feature: IGeojsonFeatureType = { type: 'Feature', geometry: { type: GeojsonEnum.LineString, coordinates }, properties };
+          const feature: IGeojsonFeatureType = { type: 'Feature', geometry: { type: "LineString", coordinates }, properties };
           geoJson.features.push(feature);
 
         }
@@ -101,7 +100,7 @@ export const rawSmarterAIGPSDataToGeojson = (rawData: any) => {
 };
 
 
-export const rawGPSDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType = GeojsonEnum.Point, color = 'Blue') => {
+export const rawGPSDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType = "Point", color = 'Blue') => {
   try {
 
     rawData = JSON.parse(rawData)

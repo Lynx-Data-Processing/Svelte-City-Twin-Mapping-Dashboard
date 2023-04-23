@@ -1,5 +1,5 @@
 
-import type { GeojsonEnum } from "./enums";
+import type { IGeojsonDataType } from "./geojsonTypes";
 
 export interface IMapStyle {
     id: number,
@@ -21,7 +21,7 @@ export interface IMapDetailsType  {
 export interface ILayerListElementType  {
     id: number,
     icon: string,
-    type: GeojsonEnum,
+    type: IGeojsonDataType,
     isShown: boolean,
     layerName: string,
     hasFilter: boolean,
@@ -30,3 +30,4 @@ export interface ILayerListElementType  {
     color: string,
     data: any,
 }
+

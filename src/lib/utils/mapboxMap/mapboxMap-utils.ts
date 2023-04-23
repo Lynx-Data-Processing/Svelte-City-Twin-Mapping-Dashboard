@@ -1,18 +1,18 @@
-import { GeojsonEnum } from '$lib/types/enums';
+import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 import type { ILayerListElementType } from '$lib/types/mapTypes';
 import { v4 as uuidv4 } from 'uuid';
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from '../filter-data';
 
 
 
-export const getInitialCoordinates = (type: GeojsonEnum, data: any) => {
+export const getInitialCoordinates = (type: IGeojsonDataType, data: any) => {
     if (!data) return;
     switch (type) {
-        case GeojsonEnum.Point:
+        case "Point":
             return data.features[0].geometry.coordinates;
-        case GeojsonEnum.Polygon:
+        case "Polygon":
             return data.features[0].geometry.coordinates[0][0];
-        case GeojsonEnum.LineString:
+        case "LineString":
             return data.features[0].geometry.coordinates[0];
         default:
             return [0, 0];
@@ -54,14 +54,13 @@ export const addMapSource = (layerListElement: ILayerListElementType, map: any) 
 export const createLayerListElement = (
     layerName: string,
     sourceName: string,
-    type: GeojsonEnum,
+    type: IGeojsonDataType,
     isShown: boolean,
     faIcon: string,
-    hasFilter: boolean,
-    dataColor: string | null,
-    cleanData: any
+    hasFilter: boolean, 
+    cleanData: any,
+    dataColor?: string,
 ): ILayerListElementType => {
-    //Create the new element and change the layer list
     const element: ILayerListElementType = {
         id: Math.floor(Math.random() * 100),
         icon: faIcon,

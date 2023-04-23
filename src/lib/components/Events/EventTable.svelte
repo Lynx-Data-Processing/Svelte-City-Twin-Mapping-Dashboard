@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { GeojsonEnum } from '$lib/types/enums';
 	import type { IEventType } from '$lib/types/eventTypes';
+	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { getDevicon } from '$lib/utils/devicon-icons';
 
@@ -112,7 +112,7 @@
 						<button
 							class="btn btn-primary"
 							on:click={() => {
-								updateMapCenter(event.coordinates, GeojsonEnum.Point);
+								updateMapCenter(event.coordinates, "Point");
 								goTop();
 							}}
 						>

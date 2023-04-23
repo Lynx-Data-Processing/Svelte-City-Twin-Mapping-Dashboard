@@ -1,6 +1,6 @@
 <script lang="ts">
 	import SearchBar from '$lib/components/SearchBar.svelte';
-	import { FontAwesomeIconGivenGeojsonEnum } from '$lib/types/enums';
+	import type { IFontAwesomeIconGivenGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 
 	export let updateMapCenter: Function;
@@ -77,7 +77,7 @@
 						}}
 						class="btn btn-black-outline w-16 btn-text-center"
 						><i
-							class={`${FontAwesomeIconGivenGeojsonEnum[layer.type]} icon-color`}
+							class={`${layer.type} icon-color`}
 							style={`--sent-color: ${layer.color}`}
 						/></button
 					>

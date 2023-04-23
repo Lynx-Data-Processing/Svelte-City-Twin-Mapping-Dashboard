@@ -1,5 +1,5 @@
-import { GeojsonEnum } from '$lib/types/enums';
-import type { IGeojsonType } from '$lib/types/geosjonTypes';
+import type { IGeojsonType } from '$lib/types/geojsonTypes';
+import type { IGeojsonDataType } from './../../types/geojsonTypes';
 
 const getCoordinates = (coordinates: any) => {
   if (coordinates.length >= 2) {
@@ -16,7 +16,7 @@ const getColor = (color: string | null) => {
   return color;
 };
 
-export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType = GeojsonEnum.Point, color: string | null = null, time = '') => {
+export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType = "Point", color: string | null = null, time = '') => {
   try {
     //* Set initial Geojson element details
     const dataName = rawData.dataName || name;
