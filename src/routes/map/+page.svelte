@@ -89,8 +89,6 @@
 			const tempEventList = await getSmarterAiEvents(dateTimeDictionary);
 			if (!tempEventList || !tempEventList.length) return;
 
-			console.log(tempEventList);
-
 			const tempGpsData = await getSmarterAiGPS(tempEventList);
 			gpsData =  tempGpsData
 			eventList = tempEventList
@@ -174,7 +172,7 @@
 
 	{#if eventList.length}
 		<div class="p-4">
-			<Card title="Recordings" width="w-full" disableToggle={true}>
+			<Card title="Recordings" width="w-full" >
 				<PaginatedTable bind:eventList {updateMapCenter} />
 			</Card>
 		</div>

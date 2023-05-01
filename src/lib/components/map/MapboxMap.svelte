@@ -136,7 +136,7 @@
 		await fetchDataFromAPIAndCreateLayer(
 			PUBLIC_TREES_URL,
 			'Trees',
-			true,
+			false,
 			'Point',
 			'fa-border-all',
 			false,
@@ -152,6 +152,8 @@
 			false,
 			'#7B48FF'
 		);
+
+		
 	};
 
 	// ------------------ Mapbox Map adding Layers ------------------ //

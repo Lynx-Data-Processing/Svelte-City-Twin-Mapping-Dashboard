@@ -40,7 +40,7 @@
 						<Auth
 							supabaseClient={data.supabase}
 							view="magic_link"
-							redirectTo={`${data.url}/login?redirect=/lynx-city-twin`}
+							redirectTo={`${data.url}/login?redirect=/map`}
 							showLinks={false}
 							appearance={{
 								theme: ThemeSupa,

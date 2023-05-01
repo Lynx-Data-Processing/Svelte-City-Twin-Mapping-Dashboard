@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition';
+	import { fade, fly, slide } from 'svelte/transition';
 	export let title: string;
 	export let width = 'w-full';
 	export let disableToggle = false;
@@ -26,10 +26,9 @@
 			</button>
 		{/if}
 	</div>
-
-	<div>
-		{#if showContent || disableToggle}
+	{#if showContent || disableToggle}
+		<div in:slide >
 			<slot />
-		{/if}
-	</div>
+		</div>
+	{/if}
 </section>

@@ -84,6 +84,6 @@
 			{/each}
 		</div>
 	{:else}
-		<div class="alert alert-green my-1" role="alert">Loading Data.</div>
+		<div class="alert alert-success my-1" role="alert">Loading Data.</div>
 	{/if}
 </div>

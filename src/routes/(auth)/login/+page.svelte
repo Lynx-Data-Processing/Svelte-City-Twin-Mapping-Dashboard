@@ -7,7 +7,7 @@
 	$: {
 		const redirectTo = $page.url.searchParams.get('redirect');
 		if (browser && data.session) {
-			goto(redirectTo ?? '/lynx-city-twin');
+			goto(redirectTo ?? '/map');
 		}
 	}
 </script>

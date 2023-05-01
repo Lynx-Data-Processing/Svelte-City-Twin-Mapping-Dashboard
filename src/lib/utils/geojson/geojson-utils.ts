@@ -97,6 +97,10 @@ const getAverageSpeed = (speeds: number[]) => {
   return totalSpeed/speeds.length;
 }
 
+const get1LatLongPoint = (sensorReading: ISensorReading) => {
+  return [sensorReading.sensorData.longitude, sensorReading.sensorData.latitude];
+}
+
 
 //* To use the data on mapbox, the data must be in GEOJSON format
 export const getSmarterAiGPS = async (eventList: IEventType[]) => {
@@ -148,6 +152,9 @@ export const getSmarterAiGPS = async (eventList: IEventType[]) => {
           //* Create the final feature config and push it to the feature array
           const feature: IGeojsonFeatureType = { type: 'Feature', geometry: { type: "LineString", coordinates }, properties };
           geoJson.features.push(feature);
+
+          //* Push the event to the eventListWithGPS array
+         // event.coordinates = get1LatLongPoint(sensorData[0]);
 
         }
       }
