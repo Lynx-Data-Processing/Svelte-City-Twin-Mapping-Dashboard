@@ -4,7 +4,7 @@
 	import type { ILayerListElementType, IMapDetailsType } from '$lib/types/mapTypes';
 	import type { IMenuComponentsType } from '$lib/types/types';
 	import { onDestroy, onMount } from 'svelte';
-
+	import { v4 as uuidv4 } from 'uuid';
 	import { axiosCacheGetUtility } from '$lib/utils/fetch-data';
 	import { rawKingstonDataToGeojsonData } from '$lib/utils/geojson/kingston-geojson-util';
 	import { buildPopup } from '$lib/utils/popup-builder';
@@ -21,7 +21,7 @@
 
 	import mapboxgl from 'mapbox-gl';
 
-	import { addMapSource, createLayerListElement } from '$lib/utils/mapboxMap/mapboxMap-utils';
+	import { addLayerSource, getInitialCoordinates, removeExistingLayerFromMap } from '$lib/utils/mapboxMap/mapboxMap-utils';
 
 	import { checkIfElementExists, removeObjectWhereValueEqualsString } from '$lib/utils/filter-data';
 	import {
@@ -52,20 +52,10 @@
 		defaultMode: 'simple_select'
 	});
 
-	const removeLayerAndSource = (layerName: string, sourceName: string) => {
-		if (mapboxMap.getLayer(layerName)) {
-			mapboxMap.removeLayer(layerName);
-		}
-
-		if (mapboxMap.getSource(sourceName)) {
-			mapboxMap.removeSource(sourceName);
-		}
-	};
 
 	const addLayerListElementToLayerList = (layerListElement: ILayerListElementType) => {
 		let tempLayerList = layerList;
-		const hasElement = checkIfElementExists(tempLayerList, 'layerName', layerListElement.layerName);
-		if (hasElement) {
+		if (checkIfElementExists(tempLayerList, 'layerName', layerListElement.layerName)) {
 			tempLayerList = removeObjectWhereValueEqualsString(
 				tempLayerList,
 				'layerName',
@@ -76,13 +66,10 @@
 		layerList = tempLayerList;
 	};
 
-	const fetchDataFromAPIAndCreateLayer = async (
+	const fetchDataFromAPI = async (
 		url: string,
 		layerName: string,
-		showOnLoad = false,
 		dataType: IGeojsonDataType = 'Point',
-		dataIcon = 'fa-border-all',
-		hasFilter = false,
 		dataColor?: string
 	) => {
 		try {
@@ -90,21 +77,8 @@
 			if (response.status === 200) {
 				const rawData = response.data.records;
 				if (!rawData.length) return;
-
-				const cleanData = rawKingstonDataToGeojsonData(rawData, layerName, dataType, dataColor);
-
-				const layerLisElement: ILayerListElementType = createLayerListElement(
-					layerName,
-					`${layerName}Source`,
-					dataType,
-					showOnLoad,
-					dataIcon,
-					hasFilter,
-					cleanData,
-					dataColor
-				);
-				removeLayerAndSource(layerLisElement.layerName, layerLisElement.sourceName);
-				addLayerListElementToLayerList(layerLisElement);
+				return rawKingstonDataToGeojsonData(rawData, layerName, dataType, dataColor);
+				
 			} else {
 				console.log(`Unable to load data for ${layerName}`);
 			}
@@ -114,46 +88,37 @@
 	};
 
 	const fetchInitialMapData = async () => {
-		const buildingLayerListElement: ILayerListElementType = createLayerListElement(
-			'3D-Buildings',
-			'composite',
-			'Feature',
-			true,
-			'fa-building',
-			false,
-			'Black'
-		);
-		addLayerListElementToLayerList(buildingLayerListElement);
 
-		await fetchDataFromAPIAndCreateLayer(
+		const buildingElement: ILayerListElementType = {
+			id: Math.floor(Math.random() * 100),
+			icon: "fa-building",
+			type: "Feature",
+			isShown: true,
+			layerName: "3D-Buildings",
+			hasFilter: false,
+			sourceName: "composite",
+			color: 'Black',
+		};
+		addLayerListElementToLayerList(buildingElement);
+
+		const neighborhoodsData = await fetchDataFromAPI(
 			PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
 			'Neighborhoods',
-			false,
-			'Polygon',
-			'fa-border-all',
-			false
+			'Polygon'
 		);
-		await fetchDataFromAPIAndCreateLayer(
-			PUBLIC_TREES_URL,
-			'Trees',
-			false,
-			'Point',
-			'fa-border-all',
-			false,
-			'Green'
-		);
-
-		await fetchDataFromAPIAndCreateLayer(
-			PUBLIC_PLANNING_POINT_URL,
-			'Road Construction (Point)',
-			false,
-			'Point',
-			'fa-road',
-			false,
-			'#7B48FF'
-		);
-
-		
+		const neighborhoodsElement: ILayerListElementType = {
+			id: Math.floor(Math.random() * 100),
+			icon: "fa-border-all",
+			type: "Polygon",
+			isShown: true,
+			layerName: "Neighborhoods",
+			hasFilter: false,
+			sourceName: "NeighborhoodsSource",
+			initialCoordinates: getInitialCoordinates("Polygon", neighborhoodsData),
+			color: 'Blue',
+			data: neighborhoodsData,
+		};
+		addLayerListElementToLayerList(neighborhoodsElement);
 	};
 
 	// ------------------ Mapbox Map adding Layers ------------------ //
@@ -267,24 +232,22 @@
 	// ------------------ Map Layer functions ------------------ //
 
 	// ------------------ Map Layer functions ------------------ //
-	const addLayerListElementSourceAndLayer = (layerListElement: ILayerListElementType) => {
-		//Add the buildings layer
+	const addLayerOnMap = (layerListElement: ILayerListElementType) => {
+
+		
 		if (layerListElement.layerName.includes('Buildings')) {
 			addBuildingLayer(mapboxMap, layerListElement);
 		}
 
 		if (layerListElement.type === 'Polygon') {
-			addMapSource(layerListElement, mapboxMap);
 			addPolygonLayer(mapboxMap, smallPopup, layerListElement, 0.5, ['get', 'Color']);
 		}
 
 		if (layerListElement.type === 'Point') {
-			addMapSource(layerListElement, mapboxMap);
 			addPointLayer(mapboxMap, smallPopup, layerListElement, 'Size', ['get', 'Color']);
 		}
 
 		if (layerListElement.type === 'LineString') {
-			addMapSource(layerListElement, mapboxMap);
 			addLineLayer(
 				mapboxMap,
 				smallPopup,
@@ -299,37 +262,40 @@
 	const addExistingDynamicGPSElements = () => {
 		if (!mapboxMap || !layerList.length) return;
 
-		try {
-			addTerrainLayer(mapboxMap);
-			layerList.forEach(function (layerLisElement) {
-				addLayerListElementSourceAndLayer(layerLisElement);
-			});
-
-			isInitialDataLoaded = true;
-		} catch (e) {}
+		addTerrainLayer(mapboxMap);
+		for (let i = 0, len = layerList.length; i < len; i++) {
+			const layerElement = layerList[i];
+			if (!layerElement.layerName.includes('Buildings')) {
+				addLayerSource(mapboxMap, layerElement.sourceName, layerElement.data);
+			}
+			addLayerOnMap(layerElement);
+		}
+		isInitialDataLoaded = true;
 	};
 
 	const addNewDynamicGPSElements = () => {
 		if (!mapboxMap || !gpsData.length) return;
 
-		gpsData.forEach((rawGpsElement: IGeojsonType) => {
-			const { dataName, dataType, hasFilter, dataSourceName } = rawGpsElement;
-
-			const layerLisElement = createLayerListElement(
-				dataName,
-				dataSourceName,
-				dataType,
-				true,
-				'fa-road',
-				hasFilter,
-				rawGpsElement,
-				'Random'
-			);
-			removeLayerAndSource(layerLisElement.layerName, layerLisElement.sourceName);
-			addLayerListElementToLayerList(layerLisElement);
-
-			addLayerListElementSourceAndLayer(layerLisElement);
-		});
+		for(let i = 0, len = gpsData.length ; i < len ; i++){
+			const gpsElement = gpsData[i];
+			const { dataName, dataType, hasFilter, dataSourceName } = gpsElement;
+			const layerElement : ILayerListElementType = {
+				id: uuidv4(),
+				layerName: dataName,
+				sourceName: dataSourceName,
+				type: dataType,
+				isShown: true,
+				icon: 'fa-road',
+				hasFilter: hasFilter,
+				color: 'Random',
+				data: gpsElement
+			};
+			
+			addLayerListElementToLayerList(layerElement);
+			removeExistingLayerFromMap(mapboxMap, layerElement.layerName);
+			addLayerSource(mapboxMap, layerElement.sourceName, layerElement.data);
+			addLayerOnMap(layerElement);
+		}
 	};
 	// ------------------ Map Layer functions ------------------ //
 
@@ -342,16 +308,13 @@
 	const addMapLayerVisibility = () => {
 		if (!mapboxMap || !layerList) return;
 
-		try {
-			layerList.forEach((layer) => {
-				mapboxMap.setLayoutProperty(
-					layer.layerName,
-					'visibility',
-					layer.isShown ? 'visible' : 'none'
-				);
-			});
-		} catch (error) {
-			console.error(error);
+		for (let i = 0, len = layerList.length; i < len; i++) {
+			const layerElement = layerList[i];
+			mapboxMap.setLayoutProperty(
+				layerElement.layerName,
+				'visibility',
+				layerElement.isShown ? 'visible' : 'none'
+			);
 		}
 	};
 
@@ -416,7 +379,7 @@
 			addExistingDynamicGPSElements();
 			if (gpsData) addExistingDynamicGPSElements();
 		});
-		// Mapboxs normal way to show and hide layers. This calls the filter every second
+		
 		mapboxMap.on('idle', () => {
 			addMapLayerVisibility();
 		});

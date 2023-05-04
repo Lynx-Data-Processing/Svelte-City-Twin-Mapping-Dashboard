@@ -101,10 +101,6 @@
 		isLoading = false;
 	};
 
-	onMount(() => {
-		fetchEventsData();
-	});
-
 	const updateSelectedPOI = (poi: ISelectedPOIType) => {
 		selectedPOI = poi;
 	};

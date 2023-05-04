@@ -1,8 +1,5 @@
 import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 import type { ILayerListElementType } from '$lib/types/mapTypes';
-import { v4 as uuidv4 } from 'uuid';
-import { checkIfElementExists, removeObjectWhereValueEqualsString } from '../filter-data';
-
 
 
 export const getInitialCoordinates = (type: IGeojsonDataType, data: any) => {
@@ -35,45 +32,22 @@ export const checkIfMapLayerExists = (layerName: string, map: any) => {
     }
 };
 
-
-export const addMapSource = (layerListElement: ILayerListElementType, map: any) => {
-    try {
-        const sourceExists = checkIfMapSourceExists(layerListElement.sourceName, map);
-        if (!sourceExists) {
-            map.addSource(layerListElement.sourceName, {
-                type: 'geojson',
-                lineMetrics: true,
-                data: layerListElement.data
-            });
-        } else {
-            map.getSource(layerListElement.sourceName).setData(layerListElement.data);
-        }
-    } catch (err) { }
+export const removeExistingLayerFromMap = (map:any, layerName: string) => {
+    if (map.getLayer(layerName)) {
+        map.removeLayer(layerName);
+    }
 };
 
 
-export const createLayerListElement = (
-    layerName: string,
-    sourceName: string,
-    type: IGeojsonDataType,
-    isShown: boolean,
-    faIcon: string,
-    hasFilter: boolean, 
-    cleanData: any,
-    color?: string,
-): ILayerListElementType => {
-    const element: ILayerListElementType = {
-        id: Math.floor(Math.random() * 100),
-        icon: faIcon,
-        type: type,
-        isShown: isShown,
-        layerName: layerName,
-        hasFilter: hasFilter,
-        sourceName: sourceName,
-        initialCoordinates: getInitialCoordinates(type, cleanData),
-        color: color || 'red',
-        data: cleanData,
-    };
-
-    return element;
-};
+export const addLayerSource = (map: any, sourceName: string, data: any) => {
+    const sourceExists = checkIfMapSourceExists(sourceName, map);
+    if (!sourceExists) {
+        map.addSource(sourceName, {
+            type: 'geojson',
+            lineMetrics: true,
+            data: data
+        });
+    } else {
+        map.getSource(sourceName).setData(data);
+    }
+}

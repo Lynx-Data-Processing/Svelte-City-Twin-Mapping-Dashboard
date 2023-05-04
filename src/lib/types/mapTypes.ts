@@ -26,9 +26,9 @@ export interface ILayerListElementType  {
     layerName: string,
     hasFilter: boolean,
     sourceName: string,
-    initialCoordinates: number[],
-    color: string,
-    data: any,
+    initialCoordinates?: number[],
+    color?: string,
+    data?: any,
 
 }
 
