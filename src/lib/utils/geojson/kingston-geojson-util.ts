@@ -8,12 +8,8 @@ const getCoordinates = (coordinates: any) => {
   return coordinates;
 };
 
-const getColor = (color: string | null) => {
-  if (color === null) {
-    let elementColor = (Math.floor(Math.random() * 16777215).toString(16)).toString();
-    return elementColor.length !== 6 ? elementColor.padEnd(6, '0') : `#${elementColor}`;
-  }
-  return color;
+const getColor = () => {
+  return `#${(Math.floor(Math.random() * 16777215).toString(16)).toString()}`;
 };
 
 export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType : IGeojsonDataType = "Point", color: string | null = null, time = '') => {
@@ -43,7 +39,7 @@ export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geo
         gpsElement.fields.Size = 1;
         gpsElement.fields.geojson = undefined;
         gpsElement.fields.geo_point_2d = undefined;
-        properties.Color = getColor(color);
+        properties.Color = getColor();
 
         //* Create the final feature config and add the feature id for the ability to hover
         const feature : IGeojsonFeatureType = {

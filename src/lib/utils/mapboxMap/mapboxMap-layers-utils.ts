@@ -62,6 +62,120 @@ export const addBuildingLayer = (map: any, layerElement: ILayerListElementType, 
     });
 };
 
+// ------------------ Mapbox Map adding Layers ------------------ //
+export const addLineLayer = (
+    mapboxMap: any,
+    smallPopup: any,
+    layerElement: ILayerListElementType,
+    lineWidth = 4,
+    color = ['red'],
+    updateSelectedPOI: Function,
+    buildPopup: Function
+) => {
+    try {
+    
+        mapboxMap.addLayer({
+            id: layerElement.layerName,
+            type: 'line',
+            source: layerElement.sourceName,
+            layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            paint: {
+                'line-color': color,
+                'line-width': lineWidth,
+                
+            }
+        });
+
+        mapboxMap.on('click', layerElement.layerName, async (e: any) => {
+            updateSelectedPOI({ lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties });
+
+            smallPopup
+                .setLngLat(e.lngLat)
+                .setHTML(
+                    e?.features
+                        ? await buildPopup(e.features[0], layerElement.layerName)
+                        : '<div>Properties do not exist</div>'
+                )
+                .addTo(mapboxMap);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        mapboxMap.on('mouseenter', layerElement.layerName, () => {
+            mapboxMap.getCanvas().style.cursor = 'pointer';
+        });
+        // Change it back to a pointer when it leaves.
+        mapboxMap.on('mouseleave', layerElement.layerName, () => {
+            mapboxMap.getCanvas().style.cursor = '';
+        });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+
+export const addPointLayer = (
+    mapboxMap: any,
+    smallPopup: any,
+    layerElement: ILayerListElementType,
+    pointSizeName = 'Size',
+    color = ['Blue'],
+    updateSelectedPOI: Function,
+    buildPopup: Function
+) => {
+    try {
+        mapboxMap.addLayer(
+            {
+                id: layerElement.layerName,
+                type: 'circle',
+                source: layerElement.sourceName,
+                minzoom: 1,
+                paint: {
+                    'circle-radius': [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        7,
+                        ['interpolate', ['linear'], ['get', pointSizeName], 1, 2, 3, 4],
+                        16,
+                        ['interpolate', ['linear'], ['get', pointSizeName], 3, 6, 9, 12]
+                    ],
+                    'circle-color': color
+                }
+            },
+            'waterway-label'
+        );
+        mapboxMap.setLayoutProperty(layerElement.layerName, 'visibility', 'none');
+        mapboxMap.moveLayer(layerElement.layerName);
+
+        mapboxMap.on('click', layerElement.layerName, async (e: any) => {
+            updateSelectedPOI({ lat: e.lngLat.lat, lng: e.lngLat.lng, data: e.features[0].properties });
+
+            smallPopup
+                .setLngLat(e.lngLat)
+                .setHTML(
+                    e?.features
+                        ? await buildPopup(e.features[0], layerElement.layerName)
+                        : '<div>Properties do not exist</div>'
+                )
+                .addTo(mapboxMap);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        mapboxMap.on('mouseenter', layerElement.layerName, () => {
+            mapboxMap.getCanvas().style.cursor = 'pointer';
+        });
+        // Change it back to a pointer when it leaves.
+        mapboxMap.on('mouseleave', layerElement.layerName, () => {
+            mapboxMap.getCanvas().style.cursor = '';
+        });
+    } catch (err) {
+        console.log(err);
+    }
+};
+
 
 
 export const addPolygonLayer = (map: any, smallPopup: any, layerElement: ILayerListElementType, opacity = 0.5, color = ['red']) => {

@@ -1,50 +1,39 @@
 <script>
 	import { onDestroy } from 'svelte';
 	import { onMount } from 'svelte/internal';
-
-	let streetViewObject = null;
-	let streetViewContainer = null;
-
-	const initializeStreetView = (poi) => {
-		try {
-			streetViewObject = new google.maps.StreetViewPanorama(streetViewContainer, {
-				position: poi,
-				pov: {
-					heading: 34,
-					pitch: 10
-				}
-			});
-		} catch (error) {
-			console.error(error);
-		}
-	};
-
-	const updateStreetView = (poi) => {
-		try {
-			if (streetViewObject === null) {
-				initializeStreetView(poi);
-			} else {
-				streetViewObject.setPosition(poi);
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	};
-
 	export let selectedPOI;
+	let streetViewObject = null;
+	let streetViewDiv = null;
+
+	const initializeStreetView = () => {
+		streetViewObject = new google.maps.StreetViewPanorama(streetViewDiv, {
+			position: selectedPOI,
+			pov: {
+				heading: 34,
+				pitch: 10
+			}
+		});
+	};
+
+	const updateStreetView = () => {
+		if (streetViewObject !== null && selectedPOI) {
+			streetViewObject.setPosition(selectedPOI);
+		} else {
+			initializeStreetView();
+		}
+	};
+	$: selectedPOI && updateStreetView();
 
 	onMount(() => {
-		if (selectedPOI !== null) {
-			initializeStreetView(selectedPOI);
+		if (selectedPOI) {
+			initializeStreetView();
 		}
 	});
-
-	$: selectedPOI && updateStreetView(selectedPOI);
 
 	onDestroy(() => {
 		try {
 			streetViewObject = null;
-			streetViewContainer = null;
+			streetViewDiv = null;
 		} catch (error) {
 			console.error(error);
 		}
@@ -55,5 +44,5 @@
 	{#if selectedPOI == null}
 		<div class="alert alert-error my-1" role="alert">Select a point on the map.</div>
 	{/if}
-	<div bind:this={streetViewContainer} class={`${selectedPOI == null ? 'h-0' : 'h-96'} w-full `} />
+	<div bind:this={streetViewDiv} class={`${selectedPOI? 'h-96' : 'h-0'} w-full `} />
 </div>

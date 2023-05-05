@@ -1,6 +1,25 @@
 import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 import type { ILayerListElementType } from '$lib/types/mapTypes';
 
+export const switchStyle = (map: any, isInitialDataLoaded: boolean, mapStyle: string) => {
+    if (!map || !isInitialDataLoaded) return;
+    map.setStyle(mapStyle);
+};
+
+export const resizeMap = (map: any) => {
+    if (!map) return;
+    map.resize();
+};
+
+
+export const updateMapCenter = (map: any, mapDetails: any) => {
+    if (!map) return;
+    map.flyTo({
+        center: mapDetails.center,
+        zoom: mapDetails.zoom
+    });
+};
+
 
 export const getInitialCoordinates = (type: IGeojsonDataType, data: any) => {
     if (!data) return;
@@ -51,3 +70,17 @@ export const addLayerSource = (map: any, sourceName: string, data: any) => {
         map.getSource(sourceName).setData(data);
     }
 }
+
+
+export const addMapLayerVisibility = (map: any, layerList: ILayerListElementType[]) => {
+    if (!map || !layerList) return;
+
+    for (let i = 0, len = layerList.length; i < len; i++) {
+        const layerElement = layerList[i];
+        map.setLayoutProperty(
+            layerElement.layerName,
+            'visibility',
+            layerElement.isShown ? 'visible' : 'none'
+        );
+    }
+};

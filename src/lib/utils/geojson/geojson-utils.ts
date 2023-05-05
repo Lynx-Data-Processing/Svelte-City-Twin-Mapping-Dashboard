@@ -1,10 +1,10 @@
-import { getSmarterAiSensorData } from './../../service/smarter-api';
 import { v4 as uuidv4 } from 'uuid';
+import { getSmarterAiSensorData } from './../../service/smarter-api';
 
 import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
 
-import { getSpeed, getVehicleSpeedColor } from '$lib/utils/vehicle-speed';
 import type { IEventType, ISensorData, ISensorReading } from '$lib/types/eventTypes';
+import { getSpeed, getVehicleSpeedColor } from '$lib/utils/vehicle-speed';
 
 //* Example
 //* { 'AlexDashcam' : [{point1}, {point2}, {point3}], 'AmirDashcam: [{point1}, {point2}, {point3}]}
@@ -58,13 +58,6 @@ const getCoordinatesFromSensorReadings = (sensorReadings: ISensorReading[]) => {
 }
 
 
-const getSpeedFromSensorReadings = (sensorReadings: ISensorReading[]) => {
-  const speeds = [];
-  for (const sensorReading of sensorReadings) {
-    speeds.push(getSpeed(sensorReading.sensorData));
-  }
-  return speeds;
-}
 
 const generateRandomSpeedForEachSensorReading = (sensorReadings: ISensorReading[]) => {
   const speeds = [];
@@ -74,20 +67,7 @@ const generateRandomSpeedForEachSensorReading = (sensorReadings: ISensorReading[
   return speeds;
 }
 
-const createLinearColorProgressUsingSpeed = (speeds: number[]) => {
-  const colorProgress : any[] = ['interpolate', ['linear'], ['line-progress']];
 
-  let speedIndex = 0;
- 
-  for (const speed of speeds) {
-    colorProgress.push(speedIndex/speeds.length);
-    colorProgress.push(getVehicleSpeedColor(speed));
-    speedIndex += 1;
-    
-  }
-  return colorProgress;
-
-}
 
 const getAverageSpeed = (speeds: number[]) => {
   let totalSpeed = 0;
@@ -145,7 +125,6 @@ export const getSmarterAiGPS = async (eventList: IEventType[]) => {
             Sensor: sensorData,
             Speeds: speeds,
             Color: getVehicleSpeedColor(getAverageSpeed(speeds)),
-            ColorLineGradient: createLinearColorProgressUsingSpeed(speeds),
             Coordinates: coordinates
           };
 

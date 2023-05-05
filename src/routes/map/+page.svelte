@@ -4,27 +4,24 @@
 	import type { IDateTimeDictionaryType, IMenuComponentsType } from '$lib/types/types';
 
 	import Card from '$lib/components/Card.svelte';
-
 	import PaginatedTable from '$lib/components/table/PaginatedTable.svelte';
 
 	import Navbar from '$lib/components/Navbar.svelte';
 	import LoadingError from '$lib/components/loading/LoadingError.svelte';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
 	import Layers from '$lib/components/map/Layers.svelte';
-	import MapLegend from '$lib/components/map/MapLegend.svelte';
-	import MapStyleSelector from '$lib/components/map/MapStyleSelector.svelte';
+
 	import MapboxMap from '$lib/components/map/MapboxMap.svelte';
 	import About from '$lib/components/menu/About.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import StreetView from '$lib/components/menu/StreetView.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { getSmarterAiEvents } from '$lib/service/smarter-api';
-	import type {IGeojsonType, IGeojsonDataType } from '$lib/types/geojsonTypes';
+	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import { getSmarterAiGPS } from '$lib/utils/geojson/geojson-utils';
-	import { onMount } from 'svelte';
-
+	
 	//* Set Initial Map Details
-	let mapStyle: string = 'mapbox://styles/canaleal/cle0l6bpx004501qotbnxa4wr';
+
 	let mapDetails: IMapDetailsType = {
 		id: 0,
 		center: [-76.491143, 44.231689],
@@ -52,21 +49,26 @@
 	let selectedMenu: IMenuComponentsType = components[1];
 	let isLoading = false;
 	let isError = false;
-	
+
 	let gpsData: IGeojsonType[] = [];
 	let eventList: IEventType[] = [];
 
 	const updateMapCenter = (
 		coordinates: number[],
-		dataType?: IGeojsonDataType,
+		dataType: IGeojsonDataType = 'Point',
 		zoomLevel?: number
 	) => {
-		let updatedZoomLevel = zoomLevel;
-		if (dataType === 'Point' || dataType === 'LineString') {
-			updatedZoomLevel = 19;
-		} else {
-			updatedZoomLevel = 15;
-		}
+		const zoomLevelMap: { [key in IGeojsonDataType]?: number } = {
+			Point: 19,
+			LineString: 19,
+			Polygon: 15,
+			MultiPolygon: 15,
+			FeatureCollection: 15,
+			Feature: 15,
+			GeometryCollection: 15
+		};
+
+		const updatedZoomLevel = zoomLevelMap[dataType] || zoomLevel || 15;
 
 		mapDetails = {
 			id: 0,
@@ -77,9 +79,6 @@
 		};
 	};
 
-	/**
-	 * Fetches event data and calls `getMediaEventsFromAllSmarterAIFiles()` to process the data.
-	 */
 	const fetchEventsData = async () => {
 		isLoading = true;
 		isError = false;
@@ -90,9 +89,8 @@
 			if (!tempEventList || !tempEventList.length) return;
 
 			const tempGpsData = await getSmarterAiGPS(tempEventList);
-			gpsData =  tempGpsData
-			eventList = tempEventList
-	
+			gpsData = tempGpsData;
+			eventList = tempEventList;
 		} catch (error) {
 			alert(error);
 			isError = true;
@@ -137,13 +135,14 @@
 		{/if}
 
 		<div
-			class={`relative col-span-1   ${selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'}  `}
+			class={`relative col-span-1   ${
+				selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'
+			}  `}
 		>
 			<MapboxMap
 				bind:mapDetails
 				bind:gpsData
 				bind:layerList
-				bind:mapStyle
 				bind:selectedMenu
 				{updateSelectedPOI}
 			/>
@@ -153,22 +152,12 @@
 			{:else if isError === true}
 				<LoadingError />
 			{/if}
-
-			<div class="absolute top-2 left-2 flex flex-col gap-4 z-100 align-right">
-				<Card title="Map Style" >
-					<MapStyleSelector bind:mapStyle />
-				</Card>
-
-				<Card title="Speed Legend (Km/h)" showOnLoad={false} width="w-[15rem]">
-					<MapLegend />
-				</Card>
-			</div>
 		</div>
 	</div>
 
 	{#if eventList.length}
 		<div class="p-4">
-			<Card title="Recordings" width="w-full" >
+			<Card title="Recordings" width="w-full">
 				<PaginatedTable bind:eventList {updateMapCenter} />
 			</Card>
 		</div>
