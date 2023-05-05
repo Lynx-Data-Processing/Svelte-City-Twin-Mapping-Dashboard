@@ -299,7 +299,7 @@
 			<MapStyleSelector bind:selectedMapStyle {mapStyles} {switchStyle} />
 		</Card>
 
-		<Card title="Speed Legend (Km/h)" showOnLoad={false} width="w-[15rem]">
+		<Card title="Speed Legend" showOnLoad={false} width="w-[15rem]">
 			<MapLegend />
 		</Card>
 	</div>

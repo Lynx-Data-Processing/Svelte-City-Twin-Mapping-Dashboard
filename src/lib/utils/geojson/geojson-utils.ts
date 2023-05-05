@@ -6,9 +6,7 @@ import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType } from '$lib/t
 import type { IEventType, ISensorData, ISensorReading } from '$lib/types/eventTypes';
 import { getSpeed, getVehicleSpeedColor } from '$lib/utils/vehicle-speed';
 
-//* Example
-//* { 'AlexDashcam' : [{point1}, {point2}, {point3}], 'AmirDashcam: [{point1}, {point2}, {point3}]}
-//* Group the data by the deviceId key
+
 const groupByKey = (array: any[], key: any) => {
   const groupedArray = array.reduce((result, currentValue) => {
     (result[currentValue[key]] = result[currentValue[key]] || []).push(
@@ -77,10 +75,6 @@ const getAverageSpeed = (speeds: number[]) => {
   return totalSpeed/speeds.length;
 }
 
-const get1LatLongPoint = (sensorReading: ISensorReading) => {
-  return [sensorReading.sensorData.longitude, sensorReading.sensorData.latitude];
-}
-
 
 //* To use the data on mapbox, the data must be in GEOJSON format
 export const getSmarterAiGPS = async (eventList: IEventType[]) => {
@@ -89,6 +83,8 @@ export const getSmarterAiGPS = async (eventList: IEventType[]) => {
 
   for (const [deviceId, events] of Object.entries(groupedEvents)) {
     try {
+
+      let eventsWithGPS = events as IEventType[];
 
       //* Set initial Geojson element details
       const dataName = `GPS - ${deviceId}`;
@@ -107,8 +103,9 @@ export const getSmarterAiGPS = async (eventList: IEventType[]) => {
         features: [],
       };
 
-      // Loop through the events and get the GPS data for each event
-      for (const event of (events as IEventType[])) {
+
+      for(let i=0, len=eventsWithGPS.length; i<len; i++) {
+        const event = eventsWithGPS[i];
 
         const response = await getSmarterAiSensorData(event, event.recordingStartTimestamp, event.recordingEndTimestamp);
         if (response.status === 200 && response.data) {
@@ -133,15 +130,14 @@ export const getSmarterAiGPS = async (eventList: IEventType[]) => {
           geoJson.features.push(feature);
 
           //* Push the event to the eventListWithGPS array
-         // event.coordinates = get1LatLongPoint(sensorData[0]);
+          event.coordinates = coordinates[0];
 
         }
       }
 
       //* Push the geojson element to the array if it has features
-      if (geoJson.features.length > 0) {
-        geoJsonArray.push(geoJson);
-      }
+      geoJsonArray.push(geoJson);
+      
     }
     catch (err) {
       console.error(err)
