@@ -57,6 +57,12 @@ export const removeExistingLayerFromMap = (map:any, layerName: string) => {
     }
 };
 
+export const removeExistingSourceFromMap = (map:any, sourceName: string) => {
+    if (map.getSource(sourceName)) {
+        map.removeSource(sourceName);
+    }
+};
+
 
 export const addLayerSource = (map: any, sourceName: string, data: any) => {
     const sourceExists = checkIfMapSourceExists(sourceName, map);
@@ -77,10 +83,13 @@ export const addMapLayerVisibility = (map: any, layerList: ILayerListElementType
 
     for (let i = 0, len = layerList.length; i < len; i++) {
         const layerElement = layerList[i];
-        map.setLayoutProperty(
-            layerElement.layerName,
-            'visibility',
-            layerElement.isShown ? 'visible' : 'none'
-        );
+        const {layerName, sourceName, isShown} = layerElement;
+        if(checkIfMapLayerExists(layerName, map) && checkIfMapSourceExists(sourceName, map)) {
+            map.setLayoutProperty(
+                layerName,
+                'visibility',
+                isShown ? 'visible' : 'none'
+            );
+        }
     }
 };

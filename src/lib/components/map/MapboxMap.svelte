@@ -22,6 +22,7 @@
 		addMapLayerVisibility,
 		getInitialCoordinates,
 		removeExistingLayerFromMap,
+		removeExistingSourceFromMap,
 		resizeMap,
 		updateMapCenter
 	} from '$lib/utils/mapboxMap/mapboxMap-utils';
@@ -37,6 +38,7 @@
 	import Card from '../Card.svelte';
 	import MapLegend from './MapLegend.svelte';
 	import MapStyleSelector from './MapStyleSelector.svelte';
+	import { mapStyles } from '$lib/utils/mapboxMap/mapboxMap-styles';
 
 	// ------------------ Mapbox ------------------
 	export let layerList: ILayerListElementType[];
@@ -48,47 +50,7 @@
 
 
 	let mapboxMap: any = null;
-	
-	const mapStyles: IMapStyle[] = [
-		{
-			id: 0,
-			name: 'Streets',
-			value: 'mapbox://styles/mapbox/streets-v11',
-			image: 'https://assets.website-files.com/5e83362767d71ffd59a0c8a9/5ea01b977fb48a501b898a93_ipad-map%20streets.png'
-		},
-
-		{
-			id: 1,
-			name: 'Dark',
-			value: 'mapbox://styles/mapbox/dark-v10',
-			image: 'https://assets.website-files.com/5e83362767d71ffd59a0c8a9/5ea01810f9a5b1c55841ee6f_ipad-map%20dark.png'
-		},
-		{
-			id: 2,
-			name: 'Outdoors',
-			value: 'mapbox://styles/canaleal/cle0l6bpx004501qotbnxa4wr',
-			image: 'https://assets.website-files.com/5e83362767d71ffd59a0c8a9/5ea01bd0779fa266f900ba3c_ipad-map%20outdoors.png'
-		},
-		{
-			id: 3,
-			name: 'Satellite',
-			value: 'mapbox://styles/mapbox/satellite-streets-v11',
-			image: 'https://assets.website-files.com/5e83362767d71ffd59a0c8a9/6025417270820571127804d8_ipad-map.png'
-		},
-		{
-			id: 4,
-			name: 'Dark - Traffic',
-			value: 'mapbox://styles/mapbox/navigation-night-v1',
-			image: 'https://assets.website-files.com/5e83362767d71ffd59a0c8a9/5ea01810f9a5b1c55841ee6f_ipad-map%20dark.png'
-		},
-		{
-			id: 5,
-			name: 'Light - Traffic',
-			value: 'mapbox://styles/mapbox/navigation-day-v1',
-			image: 'https://assets.website-files.com/5e83362767d71ffd59a0c8a9/5ea01b977fb48a501b898a93_ipad-map%20streets.png'
-		}
-	];
-	let selectedMapStyle: IMapStyle = mapStyles[0];
+	let selectedMapStyle: IMapStyle = mapStyles[1];
 
 	const smallPopup = new mapboxgl.Popup();
 	const draw = new (MapboxDraw as any)({
@@ -199,7 +161,7 @@
 		addTerrainLayer(mapboxMap);
 		for (let i = 0, len = layerList.length; i < len; i++) {
 			const layerElement = layerList[i];
-			removeExistingLayerFromMap(mapboxMap, layerElement.layerName);
+			
 			if (!layerElement.layerName.includes('Buildings')) {
 				addLayerSource(mapboxMap, layerElement.sourceName, layerElement.data);
 			}
@@ -258,6 +220,11 @@
 	$: mapboxMap && selectedMenu && resizeMap(mapboxMap);
 
 	onMount(async () => {
+
+
+
+		await fetchInitialMapData();
+
 		mapboxgl.accessToken = PUBLIC_MAPBOX_KEY;
 		mapboxMap = new mapboxgl.Map({
 			center: mapDetails.center,
@@ -267,6 +234,7 @@
 			container: 'mapboxMap',
 			antialias: true,
 			style: selectedMapStyle.value
+			
 		});
 
 		mapboxMap.addControl(draw, 'bottom-left');
@@ -277,11 +245,8 @@
 		mapboxMap.on('draw.update', updatePolygon);
 		mapboxMap.on('contextmenu', clearPolygon);
 
-		await fetchInitialMapData();
-
 		mapboxMap.on('style.load', function () {
 			addExistingDynamicGPSElements();
-			if (gpsData) addExistingDynamicGPSElements();
 		});
 
 		mapboxMap.on('idle', () => {
@@ -295,11 +260,11 @@
 
 
 	<div class="absolute top-2 left-2 flex flex-col gap-4 z-100 align-right">
-		<Card title="Map Style" >
+		<Card title="Map Style" width="w-[14rem]">
 			<MapStyleSelector bind:selectedMapStyle {mapStyles} {switchStyle} />
 		</Card>
 
-		<Card title="Speed Legend" showOnLoad={false} width="w-[15rem]">
+		<Card title="Speed Legend" showOnLoad={false} >
 			<MapLegend />
 		</Card>
 	</div>
