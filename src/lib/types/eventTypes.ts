@@ -47,7 +47,7 @@ export interface IEventType  {
     tenantId: string,
     deviceId: string,
     deviceLabel: string,
-    endpointId: number,
+    endpointId: string,
     eventTimestamp: number,
     eventEndTimestamp: number,
     recordingStartTimestamp: number,

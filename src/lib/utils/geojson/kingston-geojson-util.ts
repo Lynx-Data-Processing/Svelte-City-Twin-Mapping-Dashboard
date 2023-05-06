@@ -1,5 +1,6 @@
 import type { IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
 import type { IGeojsonDataType } from './../../types/geojsonTypes';
+import { getRandomColor } from '../color-utils';
 
 const getCoordinates = (coordinates: any) => {
   if (coordinates.length >= 2) {
@@ -8,9 +9,6 @@ const getCoordinates = (coordinates: any) => {
   return coordinates;
 };
 
-const getRandomColor = () => {
-  return `#${(Math.floor(Math.random() * 16777215).toString(16)).toString()}`;
-};
 
 export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType: IGeojsonDataType = "Point", color: string | null = null, time = '') => {
 

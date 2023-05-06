@@ -1,23 +1,33 @@
 import { dateTimeToMillisecondUnix } from '../utils/date-format';
-/* eslint-disable no-console */
-
-import { PUBLIC_API_SMARTER_AI_SENSOR_REPORT_URL, PUBLIC_API_KEY, PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL, PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL, PUBLIC_API_SMARTER_AI_EVENTS_URL, PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL, PUBLIC_DEVICE_ID, PUBLIC_TENANT_ID } from '$env/static/public';
 import type { IEventType, IMediaRecordingType, IVideoType } from '$lib/types/eventTypes';
 import type { IDateTimeDictionaryType } from '$lib/types/types';
 import axios from 'axios';
+import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_EVENTS_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_SENSOR_REPORT_URL } from '$lib/constants/global';
+import { PUBLIC_API_KEY, PUBLIC_TENANT_ID } from '$env/static/public';
 
 
 //* Fetch all devices under the Tenant key
 export const getListOfDevicesUnderTenant = async () => {
+  const params = new URLSearchParams({
+    tenantId: PUBLIC_TENANT_ID,
+    limit: '1000',
+    offset: '0',
+    status: 'ANY_STATUS',
+    type: 'ANY',
+    secretToken: PUBLIC_API_KEY
+  });
+
+  const config = {
+    method: 'get',
+    url: `${API_SMARTER_AI_ENDPOINT_LIST_URL}?${params.toString()}`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
 
   try {
-    const config = {
-      method: 'get',
-      url: `${PUBLIC_API_SMARTER_AI_ENDPOINT_LIST_URL}?tenantId=${PUBLIC_TENANT_ID}&limit=1000&offset=0&status=ANY_STATUS&type=ANY&secretToken=${PUBLIC_API_KEY}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+
 
     const promise = await axios(config);
     return promise;
@@ -34,15 +44,21 @@ export const getListOfDevicesUnderTenant = async () => {
 //* If we need more information about the device
 export const getDeviceDetails = async (deviceId: string) => {
 
-  try {
-    const config = {
-      method: 'get',
-      url: `${PUBLIC_API_SMARTER_AI_ENDPOINT_INFO_URL}?endpointId=${deviceId}&secretToken=${PUBLIC_API_KEY}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+  const params = new URLSearchParams({
+    endpointId: deviceId,
+    secretToken: PUBLIC_API_KEY
+  });
 
+  const config = {
+    method: 'get',
+    url: `${API_SMARTER_AI_ENDPOINT_INFO_URL}?${params.toString()}`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+
+  try {
     const promise = await axios(config);
     return promise;
   } catch (error: any) {
@@ -60,15 +76,23 @@ export const getDeviceDetails = async (deviceId: string) => {
 //* API ONLY loads videos saved on the cloud
 export const getVideo = async (gpsElement: any) => {
 
+  const params = new URLSearchParams({
+    endpointId: gpsElement.EndpointId,
+    fromTime: gpsElement.StartTime,
+    toTime: gpsElement.EndTime
+  });
+
+  const config = {
+    method: 'get',
+    url: `${API_SMARTER_AI_MEDIA_LIST_URL}?${params.toString()}`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${PUBLIC_API_KEY}`,
+    },
+  };
+
   try {
-    const config = {
-      method: 'get',
-      url: `${PUBLIC_API_SMARTER_AI_MEDIA_LIST_URL}?endpointId=${gpsElement.EndpointId}&fromTime=${gpsElement.StartTime}&toTime=${ gpsElement.EndTime}`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `${PUBLIC_API_KEY}`,
-      },
-    };
+
 
     const result = await axios(config);
     const videos: IMediaRecordingType[] = result.data.mediaEventRecordings.filter((res: IMediaRecordingType) => res.type === 'VIDEO'); // && res.endTimestamp > timestamp && res.startTimestamp < timestamp
@@ -83,7 +107,7 @@ export const getVideo = async (gpsElement: any) => {
       videoUrl: videoLink
     };
     return video;
-   
+
   } catch (error: any) {
     if (error.response) {
       return error.response.status;
@@ -95,17 +119,30 @@ export const getVideo = async (gpsElement: any) => {
 };
 
 
-export const getSmarterAiSensorData = async (event: IEventType ,fromDateTime: number, toDateTime: number) => {
-  const url = `${PUBLIC_API_SMARTER_AI_SENSOR_REPORT_URL}?secretToken=${PUBLIC_API_KEY}&tenantId=${PUBLIC_TENANT_ID}&endpointId=${event.endpointId}&pageSize=20&continuationToken=&fromDate=${fromDateTime}&toDate=${toDateTime}&sensorReportType=GEO_LOCATION`
-  try {
-    const config = {
-      method: 'get',
-      url: `${url}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+export const getSmarterAiSensorData = async (event: IEventType, fromDateTime: number, toDateTime: number) => {
 
+  const params = new URLSearchParams({
+    secretToken: PUBLIC_API_KEY,
+    tenantId: PUBLIC_TENANT_ID,
+    endpointId: event.endpointId,
+    pageSize: '20',
+    continuationToken: '',
+    fromDate: `${fromDateTime}`,
+    toDate: `${toDateTime}`,
+    sensorReportType: 'GEO_LOCATION'
+  });
+
+  const config = {
+    method: 'get',
+    url: `${API_SMARTER_AI_SENSOR_REPORT_URL}?${params.toString()}`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${PUBLIC_API_KEY}`,
+    },
+  };
+
+
+  try {
     const promise = await axios(config);
     return promise;
   } catch (error: any) {
@@ -120,29 +157,8 @@ export const getSmarterAiSensorData = async (event: IEventType ,fromDateTime: nu
 }
 
 
-
-const HOUR_IN_MILLISECONDS = 3600000;
-
 export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionaryType) {
-  const storageKey = 'apiResults';
-  const storageExpiryKey = 'apiResultsExpiry';
-  const storageDateTimeDictionaryKey = 'storedDateTimeDictionary';
 
-  const now = new Date().getTime();
-  const storedExpiry = localStorage.getItem(storageExpiryKey);
-  const storedDateTimeDictionary = localStorage.getItem(storageDateTimeDictionaryKey);
-
-  // Check if the results are still valid and return them
-  if (storedExpiry && now < Number(storedExpiry)) {
-    const storedResults = localStorage.getItem(storageKey);
-
-    // If stored DateTimeDictionary is the same as the new one, return the stored results
-    if (storedResults && storedDateTimeDictionary === JSON.stringify(dateTimeDictionary)) {
-      return JSON.parse(storedResults);
-    }
-  }
-
-  const baseUrl = 'https://api.anyconnect.com/v2/event-messaging/events';
   const params = new URLSearchParams({
     secretToken: PUBLIC_API_KEY,
     endpointId: '4326',
@@ -156,11 +172,11 @@ export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionary
 
   for (let i = 0; i < 1; i++) {
     try {
-      const response = await axios.get(`${baseUrl}?${params.toString()}`);
+      const response = await axios.get(`${API_SMARTER_AI_EVENTS_URL}?${params.toString()}`);
       const eventList = response.data.eventList;
       const lastObject = eventList[eventList.length - 1];
 
-      if(!lastObject) {
+      if (!lastObject) {
         break;
       }
 
@@ -173,12 +189,5 @@ export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionary
     }
   }
 
-  const flatResults = results.flat();
-
-  // Save the results to local storage with an expiry time and the dateTimeDictionary
-  localStorage.setItem(storageKey, JSON.stringify(flatResults));
-  localStorage.setItem(storageExpiryKey, (now + HOUR_IN_MILLISECONDS).toString());
-  localStorage.setItem(storageDateTimeDictionaryKey, JSON.stringify(dateTimeDictionary));
-
-  return flatResults;
+  return results.flat();
 }

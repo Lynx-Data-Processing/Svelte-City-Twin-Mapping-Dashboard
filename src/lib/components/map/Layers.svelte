@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
-	import { isEmptyString } from '$lib/utils/is-emptyStrintg';
+	import { isEmptyString } from '$lib/utils/is-emptyString';
 
 	export let updateMapCenter: Function;
 	export let layerList: ILayerListElementType[];
@@ -27,12 +27,12 @@
 	$: layerList && (filteredLayers = layerList);
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col ">
 	<div class="my-1 flex flex-row gap-4">
 		<SearchBar onChangeFunction={filterLayersBySearch} />
 	</div>
 
-	<div class="flex flex-col ">
+	<div class="flex flex-col max-h-96 overflow-auto">
 		{#each filteredLayers as layer}
 			<div class="flex flex-row gap-4  my-1">
 				<button

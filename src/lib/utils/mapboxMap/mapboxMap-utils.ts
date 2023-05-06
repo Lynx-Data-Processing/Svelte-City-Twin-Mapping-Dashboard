@@ -23,16 +23,22 @@ export const updateMapCenter = (map: any, mapDetails: any) => {
 
 export const getInitialCoordinates = (type: IGeojsonDataType, data: any) => {
     if (!data) return;
-    switch (type) {
-        case "Point":
-            return data.features[0].geometry.coordinates;
-        case "Polygon":
-            return data.features[0].geometry.coordinates[0][0];
-        case "LineString":
-            return data.features[0].geometry.coordinates[0];
-        default:
-            return [0, 0];
+    try{
+        const initialCoordinateMap: { [key in IGeojsonDataType]?: number } = {
+            Point: data.features[0].geometry.coordinates,
+            LineString:  data.features[0].geometry.coordinates[0] ,
+            Polygon: data.features[0].geometry.coordinates[0][0],
+            MultiPolygon: data.features[0].geometry.coordinates[0][0],
+        };
+    
+        console.log('initialCoordinateMap[type]', initialCoordinateMap[type]);
+        return initialCoordinateMap[type] || [0,0];
     }
+    catch(err){
+        return [0,0];
+    }
+
+   
 };
 
 export const checkIfMapSourceExists = (sourceName: string, map: any) => {

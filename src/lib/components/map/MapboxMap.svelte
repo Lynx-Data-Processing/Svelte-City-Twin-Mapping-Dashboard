@@ -10,8 +10,14 @@
 
 	import {
 		PUBLIC_MAPBOX_KEY,
-		PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL,
 	} from '$env/static/public';
+
+	import { 
+		OPEN_DATA_KINGSTON_CITY_ZONES_URL
+	} from "$lib/constants/global"
+
+	import { getRandomColor } from "$lib/utils/color-utils"
+
 
 	import MapboxDraw from '@mapbox/mapbox-gl-draw';
 	import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
@@ -84,12 +90,12 @@
 			layerName: '3D-Buildings',
 			hasFilter: false,
 			sourceName: 'composite',
-			color: 'Black'
+			color: 'Black',
 		};
 		addLayerListElementToLayerList(buildingElement);
 
 		const neighborhoodsResponse = await axiosCacheGetUtility(
-			PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL
+			OPEN_DATA_KINGSTON_CITY_ZONES_URL
 		);
 		if (neighborhoodsResponse.status === 200) {
 			const neighborhoodsData = neighborhoodsResponse.data.records;
@@ -107,7 +113,7 @@
 				id: Math.floor(Math.random() * 100),
 				icon: 'fa-border-all',
 				type: 'Polygon',
-				isShown: true,
+				isShown: false,
 				layerName: 'Neighborhoods',
 				hasFilter: false,
 				sourceName: 'NeighborhoodsSource',
@@ -117,7 +123,7 @@
 			};
 			addLayerListElementToLayerList(neighborhoodsElement);
 		} else {
-			console.log(`Unable to load data for ${PUBLIC_OPEN_DATA_KINGSTON_CITY_ZONES_URL}`);
+			console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_CITY_ZONES_URL}`);
 		}
 	};
 
@@ -183,8 +189,9 @@
 				isShown: true,
 				icon: 'fa-road',
 				hasFilter: hasFilter,
-				color: 'Random',
-				data: gpsElement
+				color: getRandomColor(),
+				data: gpsElement,
+				initialCoordinates: getInitialCoordinates(dataType, gpsElement),
 			};
 
 			addLayerListElementToLayerList(layerElement);
