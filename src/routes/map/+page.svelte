@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { IEventType, ISelectedPOIType, IVideoType } from '$lib/types/eventTypes';
+	import type { IEventType, ISelectedPOIType, IVideoType, SensorQuality } from '$lib/types/eventTypes';
 	import type { ILayerListElementType, IMapDetailsType } from '$lib/types/mapTypes';
 	import type { IDateTimeDictionaryType, IMenuComponentsType } from '$lib/types/types';
 
@@ -35,10 +35,6 @@
 	let selectedPolygon: object | null = null;
 
 	//* Set Payload details for fetching
-	let dateTimeDictionary: IDateTimeDictionaryType = {
-		startDateTime: '2022-10-23T00:00',
-		endDateTime: '2022-12-23T00:00'
-	};
 	let components: IMenuComponentsType[] = [
 		{ id: 0, title: 'Only Map', icon: 'fa-times' },
 		{ id: 1, title: 'Search Data', icon: 'fa-database' },
@@ -79,13 +75,21 @@
 		};
 	};
 
-	const fetchEventsData = async () => {
+	const fetchEventsData = async (dateTimeDictionary: IDateTimeDictionaryType, selectedSensorQuality : SensorQuality) => {
 		isLoading = true;
 		isError = false;
 
 		try {
+
+			const sensorQualityMap : { [key in SensorQuality]?: number } = {
+				Low: 1,
+				Medium: 2,
+				High: 3
+			};
+			const sensorQualityValue : number = sensorQualityMap[selectedSensorQuality] || 1;
+
 			// Get all the events from the smarter ai api
-			const tempEventList = await getSmarterAiEvents(dateTimeDictionary);
+			const tempEventList = await getSmarterAiEvents(dateTimeDictionary, sensorQualityValue);
 			if (!tempEventList || !tempEventList.length) return;
 
 			const tempGpsData = await getSmarterAiGPS(tempEventList);
@@ -108,26 +112,26 @@
 
 <Navbar bind:selectedMenu bind:components />
 <main>
-	<div class="grid grid-cols-1  2xl:grid-cols-12">
+	<div class="relative grid grid-cols-1  2xl:grid-cols-12">
 		{#if selectedMenu.id != 0}
 			<div class="col-span-1 2xl:col-span-2 flex flex-col sm:flex-row 2xl:flex-col gap-4 p-2">
-				<Card title="Layers" showOnLoad={true}>
+				<Card title="Layers" showOnLoad={true} disableToggle={true}>
 					<Layers bind:layerList {updateMapCenter} />
 				</Card>
 				{#if selectedMenu.id === 1}
-					<Card title="Search Data" showOnLoad={true}>
-						<SearchData bind:dateTimeDictionary {fetchEventsData} />
+					<Card title="Search Data" showOnLoad={true} disableToggle={true}>
+						<SearchData {fetchEventsData} />
 					</Card>
 				{:else if selectedMenu.id === 2}
-					<Card title="Street View">
+					<Card title="Street View" disableToggle={true}>
 						<StreetView bind:selectedPOI />
 					</Card>
 				{:else if selectedMenu.id === 3}
-					<Card title="Video Player">
+					<Card title="Video Player" disableToggle={true}>
 						<VideoPlayer bind:selectedPOI />
 					</Card>
 				{:else if selectedMenu.id === 4}
-					<Card title="About">
+					<Card title="About" disableToggle={true}>
 						<About />
 					</Card>
 				{/if}
@@ -135,7 +139,7 @@
 		{/if}
 
 		<div
-			class={`relative col-span-1   ${
+			class={` col-span-1   ${
 				selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'
 			}  `}
 		>
@@ -147,12 +151,14 @@
 				{updateSelectedPOI}
 			/>
 
-			{#if isLoading === true}
+			
+		</div>
+
+		{#if isLoading === true}
 				<LoadingSpinner />
 			{:else if isError === true}
 				<LoadingError />
 			{/if}
-		</div>
 	</div>
 
 	{#if eventList.length}

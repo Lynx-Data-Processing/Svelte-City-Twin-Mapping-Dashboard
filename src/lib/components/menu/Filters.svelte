@@ -14,6 +14,7 @@
 		}
 		gpsFilters = tempArray;
 	};
+	
 </script>
 
 <div class="flex flex-row">

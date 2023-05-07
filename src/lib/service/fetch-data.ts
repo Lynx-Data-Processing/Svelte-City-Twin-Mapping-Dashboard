@@ -3,69 +3,7 @@ import {
   buildWebStorage, defaultHeaderInterpreter, defaultKeyGenerator, setupCache
 } from 'axios-cache-interceptor';
 
-//* Simple utility function for axios.
-//* Used by smarter-api, and loading city data
-export const axiosUtility = async (config: object) => {
-  try {
-    const promise = await axios(config);
-    return promise;
-  } catch (error: any) {
-    if (error.response) {
-      return error.response.status;
-    } if (error.request) {
-      return error.request;
-    }
-    return error.message;
-  }
-};
 
-export const axiosBlobUtility = async (url: string) => {
-
-  var data = JSON.stringify({
-    "video_link": url
-  });
-
-
-  let config = {
-    method: 'post',
-    url: 'http://127.0.0.1:8000/machinelearning',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    data: data
-  };
-
-  return await axios(config)
-    .then((response) => {
-
-
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-
-}
-
-export const axiosGetUtility = async (url: string) => {
-  try {
-    const config = {
-      method: 'get',
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    const promise = await axios(config);
-    return promise;
-  } catch (error: any) {
-    if (error.response) {
-      return error.response.status;
-    } if (error.request) {
-      return error.request;
-    }
-    return error.message;
-  }
-};
 
 export const axiosCacheGetUtility = async (url: string) => {
   const call = setupCache(
@@ -136,4 +74,3 @@ export const axiosCacheGetUtility = async (url: string) => {
   return response;
 };
 
-export default axiosUtility;

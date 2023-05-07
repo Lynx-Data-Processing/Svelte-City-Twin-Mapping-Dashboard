@@ -8,8 +8,7 @@ export const getVehicleSpeedColor = (speed: number) => {
     return SPEED_COLORS[speedIndex];
 };
 
-//* Get the speed from the properties object
-//* Speed is sometimes not found in the object, in that case, return 0
+
 export const getSpeed = (properties: object) => {
     for (const [key, value] of Object.entries(properties)) {
         if (key.toLowerCase().includes('speed')) {

@@ -157,7 +157,7 @@ export const getSmarterAiSensorData = async (event: IEventType, fromDateTime: nu
 }
 
 
-export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionaryType) {
+export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionaryType, sensorQualityValue: number) {
 
   const params = new URLSearchParams({
     secretToken: PUBLIC_API_KEY,
@@ -170,7 +170,7 @@ export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionary
 
   const results = [];
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < sensorQualityValue; i++) {
     try {
       const response = await axios.get(`${API_SMARTER_AI_EVENTS_URL}?${params.toString()}`);
       const eventList = response.data.eventList;

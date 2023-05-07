@@ -2,7 +2,7 @@
 	import type { ISelectedPOIType } from '$lib/types/eventTypes';
 	import type { ILayerListElementType, IMapDetailsType, IMapStyle } from '$lib/types/mapTypes';
 	import type { IMenuComponentsType } from '$lib/types/types';
-	import { axiosCacheGetUtility } from '$lib/utils/fetch-data';
+	import { axiosCacheGetUtility } from '$lib/service/fetch-data';
 	import { rawKingstonDataToGeojsonData } from '$lib/utils/geojson/kingston-geojson-util';
 	import { buildPopup } from '$lib/utils/popup-builder';
 	import { onMount } from 'svelte';
@@ -84,7 +84,7 @@
 	const fetchInitialMapData = async () => {
 		const buildingElement: ILayerListElementType = {
 			id: Math.floor(Math.random() * 100),
-			icon: 'fa-building',
+			icon: 'fa-solid fa-building',
 			type: 'Feature',
 			isShown: true,
 			layerName: '3D-Buildings',
@@ -111,7 +111,7 @@
 
 			const neighborhoodsElement: ILayerListElementType = {
 				id: Math.floor(Math.random() * 100),
-				icon: 'fa-border-all',
+				icon: 'fa-solid fa-table-cells-large',
 				type: 'Polygon',
 				isShown: false,
 				layerName: 'Neighborhoods',
@@ -187,7 +187,7 @@
 				sourceName: dataSourceName,
 				type: dataType,
 				isShown: true,
-				icon: 'fa-road',
+				icon: 'fa-solid fa-car',
 				hasFilter: hasFilter,
 				color: getRandomColor(),
 				data: gpsElement,
@@ -251,6 +251,7 @@
 		mapboxMap.on('draw.delete', clearPolygon);
 		mapboxMap.on('draw.update', updatePolygon);
 		mapboxMap.on('contextmenu', clearPolygon);
+		
 
 		mapboxMap.on('style.load', function () {
 			addExistingDynamicGPSElements();
@@ -267,7 +268,7 @@
 
 
 	<div class="absolute top-2 left-2 flex flex-col gap-4 z-100 align-right">
-		<Card title="Map Style" width="w-[14rem]">
+		<Card title="Map Style" width="w-[14rem]" showOnLoad={false}>
 			<MapStyleSelector bind:selectedMapStyle {mapStyles} {switchStyle} />
 		</Card>
 

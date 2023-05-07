@@ -15,6 +15,9 @@ export const PLANNING_POLYGON_URL = "https://opendatakingston.cityofkingston.ca/
 export const PLANNING_LINE_URL = "https://opendatakingston.cityofkingston.ca/api/records/1.0/search/?dataset=capital-planning-lines&q=&facet=capital_program_line&facet=program_subclass&facet=project_title&facet=project_planning_from&facet=project_planning_to&facet=planned_construction_from&facet=planned_construction_to&facet=construction_completion_from&facet=construction_completion_to";
 export const SIDEWALK_POLYGON_URL = "https://opendatakingston.cityofkingston.ca/api/records/1.0/search/?dataset=sidewalk-surface&q=&facet=material";
 
+export const LOW = 'Low';
+export const MEDIUM = 'Medium';
+export const HIGH = 'High';
 
 export const DEVICE_ID = "CK20520033"
 export const API_SMARTER_AI_ENDPOINT_LIST_URL = "https://api.anyconnect.com/v1/endpoint/list";

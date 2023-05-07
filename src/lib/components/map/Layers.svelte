@@ -39,7 +39,7 @@
 					on:click={() => toggleLayer(layer)}
 					class={`btn w-full ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} `}
 				>
-					<i class="fa-solid {layer.icon} " />
+					<i class="{layer.icon} " />
 					<span>{layer.layerName}</span>
 				</button>
 
@@ -49,7 +49,7 @@
 					}}
 					class="btn btn-black-outline w-16 btn-text-center"
 					><i
-						class={`fa-solid ${layer.icon} icon-color`}
+						class={`${layer.icon} icon-color`}
 						style={`--sent-color: ${layer.color}`}
 					/></button
 				>

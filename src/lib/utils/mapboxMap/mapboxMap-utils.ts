@@ -21,24 +21,21 @@ export const updateMapCenter = (map: any, mapDetails: any) => {
 };
 
 
-export const getInitialCoordinates = (type: IGeojsonDataType, data: any) => {
-    if (!data) return;
-    try{
+export const getInitialCoordinates = (type: IGeojsonDataType, data: any) : number[] => {
+    if (!data) return [0,0];
+   
         const initialCoordinateMap: { [key in IGeojsonDataType]?: number } = {
-            Point: data.features[0].geometry.coordinates,
+            Point: data.features[0].geometry.coordinates ,
             LineString:  data.features[0].geometry.coordinates[0] ,
-            Polygon: data.features[0].geometry.coordinates[0][0],
-            MultiPolygon: data.features[0].geometry.coordinates[0][0],
+            Polygon: data.features[0].geometry.coordinates[0][0] ,
+            MultiPolygon: data.features[0].geometry.coordinates[0][0] ,
         };
     
-        console.log('initialCoordinateMap[type]', initialCoordinateMap[type]);
-        return initialCoordinateMap[type] || [0,0];
-    }
-    catch(err){
+        const coords = [initialCoordinateMap[type]] as number[];
+        if(coords){
+            return coords;
+        }
         return [0,0];
-    }
-
-   
 };
 
 export const checkIfMapSourceExists = (sourceName: string, map: any) => {
@@ -69,6 +66,12 @@ export const removeExistingSourceFromMap = (map:any, sourceName: string) => {
     }
 };
 
+export const updateMapSource = (map: any, sourceName: string, data: any) => {
+    const sourceExists = checkIfMapSourceExists(sourceName, map);
+    if (sourceExists) {
+        map.getSource(sourceName).setData(data);
+    }
+};
 
 export const addLayerSource = (map: any, sourceName: string, data: any) => {
     const sourceExists = checkIfMapSourceExists(sourceName, map);

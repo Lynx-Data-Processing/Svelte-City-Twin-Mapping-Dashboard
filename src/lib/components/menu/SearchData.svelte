@@ -1,13 +1,22 @@
 <script lang="ts">
+	import type { SensorQuality } from '$lib/types/eventTypes';
 	import type { IDateTimeDictionaryType } from '$lib/types/types';
-
-	export let dateTimeDictionary: IDateTimeDictionaryType;
-	export let fetchEventsData: () => void;
+	import Slider from '../Slider.svelte';
+	
+	let dateTimeDictionary: IDateTimeDictionaryType = {
+		startDateTime: '2022-10-23T00:00',
+		endDateTime: '2022-12-23T00:00'
+	};
+	export let fetchEventsData: Function;
 
 	let isEndDateBeforeStartDate = false;
 	function checkEndDateBeforeStartDate() {
 		isEndDateBeforeStartDate = new Date(dateTimeDictionary.endDateTime) < new Date(dateTimeDictionary.startDateTime);
 	}
+
+	
+	let sensorQualityLabels: SensorQuality[] = ['Low', 'Medium', 'High'];
+	let selectedSensorQuality : SensorQuality = sensorQualityLabels[0];
 </script>
 
 <div class="flex flex-col">
@@ -43,11 +52,17 @@
 		/>
 	</div>
 
+	<div class="my-1">
+		<p class="text-md">Sensor Quality</p>
+		<Slider bind:selectedValue={selectedSensorQuality}  sliderElements={sensorQualityLabels} />
+	</div>
+
+	
 	{#if dateTimeDictionary.startDateTime && dateTimeDictionary.endDateTime}
 		{#if isEndDateBeforeStartDate}
 			<div class="alert alert-error my-1" role="alert">End date cannot be before start date.</div>
 		{:else}
-			<button class={`btn btn-primary my-1`} on:click={() => fetchEventsData()}
+			<button class={`btn btn-primary my-1`} on:click={() => fetchEventsData(dateTimeDictionary, selectedSensorQuality)}
 				><i class="fa-solid fa-database " /><span>Search Data</span>
 			</button>
 		{/if}

@@ -1,3 +1,5 @@
+import type { LOW, MEDIUM, HIGH } from "$lib/constants";
+
 export interface ISensorData {
     eventSource: string;
     eventTimestamp: number;
@@ -11,7 +13,7 @@ export interface ISensorData {
     sensorData: ISensorData;
   }
   
-
+export type SensorQuality = typeof LOW | typeof MEDIUM | typeof HIGH;
 
 export interface IVideoType {
     eventId: number
