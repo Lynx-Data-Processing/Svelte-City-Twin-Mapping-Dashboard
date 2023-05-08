@@ -24,6 +24,7 @@
 	import mapboxgl from 'mapbox-gl';
 
 	import {
+	addLayerListElementToLayerList,
 		addLayerSource,
 		addMapLayerVisibility,
 		getInitialCoordinates,
@@ -68,18 +69,7 @@
 		defaultMode: 'simple_select'
 	});
 
-	const addLayerListElementToLayerList = (layerListElement: ILayerListElementType) => {
-		let tempLayerList = layerList;
-		if (checkIfElementExists(tempLayerList, 'layerName', layerListElement.layerName)) {
-			tempLayerList = removeObjectWhereValueEqualsString(
-				tempLayerList,
-				'layerName',
-				layerListElement.layerName
-			);
-		}
-		tempLayerList.push(layerListElement);
-		layerList = tempLayerList;
-	};
+
 
 	const fetchInitialMapData = async () => {
 		const buildingElement: ILayerListElementType = {
@@ -92,7 +82,7 @@
 			sourceName: 'composite',
 			color: 'Black',
 		};
-		addLayerListElementToLayerList(buildingElement);
+		layerList = addLayerListElementToLayerList(layerList, buildingElement);
 
 		const neighborhoodsResponse = await axiosCacheGetUtility(
 			OPEN_DATA_KINGSTON_CITY_ZONES_URL
@@ -121,7 +111,7 @@
 				color: 'Blue',
 				data: neighborhoodsGpsData
 			};
-			addLayerListElementToLayerList(neighborhoodsElement);
+			layerList = addLayerListElementToLayerList(layerList, neighborhoodsElement);
 		} else {
 			console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_CITY_ZONES_URL}`);
 		}
@@ -194,8 +184,7 @@
 				initialCoordinates: getInitialCoordinates(dataType, gpsElement),
 			};
 
-			addLayerListElementToLayerList(layerElement);
-			removeExistingLayerFromMap(mapboxMap, layerElement.layerName);
+			layerList = addLayerListElementToLayerList(layerList, layerElement);
 			addLayerSource(mapboxMap, layerElement.sourceName, layerElement.data);
 			addLayerOnMap(layerElement);
 		}
@@ -222,9 +211,11 @@
 		selectedPolygon = null;
 	};
 
+	// If any of the values change then call the function
 	$: mapboxMap && gpsData && addNewDynamicGPSElements();
 	$: mapboxMap && mapDetails && updateMapCenter(mapboxMap, mapDetails);
 	$: mapboxMap && selectedMenu && resizeMap(mapboxMap);
+	$: mapboxMap && layerList && addMapLayerVisibility(mapboxMap, layerList);
 
 	onMount(async () => {
 
@@ -257,9 +248,6 @@
 			addExistingDynamicGPSElements();
 		});
 
-		mapboxMap.on('idle', () => {
-			addMapLayerVisibility(mapboxMap, layerList);
-		});
 	});
 </script>
 

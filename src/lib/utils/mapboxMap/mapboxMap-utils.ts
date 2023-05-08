@@ -1,5 +1,20 @@
 import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 import type { ILayerListElementType } from '$lib/types/mapTypes';
+import { checkIfElementExists, removeObjectWhereValueEqualsString } from '../filter-data';
+
+
+export const addLayerListElementToLayerList = (layerList : ILayerListElementType[], layerListElement: ILayerListElementType) => {
+    let tempLayerList = layerList;
+    if (checkIfElementExists(tempLayerList, 'layerName', layerListElement.layerName)) {
+        tempLayerList = removeObjectWhereValueEqualsString(
+            tempLayerList,
+            'layerName',
+            layerListElement.layerName
+        );
+    }
+    tempLayerList.push(layerListElement);
+    return tempLayerList;
+};
 
 export const switchStyle = (map: any, isInitialDataLoaded: boolean, mapStyle: string) => {
     if (!map || !isInitialDataLoaded) return;
@@ -89,11 +104,11 @@ export const addLayerSource = (map: any, sourceName: string, data: any) => {
 
 export const addMapLayerVisibility = (map: any, layerList: ILayerListElementType[]) => {
     if (!map || !layerList) return;
-
+   
     for (let i = 0, len = layerList.length; i < len; i++) {
         const layerElement = layerList[i];
-        const {layerName, sourceName, isShown} = layerElement;
-        if(checkIfMapLayerExists(layerName, map) && checkIfMapSourceExists(sourceName, map)) {
+        const {layerName, isShown} = layerElement;
+        if(checkIfMapLayerExists(layerName, map)) {
             map.setLayoutProperty(
                 layerName,
                 'visibility',
