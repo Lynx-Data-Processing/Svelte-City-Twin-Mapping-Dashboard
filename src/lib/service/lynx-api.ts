@@ -2,7 +2,37 @@ import axios from "axios";
 import { fetchAuth } from "../utils/fetch-auth";
 import { PUBLIC_NODE_BACKEND_URL } from '$env/static/public';
 
+// TODO: 
+// 1. implement result parsing for all functions
+// 2. fix types on `getSensor` params
+
+
+
 // root smarterAI enpoint
+export const getSmarterAi = async () => {
+
+    const config = {
+        method: 'get',
+        url: `${PUBLIC_NODE_BACKEND_URL}/`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${fetchAuth()}`,
+        },
+    };
+  
+    try {
+        const promise = await axios(config);
+        return promise;
+    } catch (error: any) {
+        if (error.response) {
+            return error.response.status;
+        } 
+        if (error.request) {
+            return error.request;
+        }
+        return error.message;
+    }
+};
 
 // get all smarterAI devices
 export const getDevices = async () => {
