@@ -4,7 +4,7 @@ import { PUBLIC_NODE_BACKEND_URL } from '$env/static/public';
 
 // root smarterAI enpoint
 
-// get all devices from smarterAI
+// get all smarterAI devices
 export const getDevices = async () => {
 
     const config = {
@@ -30,7 +30,7 @@ export const getDevices = async () => {
     }
 };
 
-// get information for a specific device id
+// get information for a specific endpoint
 export const getInfo = async (endpointId: string) => {
 
     const params = new URLSearchParams({
@@ -60,7 +60,7 @@ export const getInfo = async (endpointId: string) => {
     }
 }
 
-// get events for a specific device id
+// get events for a specific device
 export const getEvents = async (deviceId: string) => {
 
     const params = new URLSearchParams({
@@ -90,7 +90,7 @@ export const getEvents = async (deviceId: string) => {
     }
 }
 
-// get videos for a specific device id
+// get videos for a specific endpoint
 export const getVideos = async (endpointId: string, startTime: number, endTime: number) => {
 
     const params = new URLSearchParams({
@@ -122,7 +122,7 @@ export const getVideos = async (endpointId: string, startTime: number, endTime: 
     }
 }
 
-// get sensors for a specific video id
+// get sensors for a specific endpoint
 export const getSensor = async (
     endpointId: string, 
     startTime: number, 
@@ -133,13 +133,15 @@ export const getSensor = async (
 
     const params = new URLSearchParams({
         endpointId: endpointId,
-        startTime: startTime.toString(),
-        endTime: endTime.toString(),
+        startTime: `${startTime}`,
+        endTime: `${endTime}`,
+        sensorType: sensorType,
+        processType: processType,
     });
     
     const config = {
         method: 'get',
-        url: `${PUBLIC_NODE_BACKEND_URL}/video?${params.toString()}`,
+        url: `${PUBLIC_NODE_BACKEND_URL}/sensor?${params.toString()}`,
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `${fetchAuth()}`,
