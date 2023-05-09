@@ -1,4 +1,5 @@
 import axios from "axios";
+import { fetchAuth } from "../utils/fetch-auth";
 import { PUBLIC_NODE_BACKEND_URL } from '$env/static/public';
 
 // root smarterAI enpoint
@@ -11,6 +12,7 @@ export const getDevices = async () => {
         url: `${PUBLIC_NODE_BACKEND_URL}/devices`,
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `${fetchAuth()}`,
         },
     };
   
@@ -40,6 +42,7 @@ export const getInfo = async (endpointId: string) => {
         url: `${PUBLIC_NODE_BACKEND_URL}/info?${params.toString()}`,
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `${fetchAuth()}`,
         },
     };
     
@@ -69,6 +72,7 @@ export const getEvents = async (deviceId: string) => {
         url: `${PUBLIC_NODE_BACKEND_URL}/events?${params.toString()}`,
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `${fetchAuth()}`,
         },
     };
     
@@ -91,8 +95,8 @@ export const getVideos = async (endpointId: string, startTime: number, endTime: 
 
     const params = new URLSearchParams({
         endpointId: endpointId,
-        startTime: startTime.toString(),
-        endTime: endTime.toString(),
+        startTime: `${startTime}`,
+        endTime: `${endTime}`,
     });
     
     const config = {
@@ -100,6 +104,7 @@ export const getVideos = async (endpointId: string, startTime: number, endTime: 
         url: `${PUBLIC_NODE_BACKEND_URL}/video?${params.toString()}`,
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `${fetchAuth()}`,
         },
     };
     
@@ -117,4 +122,40 @@ export const getVideos = async (endpointId: string, startTime: number, endTime: 
     }
 }
 
-// sensors endpoint
+// get sensors for a specific video id
+export const getSensor = async (
+    endpointId: string, 
+    startTime: number, 
+    endTime: number,
+    sensorType: string,
+    processType: string,
+    ) => {
+
+    const params = new URLSearchParams({
+        endpointId: endpointId,
+        startTime: startTime.toString(),
+        endTime: endTime.toString(),
+    });
+    
+    const config = {
+        method: 'get',
+        url: `${PUBLIC_NODE_BACKEND_URL}/video?${params.toString()}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${fetchAuth()}`,
+        },
+    };
+    
+    try {
+        const promise = await axios(config);
+        return promise;
+    } catch (error: any) {
+        if (error.response) {
+            return error.response.status;
+        } 
+        if (error.request) {
+            return error.request;
+        }
+        return error.message;
+    }
+}
