@@ -28,11 +28,11 @@ export const getDevices = async () => {
     }
 };
 
-// Get information from a specific device
-export const getInfo = async (deviceId: string) => {
+// get information for a specific device id
+export const getInfo = async (endpointId: string) => {
 
     const params = new URLSearchParams({
-        endpointId: deviceId,
+        endpointId: endpointId,
     });
     
     const config = {
@@ -57,7 +57,34 @@ export const getInfo = async (deviceId: string) => {
     }
 }
 
-// events endpoint
+// get events for a specific device id
+export const getEvents = async (deviceId: string) => {
+
+    const params = new URLSearchParams({
+        endpointId: deviceId,
+    });
+    
+    const config = {
+        method: 'get',
+        url: `${PUBLIC_NODE_BACKEND_URL}/events?${params.toString()}`,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+    
+    try {
+        const promise = await axios(config);
+        return promise;
+    } catch (error: any) {
+        if (error.response) {
+            return error.response.status;
+        } 
+        if (error.request) {
+            return error.request;
+        }
+        return error.message;
+    }
+}
 
 // video endpoint
 
