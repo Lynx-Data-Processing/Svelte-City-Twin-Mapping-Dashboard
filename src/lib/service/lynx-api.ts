@@ -1,12 +1,13 @@
-import axios from "axios";
+import axios from 'axios';
 import { fetchAuth } from "../utils/fetch-auth";
 import { PUBLIC_NODE_BACKEND_URL } from '$env/static/public';
-
-// TODO: 
-// 1. implement result parsing for all functions
-// 2. fix types on `getSensor` params
-
-
+import type { 
+    IDeviceType,
+    IEventType, 
+    IVideoType, 
+    IMediaRecordingType,
+    ISensorReading 
+} from '../types/eventTypes';
 
 // root smarterAI enpoint
 export const getSmarterAi = async () => {
@@ -21,8 +22,9 @@ export const getSmarterAi = async () => {
     };
   
     try {
-        const promise = await axios(config);
-        return promise;
+        const res = await axios(config);
+        return res;
+
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
@@ -47,8 +49,11 @@ export const getDevices = async () => {
     };
   
     try {
-        const promise = await axios(config);
-        return promise;
+        // parse response and return devices
+        const res = await axios(config);
+        const devices: IDeviceType[] = res.data.endpoints;
+        
+        return devices;
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
@@ -77,8 +82,11 @@ export const getInfo = async (endpointId: string) => {
     };
     
     try {
-        const promise = await axios(config);
-        return promise;
+        // parse response and return device
+        const res = await axios(config);
+        const device: IDeviceType = res.data;
+        
+        return device;
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
@@ -107,8 +115,11 @@ export const getEvents = async (deviceId: string) => {
     };
     
     try {
-        const promise = await axios(config);
-        return promise;
+        // parse response and return events
+        const res = await axios(config);
+        const events: IEventType[] = res.data.events;
+
+        return events;
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
@@ -120,13 +131,13 @@ export const getEvents = async (deviceId: string) => {
     }
 }
 
-// get videos for a specific endpoint
-export const getVideos = async (endpointId: string, startTime: number, endTime: number) => {
+// get videos / vodeo metadata for a specific endpoint
+export const getVideos = async (gpsElement: any) => {
 
     const params = new URLSearchParams({
-        endpointId: endpointId,
-        startTime: `${startTime}`,
-        endTime: `${endTime}`,
+        endpointId: gpsElement.endpointId,
+        startTime: `${gpsElement.startTime}`,
+        endTime: `${gpsElement.endTime}`,
     });
     
     const config = {
@@ -139,8 +150,21 @@ export const getVideos = async (endpointId: string, startTime: number, endTime: 
     };
     
     try {
-        const promise = await axios(config);
-        return promise;
+        // parse response and return video and video metadata
+        const res = await axios(config);
+        const videos: IMediaRecordingType[] = res.data.mediaEventRecordings.filter((res: IMediaRecordingType) => res.type === 'VIDEO');
+        const videoLink = videos.length ? videos[0].url : '';
+    
+        const video: IVideoType = {
+            eventId: gpsElement.eventId,
+            deviceId: gpsElement.deviceId,
+            endpointId: gpsElement.endpointId,
+            startTimestamp: gpsElement.startTime,
+            endTimestamp: gpsElement.endTime,
+            videoUrl: videoLink
+        };
+
+        return video;
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
@@ -179,8 +203,11 @@ export const getSensor = async (
     };
     
     try {
-        const promise = await axios(config);
-        return promise;
+        // parse response and return sensor data
+        const res = await axios(config);
+        const sensorData: ISensorReading = res.data;
+        
+        return sensorData;
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
