@@ -131,7 +131,7 @@ export const getEvents = async (deviceId: string) => {
     }
 }
 
-// get videos / vodeo metadata for a specific endpoint
+// get videos / video metadata for a specific endpoint
 export const getVideos = async (gpsElement: any) => {
 
     const params = new URLSearchParams({
