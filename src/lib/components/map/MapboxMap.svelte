@@ -6,7 +6,6 @@
 	import { rawKingstonDataToGeojsonData } from '$lib/utils/geojson/kingston-geojson-util';
 	import { buildPopup } from '$lib/utils/popup-builder';
 	import { onMount } from 'svelte';
-	import { v4 as uuidv4 } from 'uuid';
 
 	import {
 		PUBLIC_MAPBOX_KEY,
@@ -17,7 +16,6 @@
 	} from "$lib/constants/global"
 
 	import { getRandomColor } from "$lib/utils/color-utils"
-
 
 	import MapboxDraw from '@mapbox/mapbox-gl-draw';
 	import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
@@ -172,7 +170,7 @@
 			const gpsElement = gpsData[i];
 			const { dataName, dataType, hasFilter, dataSourceName } = gpsElement;
 			const layerElement: ILayerListElementType = {
-				id: uuidv4(),
+				id: Math.floor(Math.random() * 100),
 				layerName: dataName,
 				sourceName: dataSourceName,
 				type: dataType,

@@ -46,7 +46,7 @@ export const getInitialCoordinates = (type: IGeojsonDataType, data: any) : numbe
             MultiPolygon: data.features[0].geometry.coordinates[0][0] ,
         };
     
-        const coords = [initialCoordinateMap[type]] as number[];
+        const coords = initialCoordinateMap[type] as unknown as number[];
         if(coords){
             return coords;
         }

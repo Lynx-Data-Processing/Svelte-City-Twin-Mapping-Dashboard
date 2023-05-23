@@ -1,15 +1,22 @@
 <script>
+// @ts-nocheck
+
+    // @ts-ignore
     import RangeSlider from 'svelte-range-slider-pips';
 
     export let selectedValue;
+    // @ts-ignore
     export let sliderElements;
+    // @ts-ignore
     let values;
    
     const updateSelectedValue = () => {
+        // @ts-ignore
         selectedValue = sliderElements[values[0]];
     }
 
-    $: values && updateSelectedValue();
+   // @ts-ignore
+     $: values && updateSelectedValue();
    
 </script>
 
