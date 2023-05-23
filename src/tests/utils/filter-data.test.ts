@@ -1,7 +1,5 @@
 
 import "@testing-library/jest-dom";
-import { render } from "@testing-library/svelte";
-
 import { checkIfElementExists, getListOfObjectWhereKeyContainsString, getObjectsWhereKeyAnyValidStrings, getObjectsWhereKeyEqualsValue } from "$lib/utils/filter-data";
 
 describe("getListOfObjectWhereKeyContainsString", () => {

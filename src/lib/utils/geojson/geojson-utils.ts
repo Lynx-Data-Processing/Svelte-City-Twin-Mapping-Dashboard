@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { getSmarterAiSensorData } from './../../service/smarter-api';
 
 import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
@@ -88,7 +87,7 @@ export const getSmarterAiGPS = async (eventList: IEventType[]) => {
 
       //* Set initial Geojson element details
       const dataName = `GPS - ${deviceId}`;
-      const dateTime = uuidv4();
+      const dateTime = new Date().toISOString();
       const dataType: IGeojsonDataType = "LineString";
       const hasFilter = false;
       const dataSourceName = deviceId;
