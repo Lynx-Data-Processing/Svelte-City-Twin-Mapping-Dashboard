@@ -4,8 +4,8 @@
 	import Slider from '../Slider.svelte';
 	
 	let dateTimeDictionary: IDateTimeDictionaryType = {
-		startDateTime: '2022-10-23T00:00',
-		endDateTime: '2022-12-23T00:00'
+		startDateTime: '2023-01-04T00:00',
+		endDateTime: '2022-05-23T00:00'
 	};
 	export let fetchEventsData: Function;
 
