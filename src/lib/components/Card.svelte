@@ -12,7 +12,7 @@
 
 <section in:fly={{ x: -200 }} class="card shadow-md h-fit  {width} p-4 gap-4">
 	<div class="flex flow-row justify-between">
-		<p class="text-md">{title}</p>
+		<p class="card-title">{title}</p>
 
 		{#if !disableToggle}
 			<button on:click={toggleContent} class="toggle-btn text-center hover:underline">

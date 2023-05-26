@@ -1,9 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins&family=Spectral&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 :root {
-  font-family: "Quicksand", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 html {
@@ -16,6 +16,58 @@ body {
   font-size: 14px;
   line-height: 1.5rem;
   letter-spacing: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.1px;
+  letter-spacing: 0.02rem;
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 3.5rem;
+}
+
+h2 {
+  font-size: 2.5rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+p {
+  line-height: 1.57;
+  font-size: 0.75rem;
+  font-weight: normal;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background-color: #e6e8de;
 }
 
 .btn {
@@ -62,13 +114,13 @@ body {
   background-color: #282828;
 }
 .btn-primary {
-  background-color: #315ee7;
-  border-color: #315ee7;
+  background-color: #3f51b5;
+  border-color: #3f51b5;
   color: white;
 }
 .btn-primary:hover {
   color: white;
-  background-color: #10376e;
+  background-color: #324090;
 }
 .btn-error {
   background-color: rgb(180, 41, 41);
@@ -87,7 +139,7 @@ body {
   background-color: rgb(62, 133, 52);
 }
 .btn-black-outline {
-  color: #0F0F0F;
+  color: #0e0d12;
   border-color: rgb(219, 219, 219);
   border-width: 1px;
 }
@@ -113,7 +165,7 @@ body {
 }
 
 .bg-primary {
-  background-color: #315ee7;
+  background-color: #3f51b5;
   color: white;
 }
 
@@ -136,7 +188,7 @@ body {
 }
 
 .bg-dark {
-  background-color: #0F0F0F;
+  background-color: #0e0d12;
   color: white;
 }
 
@@ -296,6 +348,12 @@ body {
   transition: all 0.5s;
 }
 
+.card-title {
+  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
 .date-picker {
   padding: 1rem;
   background-clip: padding-box;
@@ -335,16 +393,16 @@ body {
   transition: all 0.5s;
 }
 .table th:first-child {
-  background-color: #315ee7;
+  background-color: #3f51b5;
   color: white;
 }
 .table th:first-child:hover {
   cursor: pointer;
   color: white;
-  background-color: #10376e;
+  background-color: #324090;
 }
 .table th:nth-child(n+2) {
-  background-color: #0F0F0F;
+  background-color: #0e0d12;
   color: white;
 }
 .table th:nth-child(n+2):hover {
@@ -372,12 +430,12 @@ body {
   border-radius: 0;
 }
 .paginated-btn-primary {
-  background-color: #315ee7;
+  background-color: #3f51b5;
   color: white;
 }
 .paginated-btn-primary:hover {
   color: white;
-  background-color: #10376e;
+  background-color: #324090;
 }
 .paginated-btn-error {
   background-color: rgb(180, 41, 41);
@@ -396,7 +454,7 @@ body {
   background-color: rgb(62, 133, 52);
 }
 .paginated-btn-black-outline {
-  color: #0F0F0F;
+  color: #0e0d12;
   border-color: rgb(219, 219, 219);
 }
 .paginated-btn-black-outline:hover {
@@ -426,7 +484,7 @@ body {
 .map-style-container .map-style-image {
   width: 100%;
   height: 100%;
-  border: 2px solid #0F0F0F;
+  border: 2px solid #0e0d12;
   border-radius: 0.5rem;
   transition: all 0.5s;
 }
@@ -437,10 +495,10 @@ body {
   cursor: pointer;
 }
 .map-style-container:hover .map-style-image {
-  border: 2px solid #315ee7;
+  border: 2px solid #3f51b5;
 }
 .map-style-container:hover .map-style-text {
-  color: #315ee7;
+  color: #3f51b5;
 }
 
 .mapboxgl-popup-close-button {
@@ -464,7 +522,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(90deg, #315ee7 50%, #ffffff 50%);
+  background: linear-gradient(90deg, #3f51b5 50%, #ffffff 50%);
 }
 
 .login-info {

@@ -53,7 +53,7 @@
 	</div>
 
 	<div class="my-1">
-		<p class="text-md">Sensor Quality</p>
+		<p class="card-title">Sensor Quality</p>
 		<Slider bind:selectedValue={selectedSensorQuality}  sliderElements={sensorQualityLabels} />
 	</div>
 

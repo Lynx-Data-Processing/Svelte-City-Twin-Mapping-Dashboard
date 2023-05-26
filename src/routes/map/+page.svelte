@@ -112,7 +112,7 @@
 
 <Navbar bind:selectedMenu bind:components />
 <main>
-	<div class="relative grid grid-cols-1  2xl:grid-cols-12">
+	<div class="relative grid grid-cols-1  2xl:grid-cols-12 bg-smoke">
 		{#if selectedMenu.id != 0}
 			<div class="col-span-1 2xl:col-span-2 flex flex-col sm:flex-row 2xl:flex-col gap-4 p-2">
 				<Card title="Layers" showOnLoad={true} disableToggle={true}>

@@ -94,7 +94,7 @@
 <footer class="mt-auto py-8 px-8 md:px-32 lg:px-32">
 	<div class="grid grid-cols-1 sm:grid-cols-3 pb-8">
 		<div class="col-span-1 py-2">
-			<p class="font-bold">GIS Mapping</p>
+			<p class="text-xl">GIS Mapping</p>
 
 			{#each MAIN_LIST as item}
 				<div class="my-2">
@@ -104,7 +104,7 @@
 		</div>
 
 		<div class="col-span-1 py-2">
-			<p class="font-bold">Tools</p>
+			<p class="text-xl">Tools</p>
 			{#each APPLICATION_LIST as item}
 				<div class="my-2">
 					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
@@ -112,7 +112,7 @@
 			{/each}
 		</div>
 		<div class="col-span-1 py-2">
-			<p class="font-bold">Information</p>
+			<p class="text-xl">Information</p>
 			{#each ABOUT_LIST as item}
 				<div class="my-2">
 					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
@@ -123,9 +123,9 @@
 
 	<div class="grid grid-cols-1 sm:grid-cols-3 py-8">
 		<div class="col-span-1 py-2">
-			<h1 class="font-bold text-2xl uppercase">
+			<p class="text-xl  uppercase">
 				<i class="fa-solid fa-location-arrow mr-1" />lynx
-			</h1>
+			</p>
 			<p class="text-sm my-2">
 				The City promotes and fosters open government principles of participation, innovation,
 				transparency and accountability. The data catalogue supports these principles and is the
@@ -137,7 +137,7 @@
 		<div class="col-span-1 py-2 " />
 
 		<div class="col-span-1 py-2">
-			<p class="font-bold">Terms</p>
+			<p class="text-xl">Terms</p>
 
 			<p class="text-sm my-2">
 				Application uses MAPBOX to display Geojson data. Interactive, thoroughly customizable maps
