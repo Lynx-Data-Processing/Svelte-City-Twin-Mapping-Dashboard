@@ -2,8 +2,9 @@ import { dateTimeToMillisecondUnix } from '../utils/date-format';
 import type { IEventType, IMediaRecordingType, IVideoType } from '$lib/types/eventTypes';
 import type { IDateTimeDictionaryType } from '$lib/types/types';
 import axios from 'axios';
-import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_EVENTS_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_SENSOR_REPORT_URL } from '$lib/constants/global';
-import { PUBLIC_API_KEY, PUBLIC_TENANT_ID } from '$env/static/public';
+import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_EVENTS_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_SENSOR_REPORT_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/global';
+import { PUBLIC_API_KEY,PUBLIC_V5_API_KEY, PUBLIC_TENANT_ID } from '$env/static/public';
+import type { ITripEvent } from '$lib/types/tripTypes';
 
 
 //* Fetch all devices under the Tenant key
@@ -189,5 +190,79 @@ export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionary
     }
   }
 
+  return results.flat();
+}
+
+
+export const getSmarterAiTripWithGps = async (tripId: string) => {
+  const params = new URLSearchParams({
+    tenantId : PUBLIC_TENANT_ID,
+  });
+
+  const config = {
+    method: 'get',
+    url: `${API_SMARTER_AI_TRIPS_URL}/${tripId}?${params.toString()}`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${PUBLIC_V5_API_KEY}`,
+    },
+  };
+
+  try {
+    const promise = await axios(config);
+    return promise.data as ITripEvent;
+  }
+  catch (error: any) {
+    if (error.response) {
+      return error.response.status;
+    } if (error.request) {
+      return error.request;
+    }
+    return error.message;
+  }
+}
+
+
+export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryType, sensorQualityValue: number) => {
+  
+  const params = new URLSearchParams({
+    endpointName: "John's Dashcam",
+    limit: "5",
+    tenantId: PUBLIC_TENANT_ID,
+    fromTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.startDateTime).toString(),
+    toTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.endDateTime).toString(),
+    offset: "0",
+  });
+
+  const results: ITripEvent[][] = [];
+
+  for (let i = 0; i < sensorQualityValue; i++) {
+
+    try {
+
+      let config = {
+        method: 'get',
+        url: `${API_SMARTER_AI_TRIPS_URL}?${params.toString()}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${PUBLIC_V5_API_KEY}`,
+        },
+      };
+
+      const response = await axios(config);
+      const tripList = response.data.tripList;
+      const lastObject = tripList[tripList.length - 1];
+
+      if (!lastObject) {
+        break;
+      }
+
+      params.set('offset', (20 * (i+1)).toString());
+      
+      results.push(tripList as ITripEvent[]);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return results.flat();
 }

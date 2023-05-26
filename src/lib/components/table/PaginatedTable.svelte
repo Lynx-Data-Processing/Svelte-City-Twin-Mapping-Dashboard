@@ -2,11 +2,12 @@
 	import { onMount } from 'svelte';
 	import EventTable from './EventTable.svelte';
 	import PaginationButtons from './PaginationButtons.svelte';
-	export let eventList: any;
+	import TripTable from './TripTable.svelte';
+	export let tableData: any;
 	export let updateMapCenter: Function;
 
-	let totalNumberOfItems = eventList.length;
-	let paginatedEvents: any = [];
+	let totalNumberOfItems = tableData.length;
+	let paginatedTableData: any = [];
 	let paginationPage = 0;
 	const numberOfItemsPerPageList = [10, 20, 30];
 	let numberOfItemsPerPage = numberOfItemsPerPageList[0];
@@ -32,20 +33,20 @@
 	};
 
 	const updatePaginationFiles = () => {
-		numberOfPages = Math.ceil(eventList.length / numberOfItemsPerPage);
+		numberOfPages = Math.ceil(tableData.length / numberOfItemsPerPage);
 		paginationFrom = paginationPage * numberOfItemsPerPage;
-		paginationTo = Math.min((paginationPage + 1) * numberOfItemsPerPage, eventList.length);
-		paginatedEvents = eventList.slice(
+		paginationTo = Math.min((paginationPage + 1) * numberOfItemsPerPage, tableData.length);
+		paginatedTableData = tableData.slice(
 			paginationPage * numberOfItemsPerPage,
 			paginationPage * numberOfItemsPerPage + numberOfItemsPerPage
 		);
 	};
-	$: eventList && updatePaginationFiles();
+	$: tableData && updatePaginationFiles();
 </script>
 
 <div class="flex flex-col">
-	{#if paginatedEvents.length}
-		<EventTable {paginatedEvents} {updateMapCenter} />
+	{#if paginatedTableData.length}
+		<TripTable paginatedTrips={paginatedTableData} {updateMapCenter} />
 
 		<PaginationButtons
 			{paginationFrom}
@@ -56,6 +57,6 @@
 			{setPaginationPage}
 		/>
 	{:else}
-		<div class="alert alert-error my-1" role="alert">No Events Found.</div>
+		<div class="alert alert-error my-1" role="alert">No Data Found.</div>
 	{/if}
 </div>

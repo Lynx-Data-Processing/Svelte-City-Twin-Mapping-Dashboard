@@ -120,7 +120,7 @@ export const getSmarterAiGPS = async (eventList: IEventType[]) => {
             EndTime: event.recordingEndTimestamp,
             Sensor: sensorData,
             Speeds: speeds,
-            Color: getVehicleSpeedColor(getAverageSpeed(speeds)),
+            color: getVehicleSpeedColor(getAverageSpeed(speeds)),
             Coordinates: coordinates
           };
 

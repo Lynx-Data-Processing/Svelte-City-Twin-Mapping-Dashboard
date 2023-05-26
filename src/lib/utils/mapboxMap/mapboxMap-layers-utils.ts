@@ -73,7 +73,7 @@ export const addLineLayer = (
     buildPopup: Function
 ) => {
     try {
-    
+
         mapboxMap.addLayer({
             id: layerElement.layerName,
             type: 'line',
@@ -85,7 +85,38 @@ export const addLineLayer = (
             paint: {
                 'line-color': color,
                 'line-width': lineWidth,
-                
+
+            }
+        });
+
+        mapboxMap.addLayer({
+            'id': layerElement.layerName + '-symbol',
+            'type': 'symbol',
+            'source': layerElement.sourceName,
+            'layout': {
+                'symbol-placement': 'line',
+                'text-field': '←',
+                'text-size': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    1,
+                    10,
+                    10,
+                    24
+                ],
+                'symbol-spacing': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    1,
+                    10,
+                    10,
+                    24
+                ]
+            },
+            'paint': {
+                'text-color': '#000000'
             }
         });
 

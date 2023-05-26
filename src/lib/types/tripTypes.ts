@@ -1,3 +1,21 @@
+interface IGeoCoordinates {
+  lon: number;
+  lat: number;
+}
+
+export interface ITripEvent {
+  id: string;
+  endpointId: number;
+  endpointName: string;
+  startTimestamp: number;
+  endTimestamp: number;
+  tripStatus: string;
+  startGeo: IGeoCoordinates;
+  endGeo: IGeoCoordinates;
+  distance: number;
+}
+
+
 export type ITrip = {
     id: string;
     endpointId: number;

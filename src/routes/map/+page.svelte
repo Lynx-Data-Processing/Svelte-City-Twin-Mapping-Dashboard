@@ -16,9 +16,11 @@
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import StreetView from '$lib/components/menu/StreetView.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
-	import { getSmarterAiEvents } from '$lib/service/smarter-api';
+	import { getSmarterAiEvents, getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import { getSmarterAiGPS } from '$lib/utils/geojson/geojson-utils';
+	import type { ITrip } from '$lib/types/tripTypes';
+	import { convertTripsToGeoJSON } from '$lib/utils/geojson/geojson-trips-utils';
 	
 	//* Set Initial Map Details
 
@@ -48,6 +50,12 @@
 
 	let gpsData: IGeojsonType[] = [];
 	let eventList: IEventType[] = [];
+	let tripList: ITrip[] = [];
+	const sensorQualityMap : { [key in SensorQuality]?: number } = {
+				Low: 1,
+				Medium: 2,
+				High: 3
+			};
 
 	const updateMapCenter = (
 		coordinates: number[],
@@ -75,26 +83,30 @@
 		};
 	};
 
-	const fetchEventsData = async (dateTimeDictionary: IDateTimeDictionaryType, selectedSensorQuality : SensorQuality) => {
+
+	const fetchTripsData = async (dateTimeDictionary: IDateTimeDictionaryType, selectedSensorQuality : SensorQuality) => {
 		isLoading = true;
 		isError = false;
 
 		try {
 
-			const sensorQualityMap : { [key in SensorQuality]?: number } = {
-				Low: 1,
-				Medium: 2,
-				High: 3
-			};
+
 			const sensorQualityValue : number = sensorQualityMap[selectedSensorQuality] || 1;
+			const tempTripList = await getSmarterAiTrips(dateTimeDictionary, sensorQualityValue);
+			if (!tempTripList || !tempTripList.length) return;
 
-			// Get all the events from the smarter ai api
-			const tempEventList = await getSmarterAiEvents(dateTimeDictionary, sensorQualityValue);
-			if (!tempEventList || !tempEventList.length) return;
+			let tempTripWithGPSList: ITrip[] = [];
+			for(let i = 0; i < tempTripList.length; i++) {
+				const trip = tempTripList[i];
+				const tempTripWithGPS = await getSmarterAiTripWithGps(trip.id);
+				tempTripWithGPSList.push(tempTripWithGPS);
+			}
 
-			const tempGpsData = await getSmarterAiGPS(tempEventList);
+			const tempGpsData = await convertTripsToGeoJSON(tempTripWithGPSList);
 			gpsData = tempGpsData;
-			eventList = tempEventList;
+			tripList = tempTripWithGPSList;
+
+			
 		} catch (error) {
 			alert(error);
 			isError = true;
@@ -112,7 +124,7 @@
 
 <Navbar bind:selectedMenu bind:components />
 <main>
-	<div class="relative grid grid-cols-1  2xl:grid-cols-12 bg-smoke">
+	<div class="relative grid grid-cols-1  2xl:grid-cols-12 ">
 		{#if selectedMenu.id != 0}
 			<div class="col-span-1 2xl:col-span-2 flex flex-col sm:flex-row 2xl:flex-col gap-4 p-2">
 				<Card title="Layers" showOnLoad={true} disableToggle={true}>
@@ -120,7 +132,7 @@
 				</Card>
 				{#if selectedMenu.id === 1}
 					<Card title="Search Data" showOnLoad={true} disableToggle={true}>
-						<SearchData {fetchEventsData} />
+						<SearchData {fetchTripsData} />
 					</Card>
 				{:else if selectedMenu.id === 2}
 					<Card title="Street View" disableToggle={true}>
@@ -161,10 +173,10 @@
 			{/if}
 	</div>
 
-	{#if eventList.length}
+	{#if tripList.length}
 		<div class="p-4">
 			<Card title="Recordings" width="w-full">
-				<PaginatedTable bind:eventList {updateMapCenter} />
+				<PaginatedTable bind:tableData={tripList} {updateMapCenter} />
 			</Card>
 		</div>
 	{/if}

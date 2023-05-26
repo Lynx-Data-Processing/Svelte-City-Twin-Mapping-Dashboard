@@ -121,7 +121,7 @@
 		}
 
 		if (layerElement.type === 'Polygon') {
-			addPolygonLayer(mapboxMap, smallPopup, layerElement, 0.5, ['get', 'Color']);
+			addPolygonLayer(mapboxMap, smallPopup, layerElement, 0.5, ['get', 'color']);
 		}
 
 		if (layerElement.type === 'Point') {
@@ -130,7 +130,7 @@
 				smallPopup,
 				layerElement,
 				'Size',
-				['get', 'Color'],
+				['get', 'color'],
 				updateSelectedPOI,
 				buildPopup
 			);
@@ -142,7 +142,7 @@
 				smallPopup,
 				layerElement,
 				8,
-				['get', 'Color'],
+				['get', 'color'],
 				updateSelectedPOI,
 				buildPopup
 			);
@@ -223,7 +223,7 @@
 
 		mapboxgl.accessToken = PUBLIC_MAPBOX_KEY;
 		mapboxMap = new mapboxgl.Map({
-			center: mapDetails.center,
+			center: mapDetails.center as mapboxgl.LngLatLike,
 			zoom: mapDetails.zoom,
 			pitch: mapDetails.pitch,
 			bearing: mapDetails.bearing,
@@ -254,7 +254,7 @@
 
 
 	<div class="absolute top-2 left-2 flex flex-col gap-4 z-100 align-right">
-		<Card title="Map Style" width="w-[14rem]" showOnLoad={false}>
+		<Card title="Map Style" width="w-[16rem]" showOnLoad={false}>
 			<MapStyleSelector bind:selectedMapStyle {mapStyles} {switchStyle} />
 		</Card>
 

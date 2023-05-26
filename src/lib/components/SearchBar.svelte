@@ -13,7 +13,7 @@
 
 <label for="default-search" class="sr-only">Search</label>
 <div class="h-full w-full relative ">
-	<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+	<div class="absolute  inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
 		<svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
 			<path
 				fill-rule="evenodd"
@@ -26,7 +26,7 @@
 		on:change={() => onChangeFunction(search)}
 		type="search"
 		id="default-search"
-		class="block w-full p-4 pl-10  border   focus:ring-blue-500 focus:border-blue-500  "
+		class="block w-full p-4 pl-10  border   focus:ring-blue-500 focus:border-blue-500  rounded-lg"
 		placeholder={placeholder}
 		bind:value={search}
 		required

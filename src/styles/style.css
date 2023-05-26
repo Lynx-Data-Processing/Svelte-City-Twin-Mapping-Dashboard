@@ -11,6 +11,7 @@ html {
 }
 
 body {
+  color: rgb(1, 30, 66);
   margin: 0;
   padding: 0;
   font-size: 14px;
@@ -72,6 +73,7 @@ hr {
 
 .btn {
   padding: 1rem;
+  border-radius: 0.5rem;
   text-align: left;
   transition: all 0.25s;
   background-color: white;
@@ -139,7 +141,7 @@ hr {
   background-color: rgb(62, 133, 52);
 }
 .btn-black-outline {
-  color: #0e0d12;
+  color: #020203;
   border-color: rgb(219, 219, 219);
   border-width: 1px;
 }
@@ -188,7 +190,7 @@ hr {
 }
 
 .bg-dark {
-  background-color: #0e0d12;
+  background-color: #020203;
   color: white;
 }
 
@@ -198,6 +200,7 @@ hr {
 
 .alert {
   padding: 1rem;
+  border-radius: 0.5rem;
 }
 .alert-error {
   color: rgb(180, 41, 41);
@@ -351,7 +354,7 @@ hr {
 .card-title {
   line-height: 1.5;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .date-picker {
@@ -393,6 +396,7 @@ hr {
   transition: all 0.5s;
 }
 .table th:first-child {
+  border-top-left-radius: 0.5rem;
   background-color: #3f51b5;
   color: white;
 }
@@ -402,7 +406,7 @@ hr {
   background-color: #324090;
 }
 .table th:nth-child(n+2) {
-  background-color: #0e0d12;
+  background-color: #020203;
   color: white;
 }
 .table th:nth-child(n+2):hover {
@@ -410,11 +414,15 @@ hr {
   color: white;
   background-color: rgb(116, 116, 116);
 }
+.table th:last-child {
+  border-top-right-radius: 0.5rem;
+}
 
 .paginated-btn {
   padding: 1rem;
   text-align: left;
   transition: all 0.5s;
+  border-radius: 0.5rem;
   border-width: 1px;
   background-color: white;
 }
@@ -454,7 +462,7 @@ hr {
   background-color: rgb(62, 133, 52);
 }
 .paginated-btn-black-outline {
-  color: #0e0d12;
+  color: #020203;
   border-color: rgb(219, 219, 219);
 }
 .paginated-btn-black-outline:hover {
@@ -484,7 +492,7 @@ hr {
 .map-style-container .map-style-image {
   width: 100%;
   height: 100%;
-  border: 2px solid #0e0d12;
+  border: 2px solid #020203;
   border-radius: 0.5rem;
   transition: all 0.5s;
 }

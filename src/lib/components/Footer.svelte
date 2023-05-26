@@ -3,8 +3,7 @@
 	import { getDevicon } from '$lib/utils/devicon-icons';
 
 	const PROGRAMMING_TOOLS = [
-		'nextjs',
-		'svelte',
+		
 		'nodejs',
 		'express',
 		'nginx',
@@ -94,7 +93,7 @@
 <footer class="mt-auto py-8 px-8 md:px-32 lg:px-32">
 	<div class="grid grid-cols-1 sm:grid-cols-3 pb-8">
 		<div class="col-span-1 py-2">
-			<p class="text-xl">GIS Mapping</p>
+			<p class="card-title">GIS Mapping</p>
 
 			{#each MAIN_LIST as item}
 				<div class="my-2">
@@ -104,7 +103,7 @@
 		</div>
 
 		<div class="col-span-1 py-2">
-			<p class="text-xl">Tools</p>
+			<p class="card-title">Tools</p>
 			{#each APPLICATION_LIST as item}
 				<div class="my-2">
 					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
@@ -112,7 +111,7 @@
 			{/each}
 		</div>
 		<div class="col-span-1 py-2">
-			<p class="text-xl">Information</p>
+			<p class="card-title">Information</p>
 			{#each ABOUT_LIST as item}
 				<div class="my-2">
 					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
@@ -123,8 +122,8 @@
 
 	<div class="grid grid-cols-1 sm:grid-cols-3 py-8">
 		<div class="col-span-1 py-2">
-			<p class="text-xl  uppercase">
-				<i class="fa-solid fa-location-arrow mr-1" />lynx
+			<p class="card-title">
+				<i class="fa-solid fa-location-arrow mr-1" />LYNX
 			</p>
 			<p class="text-sm my-2">
 				The City promotes and fosters open government principles of participation, innovation,
@@ -137,7 +136,7 @@
 		<div class="col-span-1 py-2 " />
 
 		<div class="col-span-1 py-2">
-			<p class="text-xl">Terms</p>
+			<p class="card-title">Terms</p>
 
 			<p class="text-sm my-2">
 				Application uses MAPBOX to display Geojson data. Interactive, thoroughly customizable maps
@@ -152,7 +151,7 @@
 						height="100"
 						width="auto"
 						title={tool}
-						class={`img-icon w-8 mx-2 py-2`}
+						class={`img-icon img-icon-color w-8 mx-2 py-2`}
 						alt={tool}
 						src={getDevicon(tool)}
 						loading="lazy"

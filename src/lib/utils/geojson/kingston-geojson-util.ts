@@ -38,7 +38,7 @@ export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geo
 
       let coordinates = getCoordinates(gpsElement.fields.geojson.coordinates);
       gpsElement.fields.Size = 1;
-      properties.Color = getRandomColor();
+      properties.color = getRandomColor();
 
       gpsElement.fields.geojson = undefined;
       gpsElement.fields.geo_point_2d = undefined;
