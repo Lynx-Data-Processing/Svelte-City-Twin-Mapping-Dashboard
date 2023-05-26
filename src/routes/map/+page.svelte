@@ -18,9 +18,9 @@
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { getSmarterAiEvents, getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
-	import { getSmarterAiGPS } from '$lib/utils/geojson/geojson-utils';
 	import type { ITrip } from '$lib/types/tripTypes';
 	import { convertTripsToGeoJSON } from '$lib/utils/geojson/geojson-trips-utils';
+	import { getSmarterAiGPS } from '$lib/utils/geojson/geojson-utils';
 	
 	//* Set Initial Map Details
 
@@ -124,9 +124,9 @@
 
 <Navbar bind:selectedMenu bind:components />
 <main>
-	<div class="relative grid grid-cols-1  2xl:grid-cols-12 ">
+	<div class="relative grid grid-cols-1  2xl:grid-cols-12  p-4 gap-4">
 		{#if selectedMenu.id != 0}
-			<div class="col-span-1 2xl:col-span-2 flex flex-col sm:flex-row 2xl:flex-col gap-4 p-2">
+			<div class="col-span-1 2xl:col-span-2 flex flex-col sm:flex-row 2xl:flex-col gap-4">
 				<Card title="Layers" showOnLoad={true} disableToggle={true}>
 					<Layers bind:layerList {updateMapCenter} />
 				</Card>
@@ -155,6 +155,8 @@
 				selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'
 			}  `}
 		>
+
+		
 			<MapboxMap
 				bind:mapDetails
 				bind:gpsData
@@ -162,6 +164,7 @@
 				bind:selectedMenu
 				{updateSelectedPOI}
 			/>
+		
 
 			
 		</div>

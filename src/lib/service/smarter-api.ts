@@ -1,10 +1,10 @@
-import { dateTimeToMillisecondUnix } from '../utils/date-format';
+import { PUBLIC_API_KEY, PUBLIC_TENANT_ID, PUBLIC_V5_API_KEY } from '$env/static/public';
+import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_EVENTS_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_SENSOR_REPORT_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/global';
 import type { IEventType, IMediaRecordingType, IVideoType } from '$lib/types/eventTypes';
+import type { ITripEvent } from '$lib/types/tripTypes';
 import type { IDateTimeDictionaryType } from '$lib/types/types';
 import axios from 'axios';
-import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_EVENTS_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_SENSOR_REPORT_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/global';
-import { PUBLIC_API_KEY,PUBLIC_V5_API_KEY, PUBLIC_TENANT_ID } from '$env/static/public';
-import type { ITripEvent } from '$lib/types/tripTypes';
+import { dateTimeToMillisecondUnix } from '../utils/date-format';
 
 
 //* Fetch all devices under the Tenant key

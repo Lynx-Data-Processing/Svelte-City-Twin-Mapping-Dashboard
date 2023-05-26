@@ -33,6 +33,3 @@
 	/>
 </div>
 
-<button on:click={() => clearSearch()} class="btn btn-black-outline w-16 btn-text-center"
-	><i class="fa-solid fa-trash " /></button
->

@@ -1,8 +1,8 @@
 <script lang="ts">
+	import { axiosCacheGetUtility } from '$lib/service/fetch-data';
 	import type { ISelectedPOIType } from '$lib/types/eventTypes';
 	import type { ILayerListElementType, IMapDetailsType, IMapStyle } from '$lib/types/mapTypes';
 	import type { IMenuComponentsType } from '$lib/types/types';
-	import { axiosCacheGetUtility } from '$lib/service/fetch-data';
 	import { rawKingstonDataToGeojsonData } from '$lib/utils/geojson/kingston-geojson-util';
 	import { buildPopup } from '$lib/utils/popup-builder';
 	import { onMount } from 'svelte';
@@ -11,18 +11,18 @@
 		PUBLIC_MAPBOX_KEY,
 	} from '$env/static/public';
 
-	import { 
+	import {
 		OPEN_DATA_KINGSTON_CITY_ZONES_URL
-	} from "$lib/constants/global"
+	} from "$lib/constants/global";
 
-	import { getRandomColor } from "$lib/utils/color-utils"
+	import { getRandomColor } from "$lib/utils/color-utils";
 
 	import MapboxDraw from '@mapbox/mapbox-gl-draw';
 	import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 	import mapboxgl from 'mapbox-gl';
 
 	import {
-	addLayerListElementToLayerList,
+		addLayerListElementToLayerList,
 		addLayerSource,
 		addMapLayerVisibility,
 		getInitialCoordinates,
@@ -40,10 +40,10 @@
 		addPolygonLayer,
 		addTerrainLayer
 	} from '$lib/utils/mapboxMap/mapboxMap-layers-utils';
+	import { mapStyles } from '$lib/utils/mapboxMap/mapboxMap-styles';
 	import Card from '../Card.svelte';
 	import MapLegend from './MapLegend.svelte';
 	import MapStyleSelector from './MapStyleSelector.svelte';
-	import { mapStyles } from '$lib/utils/mapboxMap/mapboxMap-styles';
 
 	// ------------------ Mapbox ------------------
 	export let layerList: ILayerListElementType[];
@@ -249,11 +249,11 @@
 	});
 </script>
 
-<div class="h-screen relative scale-in-center">
-	<div class="h-full" id="mapboxMap" />
+<div class="h-screen relative scale-in-center ">
+	<div class="h-full rounded-lg" id="mapboxMap" />
 
 
-	<div class="absolute top-2 left-2 flex flex-col gap-4 z-100 align-right">
+	<div class="absolute top-2 right-2 flex flex-col gap-4 z-100 align-right">
 		<Card title="Map Style" width="w-[16rem]" showOnLoad={false}>
 			<MapStyleSelector bind:selectedMapStyle {mapStyles} {switchStyle} />
 		</Card>

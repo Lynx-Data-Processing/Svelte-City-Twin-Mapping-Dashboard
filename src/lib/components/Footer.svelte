@@ -93,28 +93,28 @@
 <footer class="mt-auto py-8 px-8 md:px-32 lg:px-32">
 	<div class="grid grid-cols-1 sm:grid-cols-3 pb-8">
 		<div class="col-span-1 py-2">
-			<p class="card-title">GIS Mapping</p>
+			<h6 >GIS Mapping</h6>
 
 			{#each MAIN_LIST as item}
 				<div class="my-2">
-					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
+					<a href={`${item.url}`} class="  hover:underline">{item.name}</a>
 				</div>
 			{/each}
 		</div>
 
 		<div class="col-span-1 py-2">
-			<p class="card-title">Tools</p>
+			<h6 >Tools</h6>
 			{#each APPLICATION_LIST as item}
 				<div class="my-2">
-					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
+					<a href={`${item.url}`} class="  hover:underline">{item.name}</a>
 				</div>
 			{/each}
 		</div>
 		<div class="col-span-1 py-2">
-			<p class="card-title">Information</p>
+			<h6 >Information</h6>
 			{#each ABOUT_LIST as item}
 				<div class="my-2">
-					<a href={`${item.url}`} class="text-sm  hover:underline">{item.name}</a>
+					<a href={`${item.url}`} class="  hover:underline">{item.name}</a>
 				</div>
 			{/each}
 		</div>
@@ -122,10 +122,10 @@
 
 	<div class="grid grid-cols-1 sm:grid-cols-3 py-8">
 		<div class="col-span-1 py-2">
-			<p class="card-title">
+			<h6 >
 				<i class="fa-solid fa-location-arrow mr-1" />LYNX
-			</p>
-			<p class="text-sm my-2">
+			</h6>
+			<p class=" my-2">
 				The City promotes and fosters open government principles of participation, innovation,
 				transparency and accountability. The data catalogue supports these principles and is the
 				first step in making it easier to view, obtain and use the information the City has
@@ -136,9 +136,9 @@
 		<div class="col-span-1 py-2 " />
 
 		<div class="col-span-1 py-2">
-			<p class="card-title">Terms</p>
+			<h6 >Terms</h6>
 
-			<p class="text-sm my-2">
+			<p class=" my-2">
 				Application uses MAPBOX to display Geojson data. Interactive, thoroughly customizable maps
 				in the browser, powered by vector tiles and WebGL. Mapbox is a location data platform for
 				mobile and web applications. We provide building blocks to add location features like maps,
