@@ -1,5 +1,10 @@
 <script lang="ts">
-	import type { IEventType, ISelectedPOIType, IVideoType, SensorQuality } from '$lib/types/eventTypes';
+	import type {
+		IEventType,
+		ISelectedPOIType,
+		IVideoType,
+		SensorQuality
+	} from '$lib/types/eventTypes';
 	import type { ILayerListElementType, IMapDetailsType } from '$lib/types/mapTypes';
 	import type { IDateTimeDictionaryType, IMenuComponentsType } from '$lib/types/types';
 
@@ -11,17 +16,20 @@
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
 	import Layers from '$lib/components/map/Layers.svelte';
 
-	import MapboxMap from '$lib/components/map/MapboxMap.svelte';
+	import GoogleMap from '$lib/components/map/GoogleMap.svelte';
 	import About from '$lib/components/menu/About.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
-	import StreetView from '$lib/components/menu/StreetView.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
-	import { getSmarterAiEvents, getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
+	import {
+		getSmarterAiEvents,
+		getSmarterAiTripWithGps,
+		getSmarterAiTrips
+	} from '$lib/service/smarter-api';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
 	import { convertTripsToGeoJSON } from '$lib/utils/geojson/geojson-trips-utils';
 	import { getSmarterAiGPS } from '$lib/utils/geojson/geojson-utils';
-	
+
 	//* Set Initial Map Details
 
 	let mapDetails: IMapDetailsType = {
@@ -31,7 +39,7 @@
 		pitch: 30,
 		bearing: -17.6
 	};
-	//* Polygon and point of interest details
+
 	let layerList: ILayerListElementType[] = [];
 	let selectedPOI: ISelectedPOIType | null = null;
 	let selectedPolygon: object | null = null;
@@ -40,22 +48,20 @@
 	let components: IMenuComponentsType[] = [
 		{ id: 0, title: 'Only Map', icon: 'fa-times' },
 		{ id: 1, title: 'Search Data', icon: 'fa-database' },
-		{ id: 2, title: 'Street View', icon: 'fa-road' },
-		{ id: 3, title: 'Video Player', icon: 'fa-video' },
-		{ id: 4, title: 'About', icon: 'fa-info-circle' }
+		{ id: 2, title: 'Video Player', icon: 'fa-video' },
+		{ id: 3, title: 'About', icon: 'fa-info-circle' }
 	];
 	let selectedMenu: IMenuComponentsType = components[1];
 	let isLoading = false;
 	let isError = false;
 
 	let gpsData: IGeojsonType[] = [];
-	let eventList: IEventType[] = [];
 	let tripList: ITrip[] = [];
-	const sensorQualityMap : { [key in SensorQuality]?: number } = {
-				Low: 1,
-				Medium: 2,
-				High: 3
-			};
+	const sensorQualityMap: { [key in SensorQuality]?: number } = {
+		Low: 1,
+		Medium: 2,
+		High: 3
+	};
 
 	const updateMapCenter = (
 		coordinates: number[],
@@ -83,20 +89,20 @@
 		};
 	};
 
-
-	const fetchTripsData = async (dateTimeDictionary: IDateTimeDictionaryType, selectedSensorQuality : SensorQuality) => {
+	const fetchTripsData = async (
+		dateTimeDictionary: IDateTimeDictionaryType,
+		selectedSensorQuality: SensorQuality
+	) => {
 		isLoading = true;
 		isError = false;
 
 		try {
-
-
-			const sensorQualityValue : number = sensorQualityMap[selectedSensorQuality] || 1;
+			const sensorQualityValue: number = sensorQualityMap[selectedSensorQuality] || 1;
 			const tempTripList = await getSmarterAiTrips(dateTimeDictionary, sensorQualityValue);
 			if (!tempTripList || !tempTripList.length) return;
 
 			let tempTripWithGPSList: ITrip[] = [];
-			for(let i = 0; i < tempTripList.length; i++) {
+			for (let i = 0; i < tempTripList.length; i++) {
 				const trip = tempTripList[i];
 				const tempTripWithGPS = await getSmarterAiTripWithGps(trip.id);
 				tempTripWithGPSList.push(tempTripWithGPS);
@@ -105,8 +111,6 @@
 			const tempGpsData = await convertTripsToGeoJSON(tempTripWithGPSList);
 			gpsData = tempGpsData;
 			tripList = tempTripWithGPSList;
-
-			
 		} catch (error) {
 			alert(error);
 			isError = true;
@@ -135,14 +139,10 @@
 						<SearchData {fetchTripsData} />
 					</Card>
 				{:else if selectedMenu.id === 2}
-					<Card title="Street View" disableToggle={true}>
-						<StreetView bind:selectedPOI />
-					</Card>
-				{:else if selectedMenu.id === 3}
 					<Card title="Video Player" disableToggle={true}>
 						<VideoPlayer bind:selectedPOI />
 					</Card>
-				{:else if selectedMenu.id === 4}
+				{:else if selectedMenu.id === 3}
 					<Card title="About" disableToggle={true}>
 						<About />
 					</Card>
@@ -150,30 +150,15 @@
 			</div>
 		{/if}
 
-		<div
-			class={` col-span-1   ${
-				selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'
-			}  `}
-		>
-
-		
-			<MapboxMap
-				bind:mapDetails
-				bind:gpsData
-				bind:layerList
-				bind:selectedMenu
-				{updateSelectedPOI}
-			/>
-		
-
-			
+		<div class={` col-span-1   ${selectedMenu.id === 0 ? '2xl:col-span-12' : '2xl:col-span-10'}  `}>
+			<GoogleMap bind:layerList/>
 		</div>
 
 		{#if isLoading === true}
-				<LoadingSpinner />
-			{:else if isError === true}
-				<LoadingError />
-			{/if}
+			<LoadingSpinner />
+		{:else if isError === true}
+			<LoadingError />
+		{/if}
 	</div>
 
 	{#if tripList.length}

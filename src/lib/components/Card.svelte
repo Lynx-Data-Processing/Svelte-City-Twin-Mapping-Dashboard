@@ -27,7 +27,7 @@
 		{/if}
 	</div>
 	{#if showContent || disableToggle}
-		<div class="mt-2" in:slide >
+		<div class="mt-2" in:slide>
 			<slot />
 		</div>
 	{/if}

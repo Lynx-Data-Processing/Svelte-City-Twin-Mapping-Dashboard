@@ -2,15 +2,7 @@
 	import type { IFooterElementType } from '$lib/types/types';
 	import { getDevicon } from '$lib/utils/devicon-icons';
 
-	const PROGRAMMING_TOOLS = [
-		
-		'nodejs',
-		'express',
-		'nginx',
-		'github',
-		'docker',
-		'googlecloud'
-	];
+	const PROGRAMMING_TOOLS = ['nodejs', 'express', 'nginx', 'github', 'docker', 'googlecloud'];
 
 	export const MAIN_LIST: IFooterElementType[] = [
 		{
@@ -93,7 +85,7 @@
 <footer class="mt-auto py-8 px-8 md:px-32 lg:px-32">
 	<div class="grid grid-cols-1 sm:grid-cols-3 pb-8">
 		<div class="col-span-1 py-2">
-			<h6 >GIS Mapping</h6>
+			<h6>GIS Mapping</h6>
 
 			{#each MAIN_LIST as item}
 				<div class="my-2">
@@ -103,7 +95,7 @@
 		</div>
 
 		<div class="col-span-1 py-2">
-			<h6 >Tools</h6>
+			<h6>Tools</h6>
 			{#each APPLICATION_LIST as item}
 				<div class="my-2">
 					<a href={`${item.url}`} class="  hover:underline">{item.name}</a>
@@ -111,7 +103,7 @@
 			{/each}
 		</div>
 		<div class="col-span-1 py-2">
-			<h6 >Information</h6>
+			<h6>Information</h6>
 			{#each ABOUT_LIST as item}
 				<div class="my-2">
 					<a href={`${item.url}`} class="  hover:underline">{item.name}</a>
@@ -122,7 +114,7 @@
 
 	<div class="grid grid-cols-1 sm:grid-cols-3 py-8">
 		<div class="col-span-1 py-2">
-			<h6 >
+			<h6>
 				<i class="fa-solid fa-location-arrow mr-1" />LYNX
 			</h6>
 			<p class=" my-2">
@@ -136,7 +128,7 @@
 		<div class="col-span-1 py-2 " />
 
 		<div class="col-span-1 py-2">
-			<h6 >Terms</h6>
+			<h6>Terms</h6>
 
 			<p class=" my-2">
 				Application uses MAPBOX to display Geojson data. Interactive, thoroughly customizable maps

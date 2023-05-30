@@ -1,6 +1,6 @@
 import type { IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
-import type { IGeojsonDataType } from './../../types/geojsonTypes';
 import { getRandomColor } from '../color-utils';
+import type { IGeojsonDataType } from './../../types/geojsonTypes';
 
 const getCoordinates = (coordinates: any) => {
   if (coordinates.length >= 2) {

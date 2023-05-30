@@ -41,9 +41,7 @@
 		addTerrainLayer
 	} from '$lib/utils/mapboxMap/mapboxMap-layers-utils';
 	import { mapStyles } from '$lib/utils/mapboxMap/mapboxMap-styles';
-	import Card from '../Card.svelte';
-	import MapLegend from './MapLegend.svelte';
-	import MapStyleSelector from './MapStyleSelector.svelte';
+
 
 	// ------------------ Mapbox ------------------
 	export let layerList: ILayerListElementType[];
@@ -253,13 +251,5 @@
 	<div class="h-full rounded-lg" id="mapboxMap" />
 
 
-	<div class="absolute top-2 right-2 flex flex-col gap-4 z-100 align-right">
-		<Card title="Map Style" width="w-[16rem]" showOnLoad={false}>
-			<MapStyleSelector bind:selectedMapStyle {mapStyles} {switchStyle} />
-		</Card>
-
-		<Card title="Speed Legend" showOnLoad={false} >
-			<MapLegend />
-		</Card>
-	</div>
+	
 </div>
