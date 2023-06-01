@@ -2,9 +2,9 @@
 	import type { ISelectedPOIType } from '$lib/types/eventTypes';
 	import {
 		zoomLevelMap,
+		type ILatLngType,
 		type ILayerListElementType,
-		type IMapDetailsType,
-		type ILatLngType
+		type IMapDetailsType
 	} from '$lib/types/mapTypes';
 	import type { IDateTimeDictionaryType, IMenuComponentsType } from '$lib/types/types';
 
@@ -23,11 +23,11 @@
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
 	import { convertTripsToGeoJSON } from '$lib/utils/geojson/geojson-trips-utils';
-	import { onMount } from 'svelte';
 	import {
 		getInitialCoordinates,
 		getKingstonMapData
 	} from '$lib/utils/geojson/kingston-geojson-util';
+	import { onMount } from 'svelte';
 
 	let isLoading = false;
 	let isError = false;
@@ -77,13 +77,16 @@
 		try {
 			const tempTripList = await getSmarterAiTrips(dateTimeDictionary);
 			if (!tempTripList || !tempTripList.length) return;
-
+			console.log('tempTripWithGPS', tempTripList);
+			
 			let tempTripWithGPSList: ITrip[] = [];
 			for (let i = 0; i < tempTripList.length; i++) {
 				const trip = tempTripList[i];
 				const tempTripWithGPS = await getSmarterAiTripWithGps(trip.id);
 				tempTripWithGPSList.push(tempTripWithGPS);
+				
 			}
+
 
 			const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
 			for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
@@ -112,9 +115,9 @@
 		isLoading = false;
 	};
 
-	import type { Map } from 'google.maps';
+	import { LINE_STRING, MULTI_LINE_STRING, MULTI_POLYGON, POLYGON } from '$lib/constants/geojson';
 	import { checkIfElementExists, removeObjectWhereValueEqualsString } from '$lib/utils/filter-data';
-	import { MULTI_POLYGON, POLYGON } from '$lib/constants/geojson';
+	import type { Map } from 'google.maps';
 	let map: Map | undefined;
 	let mapDiv: HTMLDivElement;
 
@@ -149,38 +152,48 @@
 	};
 
 	const addLayerToGoogleMap = (layerListElement: ILayerListElementType) => {
-		if (!map || !layerListElement.geojson) return;
-		const layer = layerListElement.googleMapLayer;
-		layer.addGeoJson(layerListElement.geojson);
-		layer.setStyle((feature: { getProperty: (arg0: string) => any }) => {
-			const geometryType = layerListElement.type;
-			const color =
-				feature.getProperty('color') || '#' + Math.floor(Math.random() * 16777215).toString(16);
-			let style: google.maps.Data.StyleOptions = {
-				strokeColor: color || 'blue',
-				strokeWeight: 4
+	if (!map || !layerListElement.geojson) return;
+	const layer = layerListElement.googleMapLayer;
+	layer.addGeoJson(layerListElement.geojson);
+	layer.setStyle((feature: { getProperty: (arg0: string) => any }) => {
+		const geometryType = layerListElement.type;
+		const color =
+			feature.getProperty('color') || '#' + Math.floor(Math.random() * 16777215).toString(16);
+		let style: google.maps.Data.StyleOptions = {
+			strokeColor: color || 'blue',
+			strokeWeight: 4
+		};
+
+		if (geometryType === POLYGON || geometryType === MULTI_POLYGON) {
+			style = {
+				...style,
+				strokeColor: color,
+				fillColor: color,
+				fillOpacity: 0.3
 			};
-
-			if (geometryType === POLYGON || geometryType === MULTI_POLYGON) {
-				style = {
-					...style,
-					strokeColor: color,
-					fillColor: color,
-					fillOpacity: 0.3
-				};
-			}
-
-			return style;
-		});
-
-		layer.addListener('click', (event: { feature: { getProperty: (arg0: string) => any; }; }) => {
-		const properties = event.feature.getProperty('color');
-		if (properties) {
-			// Display properties in a popup or console.log them
-			console.log(properties);
 		}
+
+		if (geometryType === LINE_STRING || geometryType === MULTI_LINE_STRING) {
+			style = {
+				...style,
+				icons: [{
+					icon: {
+						path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW ,
+						scale: 2,  // Change this value to change the size of the arrow
+						strokeColor: 'white',
+						fillColor: 'white',
+						fillOpacity: 1
+					},
+					offset: '0',
+					repeat: '50px'  // Change this value to change the spacing of the arrows
+				}]
+			};
+		}
+
+		return style;
 	});
-	};
+}
+
 
 	const toggleGoogleMapLayerVisibility = (layerElement: ILayerListElementType) => {
 		if (!map && layerElement.googleMapLayer) return;
@@ -224,16 +237,18 @@
 		{/if}
 
 		<div class={` col-span-1  2xl:col-span-10`}>
-			<div class="h-screen scale-in-center">
+			<div class="relative h-screen scale-in-center">
 				<div bind:this={mapDiv} class="h-full w-full " />
+
+				{#if isLoading === true}
+				<LoadingSpinner />
+			{:else if isError === true}
+				<LoadingError />
+			{/if}
 			</div>
 		</div>
 
-		{#if isLoading === true}
-			<LoadingSpinner />
-		{:else if isError === true}
-			<LoadingError />
-		{/if}
+	
 	</div>
 
 	{#if tripList.length}

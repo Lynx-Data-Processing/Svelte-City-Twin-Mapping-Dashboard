@@ -236,7 +236,7 @@ export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryT
 
   const results: ITripEvent[][] = [];
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 1; i++) {
 
     try {
 
@@ -250,6 +250,10 @@ export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryT
       };
 
       const response = await axios(config);
+      if (response.status !== 200) {
+        throw new Error(`Error fetching trips: ${response.statusText}`);
+      }
+
       const tripList = response.data.tripList;
       const lastObject = tripList[tripList.length - 1];
 
