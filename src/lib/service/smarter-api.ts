@@ -223,7 +223,7 @@ export const getSmarterAiTripWithGps = async (tripId: string) => {
 }
 
 
-export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryType, sensorQualityValue: number) => {
+export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryType) => {
   
   const params = new URLSearchParams({
     endpointName: "John's Dashcam",
@@ -236,7 +236,7 @@ export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryT
 
   const results: ITripEvent[][] = [];
 
-  for (let i = 0; i < sensorQualityValue; i++) {
+  for (let i = 0; i < 2; i++) {
 
     try {
 

@@ -1,7 +1,5 @@
 <script lang="ts">
-	import type { SensorQuality } from '$lib/types/eventTypes';
 	import type { IDateTimeDictionaryType } from '$lib/types/types';
-	import Slider from '../Slider.svelte';
 	
 	let dateTimeDictionary: IDateTimeDictionaryType = {
 		startDateTime: '2023-01-04T00:00',
@@ -14,9 +12,7 @@
 		isEndDateBeforeStartDate = new Date(dateTimeDictionary.endDateTime) < new Date(dateTimeDictionary.startDateTime);
 	}
 
-	
-	let sensorQualityLabels: SensorQuality[] = ['Low', 'Medium', 'High'];
-	let selectedSensorQuality : SensorQuality = sensorQualityLabels[0];
+
 </script>
 
 <div class="flex flex-col">
@@ -52,17 +48,13 @@
 		/>
 	</div>
 
-	<div class="my-1">
-		<p class="card-title mb-2">Sensor Quality</p>
-		<Slider bind:selectedValue={selectedSensorQuality}  sliderElements={sensorQualityLabels} />
-	</div>
-
+	
 	
 	{#if dateTimeDictionary.startDateTime && dateTimeDictionary.endDateTime}
 		{#if isEndDateBeforeStartDate}
 			<div class="alert alert-error my-1" role="alert">End date cannot be before start date.</div>
 		{:else}
-			<button class={`btn btn-primary my-1`} on:click={() => fetchTripsData(dateTimeDictionary, selectedSensorQuality)}
+			<button class={`btn btn-primary my-1`} on:click={() => fetchTripsData(dateTimeDictionary)}
 				><i class="fa-solid fa-database " /><span>Search Data</span>
 			</button>
 		{/if}

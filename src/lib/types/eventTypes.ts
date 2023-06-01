@@ -1,5 +1,3 @@
-import type { LOW, MEDIUM, HIGH } from "$lib/constants";
-
 export interface ISensorData {
     eventSource: string;
     eventTimestamp: number;
@@ -13,8 +11,6 @@ export interface ISensorData {
     sensorData: ISensorData;
   }
   
-export type SensorQuality = typeof LOW | typeof MEDIUM | typeof HIGH;
-
 export interface IVideoType {
     eventId: number
     deviceId: number
@@ -23,7 +19,6 @@ export interface IVideoType {
     endTimestamp: number,
     videoUrl: string
 }
-
 
 export interface IMediaRecordingType {
     startTimestamp: number,
@@ -34,7 +29,6 @@ export interface IMediaRecordingType {
     urlExpiry: number,
     available: boolean
 }
-
 export interface ISnapshotType {
     source: string,
     fileContainer: string,
@@ -43,7 +37,6 @@ export interface ISnapshotType {
     downloadUrl: string,
     downloadUrlExpirationTime: number
 }
-
 export interface IEventType  {
     id: number,
     tenantId: string,
@@ -61,28 +54,23 @@ export interface IEventType  {
     lastUpdatedTime: number,
     version: number,
     coordinates?: number[],
-
 };
-
 export interface IEventGeojsonType  {
     ACCELEROMETER: object,
     GYROSCOPE: object,
     GEO_LOCATION: object,
     VIDEO_META: object
 }
-
 export interface ISelectedPOIType  {
     lat: number,
     lng: number,
     data: any,
 }
-
 export interface ISelectedEventType  {
     lat: number,
     lng: number,
     data: any,
 }
-
 export interface IDeviceType {
     id: number,
     label: string,

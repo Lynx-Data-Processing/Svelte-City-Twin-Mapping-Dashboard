@@ -1,34 +1,40 @@
 
-import type { IGeojsonDataType } from "./geojsonTypes";
+import type { IGeojsonType, IGeojsonDataType } from "./geojsonTypes";
 
-export interface IMapStyle {
-    id: number,
-    name: string,
-    value: string,
-    image: string
+export interface ILatLngType {
+    lat: number,
+    lng: number
 }
 
-
-export interface IMapDetailsType  {
-    id: number,
-    center: number[],
+export interface IMapDetailsType {
     zoom: number,
-    pitch: number,
-    bearing: number
-};
-
+    mapTypeId: string,
+    heading: number,
+    tilt: number,
+    center: ILatLngType
+}
 
 export interface ILayerListElementType  {
     id: number,
     icon: string,
     type: IGeojsonDataType,
-    isShown: boolean,
+    isVisible: boolean,
     layerName: string,
-    hasFilter: boolean,
+    hasFilter?: boolean,
     sourceName: string,
-    initialCoordinates?: number[],
+    initialCoordinates?: ILatLngType,
     color?: string,
-    data?: any,
-
+    geojson?: IGeojsonType,
+    googleMapLayer?: any
 }
+
+export const zoomLevelMap: { [key in IGeojsonDataType]?: number } = {
+    Point: 19,
+    LineString: 19,
+    Polygon: 15,
+    MultiPolygon: 15,
+    FeatureCollection: 15,
+    Feature: 15,
+    GeometryCollection: 15
+};
 

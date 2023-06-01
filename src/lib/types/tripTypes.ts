@@ -2,7 +2,6 @@ interface IGeoCoordinates {
   lon: number;
   lat: number;
 }
-
 export interface ITripEvent {
   id: string;
   endpointId: number;
@@ -14,7 +13,6 @@ export interface ITripEvent {
   endGeo: IGeoCoordinates;
   distance: number;
 }
-
 
 export type ITrip = {
     id: string;

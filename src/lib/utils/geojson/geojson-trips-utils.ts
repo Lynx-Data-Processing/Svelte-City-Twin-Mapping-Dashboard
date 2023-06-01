@@ -5,7 +5,7 @@ import { groupByKey } from "../filter-data";
 
 
 //* To use the data on mapbox, the data must be in GEOJSON format
-export const convertTripsToGeoJSON = async (trips: ITrip[]) => {
+export const convertTripsToGeoJSON = async (trips: ITrip[], geojsonDataType: IGeojsonDataType = "LineString") => {
   const groupedTrips = groupByKey(trips, 'endpointName');
   let geoJsonArray: IGeojsonType[] = [];
 
@@ -13,20 +13,8 @@ export const convertTripsToGeoJSON = async (trips: ITrip[]) => {
     try {
 
       let tripsWithGPS = tripList as ITrip[];
-
-      const dataName = `${deviceId}`;
-      const dateTime = new Date().toISOString();
-      const dataType: IGeojsonDataType = "LineString";
-      const hasFilter = false;
-      const dataSourceName = deviceId;
-
       const geoJson: IGeojsonType = {
         type: 'FeatureCollection',
-        dataName,
-        dateTime,
-        dataType,
-        dataSourceName,
-        hasFilter,
         features: [],
       };
 
@@ -43,9 +31,10 @@ export const convertTripsToGeoJSON = async (trips: ITrip[]) => {
             tripStatus: trip.tripStatus,
             distance: trip.distance,
             color: getRandomColorHEX(),
+
           },
           geometry: {
-            type: "LineString",
+            type: geojsonDataType,
             coordinates: points,
           },
         };

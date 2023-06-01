@@ -6,6 +6,13 @@
 	export let updateMapCenter: Function;
 	export let paginatedTrips: ITrip[] = [];
 
+	const updateCenter = (trip: ITrip, isStart: boolean) => {
+		const pos = isStart ? trip.startGeo : trip.endGeo;
+		const latLng = { lat: pos.lat, lng: pos.lon };
+		updateMapCenter(latLng, 'Point');
+		goTop();
+	};
+
 	function goTop() {
 		document.body.scrollIntoView();
 	}
@@ -52,8 +59,8 @@
 					<button
 						class="btn btn-primary"
 						on:click={() => {
-							updateMapCenter(trip.startGeo, "Point");
-							goTop();
+							updateCenter(trip, true);
+						
 						}}
 					>
 						<i class="fa-solid fa-map-marker-alt" />
@@ -64,8 +71,7 @@
 					<button
 						class="btn btn-primary"
 						on:click={() => {
-							updateMapCenter(trip.endGeo, "Point");
-							goTop();
+							updateCenter(trip, false);
 						}}
 					>
 						<i class="fa-solid fa-map-marker-alt" />

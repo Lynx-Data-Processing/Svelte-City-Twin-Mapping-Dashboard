@@ -3,13 +3,15 @@
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 	import { isEmptyString } from '$lib/utils/is-emptyString';
 
+	export let toggleGoogleMapLayerVisibility: Function;
 	export let updateMapCenter: Function;
 	export let layerList: ILayerListElementType[];
 	let filteredLayers: ILayerListElementType[] = layerList;
 
 	const toggleLayer = (selectedLayer: ILayerListElementType) => {
 		const index = layerList.findIndex((layer) => layer.layerName === selectedLayer.layerName);
-		layerList[index].isShown = !layerList[index].isShown;
+		layerList[index].isVisible = !layerList[index].isVisible;
+		toggleGoogleMapLayerVisibility(layerList[index]);
 		filteredLayers = layerList;
 	};
 
@@ -24,7 +26,7 @@
 		filteredLayers = layerList.filter((layer) => expr.test(layer.layerName));
 	};
 
-	$: layerList && (filteredLayers = layerList);
+	$: layerList &&  (filteredLayers = layerList);
 </script>
 
 <div class="flex flex-col ">
@@ -37,7 +39,7 @@
 			<div class="flex flex-row gap-4  my-1">
 				<button
 					on:click={() => toggleLayer(layer)}
-					class={`btn w-full ${layer.isShown ? 'btn-primary' : 'btn-black-outline'} `}
+					class={`btn w-full ${layer.isVisible ? 'btn-primary' : 'btn-black-outline'} `}
 				>
 					<i class="{layer.icon} " />
 					<span>{layer.layerName}</span>
@@ -50,7 +52,7 @@
 					class="btn btn-black-outline w-16 btn-text-center"
 					><i
 						class={`${layer.icon} icon-color`}
-						style={`--sent-color: ${layer.color}`}
+						
 					/></button
 				>
 			</div>

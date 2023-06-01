@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { fade, fly, slide } from 'svelte/transition';
+	import { fly, slide } from 'svelte/transition';
 	export let title: string;
 	export let width = 'w-full';
 	export let disableToggle = false;
+	export let isRounded = true;
 	export let showOnLoad = true;
 	let showContent = showOnLoad;
 	const toggleContent = () => {
@@ -10,7 +11,7 @@
 	};
 </script>
 
-<section in:fly={{ x: -200 }} class="card shadow-md h-fit  {width} p-4 gap-4 rounded-lg">
+<section in:fly={{ x: -200 }} class="card shadow-md h-fit  {width} p-4 gap-4 {isRounded ? "rounded-lg" : ""}">
 	<div class="flex flow-row justify-between">
 		<h6>{title}</h6>
 
