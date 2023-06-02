@@ -3,7 +3,7 @@
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 	import { isEmptyString } from '$lib/utils/is-emptyString';
 
-	export let toggleGoogleMapLayerVisibility: Function;
+	export let toggleGoogleLayer: Function;
 	export let updateMapCenter: Function;
 	export let layerList: ILayerListElementType[];
 	let filteredLayers: ILayerListElementType[] = layerList;
@@ -11,7 +11,7 @@
 	const toggleLayer = (selectedLayer: ILayerListElementType) => {
 		const index = layerList.findIndex((layer) => layer.layerName === selectedLayer.layerName);
 		layerList[index].isVisible = !layerList[index].isVisible;
-		toggleGoogleMapLayerVisibility(layerList[index]);
+		toggleGoogleLayer(layerList[index]);
 		filteredLayers = layerList;
 	};
 

@@ -222,8 +222,12 @@ export const getSmarterAiTripWithGps = async (tripId: string) => {
   }
 }
 
+//! : Add params for endpointName, limit and offset
+// todo : endpointName is the name of the device (STRING)
+// todo : limit is the number of trips to return (NUMBER)
+// todo : offset is the number of trips to skip (NUMBER)
 
-export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryType) => {
+export const getSmarterAiTrips = async ( dateTimeDictionary: IDateTimeDictionaryType) => {
   
   const params = new URLSearchParams({
     endpointName: "John's Dashcam",

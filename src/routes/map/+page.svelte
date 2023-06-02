@@ -19,14 +19,19 @@
 	import About from '$lib/components/menu/About.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
+	import { LINE_STRING } from '$lib/constants/geojson';
 	import { getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
 	import { convertTripsToGeoJSON } from '$lib/utils/geojson/geojson-trips-utils';
 	import {
-		getInitialCoordinates,
-		getKingstonMapData
-	} from '$lib/utils/geojson/kingston-geojson-util';
+		addLayerElementToLayerList,
+		addLayerToGoogleMap,
+		createLayerElement,
+		toggleGoogleMapLayerVisibility
+	} from '$lib/utils/geojson/google-map-utils';
+	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
+	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
 
 	let isLoading = false;
@@ -43,8 +48,6 @@
 	let layerList: ILayerListElementType[] = [];
 	let selectedPOI: ISelectedPOIType | null = null;
 	let selectedPolygon: object | null = null;
-
-	//* Set Payload details for fetching
 	let components: IMenuComponentsType[] = [
 		{ id: 1, title: 'Search Data', icon: 'fa-database' },
 		{ id: 2, title: 'Video Player', icon: 'fa-video' },
@@ -54,70 +57,6 @@
 
 	let tripList: ITrip[] = [];
 
-	export const addLayerListElementToLayerList = (
-		layerList: ILayerListElementType[],
-		layerListElement: ILayerListElementType
-	) => {
-		let tempLayerList = layerList;
-		if (checkIfElementExists(tempLayerList, 'layerName', layerListElement.layerName)) {
-			tempLayerList = removeObjectWhereValueEqualsString(
-				tempLayerList,
-				'layerName',
-				layerListElement.layerName
-			);
-		}
-		tempLayerList.push(layerListElement);
-		return tempLayerList;
-	};
-
-	const fetchTripsData = async (dateTimeDictionary: IDateTimeDictionaryType) => {
-		isLoading = true;
-		isError = false;
-
-		try {
-			const tempTripList = await getSmarterAiTrips(dateTimeDictionary);
-			if (!tempTripList || !tempTripList.length) return;
-			console.log('tempTripWithGPS', tempTripList);
-			
-			let tempTripWithGPSList: ITrip[] = [];
-			for (let i = 0; i < tempTripList.length; i++) {
-				const trip = tempTripList[i];
-				const tempTripWithGPS = await getSmarterAiTripWithGps(trip.id);
-				tempTripWithGPSList.push(tempTripWithGPS);
-				
-			}
-
-
-			const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
-			for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
-				const gpsElement = tempGeojsonData[i];
-				const layerElement: ILayerListElementType = {
-					id: Math.floor(Math.random() * 100),
-					layerName: gpsElement.features[0].properties.endpointName || 'GPS Data',
-					sourceName: gpsElement.features[0].properties.endpointName || 'GPS Data',
-					type: 'LineString',
-					isVisible: true,
-					icon: 'fa-solid fa-car',
-					color: 'black',
-					geojson: gpsElement,
-					initialCoordinates: getInitialCoordinates('LineString', gpsElement)
-				};
-				layerElement.googleMapLayer = new google.maps.Data();
-				layerList = addLayerListElementToLayerList(layerList, layerElement);
-				addLayerToGoogleMap(layerElement);
-				toggleGoogleMapLayerVisibility(layerElement);
-			}
-			tripList = tempTripWithGPSList;
-		} catch (error) {
-			isError = true;
-		}
-
-		isLoading = false;
-	};
-
-	import { LINE_STRING, MULTI_LINE_STRING, MULTI_POLYGON, POLYGON } from '$lib/constants/geojson';
-	import { checkIfElementExists, removeObjectWhereValueEqualsString } from '$lib/utils/filter-data';
-	import type { Map } from 'google.maps';
 	let map: Map | undefined;
 	let mapDiv: HTMLDivElement;
 
@@ -137,71 +76,59 @@
 	};
 
 	const getInitialMapData = async () => {
-		const tempLayerList = [];
 		const tempKingstonLayerList = await getKingstonMapData();
 		if (!tempKingstonLayerList || !tempKingstonLayerList.length) return;
-		tempLayerList.push(...tempKingstonLayerList);
+		for (let i = 0, len = tempKingstonLayerList.length; i < len; i++) {
 
-		for (let i = 0, len = tempLayerList.length; i < len; i++) {
-			const layerElement = tempLayerList[i];
-			layerElement.googleMapLayer = new google.maps.Data();
-			layerList = addLayerListElementToLayerList(layerList, layerElement);
-			addLayerToGoogleMap(layerElement);
-			toggleGoogleMapLayerVisibility(layerElement);
+			layerList = addLayerElementToLayerList(layerList, tempKingstonLayerList[i]);
+			map = addLayerToGoogleMap(map, tempKingstonLayerList[i]);
+			map = toggleGoogleMapLayerVisibility(map, tempKingstonLayerList[i]);
 		}
 	};
 
-	const addLayerToGoogleMap = (layerListElement: ILayerListElementType) => {
-	if (!map || !layerListElement.geojson) return;
-	const layer = layerListElement.googleMapLayer;
-	layer.addGeoJson(layerListElement.geojson);
-	layer.setStyle((feature: { getProperty: (arg0: string) => any }) => {
-		const geometryType = layerListElement.type;
-		const color =
-			feature.getProperty('color') || '#' + Math.floor(Math.random() * 16777215).toString(16);
-		let style: google.maps.Data.StyleOptions = {
-			strokeColor: color || 'blue',
-			strokeWeight: 4
-		};
+	const toggleGoogleLayer = (layerElement: ILayerListElementType) => {
+		toggleGoogleMapLayerVisibility(map, layerElement);
+	};
 
-		if (geometryType === POLYGON || geometryType === MULTI_POLYGON) {
-			style = {
-				...style,
-				strokeColor: color,
-				fillColor: color,
-				fillOpacity: 0.3
-			};
+	const fetchTripsData = async (dateTimeDictionary: IDateTimeDictionaryType) => {
+		isLoading = true;
+		isError = false;
+
+		try {
+			const tempTripList = await getSmarterAiTrips(dateTimeDictionary);
+			if (!tempTripList || !tempTripList.length) return;
+
+			let tempTripWithGPSList: ITrip[] = [];
+			for (let i = 0; i < tempTripList.length; i++) {
+				const tempTripWithGPS = await getSmarterAiTripWithGps(tempTripList[i].id);
+				if (!tempTripWithGPS) continue;
+				tempTripWithGPSList.push(tempTripWithGPS);
+			}
+
+			const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
+			for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
+				const gpsElement = tempGeojsonData[i];
+
+				const layerElement = createLayerElement(
+					0,
+					gpsElement.features[0].properties.endpointName,
+					LINE_STRING,
+					true,
+					'fa-solid fa-car',
+					'black',
+					gpsElement
+				);
+
+				layerList = addLayerElementToLayerList(layerList, layerElement);
+				map = addLayerToGoogleMap(map, layerElement);
+				map = toggleGoogleMapLayerVisibility(map, layerElement);
+			}
+			tripList = tempTripWithGPSList;
+		} catch (error) {
+			isError = true;
 		}
 
-		if (geometryType === LINE_STRING || geometryType === MULTI_LINE_STRING) {
-			style = {
-				...style,
-				icons: [{
-					icon: {
-						path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW ,
-						scale: 2,  // Change this value to change the size of the arrow
-						strokeColor: 'white',
-						fillColor: 'white',
-						fillOpacity: 1
-					},
-					offset: '0',
-					repeat: '50px'  // Change this value to change the spacing of the arrows
-				}]
-			};
-		}
-
-		return style;
-	});
-}
-
-
-	const toggleGoogleMapLayerVisibility = (layerElement: ILayerListElementType) => {
-		if (!map && layerElement.googleMapLayer) return;
-		if (layerElement.isVisible) {
-			layerElement.googleMapLayer.setMap(map); // Show the layer on the map
-		} else {
-			layerElement.googleMapLayer.setMap(null); // Hide the layer from the map
-		}
+		isLoading = false;
 	};
 
 	onMount(() => {
@@ -218,7 +145,7 @@
 		{#if selectedMenu.id != 0}
 			<div class="col-span-1 2xl:col-span-2 flex flex-col sm:flex-row 2xl:flex-col p-4 gap-4">
 				<Card title="Layers" showOnLoad={true} disableToggle={true}>
-					<Layers {layerList} {updateMapCenter} {toggleGoogleMapLayerVisibility} />
+					<Layers {layerList} {updateMapCenter} {toggleGoogleLayer} />
 				</Card>
 				{#if selectedMenu.id === 1}
 					<Card title="Search Data" showOnLoad={true} disableToggle={true}>
@@ -241,14 +168,12 @@
 				<div bind:this={mapDiv} class="h-full w-full " />
 
 				{#if isLoading === true}
-				<LoadingSpinner />
-			{:else if isError === true}
-				<LoadingError />
-			{/if}
+					<LoadingSpinner />
+				{:else if isError === true}
+					<LoadingError />
+				{/if}
 			</div>
 		</div>
-
-	
 	</div>
 
 	{#if tripList.length}
