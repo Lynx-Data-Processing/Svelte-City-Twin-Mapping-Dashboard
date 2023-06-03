@@ -110,7 +110,7 @@
 				const gpsElement = tempGeojsonData[i];
 
 				const layerElement = createLayerElement(
-					0,
+					false,
 					gpsElement.features[0].properties.endpointName,
 					LINE_STRING,
 					true,
@@ -126,6 +126,7 @@
 			tripList = tempTripWithGPSList;
 		} catch (error) {
 			isError = true;
+			console.log(error)
 		}
 
 		isLoading = false;

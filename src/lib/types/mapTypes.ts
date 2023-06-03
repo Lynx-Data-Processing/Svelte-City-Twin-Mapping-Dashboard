@@ -15,7 +15,7 @@ export interface IMapDetailsType {
 }
 
 export interface ILayerListElementType  {
-    id: number,
+    isTrip: boolean,
     icon: string,
     type: IGeojsonDataType,
     isVisible: boolean,

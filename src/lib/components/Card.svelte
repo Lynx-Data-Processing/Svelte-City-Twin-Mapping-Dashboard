@@ -11,7 +11,7 @@
 	};
 </script>
 
-<section in:fly={{ x: -200 }} class="card shadow-md h-fit  {width} p-4 gap-4 {isRounded ? "rounded-lg" : ""}">
+<section  class="card shadow-md h-fit  {width} p-4 gap-4 {isRounded ? "rounded-lg" : ""}">
 	<div class="flex flow-row justify-between">
 		<h6>{title}</h6>
 
@@ -28,7 +28,7 @@
 		{/if}
 	</div>
 	{#if showContent || disableToggle}
-		<div class="mt-2" in:slide>
+		<div class="mt-2" >
 			<slot />
 		</div>
 	{/if}

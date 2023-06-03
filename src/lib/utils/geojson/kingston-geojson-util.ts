@@ -1,5 +1,5 @@
 import { OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_PLANNING_LINE_URL, OPEN_DATA_KINGSTON_TREES_URL } from '$lib/constants';
-import { POLYGON } from '$lib/constants/geojson';
+import { LINE_STRING, POLYGON } from '$lib/constants/geojson';
 import { axiosCacheGetUtility } from '$lib/service/fetch-data';
 import type { IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
 import type { ILatLngType, ILayerListElementType } from '$lib/types/mapTypes';
@@ -35,9 +35,8 @@ export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeo
       let coordinates = getCoordinates(gpsElement.fields.geojson.coordinates);
       gpsElement.fields.Size = 1;
       properties.color = getRandomColor();
-
-      gpsElement.fields.geojson = undefined;
-      gpsElement.fields.geo_point_2d = undefined;
+      delete gpsElement.fields.geojson
+      delete gpsElement.fields.geo_point_2d
 
       const feature: IGeojsonFeatureType = {
         type: 'Feature',
@@ -74,10 +73,32 @@ export const getKingstonMapData = async () => {
 
     if (!neighborhoodsGpsData) return;
 
-    const neighborhoodsElement = createLayerElement(Math.floor(Math.random() * 100), 'Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', 'Black', neighborhoodsGpsData);
+    const neighborhoodsElement = createLayerElement(false, 'Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', 'Black', neighborhoodsGpsData);
     tempLayerList.push(neighborhoodsElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_CITY_ZONES_URL}`);
+  }
+
+
+  const planningLineResponse = await axiosCacheGetUtility(
+    OPEN_DATA_KINGSTON_PLANNING_LINE_URL
+  );
+
+  if (planningLineResponse.status === 200) {
+    const planningLineData = planningLineResponse.data.records;
+    if (!planningLineData.length) return;
+
+    const planningLineGpsData = rawKingstonDataToGeojsonData(
+      planningLineData,
+      'LineString'
+    );
+
+    if (!planningLineGpsData) return;
+
+    const planningLineElement = createLayerElement(false, 'Planning Line', LINE_STRING, false, 'fa-solid fa-table-cells-large', 'Black', planningLineGpsData);
+    tempLayerList.push(planningLineElement);
+  } else {
+    console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_PLANNING_LINE_URL}`);
   }
 
 

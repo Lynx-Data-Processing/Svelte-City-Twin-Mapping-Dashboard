@@ -1,10 +1,31 @@
+import type { IEventType } from "$lib/types/eventTypes";
 import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType } from "$lib/types/geojsonTypes";
 import type { ITrip } from "$lib/types/tripTypes";
-import { getRandomColorHEX } from "../color-utils";
+import { getRandomColor, getRandomColorHEX } from "../color-utils";
 import { groupByKey } from "../filter-data";
 
+// export const convertTripEventsPointsToGeojson = (tripEventPoints: IEventType[]) => {
+//   let tripEventGeojsonList = []
 
-//* To use the data on mapbox, the data must be in GEOJSON format
+//   for (let i = 0, len = tripEventPoints.length; i < len; i++) {
+//     let event = tripEventPoints[i];
+//     if(!event.geo) continue;
+//     let coord = [event.geo.lon, event.geo.lat];
+//     const point: IGeojsonFeatureType = {
+//       type: "Feature",
+//       properties: { id: "Event", "Event Type": event.tripEventType, color: "red" },
+//       geometry: {
+//         type: "Point",
+//         coordinates: coord
+//       }
+//     };
+
+//     tripEventGeojsonList.push(point)
+//   }
+
+//   return tripEventGeojsonList;
+// }
+
 export const convertTripsToGeoJSON = async (trips: ITrip[], geojsonDataType: IGeojsonDataType = "LineString") => {
   const groupedTrips = groupByKey(trips, 'endpointName');
   let geoJsonArray: IGeojsonType[] = [];
@@ -30,7 +51,7 @@ export const convertTripsToGeoJSON = async (trips: ITrip[], geojsonDataType: IGe
             endTimestamp: trip.endTimestamp,
             tripStatus: trip.tripStatus,
             distance: trip.distance,
-            color: getRandomColorHEX(),
+            color: getRandomColor(),
 
           },
           geometry: {
@@ -38,13 +59,49 @@ export const convertTripsToGeoJSON = async (trips: ITrip[], geojsonDataType: IGe
             coordinates: points,
           },
         };
-        geoJson.features.push(feature);
+
+
+        let pointsList: IGeojsonFeatureType[] = []
+        let startPoint = points[0];
+        let endPoint = points[points.length - 1];
+        // Add circles at the start and end of each feature
+
+        if (startPoint) {
+          const startCircle: IGeojsonFeatureType = {
+            type: "Feature",
+            properties: { ...feature.properties, id: feature.properties.id + '_start' },
+            geometry: {
+              type: "Point",
+              coordinates: startPoint,
+            }
+          };
+          pointsList.push(startCircle)
+        }
+
+        if (endPoint) {
+          const endCircle: IGeojsonFeatureType = {
+            type: "Feature",
+            properties: { ...feature.properties, id: feature.properties.id + '_end' },
+            geometry: {
+              type: "Point",
+              coordinates: endPoint
+            }
+          };
+          pointsList.push(endCircle)
+        }
+
+
+        // if(trip.tripEvents){
+        //   const eventTrips = convertTripEventsPointsToGeojson(trip.triggeredEvents);
+        //   pointsList.push(...eventTrips)
+        // }
+
+        geoJson.features.push(feature, ...pointsList);
       }
 
       geoJsonArray.push(geoJson);
 
-    }
-    catch (err) {
+    } catch (err) {
       console.error(err)
     }
   }

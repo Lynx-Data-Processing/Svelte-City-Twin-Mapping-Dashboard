@@ -27,7 +27,7 @@
 <main class="login-background ">
 	<div class="grid grid-cols-2 login-info w-2/5 h-3/5">
 		<div class="col-span-1 bg-primary px-16  flex flex-col justify-center ">
-			<h1 class="text-6xl "><i class="fa-solid fa-location-arrow mr-5" />LYNX</h1>
+			<h1 class="text-6xl text-white"><i class="fa-solid fa-location-arrow mr-5" />LYNX</h1>
 			<p class="mt-12 text-lg ">Cloud-based software to create and share interactive web maps.</p>
 		</div>
 		<div class="col-span-1 flex flex-col">

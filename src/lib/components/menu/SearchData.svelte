@@ -2,8 +2,8 @@
 	import type { IDateTimeDictionaryType } from '$lib/types/types';
 	
 	let dateTimeDictionary: IDateTimeDictionaryType = {
-		startDateTime: '2023-01-04T00:00',
-		endDateTime: '2023-05-23T00:00'
+		startDateTime: '2023-06-02T00:00',
+		endDateTime: '2023-06-03T00:00'
 	};
 	export let fetchTripsData: Function;
 
@@ -22,7 +22,7 @@
 			name="start_date"
 			id="start_date"
 			type="datetime-local"
-			class="form-control date-picker p-2"
+			class="form-control date-picker p-2 rounded-lg"
 			placeholder="Select a date"
 			data-mdb-toggle="datepicker"
 			min="2010-01-01"
@@ -38,7 +38,7 @@
 			name="end_date"
 			id="end_date"
 			type="datetime-local"
-			class="form-control date-picker p-2 }"
+			class="form-control date-picker p-2 rounded-lg"
 			placeholder="Select End Date Time"
 			data-mdb-toggle="datepicker"
 			min="2010-01-01"

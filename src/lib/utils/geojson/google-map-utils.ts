@@ -1,23 +1,38 @@
-import { LINE_STRING, MULTI_LINE_STRING, MULTI_POLYGON, POLYGON } from "$lib/constants/geojson";
+import { LINE_STRING, MULTI_LINE_STRING, MULTI_POINT, MULTI_POLYGON, POINT, POLYGON } from "$lib/constants/geojson";
 import type { IGeojsonDataType, IGeojsonType } from "$lib/types/geojsonTypes";
 import type { ILatLngType, ILayerListElementType } from "$lib/types/mapTypes";
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from "../filter-data";
 
-
 export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElementType) => {
     if (!map || !layerListElement.geojson) return;
     const layer = layerListElement.googleMapLayer;
+    const isTripsLayer = layerListElement.isTrip;
+
     layer.addGeoJson(layerListElement.geojson);
-    layer.setStyle((feature: { getProperty: (arg0: string) => any }) => {
-        const geometryType = layerListElement.type;
+
+    const infoWindow = new google.maps.InfoWindow();
+
+    layer.setStyle((feature: any) => {
+        const geometryType = feature.getGeometry().getType();
         const color =
             feature.getProperty('color') || '#' + Math.floor(Math.random() * 16777215).toString(16);
         let style: google.maps.Data.StyleOptions = {
             strokeColor: color || 'blue',
-            strokeWeight: 4
+            strokeWeight: 8
         };
 
-
+        if (geometryType === POINT || geometryType === MULTI_POINT) {
+            style = {
+                ...style,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 5,
+                    strokeColor: color,
+                    fillColor: color,
+                    fillOpacity: 1
+                }
+            };
+        }
 
         if (geometryType === POLYGON || geometryType === MULTI_POLYGON) {
             style = {
@@ -35,13 +50,13 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
                     {
                         icon: {
                             path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                            scale: 2, // Change this value to change the size of the arrow
+                            scale: 2,
                             strokeColor: 'white',
                             fillColor: 'white',
                             fillOpacity: 1
                         },
                         offset: '0',
-                        repeat: '100px' // Change this value to change the spacing of the arrows
+                        repeat: '100px'
                     }
                 ]
             };
@@ -50,8 +65,27 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
         return style;
     });
 
+    // Add a click listener to the layer
+    layer.addListener('click', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
+        const feature = event.feature;
+
+        // Initialize content string with feature id
+        let contentString = `<p class="text-xl font-bold">${layerListElement.layerName}</p>`;
+        // Loop through all properties of the feature
+        feature.forEachProperty((value: any, name: any) => {
+            contentString += `<p> <span class="font-bold">${name}</span>: ${value}</p>`;
+
+        });
+
+        infoWindow.setContent(contentString);
+        infoWindow.setPosition(event.latLng);
+        infoWindow.open(map);
+    });
+
+
     return map;
 };
+
 
 
 export const toggleGoogleMapLayerVisibility = (map: any, layerElement: ILayerListElementType) => {
@@ -82,7 +116,7 @@ export const addLayerElementToLayerList = (
 };
 
 export const createLayerElement = (
-    id: number,
+    isTrip: boolean,
     layerName: string,
     type: IGeojsonDataType,
     isVisible: boolean,
@@ -91,7 +125,7 @@ export const createLayerElement = (
     geojson: IGeojsonType
 ) => {
     const layerElement: ILayerListElementType = {
-        id: id || Math.floor(Math.random() * 100),
+        isTrip: isTrip || false,
         layerName: layerName || 'GPS Data',
         sourceName: layerName || 'GPS Data',
         type: type || 'LineString',
@@ -99,7 +133,7 @@ export const createLayerElement = (
         icon: icon || 'fa-solid fa-car',
         color: color || 'black',
         geojson: geojson,
-        initialCoordinates: getInitialCoordinates(type, geojson)
+        initialCoordinates: geojson ? getInitialCoordinates(type, geojson) : {lat: 0 , lng: 0}
     };
     layerElement.googleMapLayer = new google.maps.Data();
     return layerElement;
@@ -107,20 +141,25 @@ export const createLayerElement = (
 };
 
 export const getInitialCoordinates = (type: IGeojsonDataType, data: any): ILatLngType => {
-    if (!data) return { lat: 0, lng: 0 };
+    try{
+        if (!data) return { lat: 0, lng: 0 };
 
-    const initialCoordinateMap: { [key in IGeojsonDataType]?: number[] } = {
-        Point: data.features[0].geometry.coordinates,
-        LineString: data.features[0].geometry.coordinates[0],
-        Polygon: data.features[0].geometry.coordinates[0][0],
-        MultiPolygon: data.features[0].geometry.coordinates[0][0],
-    };
-
-    const coords = initialCoordinateMap[type];
-    if (coords && coords.length >= 2) {
-        return { lat: coords[1], lng: coords[0] };
+        const initialCoordinateMap: { [key in IGeojsonDataType]?: number[] } = {
+            Point: data.features[0].geometry.coordinates,
+            LineString: data.features[0].geometry.coordinates[0],
+            Polygon: data.features[0].geometry.coordinates[0],
+            MultiPolygon: data.features[0].geometry.coordinates[0],
+        };
+        
+        const coords = initialCoordinateMap[type];
+        if (coords && coords.length >= 2) {
+            return { lat: coords[1], lng: coords[0] };
+        }
+        
+        return { lat: 0, lng: 0 };
     }
-
-    return { lat: 0, lng: 0 };
+    catch (err){
+        return  { lat: 0, lng: 0 };
+    }
 };
 

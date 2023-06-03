@@ -1,3 +1,4 @@
+
 export interface ISensorData {
     eventSource: string;
     eventTimestamp: number;
@@ -37,24 +38,24 @@ export interface ISnapshotType {
     downloadUrl: string,
     downloadUrlExpirationTime: number
 }
-export interface IEventType  {
-    id: number,
-    tenantId: string,
-    deviceId: string,
-    deviceLabel: string,
-    endpointId: string,
-    eventTimestamp: number,
-    eventEndTimestamp: number,
-    recordingStartTimestamp: number,
-    recordingEndTimestamp: number,
-    eventSources: any[],
-    eventTriggerId: string,
-    triggerName: string,
-    snapshots: ISnapshotType[],
-    lastUpdatedTime: number,
-    version: number,
-    coordinates?: number[],
-};
+
+export type Snapshot = {
+    source: string;
+    downloadUrl: string;
+  };
+  
+  export type IEventType = {
+    id: string;
+    eventTimestamp: number;
+    eventEndTimestamp: number;
+    recordingStartTimestamp: number;
+    recordingEndTimestamp: number;
+    triggerName: string;
+    snapshots: Snapshot[];
+  };
+  
+  
+
 export interface IEventGeojsonType  {
     ACCELEROMETER: object,
     GYROSCOPE: object,

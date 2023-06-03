@@ -120,43 +120,6 @@ export const getVideo = async (gpsElement: any) => {
 };
 
 
-export const getSmarterAiSensorData = async (event: IEventType, fromDateTime: number, toDateTime: number) => {
-
-  const params = new URLSearchParams({
-    secretToken: PUBLIC_API_KEY,
-    tenantId: PUBLIC_TENANT_ID,
-    endpointId: event.endpointId,
-    pageSize: '20',
-    continuationToken: '',
-    fromDate: `${fromDateTime}`,
-    toDate: `${toDateTime}`,
-    sensorReportType: 'GEO_LOCATION'
-  });
-
-  const config = {
-    method: 'get',
-    url: `${API_SMARTER_AI_SENSOR_REPORT_URL}?${params.toString()}`,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `${PUBLIC_API_KEY}`,
-    },
-  };
-
-
-  try {
-    const promise = await axios(config);
-    return promise;
-  } catch (error: any) {
-    if (error.response) {
-      return error.response.status;
-    } if (error.request) {
-      return error.request;
-    }
-    return error.message;
-  }
-
-}
-
 
 export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionaryType, sensorQualityValue: number) {
 
@@ -230,8 +193,7 @@ export const getSmarterAiTripWithGps = async (tripId: string) => {
 export const getSmarterAiTrips = async ( dateTimeDictionary: IDateTimeDictionaryType) => {
   
   const params = new URLSearchParams({
-    endpointName: "John's Dashcam",
-    limit: "5",
+    limit: "20",
     tenantId: PUBLIC_TENANT_ID,
     fromTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.startDateTime).toString(),
     toTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.endDateTime).toString(),

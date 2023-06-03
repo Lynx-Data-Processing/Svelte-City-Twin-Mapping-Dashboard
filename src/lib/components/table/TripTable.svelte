@@ -39,12 +39,12 @@
 				<td>{trip.id}</td>
 				<td>{trip.endpointId}</td>
 				<td class="text-primary">{trip.endpointName}</td>
-				<td>{millisecondUnixToDateTime(trip.startTimestamp)}</td>
-				<td>{millisecondUnixToDateTime(trip.endTimestamp)}</td>
+				<td>{ trip.startTimestamp ? millisecondUnixToDateTime(trip.startTimestamp) : 0}</td>
+				<td>{ trip.endTimestamp ? millisecondUnixToDateTime(trip.endTimestamp) : 0}</td>
 				<td>
                 
-                    {#if trip.tripStatus === 'ERROR'}
-                    <div class={`alert alert-error w-full text-center`} role="alert">
+                    {#if trip.tripStatus === 'STARTED'}
+                    <div class={`alert alert-success w-full text-center`} role="alert">
                         {trip.tripStatus}
                     </div>
                 {:else}
@@ -54,7 +54,7 @@
                 {/if}
                 
                 </td>
-				<td>{trip.distance.toFixed(2)} km</td>
+				<td>{trip.distance ? `${trip.distance.toFixed(2)} km` : "N/A"}</td>
 				<td class="hidden xl:table-cell ">
 					<button
 						class="btn btn-primary"
