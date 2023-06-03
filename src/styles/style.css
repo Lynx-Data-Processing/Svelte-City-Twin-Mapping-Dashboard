@@ -135,12 +135,12 @@ hr {
   background-color: rgb(150, 31, 31);
 }
 .btn-green {
-  background-color: rgb(83, 165, 72);
+  background-color: rgb(88, 179, 76);
   color: white;
 }
 .btn-green:hover {
   color: white;
-  background-color: rgb(62, 133, 52);
+  background-color: #0d5541;
 }
 .btn-black-outline {
   color: #120c0c;
@@ -179,7 +179,7 @@ hr {
 }
 
 .bg-success {
-  background-color: rgb(83, 165, 72);
+  background-color: rgb(88, 179, 76);
   color: white;
 }
 
@@ -209,11 +209,12 @@ hr {
   background-color: rgb(254, 226, 226);
 }
 .alert-success {
-  color: rgb(83, 165, 72);
-  background-color: rgb(220, 252, 231);
+  color: #0d5541;
+  background-color: #99ddcf;
 }
 .alert-info {
-  background-color: rgb(219, 219, 219);
+  color: #203882;
+  background-color: #cfd7e0;
 }
 
 .img-icon {
@@ -476,12 +477,12 @@ hr {
   background-color: rgb(150, 31, 31);
 }
 .paginated-btn-green {
-  background-color: rgb(83, 165, 72);
+  background-color: rgb(88, 179, 76);
   color: white;
 }
 .paginated-btn-green:hover {
   color: white;
-  background-color: rgb(62, 133, 52);
+  background-color: #0d5541;
 }
 .paginated-btn-black-outline {
   color: #120c0c;

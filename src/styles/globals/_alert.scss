@@ -9,13 +9,13 @@
   }
 
   &-success {
-    color: $success-color;
+    color: $success-color-dark;
     background-color: $success-color-light;
   }
 
   &-info {
-
-    background-color: $btn-default-light;
+    color: $primary-color;
+    background-color: $info-color;
   }
 
 

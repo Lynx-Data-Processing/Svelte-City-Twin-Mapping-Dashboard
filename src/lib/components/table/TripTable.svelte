@@ -22,63 +22,49 @@
 	<thead>
 		<tr>
 			<th>Id</th>
-			<th>Endpoint Id</th>
-			<th>Endpoint Name</th>
+			<th>Endpoint</th>
 			<th>Start Time</th>
 			<th>End Time</th>
 			<th>Trip Status</th>
 			<th>Distance</th>
-			<th class="hidden xl:table-cell ">View Start Location</th>
-			<th class="hidden xl:table-cell ">View End Location</th>
-			<th class="hidden xl:table-cell ">Download</th>
+		
+			<th class="hidden xl:table-cell ">Options</th>
 		</tr>
 	</thead>
 	<tbody>
 		{#each paginatedTrips as trip}
 			<tr>
 				<td>{trip.id}</td>
-				<td>{trip.endpointId}</td>
-				<td class="text-primary">{trip.endpointName}</td>
-				<td>{ trip.startTimestamp ? millisecondUnixToDateTime(trip.startTimestamp) : 0}</td>
-				<td>{ trip.endTimestamp ? millisecondUnixToDateTime(trip.endTimestamp) : 0}</td>
 				<td>
-                
-                    {#if trip.tripStatus === 'STARTED'}
-                    <div class={`alert alert-success w-full text-center`} role="alert">
-                        {trip.tripStatus}
-                    </div>
-                {:else}
-                    <div class={`alert alert-info w-full text-center`} role="alert">
-                        {trip.tripStatus}
-                    </div>
-                {/if}
-                
-                </td>
-				<td>{trip.distance ? `${trip.distance.toFixed(2)} km` : "N/A"}</td>
+					<p>{trip.endpointName}</p>
+					<p>{trip.endpointId}</p>
+				</td>
+				<td>{trip.startTimestamp ? millisecondUnixToDateTime(trip.startTimestamp) : "N/A"}</td>
+				<td>{trip.endTimestamp ? millisecondUnixToDateTime(trip.endTimestamp) : "N/A"}</td>
+				<td>
+					{#if trip.tripStatus === 'STARTED'}
+						<div class={`alert alert-success w-full text-center`} role="alert">
+							{trip.tripStatus}
+						</div>
+					{:else}
+						<div class={`alert alert-info w-full text-center`} role="alert">
+							{trip.tripStatus}
+						</div>
+					{/if}
+				</td>
+				<td>{trip.distance ? `${trip.distance.toFixed(2)} km` : 'N/A'}</td>
+			
 				<td class="hidden xl:table-cell ">
-					<button
-						class="btn btn-primary"
+					<div class="flex flex-row gap-4 w-full justify-center">
+						<button
+						class="btn btn-black-outline"
 						on:click={() => {
 							updateCenter(trip, true);
-						
 						}}
 					>
-						<i class="fa-solid fa-map-marker-alt" />
-						<span>View Start</span>
+						<i class="fa-solid fa-eye" />
+						<span>View Trip</span>
 					</button>
-				</td>
-				<td class="hidden xl:table-cell ">
-					<button
-						class="btn btn-primary"
-						on:click={() => {
-							updateCenter(trip, false);
-						}}
-					>
-						<i class="fa-solid fa-map-marker-alt" />
-						<span>View End</span>
-					</button>
-				</td>
-				<td class="hidden xl:table-cell ">
 					<button
 						class="btn btn-black-outline"
 						on:click={() => {
@@ -88,6 +74,8 @@
 						<i class="fa-solid fa-download" />
 						<span>Download</span>
 					</button>
+					</div>
+				
 				</td>
 			</tr>
 		{/each}
