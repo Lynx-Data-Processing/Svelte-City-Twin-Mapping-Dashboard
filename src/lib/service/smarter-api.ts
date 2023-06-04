@@ -185,10 +185,6 @@ export const getSmarterAiTripWithGps = async (tripId: string) => {
   }
 }
 
-//! : Add params for endpointName, limit and offset
-// todo : endpointName is the name of the device (STRING)
-// todo : limit is the number of trips to return (NUMBER)
-// todo : offset is the number of trips to skip (NUMBER)
 
 export const getSmarterAiTrips = async (tripsParams: ITripsParamType) => {
 
@@ -229,7 +225,7 @@ export const getSmarterAiTrips = async (tripsParams: ITripsParamType) => {
       break;
     }
 
-    params.set('offset', (20 * (i + 1)).toString());
+    params.set('offset', (tripsParams.offset * (i + 1)).toString());
     results.push(tripList as ITripEvent[]);
   }
   return results.flat();
