@@ -4,120 +4,19 @@
 
 	const PROGRAMMING_TOOLS = ['nodejs', 'express', 'nginx', 'github', 'docker', 'googlecloud'];
 
-	export const MAIN_LIST: IFooterElementType[] = [
-		{
-			id: 0,
-			name: 'Animista',
-			url: 'https://animista.net/play/basic',
-			icon: 'fas fa-palette'
-		},
-
-		{
-			id: 1,
-			name: 'Developer Icons',
-			url: 'https://devicon.dev/',
-			icon: 'fas fa-code'
-		},
-		{
-			id: 2,
-			name: 'Color Designer',
-			url: 'https://colordesigner.io/tools',
-			icon: 'fas fa-palette'
-		}
-	];
-
-	export const APPLICATION_LIST: IFooterElementType[] = [
-		{
-			id: 0,
-			name: 'Animista',
-			url: 'https://animista.net/play/basic',
-			icon: 'fas fa-palette'
-		},
-
-		{
-			id: 1,
-			name: 'Developer Icons',
-			url: 'https://devicon.dev/',
-			icon: 'fas fa-code'
-		},
-		{
-			id: 2,
-			name: 'Color Designer',
-			url: 'https://colordesigner.io/tools',
-			icon: 'fas fa-palette'
-		},
-		{
-			id: 3,
-			name: 'Font Awesome',
-			url: 'https://fontawesome.com/',
-			icon: 'fas fa-font'
-		},
-		{
-			id: 4,
-			name: 'Cool Backgrounds',
-			url: 'https://coolbackgrounds.io/',
-			icon: 'fas fa-images'
-		},
-		{
-			id: 5,
-			name: 'Gradient Generator',
-			url: 'https://cssgradient.io/',
-			icon: 'fas fa-palette'
-		}
-	];
-
-	export const ABOUT_LIST: IFooterElementType[] = [
-		{
-			id: 0,
-			name: 'About Us',
-			url: '#',
-			icon: 'fab fa-linkedin'
-		},
-		{
-			id: 1,
-			name: 'Our Data',
-			url: '#',
-			icon: 'fab fa-linkedin'
-		}
-	];
 </script>
 
-<footer class="mt-auto py-8 px-8 md:px-32 lg:px-32">
-	<div class="grid grid-cols-1 sm:grid-cols-3 pb-8">
-		<div class="col-span-1 py-2">
-			<h6>GIS Mapping</h6>
-
-			{#each MAIN_LIST as item}
-				<div class="my-2">
-					<a href={`${item.url}`} class="  hover:underline">{item.name}</a>
-				</div>
-			{/each}
-		</div>
-
-		<div class="col-span-1 py-2">
-			<h6>Tools</h6>
-			{#each APPLICATION_LIST as item}
-				<div class="my-2">
-					<a href={`${item.url}`} class="  hover:underline">{item.name}</a>
-				</div>
-			{/each}
-		</div>
-		<div class="col-span-1 py-2">
-			<h6>Information</h6>
-			{#each ABOUT_LIST as item}
-				<div class="my-2">
-					<a href={`${item.url}`} class="  hover:underline">{item.name}</a>
-				</div>
-			{/each}
-		</div>
-	</div>
+<footer class="mt-auto bg-smoke py-8 px-8 ">
+	
 
 	<div class="grid grid-cols-1 sm:grid-cols-3 py-8">
 		<div class="col-span-1 py-2">
-			<h6>
-				<i class="fa-solid fa-location-arrow mr-1" />LYNX
-			</h6>
-			<p class=" my-2">
+			<div class="flex flex-row gap-2 align-middle">
+				<i class="fa-solid fa-2x fa-location-arrow" />
+				<p class="text-title my-auto">USARS GIS</p>
+		
+			</div>
+			<p class="text-sm my-2">
 				The City promotes and fosters open government principles of participation, innovation,
 				transparency and accountability. The data catalogue supports these principles and is the
 				first step in making it easier to view, obtain and use the information the City has
@@ -128,9 +27,9 @@
 		<div class="col-span-1 py-2 " />
 
 		<div class="col-span-1 py-2">
-			<h6>Terms</h6>
+			<p class="text-title my-auto">Terms</p>
 
-			<p class=" my-2">
+			<p class="text-sm my-2">
 				Application uses MAPBOX to display Geojson data. Interactive, thoroughly customizable maps
 				in the browser, powered by vector tiles and WebGL. Mapbox is a location data platform for
 				mobile and web applications. We provide building blocks to add location features like maps,

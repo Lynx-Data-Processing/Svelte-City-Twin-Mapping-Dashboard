@@ -159,7 +159,7 @@ export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionary
 
 export const getSmarterAiTripWithGps = async (tripId: string) => {
   const params = new URLSearchParams({
-    tenantId : PUBLIC_TENANT_ID,
+    tenantId: PUBLIC_TENANT_ID,
   });
 
   const config = {
@@ -190,10 +190,10 @@ export const getSmarterAiTripWithGps = async (tripId: string) => {
 // todo : limit is the number of trips to return (NUMBER)
 // todo : offset is the number of trips to skip (NUMBER)
 
-export const getSmarterAiTrips = async ( dateTimeDictionary: IDateTimeDictionaryType) => {
-  
+export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryType) => {
+
   const params = new URLSearchParams({
-    limit: "20",
+    limit: "5",
     tenantId: PUBLIC_TENANT_ID,
     fromTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.startDateTime).toString(),
     toTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.endDateTime).toString(),
@@ -204,35 +204,32 @@ export const getSmarterAiTrips = async ( dateTimeDictionary: IDateTimeDictionary
 
   for (let i = 0; i < 1; i++) {
 
-    try {
+    let config = {
+      method: 'get',
+      url: `${API_SMARTER_AI_TRIPS_URL}?${params.toString()}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${PUBLIC_V5_API_KEY}`,
+      },
+    };
 
-      let config = {
-        method: 'get',
-        url: `${API_SMARTER_AI_TRIPS_URL}?${params.toString()}`,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${PUBLIC_V5_API_KEY}`,
-        },
-      };
+    const response = await axios(config);
 
-      const response = await axios(config);
-      if (response.status !== 200) {
-        throw new Error(`Error fetching trips: ${response.statusText}`);
-      }
-
-      const tripList = response.data.tripList;
-      const lastObject = tripList[tripList.length - 1];
-
-      if (!lastObject) {
-        break;
-      }
-
-      params.set('offset', (20 * (i+1)).toString());
-      
-      results.push(tripList as ITripEvent[]);
-    } catch (error) {
-      console.error(error);
+    if (response.status === 400) {
+      throw new Error(`API Error: ${response.statusText}`);
     }
+
+    if (response.status !== 200) {
+      throw new Error(`Error fetching trips: ${response.statusText}`);
+    }
+
+    const tripList = response.data.tripList;
+    if (tripList.length === 0) {
+      break;
+    }
+
+    params.set('offset', (20 * (i + 1)).toString());
+    results.push(tripList as ITripEvent[]);
   }
   return results.flat();
 }

@@ -26,7 +26,7 @@
 		filteredLayers = layerList.filter((layer) => expr.test(layer.layerName));
 	};
 
-	$: layerList &&  (filteredLayers = layerList);
+	$: layerList && (filteredLayers = layerList);
 </script>
 
 <div class="flex flex-col ">
@@ -36,7 +36,7 @@
 
 	<div class="flex flex-col max-h-96 overflow-auto">
 		{#each filteredLayers as layer}
-			<div class="flex flex-row gap-4  my-1">
+			<div class="flex flex-row gap-2  my-1">
 				<button
 					on:click={() => toggleLayer(layer)}
 					class={`btn w-full ${layer.isVisible ? 'btn-primary' : 'btn-black-outline'} `}
@@ -50,10 +50,7 @@
 						updateMapCenter(layer.initialCoordinates, layer.type);
 					}}
 					class="btn btn-black-outline w-16 btn-text-center"
-					><i
-						class={`${layer.icon} icon-color`}
-						
-					/></button
+					><i class={`fa-solid fa-eye icon-color`} style="color: {layer.color};" /></button
 				>
 			</div>
 		{/each}

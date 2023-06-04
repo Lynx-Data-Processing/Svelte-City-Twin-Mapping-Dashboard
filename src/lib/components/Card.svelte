@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fly, slide } from 'svelte/transition';
+	import Underline from './Underline.svelte';
 	export let title: string;
 	export let width = 'w-full';
 	export let disableToggle = false;
@@ -11,10 +12,13 @@
 	};
 </script>
 
-<section  class="card shadow-md h-fit  {width} p-4 gap-4 {isRounded ? "rounded-lg" : ""}">
+<section  class="card  h-fit  {width} p-4 gap-4 {isRounded ? "rounded-md" : ""}">
 	<div class="flex flow-row justify-between">
-		<h6>{title}</h6>
-
+		<div class="flex flex-col">
+			<p class="text-subtitle">{title}</p>
+			<div class="pt-2"><Underline /></div>
+		</div>
+		
 		{#if !disableToggle}
 			<button on:click={toggleContent} class="toggle-btn text-center hover:underline">
 				{#if showContent}

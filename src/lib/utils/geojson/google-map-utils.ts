@@ -2,91 +2,113 @@ import { LINE_STRING, MULTI_LINE_STRING, MULTI_POINT, MULTI_POLYGON, POINT, POLY
 import type { IGeojsonDataType, IGeojsonType } from "$lib/types/geojsonTypes";
 import type { ILatLngType, ILayerListElementType } from "$lib/types/mapTypes";
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from "../filter-data";
+import { formatText } from "../text-format";
+const pointStyle = (style: google.maps.Data.StyleOptions, color: string) => {
+    return {
+        ...style,
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 5,
+            strokeColor: color,
+            fillColor: color,
+            fillOpacity: 1
+        }
+    };
+}
+const polygonStyle = (style: google.maps.Data.StyleOptions, color: string) => {
+    return {
+        ...style,
+        strokeColor: color,
+        fillColor: color,
+        fillOpacity: 0.5
+    };
+}
+const lineStyle = (style: google.maps.Data.StyleOptions, color: string) => {
+    style = {
+        ...style,
+        strokeWeight: 6,
+    };
+    return style;
+}
+const tripLineStyle = (style: google.maps.Data.StyleOptions, color: string) => {
+    return {
+        ...style,
+        icons: [
+            {
+                icon: {
+                    path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                    scale: 2,
+                    strokeColor: 'white',
+                    fillColor: 'white',
+                    fillOpacity: 1
+                },
+                offset: '0',
+                repeat: '100px'
+            }
+        ]
+    }
+}
 
 export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElementType) => {
     if (!map || !layerListElement.geojson) return;
     const layer = layerListElement.googleMapLayer;
     const isTripsLayer = layerListElement.isTrip;
-
     layer.addGeoJson(layerListElement.geojson);
-
     const infoWindow = new google.maps.InfoWindow();
-
     layer.setStyle((feature: any) => {
         const geometryType = feature.getGeometry().getType();
         const color =
-            feature.getProperty('color') || '#' + Math.floor(Math.random() * 16777215).toString(16);
+            feature.getProperty('color') || "black"
         let style: google.maps.Data.StyleOptions = {
             strokeColor: color || 'blue',
-            strokeWeight: 8
+            strokeWeight: 4
         };
-
         if (geometryType === POINT || geometryType === MULTI_POINT) {
-            style = {
-                ...style,
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 5,
-                    strokeColor: color,
-                    fillColor: color,
-                    fillOpacity: 1
-                }
-            };
+            style = pointStyle(style, color);
         }
-
         if (geometryType === POLYGON || geometryType === MULTI_POLYGON) {
-            style = {
-                ...style,
-                strokeColor: color,
-                fillColor: color,
-                fillOpacity: 0.3
-            };
+            style = polygonStyle(style, color);
         }
-
         if (geometryType === LINE_STRING || geometryType === MULTI_LINE_STRING) {
-            style = {
-                ...style,
-                icons: [
-                    {
-                        icon: {
-                            path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                            scale: 2,
-                            strokeColor: 'white',
-                            fillColor: 'white',
-                            fillOpacity: 1
-                        },
-                        offset: '0',
-                        repeat: '100px'
-                    }
-                ]
-            };
+            style = lineStyle(style, color)
+            style = isTripsLayer ? tripLineStyle(style, color) : style;
         }
-
         return style;
     });
 
     // Add a click listener to the layer
     layer.addListener('click', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
         const feature = event.feature;
-
         // Initialize content string with feature id
-        let contentString = `<p class="text-xl font-bold">${layerListElement.layerName}</p>`;
+        let contentString = `
+            <p class="text-subtitle font-bold">${layerListElement.layerName}</p>
+            <hr class="bg-primary w-12 h-1 my-2" /> 
+        `;
         // Loop through all properties of the feature
+        let count = 0;
         feature.forEachProperty((value: any, name: any) => {
-            contentString += `<p> <span class="font-bold">${name}</span>: ${value}</p>`;
-
+            if (count > 10) return;
+            contentString += `<p> <span class="font-bold">${formatText(name)}</span>: ${value}</p>`;
+            count++;
         });
-
         infoWindow.setContent(contentString);
         infoWindow.setPosition(event.latLng);
         infoWindow.open(map);
     });
 
+    if (layerListElement.type === POLYGON || layerListElement.type === MULTI_POLYGON) {
+        layer.addListener('mouseover', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
+            const feature = event.feature;
+            layer.overrideStyle(feature, { fillOpacity: 0.8 });
+        });
+        layer.addListener('mouseout', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
+            const feature = event.feature;
+            layer.overrideStyle(feature, { fillOpacity: 0.5 });
+        });
+    }
 
     return map;
 };
-
-
 
 export const toggleGoogleMapLayerVisibility = (map: any, layerElement: ILayerListElementType) => {
     if (!map && layerElement.googleMapLayer) return;
@@ -95,10 +117,8 @@ export const toggleGoogleMapLayerVisibility = (map: any, layerElement: ILayerLis
     } else {
         layerElement.googleMapLayer.setMap(null); // Hide the layer from the map
     }
-
     return map;
 };
-
 export const addLayerElementToLayerList = (
     layerList: ILayerListElementType[],
     layerListElement: ILayerListElementType
@@ -114,7 +134,6 @@ export const addLayerElementToLayerList = (
     tempLayerList.push(layerListElement);
     return tempLayerList;
 };
-
 export const createLayerElement = (
     isTrip: boolean,
     layerName: string,
@@ -129,37 +148,31 @@ export const createLayerElement = (
         layerName: layerName || 'GPS Data',
         sourceName: layerName || 'GPS Data',
         type: type || 'LineString',
-        isVisible: isVisible || true,
+        isVisible: isVisible,
         icon: icon || 'fa-solid fa-car',
         color: color || 'black',
         geojson: geojson,
-        initialCoordinates: geojson ? getInitialCoordinates(type, geojson) : {lat: 0 , lng: 0}
+        initialCoordinates: geojson ? getInitialCoordinates(type, geojson) : { lat: 0, lng: 0 }
     };
     layerElement.googleMapLayer = new google.maps.Data();
     return layerElement;
-
 };
-
 export const getInitialCoordinates = (type: IGeojsonDataType, data: any): ILatLngType => {
-    try{
+    try {
         if (!data) return { lat: 0, lng: 0 };
-
         const initialCoordinateMap: { [key in IGeojsonDataType]?: number[] } = {
             Point: data.features[0].geometry.coordinates,
             LineString: data.features[0].geometry.coordinates[0],
             Polygon: data.features[0].geometry.coordinates[0],
             MultiPolygon: data.features[0].geometry.coordinates[0],
         };
-        
         const coords = initialCoordinateMap[type];
         if (coords && coords.length >= 2) {
             return { lat: coords[1], lng: coords[0] };
         }
-        
         return { lat: 0, lng: 0 };
     }
-    catch (err){
-        return  { lat: 0, lng: 0 };
+    catch (err) {
+        return { lat: 0, lng: 0 };
     }
 };
-

@@ -33,7 +33,6 @@ export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeo
       const properties = gpsElement.fields;
 
       let coordinates = getCoordinates(gpsElement.fields.geojson.coordinates);
-      gpsElement.fields.Size = 1;
       properties.color = getRandomColor();
       delete gpsElement.fields.geojson
       delete gpsElement.fields.geo_point_2d
@@ -73,7 +72,7 @@ export const getKingstonMapData = async () => {
 
     if (!neighborhoodsGpsData) return;
 
-    const neighborhoodsElement = createLayerElement(false, 'Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', 'Black', neighborhoodsGpsData);
+    const neighborhoodsElement = createLayerElement(false, 'Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', getRandomColor(), neighborhoodsGpsData);
     tempLayerList.push(neighborhoodsElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_CITY_ZONES_URL}`);
@@ -95,7 +94,7 @@ export const getKingstonMapData = async () => {
 
     if (!planningLineGpsData) return;
 
-    const planningLineElement = createLayerElement(false, 'Planning Line', LINE_STRING, false, 'fa-solid fa-table-cells-large', 'Black', planningLineGpsData);
+    const planningLineElement = createLayerElement(false, 'Planning Line', LINE_STRING, false, 'fa-solid fa-table-cells-large', getRandomColor(), planningLineGpsData);
     tempLayerList.push(planningLineElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_PLANNING_LINE_URL}`);

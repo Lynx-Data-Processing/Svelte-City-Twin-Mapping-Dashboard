@@ -1,0 +1,90 @@
+
+.btn {
+    padding: $paddings-lg;
+    background-color: $white;
+	color: $black;
+    border-color: $btn-default-light;
+	border-width:  $border-width;
+
+	text-align: left;
+	transition: all $speed-sm ease;
+    span {
+        margin-left: $paddings-md;
+    }
+    &:hover {
+        cursor: pointer;
+        color: $black;
+        background-color: $btn-default-light;
+    }
+    &-text-center {
+        text-align: center;
+    }
+    &-no-border {
+        border: none;
+    }
+    &-no-rounded {
+        border-radius: 0;
+    }
+    &-dark {
+        border: $btn-dark;
+        background-color: $btn-dark;
+        color: white;
+        &:hover {
+            cursor: pointer;
+            color: white;
+            background-color: $btn-dark;
+        }
+    }
+    &-dark-light {
+        border: $btn-dark-light;
+        background-color: $btn-dark-light;
+        color: white;
+        &:hover {
+            cursor: pointer;
+            color: white;
+            background-color: $btn-dark;
+        }
+    }
+    &-primary {
+        background-color: $primary-color;
+        border-color: $primary-color;
+        color: white;
+        &:hover {
+            color: white;
+            background-color: $primary-color-dark;
+        }
+    }
+    &-error {
+        background-color: $error-color;
+        color: white;
+        &:hover {
+            color: white;
+            background-color: $error-color-dark;
+        }
+    }
+    &-green {
+        background-color: $success-color;
+        color: white;
+        &:hover {
+            color: white;
+            background-color: $success-color-dark;
+        }
+    }
+    &-black-outline {
+        color: $dark;
+        border-color: $btn-default-light;
+       
+        &:hover {
+            background-color: $btn-default-light;
+        }
+    }
+    &-error-outline {
+        color: $error-color;
+        border-color: $error-color;
+        border-width: 1px;
+        &:hover {
+            color: white;
+            background-color: $error-color;
+        }
+    }
+}

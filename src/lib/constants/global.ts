@@ -7,6 +7,8 @@ export const ERROR_SIGN_IMAGE_PATH = '/images/error-sign.svg';
 export const BRAND_COLOR = "#394EEE";
 export const BRAND_COLOR_DARK = "#10376e";
 export const SPEED_COLORS = ['#1800ff', '#0071ff', '#0093ff', '#00a9d1', '#00ba73', '#13c600', '#88ed02', '#fbf01c', '#fa9b45', '#fa6e6e'];
+export const RANDOM_COLORS = ["#f44336", "#e91e63", "#8a4af3", "#673ab7", "#3f51b5", "#009688", "#4caf50", "#8bc34a", "#2196f3", "#ffc107", "#ff5722", "#ffeb3b"]
+
 
 export const OPEN_DATA_KINGSTON_CITY_ZONES_URL = "https://opendatakingston.cityofkingston.ca/api/records/1.0/search/?dataset=neighbourhoods&q=&rows=100&facet=name";
 export const OPEN_DATA_KINGSTON_TREES_URL = "https://opendatakingston.cityofkingston.ca/api/records/1.0/search/?dataset=trees-municipal&q=&rows=500&facet=owner&facet=common_name&facet=scientific_name&facet=date_installed&facet=memorial_tree";

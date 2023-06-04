@@ -7,7 +7,7 @@
 
 <div class="app" transition:fade>
 	<Header />
-	<div class="bg-smoke">
+	<div >
 		<slot />
 	</div>
 

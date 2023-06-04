@@ -1,18 +1,15 @@
 .date-picker {
-
   padding: $paddings-lg;
   background-clip: padding-box;
   width: 100%;
-
   border-width: $border-width;
   border-color: $btn-default-light;
+ 
   border-style: solid;
   transition: all $speed-md;
-
   &:hover {
     cursor: pointer;
     color: $black;
     background-color: $btn-default-light;
   }
-
 }

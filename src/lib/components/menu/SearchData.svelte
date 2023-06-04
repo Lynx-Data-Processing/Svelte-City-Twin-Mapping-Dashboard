@@ -22,7 +22,7 @@
 			name="start_date"
 			id="start_date"
 			type="datetime-local"
-			class="form-control date-picker p-2 rounded-lg"
+			class="form-control date-picker "
 			placeholder="Select a date"
 			data-mdb-toggle="datepicker"
 			min="2010-01-01"
@@ -38,7 +38,7 @@
 			name="end_date"
 			id="end_date"
 			type="datetime-local"
-			class="form-control date-picker p-2 rounded-lg"
+			class="form-control date-picker  "
 			placeholder="Select End Date Time"
 			data-mdb-toggle="datepicker"
 			min="2010-01-01"
@@ -55,7 +55,7 @@
 			<div class="alert alert-error my-1" role="alert">End date cannot be before start date.</div>
 		{:else}
 			<button class={`btn btn-primary my-1`} on:click={() => fetchTripsData(dateTimeDictionary)}
-				><i class="fa-solid fa-database " /><span>Search Data</span>
+				><i class="fa-solid fa-search " /><span>Search Data</span>
 			</button>
 		{/if}
 	{:else}

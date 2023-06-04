@@ -1,23 +1,33 @@
-
-<div class="absolute top-0 z-10 load load-loading" >
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: rgb(241, 242, 243); display: block;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-        <rect x="19" y="19" width="20" height="20" fill="#1d3f72">
-          <animate attributeName="fill" values="#5699d2;#1d3f72;#1d3f72" keyTimes="0;0.125;1" dur="1s" repeatCount="indefinite" begin="0s" calcMode="discrete"></animate>
-        </rect><rect x="40" y="19" width="20" height="20" fill="#1d3f72">
-          <animate attributeName="fill" values="#5699d2;#1d3f72;#1d3f72" keyTimes="0;0.125;1" dur="1s" repeatCount="indefinite" begin="0.125s" calcMode="discrete"></animate>
-        </rect><rect x="61" y="19" width="20" height="20" fill="#1d3f72">
-          <animate attributeName="fill" values="#5699d2;#1d3f72;#1d3f72" keyTimes="0;0.125;1" dur="1s" repeatCount="indefinite" begin="0.25s" calcMode="discrete"></animate>
-        </rect><rect x="19" y="40" width="20" height="20" fill="#1d3f72">
-          <animate attributeName="fill" values="#5699d2;#1d3f72;#1d3f72" keyTimes="0;0.125;1" dur="1s" repeatCount="indefinite" begin="0.875s" calcMode="discrete"></animate>
-        </rect><rect x="61" y="40" width="20" height="20" fill="#1d3f72">
-          <animate attributeName="fill" values="#5699d2;#1d3f72;#1d3f72" keyTimes="0;0.125;1" dur="1s" repeatCount="indefinite" begin="0.375s" calcMode="discrete"></animate>
-        </rect><rect x="19" y="61" width="20" height="20" fill="#1d3f72">
-          <animate attributeName="fill" values="#5699d2;#1d3f72;#1d3f72" keyTimes="0;0.125;1" dur="1s" repeatCount="indefinite" begin="0.75s" calcMode="discrete"></animate>
-        </rect><rect x="40" y="61" width="20" height="20" fill="#1d3f72">
-          <animate attributeName="fill" values="#5699d2;#1d3f72;#1d3f72" keyTimes="0;0.125;1" dur="1s" repeatCount="indefinite" begin="0.625s" calcMode="discrete"></animate>
-        </rect><rect x="61" y="61" width="20" height="20" fill="#1d3f72">
-          <animate attributeName="fill" values="#5699d2;#1d3f72;#1d3f72" keyTimes="0;0.125;1" dur="1s" repeatCount="indefinite" begin="0.5s" calcMode="discrete"></animate>
-        </rect>
-        </svg>
-    </div>
-    
+<div class="absolute top-0 z-10 load load-loading h-full w-full">
+	<svg width="40" height="40" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+		><style>
+			.spinner_hzlK {
+				animation: spinner_vc4H 0.8s linear infinite;
+				animation-delay: -0.8s;
+			}
+			.spinner_koGT {
+				animation-delay: -0.65s;
+			}
+			.spinner_YF1u {
+				animation-delay: -0.5s;
+			}
+			@keyframes spinner_vc4H {
+				0% {
+					y: 1px;
+					height: 22px;
+				}
+				93.75% {
+					y: 5px;
+					height: 14px;
+					opacity: 0.2;
+				}
+			}
+		</style><rect class="spinner_hzlK" x="1" y="1" width="6" height="22" /><rect
+			class="spinner_hzlK spinner_koGT"
+			x="9"
+			y="1"
+			width="6"
+			height="22"
+		/><rect class="spinner_hzlK spinner_YF1u" x="17" y="1" width="6" height="22" /></svg
+	>
+</div>

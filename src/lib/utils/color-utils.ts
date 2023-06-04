@@ -1,10 +1,10 @@
-import { SPEED_COLORS } from "$lib/constants";
+import { RANDOM_COLORS } from "$lib/constants";
 
 export const getRandomColorHEX = () => {
     return `#${(Math.floor(Math.random() * 16777215).toString(16)).toString()}`;
   };
   
 export const getRandomColor = () => {
-    const randomIndex = Math.floor(Math.random() * SPEED_COLORS.length);
-    return SPEED_COLORS[randomIndex];
+    const randomIndex = Math.floor(Math.random() * RANDOM_COLORS.length);
+    return RANDOM_COLORS[randomIndex];
   }

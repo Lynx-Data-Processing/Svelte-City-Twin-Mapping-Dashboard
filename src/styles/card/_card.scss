@@ -1,11 +1,8 @@
 .card {
-
-
   background-color: $white;
   border-width: $border-width;
   border-style: solid;
   transition: all $speed-md;
-
-
-
+  border-color: $btn-default-light;
+  box-shadow: $box-shadow;
 }
