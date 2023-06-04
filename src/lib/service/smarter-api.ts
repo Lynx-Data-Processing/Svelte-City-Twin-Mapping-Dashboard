@@ -2,7 +2,7 @@ import { PUBLIC_API_KEY, PUBLIC_TENANT_ID, PUBLIC_V5_API_KEY } from '$env/static
 import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_EVENTS_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_SENSOR_REPORT_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/global';
 import type { IEventType, IMediaRecordingType, IVideoType } from '$lib/types/eventTypes';
 import type { ITripEvent } from '$lib/types/tripTypes';
-import type { IDateTimeDictionaryType } from '$lib/types/types';
+import type { IDateTimeDictionaryType, ITripsParamType } from '$lib/types/types';
 import axios from 'axios';
 import { dateTimeToMillisecondUnix } from '../utils/date-format';
 
@@ -190,14 +190,15 @@ export const getSmarterAiTripWithGps = async (tripId: string) => {
 // todo : limit is the number of trips to return (NUMBER)
 // todo : offset is the number of trips to skip (NUMBER)
 
-export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryType) => {
+export const getSmarterAiTrips = async (tripsParams: ITripsParamType) => {
 
   const params = new URLSearchParams({
-    limit: "20",
+    endpointName: tripsParams.endpointId,
+    limit: tripsParams.limit.toString(),
     tenantId: PUBLIC_TENANT_ID,
-    fromTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.startDateTime).toString(),
-    toTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.endDateTime).toString(),
-    offset: "0",
+    fromTimestamp: dateTimeToMillisecondUnix(tripsParams.startDateTime).toString(),
+    toTimestamp: dateTimeToMillisecondUnix(tripsParams.endDateTime).toString(),
+    offset: tripsParams.offset.toString(),
   });
 
   const results: ITripEvent[][] = [];

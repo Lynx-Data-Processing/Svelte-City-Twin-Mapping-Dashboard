@@ -4,6 +4,14 @@ export type IDateTimeDictionaryType = {
     endDateTime: string,
 }
 
+export type ITripsParamType = {
+    endpointId: string,
+    limit: number,
+    offset: number,
+    startDateTime: string,
+    endDateTime: string,
+}
+
 export interface IFooterElementType {
     id: number,
     name: string,
