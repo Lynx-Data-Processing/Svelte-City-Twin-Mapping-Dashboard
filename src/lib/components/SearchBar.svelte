@@ -11,12 +11,12 @@
 		<h5>{title}</h5>
 	{/if}
 
-	<div class="search-container">
+	<div class="search-container ">
 		<input
 			type="search"
 			bind:value={search}
 			required
-			class="search-input"
+			class="search-input "
 			{placeholder}
 			on:change={() => onChangeFunction(search)}
 		/>

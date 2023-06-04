@@ -15,7 +15,7 @@
 <section  class="card  h-fit  {width} p-4 gap-4 {isRounded ? "rounded-md" : ""}">
 	<div class="flex flow-row justify-between">
 		<div class="flex flex-col">
-			<p class="text-subtitle">{title}</p>
+			<p class="text-subtitle uppercase">{title}</p>
 			<div class="pt-2"><Underline /></div>
 		</div>
 		
