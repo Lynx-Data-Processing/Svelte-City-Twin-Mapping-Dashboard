@@ -22,7 +22,7 @@
 			name="start_date"
 			id="start_date"
 			type="datetime-local"
-			class="form-control date-picker "
+			class="form-control date-picker"
 			placeholder="Select a date"
 			data-mdb-toggle="datepicker"
 			min="2010-01-01"

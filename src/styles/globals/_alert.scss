@@ -1,6 +1,7 @@
 .alert {
   padding: $paddings-lg;
 
+
   &-error {
     color: $error-color;
     background-color: $error-color-light;
@@ -11,7 +12,8 @@
   }
   &-info {
     color: $black;
-    background-color: $info-color;
+    background-color: $smoke;
+    border: $gray;
   }
 
 }
