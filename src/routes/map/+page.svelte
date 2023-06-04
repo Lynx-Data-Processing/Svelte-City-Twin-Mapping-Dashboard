@@ -117,6 +117,7 @@
 			}
 			tripList = tempTripWithGPSList;
 		} catch (error) {
+			console.log(error);
 			isError = true;
 		}
 		finally {

@@ -54,12 +54,21 @@ export type Snapshot = {
     snapshots: Snapshot[];
   };
   
-  
 
-export interface IEventGeojsonType  {
+
+export interface ISensorDataGeolocationType {
+  latitude: string,
+  longitude: string,
+  altitude: string,
+  speed: string,
+  bearing: string,
+  accuracy: string
+}
+
+export interface ISensorDataType  {
     ACCELEROMETER: object,
     GYROSCOPE: object,
-    GEO_LOCATION: object,
+    GEO_LOCATION: ISensorDataGeolocationType,
     VIDEO_META: object
 }
 export interface ISelectedPOIType  {

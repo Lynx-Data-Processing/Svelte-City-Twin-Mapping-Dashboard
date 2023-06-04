@@ -1,30 +1,38 @@
-import type { IEventType } from "$lib/types/eventTypes";
+import type { IEventType, ISensorDataType } from "$lib/types/eventTypes";
 import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType } from "$lib/types/geojsonTypes";
 import type { ITrip } from "$lib/types/tripTypes";
+import axios from "axios";
 import { getRandomColor, getRandomColorHEX } from "../color-utils";
 import { groupByKey } from "../filter-data";
 
-// export const convertTripEventsPointsToGeojson = (tripEventPoints: IEventType[]) => {
-//   let tripEventGeojsonList = []
+export const convertTripEventsPointsToGeojson = async (tripEventPoints: IEventType[]) => {
+  let tripEventGeojsonList = []
 
-//   for (let i = 0, len = tripEventPoints.length; i < len; i++) {
-//     let event = tripEventPoints[i];
-//     if(!event.geo) continue;
-//     let coord = [event.geo.lon, event.geo.lat];
-//     const point: IGeojsonFeatureType = {
-//       type: "Feature",
-//       properties: { id: "Event", "Event Type": event.tripEventType, color: "red" },
-//       geometry: {
-//         type: "Point",
-//         coordinates: coord
-//       }
-//     };
+  for (let i = 0, len = tripEventPoints.length; i < len; i++) {
+    
+      let event = tripEventPoints[i];
+      const response = await axios.get(event.snapshots[1].downloadUrl);
+      if (response.status !== 200 || !response.data) continue;
+      if(!response.data.GEO_LOCATION) continue;
+      let sensorData : ISensorDataType = response.data as ISensorDataType;
+      let coord = [parseFloat(sensorData.GEO_LOCATION.longitude), parseFloat(sensorData.GEO_LOCATION.latitude)];
+      const point: IGeojsonFeatureType = {
+        type: "Feature",
+        properties: { ...event, image_1: event.snapshots[0].downloadUrl, image_2: event.snapshots[2].downloadUrl, isEvent: true, color: '#f03132', size: 7},
+        geometry: {
+          type: "Point",
+          coordinates: coord
+        }
+      };
 
-//     tripEventGeojsonList.push(point)
-//   }
+      tripEventGeojsonList.push(point)
+    
+   
+  }
 
-//   return tripEventGeojsonList;
-// }
+  return tripEventGeojsonList;
+}
+
 
 export const convertTripsToGeoJSON = async (trips: ITrip[], geojsonDataType: IGeojsonDataType = "LineString") => {
   const groupedTrips = groupByKey(trips, 'endpointName');
@@ -91,10 +99,10 @@ export const convertTripsToGeoJSON = async (trips: ITrip[], geojsonDataType: IGe
         }
 
 
-        // if(trip.tripEvents){
-        //   const eventTrips = convertTripEventsPointsToGeojson(trip.triggeredEvents);
-        //   pointsList.push(...eventTrips)
-        // }
+        if (trip.tripEvents) {
+          const eventTrips = await convertTripEventsPointsToGeojson(trip.triggeredEvents);
+          pointsList.push(...eventTrips)
+        }
 
         geoJson.features.push(feature, ...pointsList);
       }

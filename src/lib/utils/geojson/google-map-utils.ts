@@ -3,18 +3,33 @@ import type { IGeojsonDataType, IGeojsonType } from "$lib/types/geojsonTypes";
 import type { ILatLngType, ILayerListElementType } from "$lib/types/mapTypes";
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from "../filter-data";
 import { formatText } from "../text-format";
-const pointStyle = (style: google.maps.Data.StyleOptions, color: string) => {
+const pointStyle = (style: google.maps.Data.StyleOptions, color: string, size: number = 5) => {
     return {
         ...style,
         icon: {
             path: google.maps.SymbolPath.CIRCLE,
-            scale: 5,
+            scale: size,
             strokeColor: color,
             fillColor: color,
             fillOpacity: 1
         }
     };
 }
+
+
+const eventPointStyle = (style: google.maps.Data.StyleOptions, color: string, size: number = 7) => {
+    return {
+        ...style,
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: size,
+            strokeColor: color,
+            fillColor: color,
+            fillOpacity: 1
+        }
+    };
+} 
+
 const polygonStyle = (style: google.maps.Data.StyleOptions, color: string) => {
     return {
         ...style,
@@ -59,19 +74,20 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
         const geometryType = feature.getGeometry().getType();
         const color =
             feature.getProperty('color') || "black"
+        const size = feature.getProperty('size') || 5;
+        const isEvent = feature.getProperty('isEvent') || false;
         let style: google.maps.Data.StyleOptions = {
             strokeColor: color || 'blue',
             strokeWeight: 4
         };
         if (geometryType === POINT || geometryType === MULTI_POINT) {
-            style = pointStyle(style, color);
+            style = isEvent ? eventPointStyle(style, color, size) : pointStyle(style, color, size);;
         }
         if (geometryType === POLYGON || geometryType === MULTI_POLYGON) {
             style = polygonStyle(style, color);
         }
         if (geometryType === LINE_STRING || geometryType === MULTI_LINE_STRING) {
-            style = lineStyle(style, color)
-            style = isTripsLayer ? tripLineStyle(style, color) : style;
+            style = isTripsLayer ? tripLineStyle(style, color) : lineStyle(style, color);
         }
         return style;
     });
@@ -79,18 +95,36 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
     // Add a click listener to the layer
     layer.addListener('click', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
         const feature = event.feature;
+        const isEvent = feature.getProperty('isEvent') || false;
         // Initialize content string with feature id
         let contentString = `
-            <p class="text-subtitle font-bold">${layerListElement.layerName}</p>
+            <p class="text-subtitle font-bold">${formatText(isEvent ? feature.getProperty("triggerName") : layerListElement.layerName)}</p>
             <hr class="bg-primary w-12 h-1 my-2" /> 
         `;
         // Loop through all properties of the feature
         let count = 0;
+        let maxCount = isEvent ? 5: 10;
         feature.forEachProperty((value: any, name: any) => {
-            if (count > 10) return;
+            if (count > maxCount) return;
             contentString += `<p> <span class="font-bold">${formatText(name)}</span>: ${value}</p>`;
             count++;
         });
+
+        if (isEvent) {
+            // Create image div for event snapshot 0 and 2 (if they exist)
+            const image_1 = feature.getProperty("image_1");
+            const image_2 = feature.getProperty("image_2");
+
+            if (image_1 && image_2) {
+                contentString += `
+                    <div class="flex flex-row gap-4 mt-4">
+                        <img class="w-full h-auto object-cover" src="${image_1}" />
+                        <img class="w-full h-auto object-cover" src="${image_2}" />
+                    </div>
+                `;
+            }            
+        }
+
         infoWindow.setContent(contentString);
         infoWindow.setPosition(event.latLng);
         infoWindow.open(map);

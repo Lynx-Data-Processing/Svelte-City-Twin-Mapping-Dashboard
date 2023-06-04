@@ -193,7 +193,7 @@ export const getSmarterAiTripWithGps = async (tripId: string) => {
 export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryType) => {
 
   const params = new URLSearchParams({
-    limit: "5",
+    limit: "20",
     tenantId: PUBLIC_TENANT_ID,
     fromTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.startDateTime).toString(),
     toTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.endDateTime).toString(),
@@ -202,7 +202,7 @@ export const getSmarterAiTrips = async (dateTimeDictionary: IDateTimeDictionaryT
 
   const results: ITripEvent[][] = [];
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 3; i++) {
 
     let config = {
       method: 'get',
