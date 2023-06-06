@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { ISelectedPOIType } from '$lib/types/eventTypes';
 	import {
 		zoomLevelMap,
 		type ILatLngType,
@@ -18,8 +17,10 @@
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { LINE_STRING } from '$lib/constants/geojson';
 	import { getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
+	import type { ITripEventWithSensorDataType } from '$lib/types/eventTypes';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
+	import { getRandomColor } from '$lib/utils/color-utils';
 	import { convertTripsToGeoJSON } from '$lib/utils/geojson/geojson-trips-utils';
 	import {
 		addLayerElementToLayerList,
@@ -30,7 +31,6 @@
 	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
-	import { getRandomColor } from '$lib/utils/color-utils';
 
 	let isLoading = false;
 	let isError = false;
@@ -44,7 +44,7 @@
 	};
 
 	let layerList: ILayerListElementType[] = [];
-	let selectedPOI: ISelectedPOIType | null = null;
+	let selectedEvent : ITripEventWithSensorDataType | null = null;
 	let selectedPolygon: object | null = null;
 
 	let tripList: ITrip[] = [];
@@ -67,12 +67,17 @@
 		map.setTilt(50);
 	};
 
+	const updateSelectedEvent = (googleMapEvent: ITripEventWithSensorDataType) =>{
+		console.log(googleMapEvent);
+		selectedEvent = googleMapEvent;
+	}
+
 	const getInitialMapData = async () => {
 		const tempKingstonLayerList = await getKingstonMapData();
 		if (!tempKingstonLayerList || !tempKingstonLayerList.length) return;
 		for (let i = 0, len = tempKingstonLayerList.length; i < len; i++) {
 			layerList = addLayerElementToLayerList(layerList, tempKingstonLayerList[i]);
-			map = addLayerToGoogleMap(map, tempKingstonLayerList[i]);
+			map = addLayerToGoogleMap(map, tempKingstonLayerList[i], updateSelectedEvent);
 			map = toggleGoogleMapLayerVisibility(map, tempKingstonLayerList[i]);
 		}
 	};
@@ -112,7 +117,7 @@
 				);
 
 				layerList = addLayerElementToLayerList(layerList, layerElement);
-				map = addLayerToGoogleMap(map, layerElement);
+				map = addLayerToGoogleMap(map, layerElement, updateSelectedEvent);
 				map = toggleGoogleMapLayerVisibility(map, layerElement);
 			}
 			tripList = tempTripWithGPSList;
@@ -145,7 +150,7 @@
 				<SearchData {fetchTripsData} />
 			</Card>
 			<Card title="Video Player" disableToggle={true}>
-				<VideoPlayer {selectedPOI} />
+				<VideoPlayer {selectedEvent} />
 			</Card>
 		</div>
 

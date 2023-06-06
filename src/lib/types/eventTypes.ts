@@ -1,3 +1,4 @@
+import type { ITrip } from "./tripTypes";
 
 export interface ISensorData {
     eventSource: string;
@@ -43,6 +44,12 @@ export type Snapshot = {
     source: string;
     downloadUrl: string;
   };
+
+  export interface ITripEventWithSensorDataType extends IEventType, ISensorDataType, ITrip  {
+    isEvent: boolean, 
+    color: string
+    size: number
+  }
   
   export type IEventType = {
     id: string;
@@ -54,7 +61,6 @@ export type Snapshot = {
     snapshots: Snapshot[];
   };
   
-
 
 export interface ISensorDataGeolocationType {
   latitude: string,
@@ -71,16 +77,8 @@ export interface ISensorDataType  {
     GEO_LOCATION: ISensorDataGeolocationType,
     VIDEO_META: object
 }
-export interface ISelectedPOIType  {
-    lat: number,
-    lng: number,
-    data: any,
-}
-export interface ISelectedEventType  {
-    lat: number,
-    lng: number,
-    data: any,
-}
+
+
 export interface IDeviceType {
     id: number,
     label: string,

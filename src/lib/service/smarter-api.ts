@@ -1,6 +1,6 @@
 import { PUBLIC_API_KEY, PUBLIC_TENANT_ID, PUBLIC_V5_API_KEY } from '$env/static/public';
 import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_EVENTS_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_SENSOR_REPORT_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/global';
-import type { IEventType, IMediaRecordingType, IVideoType } from '$lib/types/eventTypes';
+import type { IEventType, IMediaRecordingType, ITripEventWithSensorDataType, IVideoType } from '$lib/types/eventTypes';
 import type { ITripEvent } from '$lib/types/tripTypes';
 import type { IDateTimeDictionaryType } from '$lib/types/types';
 import axios from 'axios';
@@ -75,12 +75,12 @@ export const getDeviceDetails = async (deviceId: string) => {
 //* Fetch all videos from the device, all videos are in MP4 format
 //* The api returns video meta data and videos together
 //* API ONLY loads videos saved on the cloud
-export const getVideo = async (gpsElement: any) => {
+export const getVideo = async (gpsElement: ITripEventWithSensorDataType) => {
 
   const params = new URLSearchParams({
-    endpointId: gpsElement.EndpointId,
-    fromTime: gpsElement.StartTime,
-    toTime: gpsElement.EndTime
+    endpointId: `${gpsElement.endpointId}`,
+    fromTime: `${gpsElement.recordingStartTimestamp}`,
+    toTime: `${gpsElement.recordingEndTimestamp}`
   });
 
   const config = {
@@ -97,17 +97,8 @@ export const getVideo = async (gpsElement: any) => {
 
     const result = await axios(config);
     const videos: IMediaRecordingType[] = result.data.mediaEventRecordings.filter((res: IMediaRecordingType) => res.type === 'VIDEO'); // && res.endTimestamp > timestamp && res.startTimestamp < timestamp
-    const videoLink = videos.length ? videos[0].url : '';
-
-    const video: IVideoType = {
-      eventId: gpsElement.EventId,
-      deviceId: gpsElement.DeviceId,
-      endpointId: gpsElement.EndpointId,
-      startTimestamp: gpsElement.StartTime,
-      endTimestamp: gpsElement.EndTime,
-      videoUrl: videoLink
-    };
-    return video;
+   
+    return videos;
 
   } catch (error: any) {
     if (error.response) {
