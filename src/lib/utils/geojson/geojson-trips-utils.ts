@@ -1,11 +1,11 @@
-import type { IEventType, ISensorDataType } from "$lib/types/eventTypes";
+import type { IEventType, ISensorDataType, ITripEventWithSensorDataType } from "$lib/types/eventTypes";
 import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType } from "$lib/types/geojsonTypes";
 import type { ITrip } from "$lib/types/tripTypes";
 import axios from "axios";
 import { getRandomColor, getRandomColorHEX } from "../color-utils";
 import { groupByKey } from "../filter-data";
 
-export const convertTripEventsPointsToGeojson = async (tripEventPoints: IEventType[]) => {
+export const convertTripEventsPointsToGeojson = async (trip: ITrip, tripEventPoints: IEventType[]) => {
   let tripEventGeojsonList = []
 
   for (let i = 0, len = tripEventPoints.length; i < len; i++) {
@@ -16,9 +16,20 @@ export const convertTripEventsPointsToGeojson = async (tripEventPoints: IEventTy
       if(!response.data.GEO_LOCATION) continue;
       let sensorData : ISensorDataType = response.data as ISensorDataType;
       let coord = [parseFloat(sensorData.GEO_LOCATION.longitude), parseFloat(sensorData.GEO_LOCATION.latitude)];
+
+      const properties : ITripEventWithSensorDataType ={
+        ...event,
+        ...sensorData,
+        ...trip,
+        isEvent: true,
+        color: '#f03132',
+        size: 7
+      }
+
+
       const point: IGeojsonFeatureType = {
         type: "Feature",
-        properties: { ...event, image_1: event.snapshots[0].downloadUrl, image_2: event.snapshots[2].downloadUrl, isEvent: true, color: '#f03132', size: 7},
+        properties: properties,
         geometry: {
           type: "Point",
           coordinates: coord
@@ -26,8 +37,6 @@ export const convertTripEventsPointsToGeojson = async (tripEventPoints: IEventTy
       };
 
       tripEventGeojsonList.push(point)
-    
-   
   }
 
   return tripEventGeojsonList;
@@ -100,7 +109,7 @@ export const convertTripsToGeoJSON = async (trips: ITrip[], geojsonDataType: IGe
 
 
         if (trip.tripEvents) {
-          const eventTrips = await convertTripEventsPointsToGeojson(trip.triggeredEvents);
+          const eventTrips = await convertTripEventsPointsToGeojson(trip, trip.triggeredEvents);
           pointsList.push(...eventTrips)
         }
 
