@@ -5,7 +5,11 @@
 		type ILayerListElementType,
 		type IMapDetailsType
 	} from '$lib/types/mapTypes';
-	import type { IDateTimeDictionaryType, IMenuComponentsType } from '$lib/types/types';
+	import type {
+		IDateTimeDictionaryType,
+		IMenuComponentsType,
+		ITripsParamType
+	} from '$lib/types/types';
 
 	import Card from '$lib/components/Card.svelte';
 	import PaginatedTable from '$lib/components/table/PaginatedTable.svelte';
@@ -44,7 +48,7 @@
 	};
 
 	let layerList: ILayerListElementType[] = [];
-	let selectedEvent : ITripEventWithSensorDataType | null = null;
+	let selectedEvent: ITripEventWithSensorDataType | null = null;
 	let selectedPolygon: object | null = null;
 
 	let tripList: ITrip[] = [];
@@ -67,10 +71,10 @@
 		map.setTilt(50);
 	};
 
-	const updateSelectedEvent = (googleMapEvent: ITripEventWithSensorDataType) =>{
+	const updateSelectedEvent = (googleMapEvent: ITripEventWithSensorDataType) => {
 		console.log(googleMapEvent);
 		selectedEvent = googleMapEvent;
-	}
+	};
 
 	const getInitialMapData = async () => {
 		const tempKingstonLayerList = await getKingstonMapData();
@@ -86,12 +90,32 @@
 		toggleGoogleMapLayerVisibility(map, layerElement);
 	};
 
-	const fetchTripsData = async (dateTimeDictionary: IDateTimeDictionaryType) => {
+	const fetchTripsData = async (tripsParams: ITripsParamType) => {
 		isLoading = true;
 		isError = false;
 
 		try {
-			const tempTripList = await getSmarterAiTrips(dateTimeDictionary);
+			// Check if data exists in local storage
+			let localData = localStorage.getItem(JSON.stringify(tripsParams));
+			if (localData) {
+				let storedData = JSON.parse(localData);
+
+				// Check if data is expired
+				const currentTime = new Date().getTime();
+				const dataTime = new Date(storedData.timestamp).getTime();
+				if (currentTime - dataTime > 30 * 60 * 1000) {
+					// 30 minutes in milliseconds
+					// Data is expired - remove it from local storage
+					localStorage.removeItem(JSON.stringify(tripsParams));
+				} else {
+					// Data is not expired - use it
+					tripList = storedData.tripList;
+					processGeojsonData(storedData.tempGeojsonData);
+					return;
+				}
+			}
+
+			const tempTripList = await getSmarterAiTrips(tripsParams);
 
 			if (!tempTripList || !tempTripList.length) return;
 
@@ -103,33 +127,39 @@
 			}
 
 			const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
-			for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
-				const gpsElement = tempGeojsonData[i];
-
-				const layerElement = createLayerElement(
-					true,
-					gpsElement.features[0].properties.endpointName,
-					LINE_STRING,
-					true,
-					'fa-solid fa-car',
-					getRandomColor(),
-					gpsElement
-				);
-
-				layerList = addLayerElementToLayerList(layerList, layerElement);
-				map = addLayerToGoogleMap(map, layerElement, updateSelectedEvent);
-				map = toggleGoogleMapLayerVisibility(map, layerElement);
-			}
+			processGeojsonData(tempGeojsonData);
 			tripList = tempTripWithGPSList;
+
+			// Save tripList and tempGeojsonData to local storage with a timestamp
+			const timestamp = new Date();
+			localStorage.setItem(
+				JSON.stringify(tripsParams),
+				JSON.stringify({ tripList, tempGeojsonData, timestamp })
+			);
 		} catch (error) {
 			console.log(error);
-			isError = true;
-		}
-		finally {
+		
+		} finally {
 			isLoading = false;
 		}
+	};
 
-		
+	const processGeojsonData = (tempGeojsonData: IGeojsonType[]) => {
+		for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
+			const gpsElement = tempGeojsonData[i];
+			const layerElement = createLayerElement(
+				true,
+				gpsElement.features[0].properties.endpointName,
+				LINE_STRING,
+				true,
+				'fa-solid fa-car',
+				getRandomColor(),
+				gpsElement
+			);
+			layerList = addLayerElementToLayerList(layerList, layerElement);
+			map = addLayerToGoogleMap(map, layerElement, updateSelectedEvent);
+			map = toggleGoogleMapLayerVisibility(map, layerElement);
+		}
 	};
 
 	onMount(() => {

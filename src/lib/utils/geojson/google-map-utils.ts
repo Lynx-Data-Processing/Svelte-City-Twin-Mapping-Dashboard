@@ -113,6 +113,21 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
         infoWindow.open(map);
     });
 
+    if(layerListElement.type === POINT || layerListElement.type === MULTI_POINT) {
+        layer.addListener('mouseover', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
+            const feature = event.feature;
+            layer.overrideStyle(feature, { fillOpacity: 1 });
+        }
+        );
+
+        layer.addListener('mouseout', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
+            const feature = event.feature;
+            layer.overrideStyle(feature, { fillOpacity: 0.5 });
+        }
+        );
+        
+    }
+
     if (layerListElement.type === POLYGON || layerListElement.type === MULTI_POLYGON) {
         layer.addListener('mouseover', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
             const feature = event.feature;

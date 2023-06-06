@@ -19,6 +19,10 @@
 	let selectedVideoIndex = 0;
 	let numberOfVideos = 0;
 
+	const refresh = () => {
+		getAllVideos();
+	};
+
 	const getAllVideos = async () => {
 		try {
 			if (!selectedEvent) return;
@@ -59,6 +63,8 @@
 
 <div class="flex flex-col">
 	{#if selectedEvent}
+
+	
 		<div class="relative h-fit">
 			<video
 				autoplay={true}
@@ -80,6 +86,11 @@
 			selectedButtonIndex={selectedVideoIndex}
 			setSelectedIndex={setSelectedVideoIndex}
 		/>
+
+		<div class="flex flex-row justify-start mt-2">
+			<button class="btn btn-primary" on:click={refresh}>Refresh</button>
+		</div>
+
 
 		{#if selectedVideo}
 			<div class="flex flex-col py-4">

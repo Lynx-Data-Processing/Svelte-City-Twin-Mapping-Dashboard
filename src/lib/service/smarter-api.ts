@@ -180,17 +180,20 @@ export const getSmarterAiTripWithGps = async (tripId: string) => {
 export const getSmarterAiTrips = async (tripsParams: ITripsParamType) => {
 
   const params = new URLSearchParams({
-    endpointName: tripsParams.endpointId,
+   
     limit: tripsParams.limit.toString(),
     tenantId: PUBLIC_TENANT_ID,
     fromTimestamp: dateTimeToMillisecondUnix(tripsParams.startDateTime).toString(),
     toTimestamp: dateTimeToMillisecondUnix(tripsParams.endDateTime).toString(),
     offset: tripsParams.offset.toString(),
   });
+  if(tripsParams.endpointId){
+    params.set('endpointId', tripsParams.endpointId);
+  }
 
   const results: ITripEvent[][] = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 1; i++) {
 
     let config = {
       method: 'get',
