@@ -44,7 +44,7 @@
 	};
 
 	let layerList: ILayerListElementType[] = [];
-	let selectedEvent : ITripEventWithSensorDataType | null = null;
+	let selectedEvent: ITripEventWithSensorDataType | null = null;
 	let selectedPolygon: object | null = null;
 
 	let tripList: ITrip[] = [];
@@ -67,10 +67,10 @@
 		map.setTilt(50);
 	};
 
-	const updateSelectedEvent = (googleMapEvent: ITripEventWithSensorDataType) =>{
+	const updateSelectedEvent = (googleMapEvent: ITripEventWithSensorDataType) => {
 		console.log(googleMapEvent);
 		selectedEvent = googleMapEvent;
-	}
+	};
 
 	const getInitialMapData = async () => {
 		const tempKingstonLayerList = await getKingstonMapData();
@@ -89,47 +89,56 @@
 	const fetchTripsData = async (dateTimeDictionary: IDateTimeDictionaryType) => {
 		isLoading = true;
 		isError = false;
-
 		try {
-			const tempTripList = await getSmarterAiTrips(dateTimeDictionary);
+			// Check if data exists in local storage
+			let localData = localStorage.getItem(JSON.stringify(dateTimeDictionary));
+			if (localData) {
+				let storedData = JSON.parse(localData);
+				tripList = storedData.tripList;
+				processGeojsonData(storedData.tempGeojsonData);
+			} else {
+				const tempTripList = await getSmarterAiTrips(dateTimeDictionary);
+				if (!tempTripList || !tempTripList.length) return;
+				let tempTripWithGPSList: ITrip[] = [];
+				for (let i = 0; i < tempTripList.length; i++) {
+					const tempTripWithGPS = await getSmarterAiTripWithGps(tempTripList[i].id);
+					if (!tempTripWithGPS) continue;
+					tempTripWithGPSList.push(tempTripWithGPS);
+				}
+				const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
+				tripList = tempTripWithGPSList;
+				processGeojsonData(tempGeojsonData);
 
-			if (!tempTripList || !tempTripList.length) return;
-
-			let tempTripWithGPSList: ITrip[] = [];
-			for (let i = 0; i < tempTripList.length; i++) {
-				const tempTripWithGPS = await getSmarterAiTripWithGps(tempTripList[i].id);
-				if (!tempTripWithGPS) continue;
-				tempTripWithGPSList.push(tempTripWithGPS);
-			}
-
-			const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
-			for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
-				const gpsElement = tempGeojsonData[i];
-
-				const layerElement = createLayerElement(
-					true,
-					gpsElement.features[0].properties.endpointName,
-					LINE_STRING,
-					true,
-					'fa-solid fa-car',
-					getRandomColor(),
-					gpsElement
+				// Save tripList and tempGeojsonData to local storage
+				localStorage.setItem(
+					JSON.stringify(dateTimeDictionary),
+					JSON.stringify({ tripList, tempGeojsonData })
 				);
-
-				layerList = addLayerElementToLayerList(layerList, layerElement);
-				map = addLayerToGoogleMap(map, layerElement, updateSelectedEvent);
-				map = toggleGoogleMapLayerVisibility(map, layerElement);
 			}
-			tripList = tempTripWithGPSList;
 		} catch (error) {
 			console.log(error);
 			isError = true;
-		}
-		finally {
+		} finally {
 			isLoading = false;
 		}
+	};
 
-		
+	const processGeojsonData = (tempGeojsonData: IGeojsonType[]) => {
+		for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
+			const gpsElement = tempGeojsonData[i];
+			const layerElement = createLayerElement(
+				true,
+				gpsElement.features[0].properties.endpointName,
+				LINE_STRING,
+				true,
+				'fa-solid fa-car',
+				getRandomColor(),
+				gpsElement
+			);
+			layerList = addLayerElementToLayerList(layerList, layerElement);
+			map = addLayerToGoogleMap(map, layerElement, updateSelectedEvent);
+			map = toggleGoogleMapLayerVisibility(map, layerElement);
+		}
 	};
 
 	onMount(() => {
