@@ -93,7 +93,6 @@
 	const fetchTripsData = async (tripsParams: ITripsParamType) => {
 		isLoading = true;
 		isError = false;
-
 		try {
 			// Check if data exists in local storage
 			let localData = localStorage.getItem(JSON.stringify(tripsParams));

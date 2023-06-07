@@ -1,5 +1,5 @@
 
-import type { IGeojsonType, IGeojsonDataType } from "./geojsonTypes";
+import type { IGeojsonDataType, IGeojsonType } from "./geojsonTypes";
 
 export interface ILatLngType {
     lat: number,
@@ -30,8 +30,8 @@ export interface ILayerListElementType  {
 
 export const zoomLevelMap: { [key in IGeojsonDataType]?: number } = {
     Point: 19,
-    LineString: 19,
-    Polygon: 15,
+    LineString: 16,
+    Polygon: 14,
     MultiPolygon: 15,
     FeatureCollection: 15,
     Feature: 15,

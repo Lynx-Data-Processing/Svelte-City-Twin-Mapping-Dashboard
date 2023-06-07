@@ -115,11 +115,7 @@
 				<p><span class="font-bold">Type</span>: {formatText(selectedVideo.type)}</p>
 				<p><span class="font-bold">Trigger Name</span>: {formatText(selectedEvent.triggerName)}</p>
 
-				<div class="flex flex-row gap-2 mt-2">
-					<i class="fa-sharp fa-2x fa-solid fa-car-side"></i>
-					<i class="fa-solid fa-video {selectedVideo.source === "vid_2" ? "fa-rotate-180 mb-4" : ""}"></i>
-				</div>
-				
+			
 			</div>
 		{/if}
 	{:else}
