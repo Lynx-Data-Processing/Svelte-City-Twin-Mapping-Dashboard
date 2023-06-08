@@ -1,9 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 :root {
-  font-family: "Nunito", sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 html {
@@ -25,6 +25,7 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: "Roboto", sans-serif;
   margin: 0;
   padding: 0;
   line-height: 1.2;
@@ -69,17 +70,19 @@ p {
 }
 
 .text-title {
+  font-family: "Roboto", sans-serif;
   font-size: 20px;
   line-height: 25px;
   font-weight: 600;
 }
 .text-subtitle {
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   line-height: 20px;
   font-weight: 600;
 }
 .text-primary {
-  color: #3f51b5;
+  color: #0F0F0F;
 }
 
 hr {
@@ -97,7 +100,7 @@ hr {
 }
 
 .bg-primary {
-  background-color: #3f51b5;
+  background-color: #0F0F0F;
   color: white;
 }
 
@@ -116,7 +119,7 @@ hr {
 }
 
 .bg-smoke {
-  background-color: #f9fafc;
+  background-color: #fbfafa;
 }
 
 .bg-dark {
@@ -141,7 +144,8 @@ hr {
 }
 .alert-info {
   color: rgb(0, 0, 0);
-  background-color: #cfd7e0;
+  background-color: #fbfafa;
+  border: rgb(116, 116, 116);
 }
 
 .img-icon {
@@ -297,7 +301,7 @@ input[type=number]::-webkit-outer-spin-button {
   transition: all 0.5s;
 }
 .search-input:hover {
-  background-color: #f9fafc;
+  background-color: #fbfafa;
 }
 
 .search-icon {
@@ -355,13 +359,13 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: #282828;
 }
 .btn-primary {
-  background-color: #3f51b5;
-  border-color: #3f51b5;
+  background-color: #0F0F0F;
+  border-color: #0F0F0F;
   color: white;
 }
 .btn-primary:hover {
   color: white;
-  background-color: rgb(0, 60, 151);
+  background-color: #3848a2;
 }
 .btn-error {
   background-color: rgb(180, 41, 41);
@@ -418,6 +422,7 @@ input[type=number]::-webkit-outer-spin-button {
   transition: all 0.5s;
   border-color: rgb(228, 228, 228);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 0.375rem;
 }
 
 .date-picker {
@@ -459,14 +464,13 @@ input[type=number]::-webkit-outer-spin-button {
   transition: all 0.5s;
 }
 .table th:first-child {
-  border-top-left-radius: 0.5rem;
-  background-color: #3f51b5;
+  background-color: #0F0F0F;
   color: white;
 }
 .table th:first-child:hover {
   cursor: pointer;
   color: white;
-  background-color: rgb(0, 60, 151);
+  background-color: #3848a2;
 }
 .table th:nth-child(n+2) {
   background-color: #070609;
@@ -477,15 +481,12 @@ input[type=number]::-webkit-outer-spin-button {
   color: white;
   background-color: rgb(116, 116, 116);
 }
-.table th:last-child {
-  border-top-right-radius: 0.5rem;
-}
 
 .paginated-btn {
   padding: 1rem;
   text-align: left;
   transition: all 0.5s;
-  border-radius: 0.5rem;
+  border-color: rgb(228, 228, 228);
   border-width: 1px;
   background-color: white;
 }
@@ -501,12 +502,12 @@ input[type=number]::-webkit-outer-spin-button {
   border-radius: 0;
 }
 .paginated-btn-primary {
-  background-color: #3f51b5;
+  background-color: #0F0F0F;
   color: white;
 }
 .paginated-btn-primary:hover {
   color: white;
-  background-color: rgb(0, 60, 151);
+  background-color: #3848a2;
 }
 .paginated-btn-error {
   background-color: rgb(180, 41, 41);
@@ -546,7 +547,7 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(90deg, #3f51b5 50%, #ffffff 50%);
+  background: linear-gradient(90deg, #0F0F0F 50%, #ffffff 50%);
 }
 
 .login-info {

@@ -38,6 +38,13 @@
 		{#each filteredLayers as layer}
 			<div class="flex flex-row gap-2  my-1">
 				<button
+				on:click={() => {
+					updateMapCenter(layer.initialCoordinates, layer.type);
+				}}
+				class="btn btn-black-outline w-16 btn-text-center"
+				><i class={`${layer.icon} icon-color`} style="color: {layer.color};" /></button
+			>
+				<button
 					on:click={() => toggleLayer(layer)}
 					class={`btn w-full ${layer.isVisible ? 'btn-primary' : 'btn-black-outline'} `}
 				>
@@ -45,13 +52,7 @@
 					<span>{layer.layerName}</span>
 				</button>
 
-				<button
-					on:click={() => {
-						updateMapCenter(layer.initialCoordinates, layer.type);
-					}}
-					class="btn btn-black-outline w-16 btn-text-center"
-					><i class={`fa-solid fa-eye icon-color`} style="color: {layer.color};" /></button
-				>
+			
 			</div>
 		{/each}
 	</div>

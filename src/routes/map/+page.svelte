@@ -1,12 +1,15 @@
 <script lang="ts">
-	import type { ISelectedPOIType } from '$lib/types/eventTypes';
 	import {
 		zoomLevelMap,
 		type ILatLngType,
 		type ILayerListElementType,
 		type IMapDetailsType
 	} from '$lib/types/mapTypes';
-	import type { IDateTimeDictionaryType, IMenuComponentsType } from '$lib/types/types';
+	import type {
+		IDateTimeDictionaryType,
+		IMenuComponentsType,
+		ITripsParamType
+	} from '$lib/types/types';
 
 	import Card from '$lib/components/Card.svelte';
 	import PaginatedTable from '$lib/components/table/PaginatedTable.svelte';
@@ -18,8 +21,10 @@
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { LINE_STRING } from '$lib/constants/geojson';
 	import { getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
+	import type { ITripEventWithSensorDataType } from '$lib/types/eventTypes';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
+	import { getRandomColor } from '$lib/utils/color-utils';
 	import { convertTripsToGeoJSON } from '$lib/utils/geojson/geojson-trips-utils';
 	import {
 		addLayerElementToLayerList,
@@ -30,7 +35,6 @@
 	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
-	import { getRandomColor } from '$lib/utils/color-utils';
 
 	let isLoading = false;
 	let isError = false;
@@ -44,7 +48,7 @@
 	};
 
 	let layerList: ILayerListElementType[] = [];
-	let selectedPOI: ISelectedPOIType | null = null;
+	let selectedEvent: ITripEventWithSensorDataType | null = null;
 	let selectedPolygon: object | null = null;
 
 	let tripList: ITrip[] = [];
@@ -67,12 +71,17 @@
 		map.setTilt(50);
 	};
 
+	const updateSelectedEvent = (googleMapEvent: ITripEventWithSensorDataType) => {
+		console.log(googleMapEvent);
+		selectedEvent = googleMapEvent;
+	};
+
 	const getInitialMapData = async () => {
 		const tempKingstonLayerList = await getKingstonMapData();
 		if (!tempKingstonLayerList || !tempKingstonLayerList.length) return;
 		for (let i = 0, len = tempKingstonLayerList.length; i < len; i++) {
 			layerList = addLayerElementToLayerList(layerList, tempKingstonLayerList[i]);
-			map = addLayerToGoogleMap(map, tempKingstonLayerList[i]);
+			map = addLayerToGoogleMap(map, tempKingstonLayerList[i], updateSelectedEvent);
 			map = toggleGoogleMapLayerVisibility(map, tempKingstonLayerList[i]);
 		}
 	};
@@ -81,12 +90,31 @@
 		toggleGoogleMapLayerVisibility(map, layerElement);
 	};
 
-	const fetchTripsData = async (dateTimeDictionary: IDateTimeDictionaryType) => {
+	const fetchTripsData = async (tripsParams: ITripsParamType) => {
 		isLoading = true;
 		isError = false;
-
 		try {
-			const tempTripList = await getSmarterAiTrips(dateTimeDictionary);
+			// Check if data exists in local storage
+			let localData = localStorage.getItem(JSON.stringify(tripsParams));
+			if (localData) {
+				let storedData = JSON.parse(localData);
+
+				// Check if data is expired
+				const currentTime = new Date().getTime();
+				const dataTime = new Date(storedData.timestamp).getTime();
+				if (currentTime - dataTime > 30 * 60 * 1000) {
+					// 30 minutes in milliseconds
+					// Data is expired - remove it from local storage
+					localStorage.removeItem(JSON.stringify(tripsParams));
+				} else {
+					// Data is not expired - use it
+					tripList = storedData.tripList;
+					processGeojsonData(storedData.tempGeojsonData);
+					return;
+				}
+			}
+
+			const tempTripList = await getSmarterAiTrips(tripsParams);
 
 			if (!tempTripList || !tempTripList.length) return;
 
@@ -98,34 +126,41 @@
 			}
 
 			const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
-			for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
-				const gpsElement = tempGeojsonData[i];
-
-				const layerElement = createLayerElement(
-					true,
-					gpsElement.features[0].properties.endpointName,
-					LINE_STRING,
-					true,
-					'fa-solid fa-car',
-					getRandomColor(),
-					gpsElement
-				);
-
-				layerList = addLayerElementToLayerList(layerList, layerElement);
-				map = addLayerToGoogleMap(map, layerElement);
-				map = toggleGoogleMapLayerVisibility(map, layerElement);
-			}
+			processGeojsonData(tempGeojsonData);
 			tripList = tempTripWithGPSList;
+
+			// Save tripList and tempGeojsonData to local storage with a timestamp
+			const timestamp = new Date();
+			localStorage.setItem(
+				JSON.stringify(tripsParams),
+				JSON.stringify({ tripList, tempGeojsonData, timestamp })
+			);
 		} catch (error) {
 			console.log(error);
-			isError = true;
-		}
-		finally {
+		
+		} finally {
 			isLoading = false;
 		}
-
-		
 	};
+
+	const processGeojsonData = (tempGeojsonData: IGeojsonType[]) => {
+		for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
+			const gpsElement = tempGeojsonData[i];
+			const layerElement = createLayerElement(
+				true,
+				gpsElement.features[0].properties.endpointName,
+				LINE_STRING,
+				true,
+				'fa-solid fa-car',
+				getRandomColor(),
+				gpsElement
+			);
+			layerList = addLayerElementToLayerList(layerList, layerElement);
+			map = addLayerToGoogleMap(map, layerElement, updateSelectedEvent);
+			map = toggleGoogleMapLayerVisibility(map, layerElement);
+		}
+	};
+
 
 	onMount(() => {
 		initializeMap();
@@ -145,7 +180,7 @@
 				<SearchData {fetchTripsData} />
 			</Card>
 			<Card title="Video Player" disableToggle={true}>
-				<VideoPlayer {selectedPOI} />
+				<VideoPlayer {selectedEvent} />
 			</Card>
 		</div>
 

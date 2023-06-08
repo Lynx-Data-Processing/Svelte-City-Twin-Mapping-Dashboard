@@ -3,6 +3,7 @@ import type { IGeojsonDataType, IGeojsonType } from "$lib/types/geojsonTypes";
 import type { ILatLngType, ILayerListElementType } from "$lib/types/mapTypes";
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from "../filter-data";
 import { formatText } from "../text-format";
+import { createEventGoogleMapsPopup, createGooglePopup } from "./google-map-popup";
 const pointStyle = (style: google.maps.Data.StyleOptions, color: string, size: number = 5) => {
     return {
         ...style,
@@ -28,7 +29,7 @@ const eventPointStyle = (style: google.maps.Data.StyleOptions, color: string, si
             fillOpacity: 1
         }
     };
-} 
+}
 
 const polygonStyle = (style: google.maps.Data.StyleOptions, color: string) => {
     return {
@@ -64,7 +65,7 @@ const tripLineStyle = (style: google.maps.Data.StyleOptions, color: string) => {
     }
 }
 
-export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElementType) => {
+export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElementType, updateSelectedEvent: Function) => {
     if (!map || !layerListElement.geojson) return;
     const layer = layerListElement.googleMapLayer;
     const isTripsLayer = layerListElement.isTrip;
@@ -94,41 +95,38 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
 
     // Add a click listener to the layer
     layer.addListener('click', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
-        const feature = event.feature;
+        let feature = event.feature;
         const isEvent = feature.getProperty('isEvent') || false;
-        // Initialize content string with feature id
-        let contentString = `
-            <p class="text-subtitle font-bold">${formatText(isEvent ? feature.getProperty("triggerName") : layerListElement.layerName)}</p>
-            <hr class="bg-primary w-12 h-1 my-2" /> 
-        `;
-        // Loop through all properties of the feature
-        let count = 0;
-        let maxCount = isEvent ? 5: 10;
-        feature.forEachProperty((value: any, name: any) => {
-            if (count > maxCount) return;
-            contentString += `<p> <span class="font-bold">${formatText(name)}</span>: ${value}</p>`;
-            count++;
-        });
 
+        let contentString = '';
         if (isEvent) {
-            // Create image div for event snapshot 0 and 2 (if they exist)
-            const image_1 = feature.getProperty("image_1");
-            const image_2 = feature.getProperty("image_2");
-
-            if (image_1 && image_2) {
-                contentString += `
-                    <div class="flex flex-row gap-4 mt-4">
-                        <img class="w-full h-auto object-cover" src="${image_1}" />
-                        <img class="w-full h-auto object-cover" src="${image_2}" />
-                    </div>
-                `;
-            }            
+           feature = feature.j as IGeojsonDataType
+           contentString = createEventGoogleMapsPopup(feature);
+           updateSelectedEvent(feature);
+        }
+        else {
+            contentString = createGooglePopup(feature, layerListElement);
         }
 
         infoWindow.setContent(contentString);
         infoWindow.setPosition(event.latLng);
         infoWindow.open(map);
     });
+
+    if(layerListElement.type === POINT || layerListElement.type === MULTI_POINT) {
+        layer.addListener('mouseover', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
+            const feature = event.feature;
+            layer.overrideStyle(feature, { fillOpacity: 1 });
+        }
+        );
+
+        layer.addListener('mouseout', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
+            const feature = event.feature;
+            layer.overrideStyle(feature, { fillOpacity: 0.5 });
+        }
+        );
+        
+    }
 
     if (layerListElement.type === POLYGON || layerListElement.type === MULTI_POLYGON) {
         layer.addListener('mouseover', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
