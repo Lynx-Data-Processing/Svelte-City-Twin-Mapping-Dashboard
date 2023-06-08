@@ -95,33 +95,49 @@
 		isError = false;
 		try {
 			// Check if data exists in local storage
-			let localData = localStorage.getItem(JSON.stringify(dateTimeDictionary));
+			let localData = localStorage.getItem(JSON.stringify(tripsParams));
 			if (localData) {
 				let storedData = JSON.parse(localData);
-				tripList = storedData.tripList;
-				processGeojsonData(storedData.tempGeojsonData);
-			} else {
-				const tempTripList = await getSmarterAiTrips(dateTimeDictionary);
-				if (!tempTripList || !tempTripList.length) return;
-				let tempTripWithGPSList: ITrip[] = [];
-				for (let i = 0; i < tempTripList.length; i++) {
-					const tempTripWithGPS = await getSmarterAiTripWithGps(tempTripList[i].id);
-					if (!tempTripWithGPS) continue;
-					tempTripWithGPSList.push(tempTripWithGPS);
-				}
-				const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
-				tripList = tempTripWithGPSList;
-				processGeojsonData(tempGeojsonData);
 
-				// Save tripList and tempGeojsonData to local storage
-				localStorage.setItem(
-					JSON.stringify(dateTimeDictionary),
-					JSON.stringify({ tripList, tempGeojsonData })
-				);
+				// Check if data is expired
+				const currentTime = new Date().getTime();
+				const dataTime = new Date(storedData.timestamp).getTime();
+				if (currentTime - dataTime > 30 * 60 * 1000) {
+					// 30 minutes in milliseconds
+					// Data is expired - remove it from local storage
+					localStorage.removeItem(JSON.stringify(tripsParams));
+				} else {
+					// Data is not expired - use it
+					tripList = storedData.tripList;
+					processGeojsonData(storedData.tempGeojsonData);
+					return;
+				}
 			}
+
+			const tempTripList = await getSmarterAiTrips(tripsParams);
+
+			if (!tempTripList || !tempTripList.length) return;
+
+			let tempTripWithGPSList: ITrip[] = [];
+			for (let i = 0; i < tempTripList.length; i++) {
+				const tempTripWithGPS = await getSmarterAiTripWithGps(tempTripList[i].id);
+				if (!tempTripWithGPS) continue;
+				tempTripWithGPSList.push(tempTripWithGPS);
+			}
+
+			const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
+			processGeojsonData(tempGeojsonData);
+			tripList = tempTripWithGPSList;
+
+			// Save tripList and tempGeojsonData to local storage with a timestamp
+			const timestamp = new Date();
+			localStorage.setItem(
+				JSON.stringify(tripsParams),
+				JSON.stringify({ tripList, tempGeojsonData, timestamp })
+			);
 		} catch (error) {
 			console.log(error);
-			isError = true;
+		
 		} finally {
 			isLoading = false;
 		}
@@ -144,6 +160,7 @@
 			map = toggleGoogleMapLayerVisibility(map, layerElement);
 		}
 	};
+
 
 	onMount(() => {
 		initializeMap();
