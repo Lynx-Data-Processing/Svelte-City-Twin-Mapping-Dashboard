@@ -6,8 +6,6 @@
 		type IMapDetailsType
 	} from '$lib/types/mapTypes';
 	import type {
-		IDateTimeDictionaryType,
-		IMenuComponentsType,
 		ITripsParamType
 	} from '$lib/types/types';
 
@@ -16,7 +14,7 @@
 
 	import LoadingError from '$lib/components/loading/LoadingError.svelte';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
-	import Layers from '$lib/components/map/Layers.svelte';
+	import Layers from '$lib/components/Layers.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { LINE_STRING } from '$lib/constants/geojson';
@@ -49,7 +47,6 @@
 
 	let layerList: ILayerListElementType[] = [];
 	let selectedEvent: ITripEventWithSensorDataType | null = null;
-	let selectedPolygon: object | null = null;
 
 	let tripList: ITrip[] = [];
 
@@ -72,7 +69,6 @@
 	};
 
 	const updateSelectedEvent = (googleMapEvent: ITripEventWithSensorDataType) => {
-		console.log(googleMapEvent);
 		selectedEvent = googleMapEvent;
 	};
 
@@ -148,7 +144,7 @@
 			const gpsElement = tempGeojsonData[i];
 			const layerElement = createLayerElement(
 				true,
-				gpsElement.features[0].properties.endpointName,
+				gpsElement.features[0].properties.endpointName || 'Trip ' + (i + 1),
 				LINE_STRING,
 				true,
 				'fa-solid fa-car',
@@ -164,6 +160,7 @@
 
 	onMount(() => {
 		initializeMap();
+		if (!map) return;
 		getInitialMapData();
 	});
 </script>
@@ -172,7 +169,7 @@
 
 <div>
 	<div class="grid grid-cols-1  2xl:grid-cols-12 ">
-		<div class="col-span-1 2xl:col-span-2 flex flex-col sm:flex-row 2xl:flex-col p-4 gap-4">
+		<div class="col-span-1 2xl:col-span-2 flex flex-col  2xl:flex-col p-4 gap-4">
 			<Card title="Layers" showOnLoad={true} disableToggle={true}>
 				<Layers {layerList} {updateMapCenter} {toggleGoogleLayer} />
 			</Card>

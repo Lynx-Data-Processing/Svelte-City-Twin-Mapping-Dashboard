@@ -1,9 +1,6 @@
 <script lang="ts">
-	import type { IFooterElementType } from '$lib/types/types';
 	import { getDevicon } from '$lib/utils/devicon-icons';
-
 	const PROGRAMMING_TOOLS = ['nodejs', 'express', 'nginx', 'github', 'docker', 'googlecloud'];
-
 </script>
 
 <footer class="mt-auto bg-smoke py-8 px-8 ">

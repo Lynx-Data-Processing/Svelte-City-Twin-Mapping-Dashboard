@@ -1,8 +1,8 @@
 import { PUBLIC_API_KEY, PUBLIC_TENANT_ID, PUBLIC_V5_API_KEY } from '$env/static/public';
-import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_EVENTS_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_SENSOR_REPORT_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/global';
-import type { IEventType, IMediaRecordingType, ITripEventWithSensorDataType, IVideoType } from '$lib/types/eventTypes';
+import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/global';
+import type { IMediaRecordingType, ITripEventWithSensorDataType } from '$lib/types/eventTypes';
 import type { ITripEvent } from '$lib/types/tripTypes';
-import type { IDateTimeDictionaryType, ITripsParamType } from '$lib/types/types';
+import type { ITripsParamType } from '$lib/types/types';
 import axios from 'axios';
 import { dateTimeToMillisecondUnix } from '../utils/date-format';
 
@@ -109,43 +109,6 @@ export const getVideo = async (gpsElement: ITripEventWithSensorDataType) => {
     return error.message;
   }
 };
-
-
-
-export async function getSmarterAiEvents(dateTimeDictionary: IDateTimeDictionaryType, sensorQualityValue: number) {
-
-  const params = new URLSearchParams({
-    secretToken: PUBLIC_API_KEY,
-    endpointId: '4326',
-    pageSize: '100',
-    tenantId: PUBLIC_TENANT_ID,
-    startTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.startDateTime).toString(),
-    endTimestamp: dateTimeToMillisecondUnix(dateTimeDictionary.endDateTime).toString(),
-  });
-
-  const results = [];
-
-  for (let i = 0; i < sensorQualityValue; i++) {
-    try {
-      const response = await axios.get(`${API_SMARTER_AI_EVENTS_URL}?${params.toString()}`);
-      const eventList = response.data.eventList;
-      const lastObject = eventList[eventList.length - 1];
-
-      if (!lastObject) {
-        break;
-      }
-
-      params.set('lastMaxEventId', lastObject.id);
-      params.set('lastMaxEventTimestamp', lastObject.eventTimestamp);
-
-      results.push(eventList);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  return results.flat();
-}
 
 
 export const getSmarterAiTripWithGps = async (tripId: string) => {

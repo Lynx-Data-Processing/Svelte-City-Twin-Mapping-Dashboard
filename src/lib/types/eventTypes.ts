@@ -1,66 +1,66 @@
 import type { ITrip } from "./tripTypes";
 
 export interface ISensorData {
-    eventSource: string;
-    eventTimestamp: number;
-    latitude: number;
-    longitude: number;
-    altitude: number;
-  }
-  
-  export interface ISensorReading {
-    occurrenceTime: number;
-    sensorData: ISensorData;
-  }
-  
+  eventSource: string;
+  eventTimestamp: number;
+  latitude: number;
+  longitude: number;
+  altitude: number;
+}
+
+export interface ISensorReading {
+  occurrenceTime: number;
+  sensorData: ISensorData;
+}
+
 export interface IVideoType {
-    eventId: number
-    deviceId: number
-    endpointId: number,
-    startTimestamp: number,
-    endTimestamp: number,
-    videoUrl: string
+  eventId: number
+  deviceId: number
+  endpointId: number,
+  startTimestamp: number,
+  endTimestamp: number,
+  videoUrl: string
 }
 
 export interface IMediaRecordingType {
-    startTimestamp: number,
-    endTimestamp: number,
-    source: string,
-    type: string,
-    url: string,
-    urlExpiry: number,
-    available: boolean
+  startTimestamp: number,
+  endTimestamp: number,
+  source: string,
+  type: string,
+  url: string,
+  urlExpiry: number,
+  available: boolean
 }
 export interface ISnapshotType {
-    source: string,
-    fileContainer: string,
-    filePath: string,
-    server: string,
-    downloadUrl: string,
-    downloadUrlExpirationTime: number
+  source: string,
+  fileContainer: string,
+  filePath: string,
+  server: string,
+  downloadUrl: string,
+  downloadUrlExpirationTime: number
 }
 
 export type Snapshot = {
-    source: string;
-    downloadUrl: string;
-  };
+  source: string;
+  downloadUrl: string;
+};
 
-  export interface ITripEventWithSensorDataType extends IEventType, ISensorDataType, ITrip  {
-    isEvent: boolean, 
-    color: string
-    size: number
-  }
-  
-  export type IEventType = {
-    id: string;
-    eventTimestamp: number;
-    eventEndTimestamp: number;
-    recordingStartTimestamp: number;
-    recordingEndTimestamp: number;
-    triggerName: string;
-    snapshots: Snapshot[];
-  };
-  
+export interface ITripEventWithSensorDataType extends IEventType, ISensorDataType, ITrip {
+  isEvent: boolean,
+  color: string
+  size: number
+}
+
+export type IEventType = {
+  id: string;
+  eventTimestamp: number;
+  eventEndTimestamp: number;
+  recordingStartTimestamp: number;
+  recordingEndTimestamp: number;
+  triggerName: string;
+  snapshots: Snapshot[];
+};
+
 
 export interface ISensorDataGeolocationType {
   latitude: string,
@@ -71,37 +71,37 @@ export interface ISensorDataGeolocationType {
   accuracy: string
 }
 
-export interface ISensorDataType  {
-    ACCELEROMETER: object,
-    GYROSCOPE: object,
-    GEO_LOCATION: ISensorDataGeolocationType,
-    VIDEO_META: object
+export interface ISensorDataType {
+  ACCELEROMETER: object,
+  GYROSCOPE: object,
+  GEO_LOCATION: ISensorDataGeolocationType,
+  VIDEO_META: object
 }
 
 
 export interface IDeviceType {
-    id: number,
-    label: string,
-    ipv4Address: string,
-    ipv6Address: string,
-    type: string,
-    ownerUserId: number,
-    imageUrl: string,
-    createdTime: string,
-    tenantId: number,
-    tenantID: string,
-    country: string,
-    city: string,
-    platform: string,
-    packageVersion: string,
-    hostIP: string,
-    status: string,
-    groupId: number,
-    deviceKey: string,
-    productId: string,
-    systemImage: string,
-    oemImage: string,
-    vin: string,
-    vinUpdatedAt: string,
-    canbus: string,
+  id: number,
+  label: string,
+  ipv4Address: string,
+  ipv6Address: string,
+  type: string,
+  ownerUserId: number,
+  imageUrl: string,
+  createdTime: string,
+  tenantId: number,
+  tenantID: string,
+  country: string,
+  city: string,
+  platform: string,
+  packageVersion: string,
+  hostIP: string,
+  status: string,
+  groupId: number,
+  deviceKey: string,
+  productId: string,
+  systemImage: string,
+  oemImage: string,
+  vin: string,
+  vinUpdatedAt: string,
+  canbus: string,
 }

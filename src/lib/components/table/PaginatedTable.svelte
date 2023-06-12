@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import EventTable from './EventTable.svelte';
+
 	import PaginationButtons from './PaginationButtons.svelte';
 	import TripTable from './TripTable.svelte';
 	export let tableData: any;

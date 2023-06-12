@@ -5,9 +5,8 @@
 	import type { IMediaRecordingType, ITripEventWithSensorDataType } from '$lib/types/eventTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { formatText } from '$lib/utils/text-format';
-	import ButtonList from '../ButtonList.svelte';
+	import ButtonToggle from "../ButtonToggle.svelte";
 	import Underline from '../Underline.svelte';
-	import PaginationButtons from '../table/PaginationButtons.svelte';
 
 	export let selectedEvent: ITripEventWithSensorDataType | null = null;
 	let videos: IMediaRecordingType[];
@@ -81,7 +80,7 @@
 			{/if}
 		</div>
 
-		<ButtonList
+		<ButtonToggle
 			numberOfButtons={numberOfVideos}
 			selectedButtonIndex={selectedVideoIndex}
 			setSelectedIndex={setSelectedVideoIndex}
@@ -119,6 +118,6 @@
 			</div>
 		{/if}
 	{:else}
-		<div class="alert alert-error my-1" role="alert">No GPS selected.</div>
+		<div class="alert alert-error my-1" role="alert">No Event selected</div>
 	{/if}
 </div>

@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  color: #0d162a;
+  color: #030408;
   background-color: white;
   margin: 0;
   padding: 0;
@@ -261,29 +261,6 @@ hr {
   background-position: center center;
   background-repeat: no-repeat;
   background-image: url(https://www.arcgis.com/apps/instant/interactivelegend/assets/loader-ie9.gif);
-}
-
-.number-picker-container {
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-.number-picker-input {
-  padding: 1rem;
-  background-clip: padding-box;
-  width: 100%;
-  border-width: 1px;
-  border-color: rgb(228, 228, 228);
-  border-style: solid;
-  transition: all 0.5s;
-}
-
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button {  
-   opacity: 1;
-   scale: 1;
 }
 
 .search-container {

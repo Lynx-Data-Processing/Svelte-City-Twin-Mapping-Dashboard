@@ -7,9 +7,8 @@
 
 <div class="app" transition:fade>
 	<Header />
-	<div >
-		<slot />
-	</div>
+
+	<slot />
 
 	<Footer />
 </div>
