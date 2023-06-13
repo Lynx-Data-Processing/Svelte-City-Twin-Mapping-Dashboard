@@ -22,7 +22,7 @@ export const convertTripEventsPointsToGeojson = async (trip: ITrip, tripEventPoi
         ...sensorData,
         ...trip,
         isEvent: true,
-        color: '#f03132',
+        color: '#f13031',
         size: 7
       }
 

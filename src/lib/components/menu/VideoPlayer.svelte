@@ -5,7 +5,7 @@
 	import type { IMediaRecordingType, ITripEventWithSensorDataType } from '$lib/types/eventTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { formatText } from '$lib/utils/text-format';
-	import ButtonToggle from "../ButtonToggle.svelte";
+	import ButtonToggle from '../ButtonToggle.svelte';
 	import Underline from '../Underline.svelte';
 
 	export let selectedEvent: ITripEventWithSensorDataType | null = null;
@@ -62,8 +62,6 @@
 
 <div class="flex flex-col">
 	{#if selectedEvent}
-
-	
 		<div class="relative h-fit">
 			<video
 				autoplay={true}
@@ -86,35 +84,38 @@
 			setSelectedIndex={setSelectedVideoIndex}
 		/>
 
-		<div class="flex flex-row justify-start mt-2">
-			<button class="btn btn-primary" on:click={refresh}>Refresh</button>
-		</div>
-
-
 		{#if selectedVideo}
-			<div class="flex flex-col py-4">
-				<p class="text-subtitle uppercase">Details</p>
-				<div class="pt-2"><Underline /></div>
+			<div class="flex flex-col mt-4">
+				<p class="text-subtitle">{formatText(selectedEvent.endpointName)}</p>
+				<div class="py-2"><Underline /></div>
 
 				<p>
-					<span class="font-bold">Endpoint Name</span>: {formatText(selectedEvent.endpointName)}
-				</p>
-				<p>
-					<span class="font-bold">Recording Start</span>: {selectedVideo?.startTimestamp
+					<span class="font-bold">Start</span>: {selectedVideo?.startTimestamp
 						? millisecondUnixToDateTime(selectedVideo.startTimestamp)
 						: 'N/A'}
 				</p>
 
 				<p>
-					<span class="font-bold">Recording End</span>: {selectedVideo?.endTimestamp
+					<span class="font-bold">End</span>: {selectedVideo?.endTimestamp
 						? millisecondUnixToDateTime(selectedVideo.endTimestamp)
 						: 'N/A'}
 				</p>
-				<p><span class="font-bold">Source</span>: {formatText(selectedVideo.source)}</p>
-				<p><span class="font-bold">Type</span>: {formatText(selectedVideo.type)}</p>
-				<p><span class="font-bold">Trigger Name</span>: {formatText(selectedEvent.triggerName)}</p>
+				
+				<hr class="my-2" />
 
-			
+				<div class="flex flex-row justify-between">
+					<div class="flex flex-col ">
+						<p class="text-subtitle">Distance</p>
+						<p>
+							{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
+						</p>
+					</div>
+
+					<div class="flex flex-col ">
+						<p class="text-subtitle">Trigger Name</p>
+						<p>{formatText(selectedEvent.triggerName)}</p>
+					</div>
+				</div>
 			</div>
 		{/if}
 	{:else}

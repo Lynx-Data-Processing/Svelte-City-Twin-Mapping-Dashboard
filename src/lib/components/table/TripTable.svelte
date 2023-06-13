@@ -52,7 +52,7 @@
 						</div>
 					{/if}
 				</td>
-				<td>{trip.distance ? `${trip.distance.toFixed(2)} km` : 'N/A'}</td>
+				<td>{trip.distance ? `${(trip.distance/1000).toFixed(2)} km` : 'N/A'}</td>
 			
 				<td class="hidden xl:table-cell ">
 					<div class="flex flex-row gap-4 w-full justify-center">

@@ -38,7 +38,7 @@
 	let isError = false;
 
 	let mapDetails: IMapDetailsType = {
-		mapTypeId: 'satellite',
+		mapTypeId: 'roadmap',
 		center: { lng: -76.491143, lat: 44.231689 },
 		zoom: 17,
 		tilt: 60,
@@ -169,11 +169,11 @@
 
 <div>
 	<div class="grid grid-cols-1  2xl:grid-cols-12 ">
-		<div class="col-span-1 2xl:col-span-2 flex flex-col  2xl:flex-col p-4 gap-4">
+		<div class="col-span-1 2xl:col-span-3 flex flex-col  2xl:flex-col p-4 gap-4">
 			<Card title="Layers" showOnLoad={true} disableToggle={true}>
 				<Layers {layerList} {updateMapCenter} {toggleGoogleLayer} />
 			</Card>
-			<Card title="Search Data" showOnLoad={true} disableToggle={true}>
+			<Card title="Search Data" showOnLoad={true} disableToggle={false}>
 				<SearchData {fetchTripsData} />
 			</Card>
 			<Card title="Video Player" disableToggle={true}>
@@ -181,7 +181,7 @@
 			</Card>
 		</div>
 
-		<div class={` col-span-1  2xl:col-span-10`}>
+		<div class={` col-span-1  2xl:col-span-9`}>
 			<div class="relative h-screen scale-in-center">
 				<div bind:this={mapDiv} class="h-full w-full " />
 

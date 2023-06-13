@@ -3,7 +3,7 @@
 	
 	let tripsParams: ITripsParamType = {
 		endpointId: '',
-		limit: 20,
+		limit: 5,
 		offset: 0,
 		startDateTime: '2023-06-02T00:00',
 		endDateTime: '2023-06-03T00:00'
