@@ -20,6 +20,8 @@
 
 <div class="flex flex-col">
 
+	<span id="search-err">* Notice: Search functionality has been impacted by API issues. Mock-data can still be requested. *</span>
+
 	<div id="endpointSelect" class="search-container">
 		<label for="endpoint_select">Endpoint</label>
 		<input
@@ -30,6 +32,7 @@
 			class="form-control search-input "
 			data-mdb-toggle="datepicker"
 			bind:value={tripsParams.endpointId}
+			disabled
 		/>
 	</div>
 
@@ -45,6 +48,7 @@
 				min="1"
 				max="100"
 				bind:value={tripsParams.limit}
+				disabled
 			/>
 		</div>
 
@@ -59,6 +63,7 @@
 				min="0"
 				max="10"
 				bind:value={tripsParams.offset}
+				disabled
 			/>
 		</div>
 	</div>
@@ -76,6 +81,7 @@
 			max="2022-12-31"
 			bind:value={tripsParams.startDateTime}
 			on:input={checkEndDateBeforeStartDate}
+			disabled
 		/>
 	</div>
 
@@ -92,6 +98,7 @@
 			max="2022-12-31"
 			bind:value={tripsParams.endDateTime}
 			on:input={checkEndDateBeforeStartDate}
+			disabled
 		/>
 	</div>
 	

@@ -591,3 +591,8 @@ hr {
     transform: translateX(0%);
   }
 }/*# sourceMappingURL=style.css.map */
+
+#search-err {
+  font-size: small;
+  font-weight: bold;
+}
