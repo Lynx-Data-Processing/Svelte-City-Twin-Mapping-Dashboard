@@ -150,7 +150,7 @@ export const getSmarterAiTrips = async (tripsParams: ITripsParamType) => {
     offset: tripsParams.offset.toString(),
   });
   if(tripsParams.endpointId){
-    params.set('endpointId', tripsParams.endpointId);
+    params.set('endpointName', tripsParams.endpointId);
   }
 
   const results: ITripEvent[][] = [];

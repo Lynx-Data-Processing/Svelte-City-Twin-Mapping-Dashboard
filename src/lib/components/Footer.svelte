@@ -3,7 +3,7 @@
 	const PROGRAMMING_TOOLS = ['nodejs', 'express', 'nginx', 'github', 'docker', 'googlecloud'];
 </script>
 
-<footer class="mt-auto bg-smoke py-8 px-8 ">
+<footer class="mt-auto bg-dark bg-topography py-8 px-8 ">
 	
 
 	<div class="grid grid-cols-1 sm:grid-cols-3 py-8">

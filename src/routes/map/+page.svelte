@@ -12,9 +12,9 @@
 	import Card from '$lib/components/Card.svelte';
 	import PaginatedTable from '$lib/components/table/PaginatedTable.svelte';
 
+	import Layers from '$lib/components/Layers.svelte';
 	import LoadingError from '$lib/components/loading/LoadingError.svelte';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
-	import Layers from '$lib/components/Layers.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { LINE_STRING } from '$lib/constants/geojson';

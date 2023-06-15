@@ -73,13 +73,15 @@ p {
   font-family: "Roboto", sans-serif;
   font-size: 20px;
   line-height: 25px;
-  font-weight: 600;
+  font-weight: 800;
+  letter-spacing: -0.04em;
 }
 .text-subtitle {
   font-family: "Roboto", sans-serif;
   font-size: 16px;
-  line-height: 20px;
-  font-weight: 600;
+  line-height: 25px;
+  font-weight: 400;
+  letter-spacing: -0.04em;
 }
 .text-primary {
   color: #0F0F0F;
@@ -97,6 +99,22 @@ hr {
   background-color: var(--color);
   border-radius: 50%;
   display: inline-block;
+}
+
+.bg-grid {
+  background-size: 25px 25px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.01) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+}
+
+.bg-topography {
+  background-image: url(https://discoverybuildersllc.com/static/pattern.png);
+  -o-object-fit: cover;
+     object-fit: cover;
+  background-attachment: fixed;
+}
+
+.bg-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .bg-primary {
