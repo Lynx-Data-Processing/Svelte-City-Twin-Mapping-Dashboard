@@ -1,0 +1,24 @@
+.search-container {
+    position: relative;
+    width: auto;
+}
+.search-input {
+    padding: $paddings-lg;
+    background-clip: padding-box;
+    width: 100%;
+    border-width: $border-width;
+    border-color: $btn-default-light;
+    font-size: $font-size-sm;
+    border-style: solid;
+    transition: all $speed-md;
+    &:hover {
+        background-color: $smoke;
+    }
+}
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    color: $btn-default-light
+}

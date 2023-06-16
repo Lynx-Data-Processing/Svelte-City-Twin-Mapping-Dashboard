@@ -1,0 +1,78 @@
+
+.btn {
+    padding: 12px 16px;
+	border: 1px solid $smoke-dark;
+	
+	color: $black;
+
+	border: 1px solid $smoke-dark;
+	z-index: 1;
+	overflow: hidden;
+	cursor: pointer;
+	transition: all $speed-sm ease;
+    background-color: $smoke;
+    border-width:  $border-width;
+    border-radius: $radius-lg;
+  
+	text-align: left;
+    span {
+        margin-left: $paddings-md;
+    }
+    &:hover {
+        cursor: pointer;
+        color: $black;
+        background-color: $smoke-dark;
+    }
+    &-text-center {
+        text-align: center;
+    }
+    &-no-border {
+        border: none;
+    }
+    &-no-rounded {
+        border-radius: 0;
+    }
+
+    &-primary {
+        background-color: $primary-color;
+        border-color: $primary-color;
+        color: white;
+        &:hover {
+            color: white;
+            background-color: $primary-color-dark;
+        }
+    }
+    &-error {
+        background-color: $error-color;
+        color: white;
+        &:hover {
+            color: white;
+            background-color: $error-color-dark;
+        }
+    }
+    &-green {
+        background-color: $success-color;
+        color: white;
+        &:hover {
+            color: white;
+            background-color: $success-color-dark;
+        }
+    }
+    &-black-outline {
+        color: $dark;
+        border-color: $btn-default-light;
+       
+        &:hover {
+            background-color: $smoke-dark;
+        }
+    }
+    &-error-outline {
+        color: $error-color;
+        border-color: $error-color;
+        border-width: 1px;
+        &:hover {
+            color: white;
+            background-color: $error-color;
+        }
+    }
+}

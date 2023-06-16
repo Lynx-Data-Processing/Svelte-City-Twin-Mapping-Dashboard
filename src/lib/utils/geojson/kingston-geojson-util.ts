@@ -1,5 +1,14 @@
-import { GeojsonEnum } from '$lib/types/enums';
-import type { IGeojsonType } from '$lib/types/geosjonTypes';
+import { OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_PLANNING_LINE_URL, OPEN_DATA_KINGSTON_TREES_URL } from '$lib/constants';
+import { LINE_STRING, POLYGON } from '$lib/constants/geojson';
+import { axiosCacheGetUtility } from '$lib/service/fetch-data';
+import type { IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
+import type { ILatLngType, ILayerListElementType } from '$lib/types/mapTypes';
+import { getRandomColor } from '../color-utils';
+import type { IGeojsonDataType } from './../../types/geojsonTypes';
+import { createLayerElement, getInitialCoordinates } from './google-map-utils';
+
+
+
 
 const getCoordinates = (coordinates: any) => {
   if (coordinates.length >= 2) {
@@ -8,60 +17,91 @@ const getCoordinates = (coordinates: any) => {
   return coordinates;
 };
 
-const getColor = (color: string | null) => {
-  if (color === null) {
-    let elementColor = (Math.floor(Math.random() * 16777215).toString(16)).toString();
-    return elementColor.length !== 6 ? elementColor.padEnd(6, '0') : `#${elementColor}`;
-  }
-  return color;
-};
 
-export const rawKingstonDataToGeojsonData = (rawData: any, name = 'General', geojsonDataType = GeojsonEnum.Point, color: string | null = null, time = '') => {
-  try {
-    //* Set initial Geojson element details
-    const dataName = rawData.dataName || name;
-    const dateTime = rawData.dateTime || time;
-    const dataType = rawData.dataType || geojsonDataType;
-    const hasFilter = rawData.hasFilter || false;
+export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeojsonDataType = "Point") => {
 
-    //* Create Geojson feature collection
-    const geoJson: IGeojsonType = {
-      type: 'FeatureCollection',
-      dataName,
-      dateTime,
-      dataType,
-      hasFilter,
-      features: [],
-    };
-    //* For every bigquery row create a GEOJSON GPS element
-    for (const gpsElement of rawData) {
+  //* Create Geojson feature collection
+  const geoJson: IGeojsonType = {
+    type: 'FeatureCollection',
+    features: [],
+  };
 
-      try {
-        let coordinates = getCoordinates(gpsElement.fields.geojson.coordinates);
-        const properties = gpsElement.fields;
-        gpsElement.fields.Size = 1;
-        gpsElement.fields.geojson = undefined;
-        gpsElement.fields.geo_point_2d = undefined;
-        properties.Color = getColor(color);
+  for (let i = 0, len = rawData.length; i < len; i++) {
 
-        //* Create the final feature config and add the feature id for the ability to hover
-        const feature = {
-          type: 'Feature',
-          geometry: { type: geojsonDataType, coordinates },
-          properties,
-        };
-        geoJson.features.push(feature);
-      }
-      catch (err) {
-        console.error(err);
-        continue;
-      }
+    try {
+      const gpsElement = rawData[i];
+      const properties = gpsElement.fields;
+
+      let coordinates = getCoordinates(gpsElement.fields.geojson.coordinates);
+      properties.color = getRandomColor();
+      delete gpsElement.fields.geojson
+      delete gpsElement.fields.geo_point_2d
+
+      const feature: IGeojsonFeatureType = {
+        type: 'Feature',
+        geometry: { type: geojsonDataType, coordinates },
+        properties,
+      };
+      geoJson.features.push(feature);
     }
+    catch (err) {
+      console.error(err);
+      continue;
+    }
+  }
 
-    return geoJson;
-  }
-  catch (err) {
-    console.log(err);
-  }
+  return geoJson;
 };
+
+
+
+export const getKingstonMapData = async () => {
+  const tempLayerList: ILayerListElementType[] = [];
+
+  const neighborhoodsResponse = await axiosCacheGetUtility(
+    OPEN_DATA_KINGSTON_CITY_ZONES_URL
+  );
+  if (neighborhoodsResponse.status === 200) {
+    const neighborhoodsData = neighborhoodsResponse.data.records;
+    if (!neighborhoodsData.length) return;
+
+    const neighborhoodsGpsData = rawKingstonDataToGeojsonData(
+      neighborhoodsData,
+      'Polygon'
+    );
+
+    if (!neighborhoodsGpsData) return;
+
+    const neighborhoodsElement = createLayerElement('neighborhood', 'Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', getRandomColor(), neighborhoodsGpsData);
+    tempLayerList.push(neighborhoodsElement);
+  } else {
+    console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_CITY_ZONES_URL}`);
+  }
+
+
+  const planningLineResponse = await axiosCacheGetUtility(
+    OPEN_DATA_KINGSTON_PLANNING_LINE_URL
+  );
+
+  if (planningLineResponse.status === 200) {
+    const planningLineData = planningLineResponse.data.records;
+    if (!planningLineData.length) return;
+
+    const planningLineGpsData = rawKingstonDataToGeojsonData(
+      planningLineData,
+      'LineString'
+    );
+
+    if (!planningLineGpsData) return;
+
+    const planningLineElement = createLayerElement('', 'Planning Line', LINE_STRING, false, 'fa-solid fa-road', getRandomColor(), planningLineGpsData);
+    tempLayerList.push(planningLineElement);
+  } else {
+    console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_PLANNING_LINE_URL}`);
+  }
+
+
+
+  return tempLayerList;
+}
 

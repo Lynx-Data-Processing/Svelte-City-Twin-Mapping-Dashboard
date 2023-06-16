@@ -1,42 +1,46 @@
-$white: rgb(255, 255, 255);
-$smoke: #F3F3F3;
-$light-gray: #F5F7FA;
-$dark: #0F0F0F;
+$dark: #0e0e0e;
 $black: rgb(0, 0, 0);
 $gray: rgb(116, 116, 116);
-$primary-color: #315ee7;
-$primary-color-light: #2473db;
-$primary-color-dark: #10376e;
-
-$btn-dark: #282828;
-$btn-dark-light: #0F0F0F;
 
 
-$success-color: rgb(83, 165, 72);
-$success-color-dark: rgb(62, 133, 52);
-$success-color-light: rgb(220, 252, 231);
+$btn-default-light: rgb(247, 247, 247);
+$primary-color: #182166;
+$primary-color-light: #18247e;
+$primary-color-dark: #0d154e;
 
+$white: rgb(255, 255, 255);
+$smoke: #f0f0f0;
+$smoke-dark: #dddddd;
+$smoke-trans: rgba(255, 255, 255, 0.05);
+$smoke-yellow: #f8f9f3;
+$light-gray: #F5F7FA;
+
+
+$text-dark: #030408;
+
+$info-color: #cfd7e0;
+$success-color: rgb(88, 179, 76);
+$success-color-dark: #0d5541;
+$success-color-light: #99ddcf;
 $error-color: rgb(180, 41, 41);
 $error-color-dark: rgb(150, 31, 31);
 $error-color-light: rgb(254, 226, 226);
-
 $btn-default: rgb(247, 247, 247);
-$btn-default-light: rgb(219, 219, 219);
 
 $light-warning: #FFFBF1;
+
+
 
 $speed-sm: 0.25s;
 $speed-md: 0.5s;
 $speed-lg: 1s;
+$speed-xl: 1.25s;
 
-$font-size-sm: 14px;
-$font-size-md: 16px;
-$font-size-lg: 18px;
-
-$line-height-sm: 1rem;
-$line-height-md: 1.5rem;
-$line-height-lg: 2rem;
-
+$font-size-sm: 0.85rem;
+$font-size-md: 1rem;
+$font-size-lg: 1.25rem;
+$font-size-xl: 1.5rem;
+$font-size-xxl: 2rem;
 
 
 $paddings-sm: 0.25rem;
@@ -44,11 +48,16 @@ $paddings-md: 0.5rem;
 $paddings-lg: 1rem;
 $paddings-xl: 2rem;
 
-
 $radius-sm: 0.25rem;
+$radius-md: 0.375rem;
 $radius-lg: 0.5rem;
 $radius-xl: 1rem;
-
 $border-width: 1px;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$box-shadow: 0 3px 10px #0003;
+$button-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 
-$box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+$card-shadow: 0 0 15px -6px rgba(0, 0, 0, 0.5);

@@ -1,0 +1,41 @@
+.table td {
+  border-bottom: 1px solid #ddd;
+  padding: $paddings-lg;
+  text-align: center;
+  transition: all $speed-md;
+  &:first-child {
+    background-color: $light-gray;
+  }
+}
+.table tr {
+  transition: all $speed-md;
+  &:hover {
+    background-color: $light-warning;
+  }
+}
+.table th {
+  font-weight: 400;
+  padding: $paddings-lg;
+  text-align: center;
+  transition: all $speed-md;
+  &:first-child {
+    
+    background-color: $primary-color;
+    color: white;
+    &:hover {
+      cursor: pointer;
+      color: white;
+      background-color: $primary-color-dark;
+    }
+  }
+  &:nth-child(n+2) {
+    background-color: $dark;
+    color: white;
+    &:hover {
+      cursor: pointer;
+      color: white;
+      background-color: $gray;
+    }
+  }
+ 
+}

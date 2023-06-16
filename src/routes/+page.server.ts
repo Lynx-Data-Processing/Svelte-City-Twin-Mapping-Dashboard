@@ -7,7 +7,7 @@ export const load: PageServerLoad = async ({ parent, url }) => {
 
     // if the users session token already exists, redirect to home page
 	if (session) {
-		throw redirect(303, '/lynx-city-twin');
+		throw redirect(303, '/map');
 	}
 
 	return { url: url.origin };

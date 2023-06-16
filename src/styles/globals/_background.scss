@@ -1,31 +1,41 @@
+.bg-grid {
+  background-size: 25px 25px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.005) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+}
+.bg-topography {
+  background-image: url(https://discoverybuildersllc.com/static/pattern.png);
+  object-fit: cover;
+  background-attachment: fixed;
+}
+
+.bg-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 .bg-primary {
   background-color: $primary-color;
   color: white;
 }
-
 .bg-error {
   background-color: $error-color;
   color: white;
 }
-
 .bg-success {
   background-color: $success-color;
   color: white;
 }
-
 .bg-white {
   background-color: $white;
 }
-
 .bg-smoke {
   background-color: $smoke;
 }
-
 .bg-dark {
   background-color: $dark;
   color: white;
 }
-
 .bg-light-gray {
   background-color: $light-gray;
 }

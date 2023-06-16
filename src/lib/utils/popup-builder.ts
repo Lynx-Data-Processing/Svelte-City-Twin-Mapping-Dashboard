@@ -12,7 +12,7 @@ function separateCaps(str: string) {
 
 function shortenString(str: string) {
   if (str.length > 6) {
-    return str.slice(0, 6);
+    return str.slice(0, 12);
   }
   return str;
 }

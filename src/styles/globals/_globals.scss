@@ -2,154 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
-
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap");
-
-
-
-
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap');
 :root {
-    font-family: 'Quicksand', sans-serif;
+	font-family: 'Lato', sans-serif;
 }
-
 
 
 html {
     scroll-behavior: smooth;
-
 }
 
 body {
-
+    box-sizing: border-box;
+    background-color: white;
     margin: 0;
     padding: 0;
-    font-size: $font-size-sm;
-    line-height: $line-height-md;
-    letter-spacing: 0;
-
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.75;
+    color: #000000;
+    line-height: 1.75;
 }
 
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 
 
+    line-height: 1.2;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: -.1px;
+    letter-spacing: 0.02rem;
 
-.btn {
+}
 
-    padding: $paddings-lg;
-
-    text-align: left;
-    transition: all $speed-sm;
-
-    background-color: white;
-
-    span {
-        margin-left: $paddings-md;
-    }
-
-    &:hover {
-        cursor: pointer;
-        color: $black;
-        background-color: $btn-default-light;
-
-    }
-
-    &-text-center {
-        text-align: center;
-    }
+label,
+span,
+p {
+    font-size: $font-size-sm;
+    line-height: 1.5;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -.1px;
+}
 
 
+.text {
 
-    &-no-border {
-        border: none;
-    }
+	&-title {
+		font-size: $font-size-xxl;
+		line-height: 25px;
+		font-weight: 800;
+		letter-spacing: -.04em;
+	}
 
-    &-no-rounded {
-        border-radius: 0;
-    }
+	&-subtitle {
+		font-size: $font-size-lg;
+		line-height: 25px;
+		font-weight: 400;
+		letter-spacing: -.04em;
+	}
 
-    &-dark {
-        border: $btn-dark;
-        background-color: $btn-dark;
-        color: white;
+	&-no-spacing {
+		line-height: 0.75;
+		/* Adjust line height to remove spacing */
+	}
 
-        &:hover {
-            cursor: pointer;
-            color: white;
-            background-color: $btn-dark;
-        }
-
-    }
-
-    &-dark-light {
-        border: $btn-dark-light;
-        background-color: $btn-dark-light;
-        color: white;
-
-        &:hover {
-            cursor: pointer;
-            color: white;
-            background-color: $btn-dark;
-        }
-    }
+	&-primary {
+		color: $primary-color;
+	}
+}
 
 
-    &-primary {
-
-        background-color: $primary-color;
-        border-color: $primary-color;
-        color: white;
-
-        &:hover {
-            color: white;
-            background-color: $primary-color-dark;
-        }
-    }
-
-    &-error {
-        background-color: $error-color;
-        color: white;
-
-        &:hover {
-            color: white;
-            background-color: $error-color-dark;
-        }
-    }
-
-    &-green {
-        background-color: $success-color;
-        color: white;
-
-        &:hover {
-            color: white;
-            background-color: $success-color-dark;
-        }
-    }
-
-    &-black-outline {
-
-        color: $dark;
-        border-color: $btn-default-light;
-        border-width: 1px;
-
-        &:hover {
-
-            background-color: $btn-default-light;
-        }
-    }
-
-    &-error-outline {
-
-        color: $error-color;
-        border-color: $error-color;
-        border-width: 1px;
-
-        &:hover {
-            color: white;
-            background-color: $error-color;
-        }
-    }
-
-
+hr {
+    border: none;
+    height: 1px;
+    background-color: #e6e8de;
 }
 
 .dot {

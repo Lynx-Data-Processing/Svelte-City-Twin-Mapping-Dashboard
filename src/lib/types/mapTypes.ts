@@ -1,32 +1,41 @@
 
-import type { GeojsonEnum } from "./enums";
+import type { ITripEventType } from "./eventTypes";
+import type { IGeojsonDataType, IGeojsonType } from "./geojsonTypes";
 
-export interface IMapStyle {
-    id: number,
-    name: string,
-    value: string,
-    img: string
+export interface ILatLngType {
+    lat: number,
+    lng: number
 }
 
-
-export interface IMapDetailsType  {
-    id: number,
-    center: number[],
+export interface IMapDetailsType {
     zoom: number,
-    pitch: number,
-    bearing: number
-};
-
+    mapTypeId: string,
+    heading: number,
+    tilt: number,
+    center: ILatLngType
+}
 
 export interface ILayerListElementType  {
-    id: number,
+    tripEvent: ITripEventType
     icon: string,
-    type: GeojsonEnum,
-    isShown: boolean,
+    type: IGeojsonDataType,
+    isVisible: boolean,
     layerName: string,
-    hasFilter: boolean,
+    hasFilter?: boolean,
     sourceName: string,
-    initialCoordinates: number[],
-    color: string,
-    data: any,
+    initialCoordinates?: ILatLngType,
+    color?: string,
+    geojson?: IGeojsonType,
+    googleMapLayer?: any
 }
+
+export const zoomLevelMap: { [key in IGeojsonDataType]?: number } = {
+    Point: 19,
+    LineString: 16,
+    Polygon: 14,
+    MultiPolygon: 15,
+    FeatureCollection: 15,
+    Feature: 15,
+    GeometryCollection: 15
+};
+

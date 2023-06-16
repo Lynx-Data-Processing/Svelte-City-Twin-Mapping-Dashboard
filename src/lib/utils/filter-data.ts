@@ -51,3 +51,13 @@ export const getObjectWhereKeyEqualsGivenValue = (listOfObjects: any[], key: str
   }
   return null;
 }
+
+export const groupByKey = (array: any[], key: any) => {
+  const groupedArray = array.reduce((result, currentValue) => {
+    (result[currentValue[key]] = result[currentValue[key]] || []).push(
+      currentValue,
+    );
+    return result;
+  }, {});
+  return groupedArray;
+};
