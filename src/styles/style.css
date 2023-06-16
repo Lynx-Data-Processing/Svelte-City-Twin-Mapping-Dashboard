@@ -38,7 +38,7 @@ h6 {
 label,
 span,
 p {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   line-height: 1.5;
   font-style: normal;
   font-weight: 400;
@@ -46,13 +46,13 @@ p {
 }
 
 .text-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   line-height: 25px;
   font-weight: 800;
   letter-spacing: -0.04em;
 }
 .text-subtitle {
-  font-size: 1.25rem;
+  font-size: 1rem;
   line-height: 25px;
   font-weight: 400;
   letter-spacing: -0.04em;
@@ -271,7 +271,7 @@ hr {
   width: 100%;
   border-width: 1px;
   border-color: rgb(247, 247, 247);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   border-style: solid;
   transition: all 0.5s;
 }
@@ -392,7 +392,7 @@ hr {
   width: 100%;
   border-width: 1px;
   border-color: rgb(247, 247, 247);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   border-style: solid;
   transition: all 0.5s;
 }
@@ -403,7 +403,7 @@ hr {
 }
 
 .search-input {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
 }
 
 .table td {

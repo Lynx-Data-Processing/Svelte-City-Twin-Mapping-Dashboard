@@ -69,60 +69,70 @@
 </script>
 
 <div class="flex flex-col  gap-2 relative">
-	{#if selectedEvent && numberOfVideos > 0}
-		<div class="flex-1 ">
-			<video
-				autoplay={true}
-				class="h-auto overflow-hidden rounded-top-md"
-				controls
-				height="100%"
-				width="100%"
-				title={`processedVideoUrl`}
-				src={selectedVideo?.url}
-				><track src="captions_en.vtt" kind="captions" srclang="en" label="english_captions" />
-			</video>
+	{#if selectedEvent && numberOfVideos >= 0}
+		{#if loadingVideo}
+		<div class="p-4 h-64"> 
+			<LoadingSpinner />
 		</div>
+		
+		{:else if numberOfVideos > 0}
+			<div class="flex-1 ">
+				<video
+					autoplay={true}
+					class="h-auto overflow-hidden rounded-top-md"
+					controls
+					height="100%"
+					width="100%"
+					title={`processedVideoUrl`}
+					src={selectedVideo?.url}
+					><track src="captions_en.vtt" kind="captions" srclang="en" label="english_captions" />
+				</video>
+			</div>
 
-		<div class="flex flex-col px-4 py-4 gap-2">
-			<p class="text-subtitle">{selectedEvent.endpointName}</p>
+			<div class="flex flex-col px-4 py-4 gap-2">
+				<p class="text-subtitle">{selectedEvent.endpointName}</p>
 
-			<Underline />
+				<Underline />
 
-			<div class="flex flex-row justify-between ">
-				<div>
-					<p>Distance</p>
-					<p>
-						{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
-					</p>
-				</div>
+				<div class="flex flex-row justify-between ">
+					<div>
+						<p>Distance</p>
+						<p>
+							{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
+						</p>
+					</div>
 
-				<div>
-					<p>Trigger</p>
-					<p>{formatText(selectedEvent.triggerName)}</p>
-				</div>
+					<div>
+						<p>Trigger</p>
+						<p>{formatText(selectedEvent.triggerName)}</p>
+					</div>
 
-				<div class="my-auto">
-					<p>Time</p>
-					<p>{millisecondUnixToDateTime(selectedEvent.recordingStartTimestamp)}</p>
-					<p>{millisecondUnixToDateTime(selectedEvent.recordingEndTimestamp)}</p>
+					<div class="my-auto">
+						<p>Time</p>
+						<p>{millisecondUnixToDateTime(selectedEvent.recordingStartTimestamp)}</p>
+						<p>{millisecondUnixToDateTime(selectedEvent.recordingEndTimestamp)}</p>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="mt-auto px-4 py-4 flex flex-row bg-smoke rounded-md justify-between">
-			<ButtonToggle
-				numberOfButtons={numberOfVideos}
-				selectedButtonIndex={selectedVideoIndex}
-				setSelectedIndex={setSelectedVideoIndex}
-			/>
+			<div class="mt-auto px-4 py-4 flex flex-row bg-smoke rounded-md justify-between">
+				<ButtonToggle
+					numberOfButtons={numberOfVideos}
+					selectedButtonIndex={selectedVideoIndex}
+					setSelectedIndex={setSelectedVideoIndex}
+				/>
 
-			<button class="btn" title="Videos are stored in smaller, manageable chunks for optimal performance; use the buttons to select the desired video.">
-				<i class="fas fa-question-circle fa-xl" />
-			</button>
-		</div>
-
-		{#if loadingVideo}
-			<LoadingSpinner />
+				<button
+					class="btn"
+					title="Videos are stored in smaller, manageable chunks for optimal performance; use the buttons to select the desired video."
+				>
+					<i class="fas fa-question-circle fa-xl" />
+				</button>
+			</div>
+		{:else}
+			<div class="px-4 py-4">
+				<div class="alert alert-error "><span>{getErrorText()}</span></div>
+			</div>
 		{/if}
 	{:else}
 		<div class="px-4 py-4">
