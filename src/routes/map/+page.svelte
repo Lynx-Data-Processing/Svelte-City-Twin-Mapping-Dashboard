@@ -14,11 +14,12 @@
 	import Layers from '$lib/components/Layers.svelte';
 	import LoadingError from '$lib/components/loading/LoadingError.svelte';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
+	import About from '$lib/components/menu/About.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { LINE_STRING, POINT } from '$lib/constants/geojson';
 	import { getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
-	import { TRIP, type IEventGoogleDataType, TRIP_EVENT } from '$lib/types/eventTypes';
+	import { TRIP, TRIP_EVENT, type IEventGoogleDataType } from '$lib/types/eventTypes';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
 	import { getRandomColor } from '$lib/utils/color-utils';
@@ -32,7 +33,6 @@
 	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
-	import About from '$lib/components/menu/About.svelte';
 
 	let isLoading = false;
 	let isError = false;
@@ -155,9 +155,7 @@
 				<VideoPlayer {selectedEvent} />
 			</Card>
 
-			<Card title="About" icon="fa-solid fa-info-circle" disableToggle={false} showOnLoad={false}>
-				<About />
-			</Card>
+		
 		</div>
 
 		<div class={` col-span-1  2xl:col-span-9`}>
