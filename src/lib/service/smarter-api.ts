@@ -1,6 +1,6 @@
 import { PUBLIC_API_KEY, PUBLIC_TENANT_ID, PUBLIC_V5_API_KEY } from '$env/static/public';
 import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/global';
-import type { IMediaRecordingType, ITripEventWithSensorDataType } from '$lib/types/eventTypes';
+import type { IEventGoogleDataType, IMediaRecordingType } from '$lib/types/eventTypes';
 import type { ITripEvent } from '$lib/types/tripTypes';
 import type { ITripsParamType } from '$lib/types/types';
 import axios from 'axios';
@@ -75,7 +75,7 @@ export const getDeviceDetails = async (deviceId: string) => {
 //* Fetch all videos from the device, all videos are in MP4 format
 //* The api returns video meta data and videos together
 //* API ONLY loads videos saved on the cloud
-export const getVideo = async (gpsElement: ITripEventWithSensorDataType) => {
+export const getVideo = async (gpsElement: IEventGoogleDataType) => {
 
   const params = new URLSearchParams({
     endpointId: `${gpsElement.endpointId}`,
@@ -145,8 +145,8 @@ export const getSmarterAiTrips = async (tripsParams: ITripsParamType) => {
   const params = new URLSearchParams({
     limit: "5",
     tenantId: PUBLIC_TENANT_ID,
-    fromTimestamp: dateTimeToMillisecondUnix(tripsParams.startDateTime).toString(),
-    toTimestamp: dateTimeToMillisecondUnix(tripsParams.endDateTime).toString(),
+    fromTimestamp: (1686660336634).toString(),
+    toTimestamp: (1686853381221).toString(),
     offset: tripsParams.offset.toString(),
   });
   if(tripsParams.endpointId){

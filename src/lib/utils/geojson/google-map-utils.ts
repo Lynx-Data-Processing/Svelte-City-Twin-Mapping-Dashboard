@@ -1,9 +1,10 @@
 import { LINE_STRING, MULTI_LINE_STRING, MULTI_POINT, MULTI_POLYGON, POINT, POLYGON } from "$lib/constants/geojson";
+import { TRIP, TRIP_EVENT } from "$lib/types/eventTypes";
 import type { IGeojsonDataType, IGeojsonType } from "$lib/types/geojsonTypes";
 import type { ILatLngType, ILayerListElementType } from "$lib/types/mapTypes";
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from "../filter-data";
 import { formatText } from "../text-format";
-import { createEventGoogleMapsPopup, createGooglePopup } from "./google-map-popup";
+import { createEventGoogleMapsPopup, createGooglePopup, createTripGoogleMapsPopup } from "./google-map-popup";
 const pointStyle = (style: google.maps.Data.StyleOptions, color: string, size: number = 5) => {
     return {
         ...style,
@@ -96,13 +97,17 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
     // Add a click listener to the layer
     layer.addListener('click', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
         let feature = event.feature;
-        const isEvent = feature.getProperty('isEvent') || false;
+        const featureType = feature.getProperty('type') || null;
 
         let contentString = '';
-        if (isEvent) {
-           feature = feature.j as IGeojsonDataType
-           contentString = createEventGoogleMapsPopup(feature);
-           updateSelectedEvent(feature);
+        if (featureType === TRIP_EVENT) {
+            feature = feature.j as IGeojsonDataType
+            contentString = createEventGoogleMapsPopup(feature);
+            updateSelectedEvent(feature);
+        }
+        else if (featureType === TRIP) {
+            feature = feature.j as IGeojsonDataType
+            contentString = createTripGoogleMapsPopup(feature);
         }
         else {
             contentString = createGooglePopup(feature, layerListElement);
@@ -113,7 +118,7 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
         infoWindow.open(map);
     });
 
-    if(layerListElement.type === POINT || layerListElement.type === MULTI_POINT) {
+    if (layerListElement.type === POINT || layerListElement.type === MULTI_POINT) {
         layer.addListener('mouseover', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
             const feature = event.feature;
             layer.overrideStyle(feature, { fillOpacity: 1 });
@@ -125,7 +130,7 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
             layer.overrideStyle(feature, { fillOpacity: 0.5 });
         }
         );
-        
+
     }
 
     if (layerListElement.type === POLYGON || layerListElement.type === MULTI_POLYGON) {
@@ -186,6 +191,7 @@ export const createLayerElement = (
         geojson: geojson,
         initialCoordinates: geojson ? getInitialCoordinates(type, geojson) : { lat: 0, lng: 0 }
     };
+
     layerElement.googleMapLayer = new google.maps.Data();
     return layerElement;
 };
@@ -195,7 +201,7 @@ export const getInitialCoordinates = (type: IGeojsonDataType, data: any): ILatLn
         const initialCoordinateMap: { [key in IGeojsonDataType]?: number[] } = {
             Point: data.features[0].geometry.coordinates,
             LineString: data.features[0].geometry.coordinates[0],
-            Polygon: data.features[0].geometry.coordinates[0],
+            Polygon: data.features[0].geometry.coordinates[0][0],
             MultiPolygon: data.features[0].geometry.coordinates[0],
         };
         const coords = initialCoordinateMap[type];

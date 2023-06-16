@@ -15,8 +15,8 @@
 <section  class="card  h-fit  {width} p-4 gap-4 {isRounded ? "rounded-md" : ""}">
 	<div class="flex flow-row justify-between">
 		<div class="flex flex-col">
-			<p class="text-subtitle uppercase">{title}</p>
-			<div class="pt-2"><Underline /></div>
+			<p class="text-subtitle ">{title}</p>
+			
 		</div>
 		
 		{#if !disableToggle}
@@ -32,7 +32,7 @@
 		{/if}
 	</div>
 	{#if showContent || disableToggle}
-		<div class="mt-2" >
+		<div class="mt-2" transition:slide>
 			<slot />
 		</div>
 	{/if}

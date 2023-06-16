@@ -10,16 +10,15 @@
 	} from '$lib/types/types';
 
 	import Card from '$lib/components/Card.svelte';
-	import PaginatedTable from '$lib/components/table/PaginatedTable.svelte';
 
 	import Layers from '$lib/components/Layers.svelte';
 	import LoadingError from '$lib/components/loading/LoadingError.svelte';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
-	import { LINE_STRING } from '$lib/constants/geojson';
+	import { LINE_STRING, POINT } from '$lib/constants/geojson';
 	import { getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
-	import type { ITripEventWithSensorDataType } from '$lib/types/eventTypes';
+	import type { IEventGoogleDataType } from '$lib/types/eventTypes';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
 	import { getRandomColor } from '$lib/utils/color-utils';
@@ -46,9 +45,8 @@
 	};
 
 	let layerList: ILayerListElementType[] = [];
-	let selectedEvent: ITripEventWithSensorDataType | null = null;
+	let selectedEvent: IEventGoogleDataType | null = null;
 
-	let tripList: ITrip[] = [];
 
 	let map: Map | undefined;
 	let mapDiv: HTMLDivElement;
@@ -68,7 +66,7 @@
 		map.setTilt(50);
 	};
 
-	const updateSelectedEvent = (googleMapEvent: ITripEventWithSensorDataType) => {
+	const updateSelectedEvent = (googleMapEvent: IEventGoogleDataType) => {
 		selectedEvent = googleMapEvent;
 	};
 
@@ -90,25 +88,7 @@
 		isLoading = true;
 		isError = false;
 		try {
-			// Check if data exists in local storage
-			let localData = localStorage.getItem(JSON.stringify(tripsParams));
-			if (localData) {
-				let storedData = JSON.parse(localData);
-
-				// Check if data is expired
-				const currentTime = new Date().getTime();
-				const dataTime = new Date(storedData.timestamp).getTime();
-				if (currentTime - dataTime > 30 * 60 * 1000) {
-					// 30 minutes in milliseconds
-					// Data is expired - remove it from local storage
-					localStorage.removeItem(JSON.stringify(tripsParams));
-				} else {
-					// Data is not expired - use it
-					tripList = storedData.tripList;
-					processGeojsonData(storedData.tempGeojsonData);
-					return;
-				}
-			}
+			
 
 			const tempTripList = await getSmarterAiTrips(tripsParams);
 
@@ -123,14 +103,7 @@
 
 			const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
 			processGeojsonData(tempGeojsonData);
-			tripList = tempTripWithGPSList;
 
-			// Save tripList and tempGeojsonData to local storage with a timestamp
-			const timestamp = new Date();
-			localStorage.setItem(
-				JSON.stringify(tripsParams),
-				JSON.stringify({ tripList, tempGeojsonData, timestamp })
-			);
 		} catch (error) {
 			console.log(error);
 		
@@ -140,15 +113,16 @@
 	};
 
 	const processGeojsonData = (tempGeojsonData: IGeojsonType[]) => {
+		if (!tempGeojsonData || !tempGeojsonData.length) return;
 		for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
 			const gpsElement = tempGeojsonData[i];
 			const layerElement = createLayerElement(
 				true,
-				gpsElement.features[0].properties.endpointName || 'Trip ' + (i + 1),
-				LINE_STRING,
+				gpsElement.name || 'Trip ' + (i + 1),
+				gpsElement.isTrip ? LINE_STRING : POINT,
 				true,
-				'fa-solid fa-car',
-				getRandomColor(),
+				gpsElement.isTrip ? 'fa fa-route' : 'fa fa-map-marker',
+				gpsElement.color ?? getRandomColor(),
 				gpsElement
 			);
 			layerList = addLayerElementToLayerList(layerList, layerElement);
@@ -171,7 +145,7 @@
 	<div class="grid grid-cols-1  2xl:grid-cols-12 ">
 		<div class="col-span-1 2xl:col-span-3 flex flex-col  2xl:flex-col p-4 gap-4">
 			<Card title="Layers" showOnLoad={true} disableToggle={true}>
-				<Layers {layerList} {updateMapCenter} {toggleGoogleLayer} />
+				<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
 			</Card>
 			<Card title="Search Data" showOnLoad={true} disableToggle={false}>
 				<SearchData {fetchTripsData} />
@@ -194,11 +168,4 @@
 		</div>
 	</div>
 
-	{#if tripList.length}
-		<div class="p-4">
-			<Card title="Trips" width="w-full">
-				<PaginatedTable bind:tableData={tripList} {updateMapCenter} />
-			</Card>
-		</div>
-	{/if}
 </div>

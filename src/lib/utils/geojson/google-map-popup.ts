@@ -1,37 +1,56 @@
-import type { ITripEventWithSensorDataType } from "$lib/types/eventTypes";
+import type { IEventGoogleDataType } from "$lib/types/eventTypes";
 import type { ILayerListElementType } from "$lib/types/mapTypes";
+import type { ITripGoogleDataType } from "$lib/types/tripTypes";
 import { millisecondUnixToDateTime } from "../date-format";
 import { formatText } from "../text-format";
 
 
-export const createImageDiv = (image1: string, image2: string): string => {
-    return `
+export const createImageDiv = (image: string): string => {
+  return `
       <div class="flex flex-row mt-4">
-        <img class="w-64 h-auto object-cover" src="${image1}" />
-        <img class="w-64 h-auto object-cover" src="${image2}" />
+        <img class="w-96 h-auto object-cover" src="${image}" />
       </div>
     `;
 };
 
 export const createContentString = (feature: any, maxCount: number): string => {
-    let contentString = '';
-    let count = 0;
-    feature.forEachProperty((value: any, name: any) => {
-        if (count > maxCount) return;
-        contentString += `<p> <span class="font-bold">${formatText(name)}</span>: ${value}</p>`;
-        count++;
-    });
+  let contentString = '';
+  let count = 0;
+  feature.forEachProperty((value: any, name: any) => {
+    if (count > maxCount) return;
+    contentString += `<p> <span class="font-bold">${formatText(name)}</span>: ${value}</p>`;
+    count++;
+  });
 
-    return contentString;
+  return contentString;
 };
 
-export const createEventGoogleMapsPopup = (feature: ITripEventWithSensorDataType): string => {
-    let contentString = `
+export const createTripGoogleMapsPopup = (feature: ITripGoogleDataType): string => {
+
+  let contentString = `
+  <p class="text-subtitle font-bold">${formatText(feature.endpointName)}</p>
+  <hr class="bg-primary w-12 h-1 my-2" />
+  `;
+
+  contentString += `
+    <p> <span class="font-bold">Trip ID</span>: ${formatText(feature.id)}</p>
+    <p> <span class="font-bold">Start Time</span>: ${feature.startTimestamp ? millisecondUnixToDateTime(feature.startTimestamp) : "N/A"}</p>
+    <p> <span class="font-bold">End Time</span>: ${feature.endTimestamp ? millisecondUnixToDateTime(feature.endTimestamp) : "N/A"}</p>
+    <p> <span class="font-bold">Distance</span>: ${feature.tripStatus ? feature.tripStatus : "N/A"}</p>
+    <p> <span class="font-bold">End Address</span>: ${feature.distance ? `${(feature.distance / 1000).toFixed(2)} km` : 'N/A'}</p>
+    `
+
+  return contentString;
+
+}
+
+export const createEventGoogleMapsPopup = (feature: IEventGoogleDataType): string => {
+  let contentString = `
       <p class="text-subtitle font-bold">${formatText(feature.triggerName)}</p>
       <hr class="bg-primary w-12 h-1 my-2" /> 
     `;
-    
-    contentString += `
+
+  contentString += `
         <p> <span class="font-bold">Event ID</span>: ${formatText(feature.id)}</p>
         <p> <span class="font-bold">Recording Start</span>: ${feature.recordingStartTimestamp ? millisecondUnixToDateTime(feature.recordingStartTimestamp) : "N/A"}</p>
         <p> <span class="font-bold">Recording End</span>: ${feature.recordingEndTimestamp ? millisecondUnixToDateTime(feature.recordingEndTimestamp) : "N/A"}</p>
@@ -39,23 +58,22 @@ export const createEventGoogleMapsPopup = (feature: ITripEventWithSensorDataType
 
     `
 
-    const image1 = feature.snapshots[0]?.downloadUrl;
-    const image2 = feature.snapshots[2]?.downloadUrl;
-    if (image1 && image2) {
-        contentString += createImageDiv(image1, image2);
-    }
-
-    return contentString;
+  let videoObjects = feature.snapshots.find((o) => o.source.includes("vid"));
+  const image = videoObjects?.downloadUrl;
+  if (image) {
+    contentString += createImageDiv(image);
+  }
+  return contentString;
 };
 
 export const createGooglePopup = (feature: any, layerListElement: ILayerListElementType): string => {
-    let contentString = `
+  let contentString = `
       <p class="text-subtitle font-bold">${layerListElement.layerName}</p>
       <hr class="bg-primary w-12 h-1 my-2" /> 
     `;
 
-    const maxCount = 10;
-    contentString += createContentString(feature, maxCount);
+  const maxCount = 10;
+  contentString += createContentString(feature, maxCount);
 
-    return contentString;
+  return contentString;
 };

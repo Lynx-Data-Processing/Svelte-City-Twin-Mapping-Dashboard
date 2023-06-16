@@ -94,7 +94,7 @@ export const getKingstonMapData = async () => {
 
     if (!planningLineGpsData) return;
 
-    const planningLineElement = createLayerElement(false, 'Planning Line', LINE_STRING, false, 'fa-solid fa-table-cells-large', getRandomColor(), planningLineGpsData);
+    const planningLineElement = createLayerElement(false, 'Planning Line', LINE_STRING, false, 'fa-solid fa-road', getRandomColor(), planningLineGpsData);
     tempLayerList.push(planningLineElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_PLANNING_LINE_URL}`);

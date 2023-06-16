@@ -5,7 +5,7 @@
 	import '../../styles/style.css';
 </script>
 
-<div class="app" transition:fade>
+<div transition:fade>
 	<Header />
 
 	<slot />

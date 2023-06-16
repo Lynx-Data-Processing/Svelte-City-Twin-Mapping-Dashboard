@@ -2,8 +2,7 @@
 	export let title: string = '';
 	export let placeholder: string = 'Search...';
 	export let onChangeFunction: Function;
-
-	let search: string = '';
+	export let search: string = '';
 </script>
 
 <div class="flex flex-col gap-4 w-full">
@@ -18,7 +17,7 @@
 			required
 			class="search-input "
 			{placeholder}
-			on:change={() => onChangeFunction(search)}
+			on:change={() => onChangeFunction()}
 		/>
 		<i class="fas fa-search search-icon" />
 	</div>

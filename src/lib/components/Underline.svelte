@@ -1,6 +1,6 @@
 <script lang="ts">
     export let isLarge = false;
-    export let size = 'h-1';
+    export let size = 'h-0.5';
     export let isRounded = false
 </script>
 

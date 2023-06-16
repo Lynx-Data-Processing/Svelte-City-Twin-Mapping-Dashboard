@@ -1,4 +1,4 @@
-import type { IEventType } from "./eventTypes";
+import type { IEventType, ITripEventType } from "./eventTypes";
 
 interface IGeoCoordinates {
   lon: number;
@@ -43,3 +43,10 @@ export type ITrip = {
   geoPoints: { geo: { lon: number; lat: number }; timestamp: number }[];
   driverTripWithScore: any[];
 };
+
+
+export interface ITripGoogleDataType extends ITrip {
+  type: ITripEventType
+  color: string
+  size: number
+}

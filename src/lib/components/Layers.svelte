@@ -7,15 +7,19 @@
 	export let updateMapCenter: Function;
 	export let layerList: ILayerListElementType[];
 	let filteredLayers: ILayerListElementType[] = layerList;
+	let search = '';
 
 	const toggleLayer = (selectedLayer: ILayerListElementType) => {
 		const index = layerList.findIndex((layer) => layer.layerName === selectedLayer.layerName);
 		layerList[index].isVisible = !layerList[index].isVisible;
 		toggleGoogleLayer(layerList[index]);
-		filteredLayers = layerList;
+
+		if (layerList[index].isVisible)
+			updateMapCenter(selectedLayer.initialCoordinates, selectedLayer.type);
+			
 	};
 
-	const filterLayersBySearch = (search: string) => {
+	const filterLayersBySearch = () => {
 		if (isEmptyString(search)) {
 			filteredLayers = layerList;
 			return;
@@ -26,17 +30,17 @@
 		filteredLayers = layerList.filter((layer) => expr.test(layer.layerName));
 	};
 
-	$: layerList && (filteredLayers = layerList);
+	$: layerList && filterLayersBySearch();
 </script>
 
-<div class="flex flex-col ">
+<div class="flex flex-col gap-2 ">
 	<div class="my-1 flex flex-row gap-4">
-		<SearchBar onChangeFunction={filterLayersBySearch} />
+		<SearchBar onChangeFunction={filterLayersBySearch}  bind:search/>
 	</div>
 
-	<div class="flex flex-col max-h-96 overflow-auto">
+	<div class="flex flex-col max-h-96 overflow-auto gap-2">
 		{#each filteredLayers as layer}
-			<div class="flex flex-row gap-2  my-1">
+			<div class="flex flex-row gap-2 ">
 				<button
 				on:click={() => {
 					updateMapCenter(layer.initialCoordinates, layer.type);
@@ -45,7 +49,7 @@
 				><i class={`${layer.icon} icon-color`} style="color: {layer.color};" /></button
 			>
 				<button
-					on:click={() => toggleLayer(layer)}
+					on:click={() => {toggleLayer(layer)}}
 					class={`btn w-full ${layer.isVisible ? 'btn-primary' : 'btn-black-outline'} `}
 				>
 					<i class="{layer.icon} " />

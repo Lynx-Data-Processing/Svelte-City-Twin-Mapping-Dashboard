@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap');
+
 :root {
     font-family: 'Lato', sans-serif;
-  
+
 }
 
 html {
@@ -13,13 +14,17 @@ html {
 }
 
 body {
-    color: $text-dark;
+    box-sizing: border-box;
     background-color: white;
     margin: 0;
     padding: 0;
-    font-size: $font-size-sm;
-    letter-spacing: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.75;
+    color: #000000;
+    line-height: 1.75;
 }
+
 
 h1,
 h2,
@@ -27,73 +32,52 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
+
+
     line-height: 1.2;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 700;
     letter-spacing: -.1px;
     letter-spacing: 0.02rem;
-    font-weight: 500;
-}
 
-h1 {
-    font-size: 3.5rem;
-}
-
-h2 {
-    font-size: 2.5rem;
-}
-
-h3 {
-    font-size: 1.75rem;
-}
-
-h4 {
-    font-size: 1.5rem;
-}
-
-h5 {
-    font-size: 1.25rem;
-
-}
-
-h6 {
-    font-size: 1rem;
 }
 
 span,
 p {
-    font-size: $font-size-sm;
+    font-size: .85rem;
     line-height: 1.5;
     font-style: normal;
     font-weight: 400;
     letter-spacing: -.1px;
 }
 
+label {
+    font-size: 12px;
+    font-style: normal;
+}
 
-.text{
-    
+
+.text {
+
+    font-family: 'Roboto', sans-serif;
 
     &-title {
-        font-family: 'Roboto', sans-serif;
-        font-size: 20px;
+
+        font-size: 1.85rem;
         line-height: 25px;
-		font-weight: 800;
-		letter-spacing: -.04em;
+        font-weight: 800;
+        letter-spacing: -.04em;
     }
 
     &-subtitle {
-        font-family: 'Roboto', sans-serif;
-    
-        font-size: 16px;
+
+        font-size: 1.25rem;
         line-height: 25px;
-		font-weight: 400;
-		letter-spacing: -.04em;
+        font-weight: 400;
+        letter-spacing: -.04em;
     }
-    
-    &-primary{
+
+    &-primary {
         color: $primary-color;
     }
 }

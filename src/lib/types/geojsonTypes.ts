@@ -4,9 +4,11 @@ import type { FEATURE, FEATURE_COLLECTION, GEOMETRY_COLLECTION, LINE_STRING, MUL
 export type IGeojsonDataType = typeof POINT | typeof MULTI_POINT | typeof LINE_STRING | typeof MULTI_LINE_STRING | typeof POLYGON | typeof MULTI_POLYGON | typeof GEOMETRY_COLLECTION | typeof FEATURE | typeof FEATURE_COLLECTION;
 
 export interface IGeojsonType {
-    id?: string,
+    name?: string,
+    isTrip?: boolean,
     type: typeof FEATURE_COLLECTION,
-    features: IGeojsonFeatureType[]
+    features: IGeojsonFeatureType[],
+    color?: string,
 }
 
 interface IGeojsonPropertiesType {

@@ -2,13 +2,13 @@
 	import { PUBLIC_GCP_BUCKET_URL } from '$env/static/public';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
 	import { getVideo } from '$lib/service/smarter-api';
-	import type { IMediaRecordingType, ITripEventWithSensorDataType } from '$lib/types/eventTypes';
+	import type { IEventGoogleDataType, IMediaRecordingType } from '$lib/types/eventTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { formatText } from '$lib/utils/text-format';
 	import ButtonToggle from '../ButtonToggle.svelte';
 	import Underline from '../Underline.svelte';
 
-	export let selectedEvent: ITripEventWithSensorDataType | null = null;
+	export let selectedEvent: IEventGoogleDataType | null = null;
 	let videos: IMediaRecordingType[];
 
 	let loadingVideo: boolean = false;
@@ -28,12 +28,14 @@
 			loadingVideo = true;
 			selectedVideoIndex = 0;
 
+			// Get all the videos and Remove any interior view videos
 			let tempVideos = await getVideo(selectedEvent);
-			numberOfVideos = tempVideos.length;
+			tempVideos = tempVideos.filter((video: IMediaRecordingType) => video.source === 'vid_1');
 
+			// Set the video url
+			numberOfVideos = tempVideos.length;
 			videos = tempVideos;
 			selectedVideo = tempVideos[0];
-			console.log(tempVideos);
 			loadingVideo = false;
 		} catch (e) {
 			console.log(e);
@@ -57,15 +59,21 @@
 		selectedVideo = videos[selectedVideoIndex];
 	};
 
+	const getErrorText = () => {
+		if (!selectedEvent) return 'No event selected';
+		else if (numberOfVideos === 0) return 'No videos found';
+		else return 'Error loading videos';
+	};
+
 	$: selectedEvent && getAllVideos();
 </script>
 
-<div class="flex flex-col">
-	{#if selectedEvent}
-		<div class="relative h-fit">
+<div class="flex flex-col gap-4 relative">
+	{#if selectedEvent && numberOfVideos >= 0}
+		<div class="flex-1 h-64">
 			<video
 				autoplay={true}
-				class="w-full h-auto overflow-hidden "
+				class="h-auto overflow-hidden "
 				controls
 				height="100%"
 				width="100%"
@@ -73,52 +81,49 @@
 				src={selectedVideo?.url}
 				><track src="captions_en.vtt" kind="captions" srclang="en" label="english_captions" />
 			</video>
-			{#if loadingVideo}
-				<LoadingSpinner />
-			{/if}
 		</div>
 
-		<ButtonToggle
-			numberOfButtons={numberOfVideos}
-			selectedButtonIndex={selectedVideoIndex}
-			setSelectedIndex={setSelectedVideoIndex}
-		/>
+		<div class="flex flex-row gap-2 justify-between">
 
-		{#if selectedVideo}
-			<div class="flex flex-col mt-4">
-				<p class="text-subtitle">{formatText(selectedEvent.endpointName)}</p>
-				<div class="py-2"><Underline /></div>
+			<div>
+				<p class="text-subtitle">Select Video</p>
+				<ButtonToggle
+					numberOfButtons={numberOfVideos}
+					selectedButtonIndex={selectedVideoIndex}
+					setSelectedIndex={setSelectedVideoIndex}
+				/>
+			</div>
 
-				<p>
-					<span class="font-bold">Start</span>: {selectedVideo?.startTimestamp
-						? millisecondUnixToDateTime(selectedVideo.startTimestamp)
-						: 'N/A'}
-				</p>
+			<div class="text-right">
+				<p class="text-subtitle">Start - End</p>
+				<p>{millisecondUnixToDateTime(selectedEvent.recordingStartTimestamp)}</p>
+				<p>{millisecondUnixToDateTime(selectedEvent.recordingEndTimestamp)}</p>
+			</div>
+		
+		</div>
 
-				<p>
-					<span class="font-bold">End</span>: {selectedVideo?.endTimestamp
-						? millisecondUnixToDateTime(selectedVideo.endTimestamp)
-						: 'N/A'}
-				</p>
-				
-				<hr class="my-2" />
+		<hr />
 
-				<div class="flex flex-row justify-between">
-					<div class="flex flex-col ">
-						<p class="text-subtitle">Distance</p>
-						<p>
-							{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
-						</p>
-					</div>
+		<div class="flex-1 flex flex-col justify-between gap-4">
+			<div class="flex justify-between">
+				<div>
+					<p class="text-subtitle">Distance</p>
+					<p>
+						{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
+					</p>
+				</div>
 
-					<div class="flex flex-col ">
-						<p class="text-subtitle">Trigger Name</p>
-						<p>{formatText(selectedEvent.triggerName)}</p>
-					</div>
+				<div class="text-right">
+					<p class="text-subtitle">Trigger Name</p>
+					<p>{formatText(selectedEvent.triggerName)}</p>
 				</div>
 			</div>
+		</div>
+
+		{#if loadingVideo}
+			<LoadingSpinner />
 		{/if}
 	{:else}
-		<div class="alert alert-error my-1" role="alert">No Event selected</div>
+		<div class="alert alert-error my-1" role="alert">{getErrorText()}</div>
 	{/if}
 </div>

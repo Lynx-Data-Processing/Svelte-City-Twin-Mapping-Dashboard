@@ -45,8 +45,15 @@ export type Snapshot = {
   downloadUrl: string;
 };
 
-export interface ITripEventWithSensorDataType extends IEventType, ISensorDataType, ITrip {
-  isEvent: boolean,
+
+export const TRIP = "TRIP";
+export const TRIP_EVENT = "TRIP_EVENT";
+
+export type ITripEventType =  typeof TRIP | typeof TRIP_EVENT;
+
+
+export interface IEventGoogleDataType extends IEventType, ISensorDataType, ITrip {
+  type: ITripEventType
   color: string
   size: number
 }

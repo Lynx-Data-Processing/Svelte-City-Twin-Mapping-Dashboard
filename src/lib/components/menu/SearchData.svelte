@@ -2,11 +2,11 @@
 	import type { ITripsParamType } from '$lib/types/types';
 	
 	let tripsParams: ITripsParamType = {
-		endpointId: '',
-		limit: 5,
+		endpointId: "John",
+		limit: 20,
 		offset: 0,
-		startDateTime: '2023-06-02T00:00',
-		endDateTime: '2023-06-03T00:00'
+		startDateTime: '2023-06-14T00:00',
+		endDateTime: '2023-06-15T23:00'
 	};
 	export let fetchTripsData: Function;
 
@@ -18,10 +18,9 @@
 
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col gap-2">
 
-	<span id="search-err">* Notice: Search functionality has been impacted by API issues. Mock-data can still be requested. *</span>
-
+	
 	<div id="endpointSelect" class="search-container">
 		<label for="endpoint_select">Endpoint</label>
 		<input
@@ -29,21 +28,21 @@
 			id="enpoint_select"
 			type="search"
 			placeholder="Endpoint ID"
-			class="form-control search-input "
+			class="form-control search-input rounded-lg"
 			data-mdb-toggle="datepicker"
 			bind:value={tripsParams.endpointId}
 			disabled
 		/>
 	</div>
 
-	<div class="flex flex-row justify-between gap-x-4">
-		<div id="limit" class="number-picker-container my-1 ">
+	<div class="flex flex-row gap-x-4">
+		<div id="limit" class="number-picker-container my-1 w-full">
 			<label for="limit">Limit</label>
 			<input
 				name="limit"
 				id="limit"
 				type="number"
-				class="form-control search-input "
+				class="form-control search-input rounded-lg"
 				placeholder="Limit"
 				min="1"
 				max="100"
@@ -52,13 +51,13 @@
 			/>
 		</div>
 
-		<div id="offset" class="number-picker-container my-1 ">
+		<div id="offset" class="number-picker-container my-1 w-full">
 			<label for="offset">Offset</label>
 			<input
 				name="offset"
 				id="offset"
 				type="number"
-				class="form-control search-input "
+				class="form-control search-input rounded-lg "
 				placeholder="Offset"
 				min="0"
 				max="10"
@@ -74,7 +73,7 @@
 			name="start_date"
 			id="start_date"
 			type="datetime-local"
-			class="form-control date-picker"
+			class="form-control date-picker rounded-lg"
 			placeholder="Select a date"
 			data-mdb-toggle="datepicker"
 			min="2010-01-01"
@@ -91,7 +90,7 @@
 			name="end_date"
 			id="end_date"
 			type="datetime-local"
-			class="form-control date-picker  "
+			class="form-control date-picker  rounded-lg"
 			placeholder="Select End Date Time"
 			data-mdb-toggle="datepicker"
 			min="2010-01-01"
@@ -101,6 +100,9 @@
 			disabled
 		/>
 	</div>
+
+	<span class="alert alert-error">Notice: Search functionality has been impacted by API issues. Mock-data can still be requested.</span>
+
 	
 	{#if tripsParams.startDateTime && tripsParams.endDateTime}
 		{#if isEndDateBeforeStartDate}
