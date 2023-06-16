@@ -143,7 +143,7 @@ export const getSmarterAiTripWithGps = async (tripId: string) => {
 export const getSmarterAiTrips = async (tripsParams: ITripsParamType) => {
 
   const params = new URLSearchParams({
-    limit: "5",
+    limit: "3",
     tenantId: PUBLIC_TENANT_ID,
     fromTimestamp: (1686660336634).toString(),
     toTimestamp: (1686853381221).toString(),

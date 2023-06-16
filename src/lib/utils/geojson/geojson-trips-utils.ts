@@ -59,7 +59,7 @@ export const convertTripsToGeoJSON = async (trips: ITrip[], geojsonDataType: IGe
 
       const color = getRandomColor();
       const geoJson: IGeojsonType = {
-        name: `${trip.endpointName}_${i}_trip`,
+        name: `${trip.endpointName} Trip ${i+1}`,
         color : color,
         isTrip: true,
         type: 'FeatureCollection',
@@ -67,7 +67,7 @@ export const convertTripsToGeoJSON = async (trips: ITrip[], geojsonDataType: IGe
       };
 
       const geoJsonEvents: IGeojsonType = {
-        name:  `${trip.endpointName}_${i}_events`,
+        name:  `${trip.endpointName} Trip ${i+1} Events`,
         isTrip: false,
         type: 'FeatureCollection',
         features: [],

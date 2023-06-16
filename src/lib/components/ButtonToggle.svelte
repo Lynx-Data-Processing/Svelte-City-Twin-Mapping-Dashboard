@@ -12,7 +12,7 @@
 				selectedButtonIndex === index ? 'btn-primary ' : 'btn-gray'
 			}`}
 		>
-			{index}
+			{index+1}
 		</button>
 	{/each}
 </div>

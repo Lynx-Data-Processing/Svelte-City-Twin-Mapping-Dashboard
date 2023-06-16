@@ -8,7 +8,9 @@
 <div transition:fade>
 	<Header />
 
-	<slot />
-
+	<div class="pt-16">
+		<slot />
+	</div>
+	
 	<Footer />
 </div>

@@ -5,20 +5,18 @@
 	export let search: string = '';
 </script>
 
-<div class="flex flex-col gap-4 w-full">
-	{#if title}
-		<h5>{title}</h5>
-	{/if}
+<div class="flex flex-row gap-4 w-full">
 
-	<div class="search-container ">
+	<div class="search-container flex-1 ">
 		<input
 			type="search"
 			bind:value={search}
 			required
-			class="search-input "
+			class="search-input rounded-lg"
 			{placeholder}
 			on:change={() => onChangeFunction()}
 		/>
 		<i class="fas fa-search search-icon" />
 	</div>
+
 </div>

@@ -1,4 +1,5 @@
 
+import type { ITripEventType } from "./eventTypes";
 import type { IGeojsonDataType, IGeojsonType } from "./geojsonTypes";
 
 export interface ILatLngType {
@@ -15,7 +16,7 @@ export interface IMapDetailsType {
 }
 
 export interface ILayerListElementType  {
-    isTrip: boolean,
+    tripEvent: ITripEventType
     icon: string,
     type: IGeojsonDataType,
     isVisible: boolean,

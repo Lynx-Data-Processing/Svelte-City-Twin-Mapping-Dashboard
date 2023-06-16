@@ -3,11 +3,10 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap');
-
 :root {
-    font-family: 'Lato', sans-serif;
-
+	font-family: 'Lato', sans-serif;
 }
+
 
 html {
     scroll-behavior: smooth;
@@ -42,45 +41,43 @@ h6 {
 
 }
 
+label,
 span,
 p {
-    font-size: .85rem;
+    font-size: $font-size-sm;
     line-height: 1.5;
     font-style: normal;
     font-weight: 400;
     letter-spacing: -.1px;
 }
 
-label {
-    font-size: 12px;
-    font-style: normal;
-}
-
 
 .text {
 
-    font-family: 'Roboto', sans-serif;
+	&-title {
+		font-size: $font-size-xxl;
+		line-height: 25px;
+		font-weight: 800;
+		letter-spacing: -.04em;
+	}
 
-    &-title {
+	&-subtitle {
+		font-size: $font-size-lg;
+		line-height: 25px;
+		font-weight: 400;
+		letter-spacing: -.04em;
+	}
 
-        font-size: 1.85rem;
-        line-height: 25px;
-        font-weight: 800;
-        letter-spacing: -.04em;
-    }
+	&-no-spacing {
+		line-height: 0.75;
+		/* Adjust line height to remove spacing */
+	}
 
-    &-subtitle {
-
-        font-size: 1.25rem;
-        line-height: 25px;
-        font-weight: 400;
-        letter-spacing: -.04em;
-    }
-
-    &-primary {
-        color: $primary-color;
-    }
+	&-primary {
+		color: $primary-color;
+	}
 }
+
 
 hr {
     border: none;

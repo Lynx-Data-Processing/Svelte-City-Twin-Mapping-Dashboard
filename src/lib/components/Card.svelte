@@ -2,9 +2,10 @@
 	import { fly, slide } from 'svelte/transition';
 	import Underline from './Underline.svelte';
 	export let title: string;
+	export let icon = 'fa-solid fa-diamond';
 	export let width = 'w-full';
 	export let disableToggle = false;
-	export let isRounded = true;
+	export let isRounded = false;
 	export let showOnLoad = true;
 	let showContent = showOnLoad;
 	const toggleContent = () => {
@@ -12,27 +13,27 @@
 	};
 </script>
 
-<section  class="card  h-fit  {width} p-4 gap-4 {isRounded ? "rounded-md" : ""}">
-	<div class="flex flow-row justify-between">
-		<div class="flex flex-col">
-			<p class="text-subtitle ">{title}</p>
-			
+<section class="card  h-fit card-shadow  {width}  gap-4 {isRounded ? 'rounded-md' : ''}">
+	<div class="flex flow-row justify-between bg-dark bg-grid px-4 py-4 ">
+		<div class=" flex flex-row gap-2 align-middle ">
+			<i class={`${icon} icon-color my-auto`} />
+			<p class="text-subtitle my-auto">{title}</p>
 		</div>
-		
+
 		{#if !disableToggle}
-			<button on:click={toggleContent} class="toggle-btn text-center hover:underline">
+			<button on:click={toggleContent} class="toggle-btn text-center hover:underline ">
 				{#if showContent}
-					<i class="fa-solid fa-minus" />
+					<i class="fa-solid fa-minus mr-2" />
 					<span>Hide</span>
 				{:else}
-					<i class="fa-solid fa-plus" />
+					<i class="fa-solid fa-plus mr-2" />
 					<span>Show</span>
 				{/if}
 			</button>
 		{/if}
 	</div>
 	{#if showContent || disableToggle}
-		<div class="mt-2" transition:slide>
+		<div transition:slide>
 			<slot />
 		</div>
 	{/if}

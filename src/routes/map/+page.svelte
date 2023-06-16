@@ -18,7 +18,7 @@
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { LINE_STRING, POINT } from '$lib/constants/geojson';
 	import { getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
-	import type { IEventGoogleDataType } from '$lib/types/eventTypes';
+	import { TRIP, type IEventGoogleDataType, TRIP_EVENT } from '$lib/types/eventTypes';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
 	import { getRandomColor } from '$lib/utils/color-utils';
@@ -32,6 +32,7 @@
 	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
+	import About from '$lib/components/menu/About.svelte';
 
 	let isLoading = false;
 	let isError = false;
@@ -117,7 +118,7 @@
 		for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
 			const gpsElement = tempGeojsonData[i];
 			const layerElement = createLayerElement(
-				true,
+				gpsElement.isTrip ? TRIP : TRIP_EVENT,
 				gpsElement.name || 'Trip ' + (i + 1),
 				gpsElement.isTrip ? LINE_STRING : POINT,
 				true,
@@ -144,14 +145,18 @@
 <div>
 	<div class="grid grid-cols-1  2xl:grid-cols-12 ">
 		<div class="col-span-1 2xl:col-span-3 flex flex-col  2xl:flex-col p-4 gap-4">
-			<Card title="Layers" showOnLoad={true} disableToggle={true}>
+			<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={false}>
 				<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
 			</Card>
-			<Card title="Search Data" showOnLoad={true} disableToggle={false}>
+			<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
 				<SearchData {fetchTripsData} />
 			</Card>
-			<Card title="Video Player" disableToggle={true}>
+			<Card title="Video Player" icon="fa-solid fa-video" disableToggle={false}>
 				<VideoPlayer {selectedEvent} />
+			</Card>
+
+			<Card title="About" icon="fa-solid fa-info-circle" disableToggle={false} showOnLoad={false}>
+				<About />
 			</Card>
 		</div>
 

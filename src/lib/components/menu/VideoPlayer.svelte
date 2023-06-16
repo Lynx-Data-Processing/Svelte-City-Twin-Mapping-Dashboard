@@ -68,12 +68,12 @@
 	$: selectedEvent && getAllVideos();
 </script>
 
-<div class="flex flex-col gap-4 relative">
-	{#if selectedEvent && numberOfVideos >= 0}
-		<div class="flex-1 h-64">
+<div class="flex flex-col  gap-2 relative">
+	{#if selectedEvent && numberOfVideos > 0}
+		<div class="flex-1 ">
 			<video
 				autoplay={true}
-				class="h-auto overflow-hidden "
+				class="h-auto overflow-hidden rounded-top-md"
 				controls
 				height="100%"
 				width="100%"
@@ -83,47 +83,50 @@
 			</video>
 		</div>
 
-		<div class="flex flex-row gap-2 justify-between">
+		<div class="flex flex-col px-4 py-4 gap-2">
+			<p class="text-subtitle">{selectedEvent.endpointName}</p>
 
-			<div>
-				<p class="text-subtitle">Select Video</p>
-				<ButtonToggle
-					numberOfButtons={numberOfVideos}
-					selectedButtonIndex={selectedVideoIndex}
-					setSelectedIndex={setSelectedVideoIndex}
-				/>
-			</div>
+			<Underline />
 
-			<div class="text-right">
-				<p class="text-subtitle">Start - End</p>
-				<p>{millisecondUnixToDateTime(selectedEvent.recordingStartTimestamp)}</p>
-				<p>{millisecondUnixToDateTime(selectedEvent.recordingEndTimestamp)}</p>
-			</div>
-		
-		</div>
-
-		<hr />
-
-		<div class="flex-1 flex flex-col justify-between gap-4">
-			<div class="flex justify-between">
+			<div class="flex flex-row justify-between ">
 				<div>
-					<p class="text-subtitle">Distance</p>
+					<p>Distance</p>
 					<p>
 						{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
 					</p>
 				</div>
 
-				<div class="text-right">
-					<p class="text-subtitle">Trigger Name</p>
+				<div>
+					<p>Trigger</p>
 					<p>{formatText(selectedEvent.triggerName)}</p>
 				</div>
+
+				<div class="my-auto">
+					<p>Time</p>
+					<p>{millisecondUnixToDateTime(selectedEvent.recordingStartTimestamp)}</p>
+					<p>{millisecondUnixToDateTime(selectedEvent.recordingEndTimestamp)}</p>
+				</div>
 			</div>
+		</div>
+
+		<div class="mt-auto px-4 py-4 flex flex-row bg-smoke rounded-md justify-between">
+			<ButtonToggle
+				numberOfButtons={numberOfVideos}
+				selectedButtonIndex={selectedVideoIndex}
+				setSelectedIndex={setSelectedVideoIndex}
+			/>
+
+			<button class="btn" title="Videos are stored in smaller, manageable chunks for optimal performance; use the buttons to select the desired video.">
+				<i class="fas fa-question-circle fa-xl" />
+			</button>
 		</div>
 
 		{#if loadingVideo}
 			<LoadingSpinner />
 		{/if}
 	{:else}
-		<div class="alert alert-error my-1" role="alert">{getErrorText()}</div>
+		<div class="px-4 py-4">
+			<div class="alert alert-error "><span>{getErrorText()}</span></div>
+		</div>
 	{/if}
 </div>

@@ -1,4 +1,4 @@
-<div class="absolute top-0 z-10 load load-loading h-full w-full">
+<div class="absolute top-0 z-6 load load-loading h-full w-full">
 	<svg width="40" height="40" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
 		><style>
 			.spinner_hzlK {

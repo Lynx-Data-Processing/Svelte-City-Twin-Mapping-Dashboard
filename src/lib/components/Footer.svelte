@@ -7,9 +7,9 @@
 	<div class="py-16 px-8 bg-overlay">
 		<div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
 			<div class="col-span-1">
-				<div class="flex flex-row gap-2 align-middle">
-					<i class="fa-solid fa-2x fa-location-arrow" />
-					<p class="text-title my-auto">USARS GIS</p>
+				<div class=" flex flex-row gap-2 align-middle ">
+					<i class="fa-solid fa-xl fa-location-arrow my-auto" />
+					<p class="text-subtitle my-auto">USARS GIS</p>
 				</div>
 				<p class="text-sm my-2 ">
 					The City promotes and fosters open government principles of participation, innovation,

@@ -49,7 +49,7 @@ export type Snapshot = {
 export const TRIP = "TRIP";
 export const TRIP_EVENT = "TRIP_EVENT";
 
-export type ITripEventType =  typeof TRIP | typeof TRIP_EVENT;
+export type ITripEventType =  typeof TRIP | typeof TRIP_EVENT | string;
 
 
 export interface IEventGoogleDataType extends IEventType, ISensorDataType, ITrip {

@@ -28,8 +28,8 @@ export const createContentString = (feature: any, maxCount: number): string => {
 export const createTripGoogleMapsPopup = (feature: ITripGoogleDataType): string => {
 
   let contentString = `
-  <p class="text-subtitle font-bold">${formatText(feature.endpointName)}</p>
-  <hr class="bg-primary w-12 h-1 my-2" />
+  <p class="text-subtitle ">${formatText(feature.endpointName)}</p>
+  <hr class="bg-primary w-12 h-0.5 my-2" />
   `;
 
   contentString += `
@@ -46,8 +46,8 @@ export const createTripGoogleMapsPopup = (feature: ITripGoogleDataType): string 
 
 export const createEventGoogleMapsPopup = (feature: IEventGoogleDataType): string => {
   let contentString = `
-      <p class="text-subtitle font-bold">${formatText(feature.triggerName)}</p>
-      <hr class="bg-primary w-12 h-1 my-2" /> 
+      <p class="text-subtitle ">${formatText(feature.triggerName)}</p>
+      <hr class="bg-primary w-12 h-0.5 my-2" /> 
     `;
 
   contentString += `
@@ -68,7 +68,7 @@ export const createEventGoogleMapsPopup = (feature: IEventGoogleDataType): strin
 
 export const createGooglePopup = (feature: any, layerListElement: ILayerListElementType): string => {
   let contentString = `
-      <p class="text-subtitle font-bold">${layerListElement.layerName}</p>
+      <p class="text-subtitle ">${layerListElement.layerName}</p>
       <hr class="bg-primary w-12 h-1 my-2" /> 
     `;
 

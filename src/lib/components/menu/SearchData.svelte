@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { ITripsParamType } from '$lib/types/types';
-	
+
 	let tripsParams: ITripsParamType = {
-		endpointId: "John",
+		endpointId: 'John',
 		limit: 20,
 		offset: 0,
 		startDateTime: '2023-06-14T00:00',
@@ -12,15 +12,12 @@
 
 	let isEndDateBeforeStartDate = false;
 	function checkEndDateBeforeStartDate() {
-		isEndDateBeforeStartDate = new Date(tripsParams.endDateTime) < new Date(tripsParams.startDateTime);
+		isEndDateBeforeStartDate =
+			new Date(tripsParams.endDateTime) < new Date(tripsParams.startDateTime);
 	}
-
-
 </script>
 
-<div class="flex flex-col gap-2">
-
-	
+<div class="flex flex-col gap-2 px-4 py-4">
 	<div id="endpointSelect" class="search-container">
 		<label for="endpoint_select">Endpoint</label>
 		<input
@@ -84,7 +81,7 @@
 		/>
 	</div>
 
-	<div id="endDate"  class="datepicker form-floating my-1 w-full" data-mdb-toggle-button="false">
+	<div id="endDate" class="datepicker form-floating my-1 w-full" data-mdb-toggle-button="false">
 		<label for="end_date">End date</label>
 		<input
 			name="end_date"
@@ -101,9 +98,10 @@
 		/>
 	</div>
 
-	<span class="alert alert-error">Notice: Search functionality has been impacted by API issues. Mock-data can still be requested.</span>
+	<span class="alert alert-error"
+		>We apologize for the slower performance of our API due to the extensive volume of data being processed; however, please be assured that data retrieval is still fully functional</span
+	>
 
-	
 	{#if tripsParams.startDateTime && tripsParams.endDateTime}
 		{#if isEndDateBeforeStartDate}
 			<div class="alert alert-error my-1" role="alert">End date cannot be before start date.</div>
@@ -116,4 +114,3 @@
 		<div class="alert alert-error my-1" role="alert">Select a Date and Time before Searching.</div>
 	{/if}
 </div>
-

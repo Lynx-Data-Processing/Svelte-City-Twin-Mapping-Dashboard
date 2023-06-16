@@ -69,7 +69,7 @@ const tripLineStyle = (style: google.maps.Data.StyleOptions, color: string) => {
 export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElementType, updateSelectedEvent: Function) => {
     if (!map || !layerListElement.geojson) return;
     const layer = layerListElement.googleMapLayer;
-    const isTripsLayer = layerListElement.isTrip;
+    const tripEvent = layerListElement.tripEvent;
     layer.addGeoJson(layerListElement.geojson);
     const infoWindow = new google.maps.InfoWindow();
     layer.setStyle((feature: any) => {
@@ -89,7 +89,7 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
             style = polygonStyle(style, color);
         }
         if (geometryType === LINE_STRING || geometryType === MULTI_LINE_STRING) {
-            style = isTripsLayer ? tripLineStyle(style, color) : lineStyle(style, color);
+            style = tripEvent === TRIP ? tripLineStyle(style, color) : lineStyle(style, color);
         }
         return style;
     });
@@ -172,7 +172,7 @@ export const addLayerElementToLayerList = (
     return tempLayerList;
 };
 export const createLayerElement = (
-    isTrip: boolean,
+    tripEvent: string,
     layerName: string,
     type: IGeojsonDataType,
     isVisible: boolean,
@@ -181,7 +181,7 @@ export const createLayerElement = (
     geojson: IGeojsonType
 ) => {
     const layerElement: ILayerListElementType = {
-        isTrip: isTrip || false,
+        tripEvent: tripEvent || '',
         layerName: layerName || 'GPS Data',
         sourceName: layerName || 'GPS Data',
         type: type || 'LineString',

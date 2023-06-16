@@ -8,7 +8,7 @@
     width: 100%;
     border-width: $border-width;
     border-color: $btn-default-light;
-  
+    font-size: $font-size-sm;
     border-style: solid;
     transition: all $speed-md;
     &:hover {
