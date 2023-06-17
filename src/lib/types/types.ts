@@ -4,7 +4,7 @@ export type IDateTimeDictionaryType = {
     endDateTime: string,
 }
 
-export type ITripsParamType = {
+export type ISearchParamType = {
     endpointId: string,
     limit: number,
     offset: number,

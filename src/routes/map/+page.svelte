@@ -5,9 +5,7 @@
 		type ILayerListElementType,
 		type IMapDetailsType
 	} from '$lib/types/mapTypes';
-	import type {
-		ITripsParamType
-	} from '$lib/types/types';
+	import type { ISearchParamType } from '$lib/types/types';
 
 	import Card from '$lib/components/Card.svelte';
 
@@ -18,6 +16,7 @@
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { LINE_STRING, POINT } from '$lib/constants/geojson';
+	import { MAP_DATA } from '$lib/constants/initialData';
 	import { getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
 	import { TRIP, TRIP_EVENT, type IEventGoogleDataType } from '$lib/types/eventTypes';
 	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
@@ -37,17 +36,10 @@
 	let isLoading = false;
 	let isError = false;
 
-	let mapDetails: IMapDetailsType = {
-		mapTypeId: 'roadmap',
-		center: { lng: -76.491143, lat: 44.231689 },
-		zoom: 17,
-		tilt: 60,
-		heading: -17.6
-	};
+	let mapDetails: IMapDetailsType = MAP_DATA
 
 	let layerList: ILayerListElementType[] = [];
 	let selectedEvent: IEventGoogleDataType | null = null;
-
 
 	let map: Map | undefined;
 	let mapDiv: HTMLDivElement;
@@ -85,13 +77,11 @@
 		toggleGoogleMapLayerVisibility(map, layerElement);
 	};
 
-	const fetchTripsData = async (tripsParams: ITripsParamType) => {
+	const fetchTripsData = async (searchParams: ISearchParamType) => {
 		isLoading = true;
 		isError = false;
 		try {
-			
-
-			const tempTripList = await getSmarterAiTrips(tripsParams);
+			const tempTripList = await getSmarterAiTrips(searchParams);
 
 			if (!tempTripList || !tempTripList.length) return;
 
@@ -104,10 +94,8 @@
 
 			const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
 			processGeojsonData(tempGeojsonData);
-
 		} catch (error) {
 			console.log(error);
-		
 		} finally {
 			isLoading = false;
 		}
@@ -132,7 +120,6 @@
 		}
 	};
 
-
 	onMount(() => {
 		initializeMap();
 		if (!map) return;
@@ -154,8 +141,6 @@
 			<Card title="Video Player" icon="fa-solid fa-video" disableToggle={false}>
 				<VideoPlayer {selectedEvent} />
 			</Card>
-
-		
 		</div>
 
 		<div class={` col-span-1  2xl:col-span-9`}>
@@ -170,5 +155,4 @@
 			</div>
 		</div>
 	</div>
-
 </div>

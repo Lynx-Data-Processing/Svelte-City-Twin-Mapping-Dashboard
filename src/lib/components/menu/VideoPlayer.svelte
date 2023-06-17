@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { PUBLIC_GCP_BUCKET_URL } from '$env/static/public';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
+	import { DISTANCE, TIME, TRIGGER } from '$lib/constants/strings';
 	import { getVideo } from '$lib/service/smarter-api';
 	import type { IEventGoogleDataType, IMediaRecordingType } from '$lib/types/eventTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { formatText } from '$lib/utils/text-format';
-	import ButtonToggle from '../ButtonToggle.svelte';
+	import Toggle from '../Toggle.svelte';
 	import Underline from '../Underline.svelte';
 
 	export let selectedEvent: IEventGoogleDataType | null = null;
@@ -71,10 +72,9 @@
 <div class="flex flex-col  gap-2 relative">
 	{#if selectedEvent && numberOfVideos >= 0}
 		{#if loadingVideo}
-		<div class="p-4 h-64"> 
-			<LoadingSpinner />
-		</div>
-		
+			<div class="p-4 h-64">
+				<LoadingSpinner />
+			</div>
 		{:else if numberOfVideos > 0}
 			<div class="flex-1 ">
 				<video
@@ -96,19 +96,19 @@
 
 				<div class="flex flex-row justify-between ">
 					<div>
-						<p>Distance</p>
+						<p>{DISTANCE}</p>
 						<p>
 							{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
 						</p>
 					</div>
 
 					<div>
-						<p>Trigger</p>
+						<p>{TRIGGER}</p>
 						<p>{formatText(selectedEvent.triggerName)}</p>
 					</div>
 
 					<div class="my-auto">
-						<p>Time</p>
+						<p>{TIME}</p>
 						<p>{millisecondUnixToDateTime(selectedEvent.recordingStartTimestamp)}</p>
 						<p>{millisecondUnixToDateTime(selectedEvent.recordingEndTimestamp)}</p>
 					</div>
@@ -116,7 +116,7 @@
 			</div>
 
 			<div class="mt-auto px-4 py-4 flex flex-row bg-smoke rounded-md justify-between">
-				<ButtonToggle
+				<Toggle
 					numberOfButtons={numberOfVideos}
 					selectedButtonIndex={selectedVideoIndex}
 					setSelectedIndex={setSelectedVideoIndex}

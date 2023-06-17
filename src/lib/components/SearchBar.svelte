@@ -6,7 +6,9 @@
 </script>
 
 <div class="flex flex-row gap-4 w-full">
-
+	{#if title}
+		<h2 class="text-2xl font-bold">{title}</h2>
+	{/if}
 	<div class="search-container flex-1 ">
 		<input
 			type="search"
@@ -18,5 +20,4 @@
 		/>
 		<i class="fas fa-search search-icon" />
 	</div>
-
 </div>

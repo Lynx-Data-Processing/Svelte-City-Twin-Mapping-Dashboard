@@ -45,7 +45,7 @@
 			return "Boundaries of neighbourhoods within the City of Kingston, Ontario, as established from the 2016 census dissemination areas. Includes neighbourhood names."
 		}
 
-		// if no key from keyMap is found in layerName, return an empty string
+		
 		return 'Layer represents ' + layer.layerName + ' data collected by the Sheridan College Team';
 	};
 

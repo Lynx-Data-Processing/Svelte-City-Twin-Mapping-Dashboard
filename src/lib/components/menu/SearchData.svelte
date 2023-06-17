@@ -1,20 +1,14 @@
 <script lang="ts">
-	import type { ITripsParamType } from '$lib/types/types';
+	import { SEARCH_PARAMS } from '$lib/constants/initialData';
+	import type { ISearchParamType } from '$lib/types/types';
 
-	let tripsParams: ITripsParamType = {
-		endpointId: 'John',
-		limit: 20,
-		offset: 0,
-		startDateTime: '2023-06-14T00:00',
-		endDateTime: '2023-06-15T23:00'
-	};
+	let tripsParams: ISearchParamType = SEARCH_PARAMS;
 	export let fetchTripsData: Function;
-
 	let isEndDateBeforeStartDate = false;
-	function checkEndDateBeforeStartDate() {
+	const checkEndDateBeforeStartDate = () => {
 		isEndDateBeforeStartDate =
 			new Date(tripsParams.endDateTime) < new Date(tripsParams.startDateTime);
-	}
+	};
 </script>
 
 <div class="flex flex-col gap-2 px-4 py-4">
@@ -99,7 +93,8 @@
 	</div>
 
 	<span class="alert alert-error"
-		>We apologize for the slower performance of our API due to the extensive volume of data being processed; however, please be assured that data retrieval is still fully functional</span
+		>We apologize for the slower performance of our API due to the extensive volume of data being
+		processed; however, please be assured that data retrieval is still fully functional</span
 	>
 
 	{#if tripsParams.startDateTime && tripsParams.endDateTime}

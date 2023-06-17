@@ -1,8 +1,8 @@
 import { PUBLIC_API_KEY, PUBLIC_TENANT_ID, PUBLIC_V5_API_KEY } from '$env/static/public';
-import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/global';
+import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/smarter';
 import type { IEventGoogleDataType, IMediaRecordingType } from '$lib/types/eventTypes';
 import type { ITripEvent } from '$lib/types/tripTypes';
-import type { ITripsParamType } from '$lib/types/types';
+import type { ISearchParamType } from '$lib/types/types';
 import axios from 'axios';
 import { dateTimeToMillisecondUnix } from '../utils/date-format';
 
@@ -140,7 +140,7 @@ export const getSmarterAiTripWithGps = async (tripId: string) => {
 }
 
 
-export const getSmarterAiTrips = async (tripsParams: ITripsParamType) => {
+export const getSmarterAiTrips = async (tripsParams: ISearchParamType) => {
 
   const params = new URLSearchParams({
     limit: "3",
