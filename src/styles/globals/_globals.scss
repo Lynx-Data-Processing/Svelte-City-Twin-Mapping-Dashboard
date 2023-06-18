@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap');
+
 :root {
-	font-family: 'Lato', sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
 
@@ -54,30 +55,49 @@ p {
 
 .text {
 
-	&-title {
-		font-size: $font-size-xxl;
-		line-height: 25px;
-		font-weight: 800;
-		letter-spacing: -.04em;
-	}
+    &-title {
+        font-size: $font-size-xxl;
+        line-height: 25px;
+        font-weight: 800;
+        letter-spacing: -.04em;
+    }
 
-	&-subtitle {
-		font-size: $font-size-lg;
-		line-height: 25px;
-		font-weight: 400;
-		letter-spacing: -.04em;
-	}
+    &-subtitle {
+        font-size: $font-size-lg;
+        line-height: 25px;
+        font-weight: 400;
+        letter-spacing: -.04em;
+    }
 
-	&-no-spacing {
-		line-height: 0.75;
-		/* Adjust line height to remove spacing */
-	}
+    &-no-spacing {
+        line-height: 0.75;
+        /* Adjust line height to remove spacing */
+    }
 
-	&-primary {
-		color: $primary-color;
-	}
+    &-primary {
+        color: $primary-color;
+    }
 }
 
+
+.navbar {
+    width: 100%;
+    z-index: 100;
+    position: fixed;
+    height: 4rem;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+
+    padding-top: 4rem;
+    height: calc(100vh - 4rem);
+}
+
+.map {
+    min-height: calc(100vh - 4rem);
+}
 
 hr {
     border: none;

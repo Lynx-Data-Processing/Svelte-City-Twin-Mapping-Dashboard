@@ -16,7 +16,6 @@ export interface IMapDetailsType {
 }
 
 export interface ILayerListElementType  {
-    tripEvent: ITripEventType
     icon: string,
     type: IGeojsonDataType,
     isVisible: boolean,
@@ -39,3 +38,10 @@ export const zoomLevelMap: { [key in IGeojsonDataType]?: number } = {
     GeometryCollection: 15
 };
 
+export interface IIconType {
+    path: google.maps.SymbolPath | string,
+    scale: number,
+    strokeColor: string,
+    fillColor: string,
+    fillOpacity: number
+}

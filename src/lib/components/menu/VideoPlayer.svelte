@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { PUBLIC_GCP_BUCKET_URL } from '$env/static/public';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
-	import { DISTANCE, TIME, TRIGGER } from '$lib/constants/strings';
+	import { TIME, TRIGGER, TRIP_DISTANCE } from '$lib/constants/strings';
 	import { getVideo } from '$lib/service/smarter-api';
 	import type { IEventGoogleDataType, IMediaRecordingType } from '$lib/types/eventTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
@@ -37,6 +37,8 @@
 			numberOfVideos = tempVideos.length;
 			videos = tempVideos;
 			selectedVideo = tempVideos[0];
+
+			console.log(selectedEvent);
 			loadingVideo = false;
 		} catch (e) {
 			console.log(e);
@@ -76,10 +78,10 @@
 				<LoadingSpinner />
 			</div>
 		{:else if numberOfVideos > 0}
-			<div class="flex-1 ">
+			<div class="flex-1 h-64">
 				<video
 					autoplay={true}
-					class="h-auto overflow-hidden rounded-top-md"
+					class="h-64 overflow-hidden rounded-top-md bg-dark"
 					controls
 					height="100%"
 					width="100%"
@@ -89,14 +91,14 @@
 				</video>
 			</div>
 
-			<div class="flex flex-col px-4 py-4 gap-2">
+			<div class="flex flex-col px-4 py-2 gap-2">
 				<p class="text-subtitle">{selectedEvent.endpointName}</p>
 
 				<Underline />
 
 				<div class="flex flex-row justify-between ">
 					<div>
-						<p>{DISTANCE}</p>
+						<p>{TRIP_DISTANCE}</p>
 						<p>
 							{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
 						</p>
@@ -115,7 +117,7 @@
 				</div>
 			</div>
 
-			<div class="mt-auto px-4 py-4 flex flex-row bg-smoke rounded-md justify-between">
+			<div class="mt-auto px-4 py-2 flex flex-row bg-smoke rounded-md justify-between">
 				<Toggle
 					numberOfButtons={numberOfVideos}
 					selectedButtonIndex={selectedVideoIndex}

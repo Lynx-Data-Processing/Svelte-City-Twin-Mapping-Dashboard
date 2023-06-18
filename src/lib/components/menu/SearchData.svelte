@@ -56,6 +56,19 @@
 				disabled
 			/>
 		</div>
+
+		<div id="offset" class="number-picker-container my-1 w-full">
+			<label for="showEvents">Show Events</label>
+			<input
+				name="showEvents"
+				id="showEvents"
+				type="checkbox"
+				class="form-control search-input rounded-lg "
+				placeholder="showEvents"
+				bind:checked={tripsParams.showEvents}
+				disabled
+			/>
+		</div>
 	</div>
 
 	<div id="startDate" class="datepicker form-floating my-1  w-full" data-mdb-toggle-button="false">

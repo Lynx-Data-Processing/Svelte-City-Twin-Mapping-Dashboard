@@ -65,6 +65,24 @@ p {
   color: #182166;
 }
 
+.navbar {
+  width: 100%;
+  z-index: 100;
+  position: fixed;
+  height: 4rem;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  padding-top: 4rem;
+  height: calc(100vh - 4rem);
+}
+
+.map {
+  min-height: calc(100vh - 4rem);
+}
+
 hr {
   border: none;
   height: 1px;
@@ -284,7 +302,7 @@ hr {
   top: 50%;
   right: 20px;
   transform: translateY(-50%);
-  color: rgb(247, 247, 247);
+  color: #0e0e0e;
 }
 
 .btn {

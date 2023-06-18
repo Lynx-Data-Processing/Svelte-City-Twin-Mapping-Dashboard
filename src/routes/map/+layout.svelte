@@ -5,12 +5,12 @@
 	import '../../styles/style.css';
 </script>
 
-<div transition:fade>
-	<Header />
+<Header />
 
-	<div class="pt-16">
-		<slot />
-	</div>
+<div class="main">
+	<slot />
 
 	<Footer />
 </div>
+
+

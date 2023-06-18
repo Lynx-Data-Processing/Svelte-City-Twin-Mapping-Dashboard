@@ -36,8 +36,8 @@ export const createTripGoogleMapsPopup = (feature: ITripGoogleDataType): string 
     <p> <span class="font-bold">Trip ID</span>: ${formatText(feature.id)}</p>
     <p> <span class="font-bold">Start Time</span>: ${feature.startTimestamp ? millisecondUnixToDateTime(feature.startTimestamp) : "N/A"}</p>
     <p> <span class="font-bold">End Time</span>: ${feature.endTimestamp ? millisecondUnixToDateTime(feature.endTimestamp) : "N/A"}</p>
-    <p> <span class="font-bold">Distance</span>: ${feature.tripStatus ? feature.tripStatus : "N/A"}</p>
-    <p> <span class="font-bold">End Address</span>: ${feature.distance ? `${(feature.distance / 1000).toFixed(2)} km` : 'N/A'}</p>
+    <p> <span class="font-bold">Status</span>: ${feature.tripStatus ? feature.tripStatus : "N/A"}</p>
+    <p> <span class="font-bold">Distance</span>: ${feature.distance ? `${(feature.distance / 1000).toFixed(2)} km` : 'N/A'}</p>
     `
 
   return contentString;
@@ -45,6 +45,7 @@ export const createTripGoogleMapsPopup = (feature: ITripGoogleDataType): string 
 }
 
 export const createEventGoogleMapsPopup = (feature: IEventGoogleDataType): string => {
+
   let contentString = `
       <p class="text-subtitle ">${formatText(feature.triggerName)}</p>
       <hr class="bg-primary w-12 h-0.5 my-2" /> 
@@ -58,18 +59,21 @@ export const createEventGoogleMapsPopup = (feature: IEventGoogleDataType): strin
 
     `
 
-  let videoObjects = feature.snapshots.find((o) => o.source.includes("vid"));
-  const image = videoObjects?.downloadUrl;
-  if (image) {
-    contentString += createImageDiv(image);
-  }
+  // if (feature.snapshots) {
+
+  //   let videoObjects = feature.snapshots.find((o) => o.source.includes("vid"));
+  //   const image = videoObjects?.downloadUrl;
+  //   if (image) {
+  //     contentString += createImageDiv(image);
+  //   }
+  // }
   return contentString;
 };
 
 export const createGooglePopup = (feature: any, layerListElement: ILayerListElementType): string => {
   let contentString = `
       <p class="text-subtitle ">${layerListElement.layerName}</p>
-      <hr class="bg-primary w-12 h-1 my-2" /> 
+      <hr class="bg-primary w-12 h-0.5 my-2" /> 
     `;
 
   const maxCount = 10;

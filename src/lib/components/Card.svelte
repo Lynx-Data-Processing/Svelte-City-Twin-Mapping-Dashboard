@@ -7,7 +7,7 @@
 	export let disableToggle = false;
 	export let isRounded = false;
 	export let showOnLoad = true;
-	let showContent = showOnLoad;
+	export let showContent = showOnLoad;
 	const toggleContent = () => {
 		showContent = !showContent;
 	};

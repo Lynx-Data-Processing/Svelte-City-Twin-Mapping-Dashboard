@@ -1,11 +1,11 @@
 import { OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_PLANNING_LINE_URL, OPEN_DATA_KINGSTON_TREES_URL } from '$lib/constants';
-import { LINE_STRING, POLYGON } from '$lib/constants/geojson';
+import { LINE_STRING, POINT, POLYGON } from '$lib/constants/geojson';
 import { axiosCacheGetUtility } from '$lib/service/fetch-data';
 import type { IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
-import type { ILatLngType, ILayerListElementType } from '$lib/types/mapTypes';
-import { getRandomColor } from '../color-utils';
+import type { ILayerListElementType } from '$lib/types/mapTypes';
 import type { IGeojsonDataType } from './../../types/geojsonTypes';
-import { createLayerElement, getInitialCoordinates } from './google-map-utils';
+import { getColorGivenIndex } from './../color-utils';
+import { createLayerElement } from './google-map-utils';
 
 
 
@@ -18,9 +18,8 @@ const getCoordinates = (coordinates: any) => {
 };
 
 
-export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeojsonDataType = "Point") => {
+export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeojsonDataType = POINT, color?: string) => {
 
-  //* Create Geojson feature collection
   const geoJson: IGeojsonType = {
     type: 'FeatureCollection',
     features: [],
@@ -33,7 +32,7 @@ export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeo
       const properties = gpsElement.fields;
 
       let coordinates = getCoordinates(gpsElement.fields.geojson.coordinates);
-      properties.color = getRandomColor();
+      properties.color = color || getColorGivenIndex(i);
       delete gpsElement.fields.geojson
       delete gpsElement.fields.geo_point_2d
 
@@ -64,15 +63,13 @@ export const getKingstonMapData = async () => {
   if (neighborhoodsResponse.status === 200) {
     const neighborhoodsData = neighborhoodsResponse.data.records;
     if (!neighborhoodsData.length) return;
-
     const neighborhoodsGpsData = rawKingstonDataToGeojsonData(
       neighborhoodsData,
-      'Polygon'
+      POLYGON
     );
 
     if (!neighborhoodsGpsData) return;
-
-    const neighborhoodsElement = createLayerElement('neighborhood', 'Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', getRandomColor(), neighborhoodsGpsData);
+    const neighborhoodsElement = createLayerElement('Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', 'Black', neighborhoodsGpsData);
     tempLayerList.push(neighborhoodsElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_CITY_ZONES_URL}`);
@@ -89,12 +86,12 @@ export const getKingstonMapData = async () => {
 
     const planningLineGpsData = rawKingstonDataToGeojsonData(
       planningLineData,
-      'LineString'
+      LINE_STRING,
     );
 
     if (!planningLineGpsData) return;
 
-    const planningLineElement = createLayerElement('', 'Planning Line', LINE_STRING, false, 'fa-solid fa-road', getRandomColor(), planningLineGpsData);
+    const planningLineElement = createLayerElement('Planning Line', LINE_STRING, false, 'fa-solid fa-road', 'Black', planningLineGpsData);
     tempLayerList.push(planningLineElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_PLANNING_LINE_URL}`);

@@ -16,7 +16,7 @@
 			required
 			class="search-input rounded-lg"
 			{placeholder}
-			on:change={() => onChangeFunction()}
+			on:input={() => onChangeFunction()}
 		/>
 		<i class="fas fa-search search-icon" />
 	</div>

@@ -12,21 +12,23 @@
 	import Layers from '$lib/components/Layers.svelte';
 	import LoadingError from '$lib/components/loading/LoadingError.svelte';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
-	import About from '$lib/components/menu/About.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
-	import { LINE_STRING, POINT } from '$lib/constants/geojson';
+	import { POINT } from '$lib/constants';
 	import { MAP_DATA } from '$lib/constants/initialData';
-	import { getSmarterAiTripWithGps, getSmarterAiTrips } from '$lib/service/smarter-api';
-	import { TRIP, TRIP_EVENT, type IEventGoogleDataType } from '$lib/types/eventTypes';
-	import type { IGeojsonDataType, IGeojsonType } from '$lib/types/geojsonTypes';
+	import mockLayerListElements from '$lib/mock/layerListElements.json';
+	import {
+		getGPSForTrips,
+		getSmarterAiTrips
+	} from '$lib/service/smarter-api';
+	import type { IEventGoogleDataType } from '$lib/types/eventTypes';
+	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
-	import { getRandomColor } from '$lib/utils/color-utils';
-	import { convertTripsToGeoJSON } from '$lib/utils/geojson/geojson-trips-utils';
+	import { javascriptObjectToJSONFile } from '$lib/utils/download-utils';
+	import { convertTripsToLayerListElements } from '$lib/utils/geojson/geojson-trips-utils';
 	import {
 		addLayerElementToLayerList,
 		addLayerToGoogleMap,
-		createLayerElement,
 		toggleGoogleMapLayerVisibility
 	} from '$lib/utils/geojson/google-map-utils';
 	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
@@ -36,7 +38,7 @@
 	let isLoading = false;
 	let isError = false;
 
-	let mapDetails: IMapDetailsType = MAP_DATA
+	let mapDetails: IMapDetailsType = MAP_DATA;
 
 	let layerList: ILayerListElementType[] = [];
 	let selectedEvent: IEventGoogleDataType | null = null;
@@ -51,7 +53,7 @@
 
 	const updateMapCenter = (
 		coordinates: ILatLngType,
-		dataType: IGeojsonDataType = 'Point',
+		dataType: IGeojsonDataType = POINT,
 		zoomLevel?: number
 	) => {
 		map.setCenter(coordinates);
@@ -66,11 +68,7 @@
 	const getInitialMapData = async () => {
 		const tempKingstonLayerList = await getKingstonMapData();
 		if (!tempKingstonLayerList || !tempKingstonLayerList.length) return;
-		for (let i = 0, len = tempKingstonLayerList.length; i < len; i++) {
-			layerList = addLayerElementToLayerList(layerList, tempKingstonLayerList[i]);
-			map = addLayerToGoogleMap(map, tempKingstonLayerList[i], updateSelectedEvent);
-			map = toggleGoogleMapLayerVisibility(map, tempKingstonLayerList[i]);
-		}
+		processLayerListElements(tempKingstonLayerList);
 	};
 
 	const toggleGoogleLayer = (layerElement: ILayerListElementType) => {
@@ -81,19 +79,32 @@
 		isLoading = true;
 		isError = false;
 		try {
-			const tempTripList = await getSmarterAiTrips(searchParams);
+			if(searchParams.useRealData){
+				const tempTripList = await getSmarterAiTrips(searchParams);
+				if (!tempTripList || !tempTripList.length) return;
 
-			if (!tempTripList || !tempTripList.length) return;
+				let tempTripWithGPSList: ITrip[] = await getGPSForTrips(tempTripList);
+				if (!tempTripWithGPSList || !tempTripWithGPSList.length) return;
 
-			let tempTripWithGPSList: ITrip[] = [];
-			for (let i = 0; i < tempTripList.length; i++) {
-				const tempTripWithGPS = await getSmarterAiTripWithGps(tempTripList[i].id);
-				if (!tempTripWithGPS) continue;
-				tempTripWithGPSList.push(tempTripWithGPS);
+				const layerListElements: ILayerListElementType[] = await convertTripsToLayerListElements(
+					tempTripWithGPSList, searchParams.showEvents
+				);
+				if (!layerListElements || !layerListElements.length) return;
+				let layerListElementsTrips = layerListElements.filter((layerListElement) => layerListElement.layerName.includes('Trips'));
+				javascriptObjectToJSONFile(layerListElementsTrips, 'layerListElementsTrips.json')
+
+				let layerListElementsEvents = layerListElements.filter((layerListElement) => layerListElement.layerName.includes('Events'));
+				javascriptObjectToJSONFile(layerListElementsEvents, 'layerListElementsEvents.json')
+
+				processLayerListElements(layerListElements);
 			}
-
-			const tempGeojsonData: IGeojsonType[] = await convertTripsToGeoJSON(tempTripWithGPSList);
-			processGeojsonData(tempGeojsonData);
+			else{
+				
+				const layerListElements: ILayerListElementType[] = mockLayerListElements.slice(0,25) as ILayerListElementType[];
+				if (!layerListElements || !layerListElements.length) return;
+				processLayerListElements(layerListElements);
+				
+			}
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -101,19 +112,9 @@
 		}
 	};
 
-	const processGeojsonData = (tempGeojsonData: IGeojsonType[]) => {
-		if (!tempGeojsonData || !tempGeojsonData.length) return;
-		for (let i = 0, len = tempGeojsonData.length; i < len; i++) {
-			const gpsElement = tempGeojsonData[i];
-			const layerElement = createLayerElement(
-				gpsElement.isTrip ? TRIP : TRIP_EVENT,
-				gpsElement.name || 'Trip ' + (i + 1),
-				gpsElement.isTrip ? LINE_STRING : POINT,
-				true,
-				gpsElement.isTrip ? 'fa fa-route' : 'fa fa-map-marker',
-				gpsElement.color ?? getRandomColor(),
-				gpsElement
-			);
+	const processLayerListElements = (layerListElements: ILayerListElementType[]) => {
+		for (let i = 0, len = layerListElements.length; i < len; i++) {
+			const layerElement = layerListElements[i];
 			layerList = addLayerElementToLayerList(layerList, layerElement);
 			map = addLayerToGoogleMap(map, layerElement, updateSelectedEvent);
 			map = toggleGoogleMapLayerVisibility(map, layerElement);
@@ -132,19 +133,19 @@
 <div>
 	<div class="grid grid-cols-1  2xl:grid-cols-12 ">
 		<div class="col-span-1 2xl:col-span-3 flex flex-col  2xl:flex-col p-4 gap-4">
-			<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={false}>
+			<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={true}>
 				<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
 			</Card>
 			<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
 				<SearchData {fetchTripsData} />
 			</Card>
-			<Card title="Video Player" icon="fa-solid fa-video" disableToggle={false}>
+			<Card title="Video Player" icon="fa-solid fa-video" disableToggle={false} showContent={selectedEvent ? true: false}>
 				<VideoPlayer {selectedEvent} />
 			</Card>
 		</div>
 
-		<div class={` col-span-1  2xl:col-span-9`}>
-			<div class="relative h-screen scale-in-center">
+		<div class={` col-span-1 map 2xl:col-span-9`}>
+			<div class="relative h-full scale-in-center">
 				<div bind:this={mapDiv} class="h-full w-full " />
 
 				{#if isLoading === true}

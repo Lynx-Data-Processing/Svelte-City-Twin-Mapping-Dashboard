@@ -4,7 +4,12 @@ export const USARS_ABOUT = "This is a web application that allows users to view 
 
 export const LOGOUT = "Logout";
 
-export const DISTANCE = "Distance"
+export const TRIP_DISTANCE = "Trip Distance"
 export const TIME = "Time"
 export const SPEED = "Speed"
 export const TRIGGER = "Trigger"
+
+export const TAILGATING_GPS = "tailgating_gps"
+export const SPEEDING = "Speeding"
+export const STOP_SIGN = "Stop Sign"
+export const EMERGENCY_RECORD = "EMERGENCY_RECORD"

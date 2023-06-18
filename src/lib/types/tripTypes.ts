@@ -40,7 +40,7 @@ export type ITrip = {
   distance: number;
   tripEvents: ITripEventPoint[];
   triggeredEvents: IEventType[];
-  geoPoints: { geo: { lon: number; lat: number }; timestamp: number }[];
+  geoPoints?: { geo: { lon: number; lat: number }; timestamp: number }[];
   driverTripWithScore: any[];
 };
 

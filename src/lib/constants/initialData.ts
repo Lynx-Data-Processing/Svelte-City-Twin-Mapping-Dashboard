@@ -15,6 +15,8 @@ export const SEARCH_PARAMS : ISearchParamType = {
     endpointId: 'John',
     limit: 20,
     offset: 0,
-    startDateTime: '2023-06-14T00:00',
-    endDateTime: '2023-06-15T23:00'
+    showEvents: true,
+    useRealData: false,
+    startDateTime: '2023-06-04T00:00',
+    endDateTime: '2023-06-17T23:00'
 };

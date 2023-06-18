@@ -1,0 +1,124 @@
+{
+    "tripList": [
+        {
+            "id": "eae0b285-6515-484e-b27c-1d0fe65b96e0",
+            "endpointId": 122546,
+            "endpointName": "John's new Dashcam F402245ETTW1C",
+            "startTimestamp": 1686753910641,
+            "endTimestamp": 1686853381221,
+            "tripStatus": "ENDED",
+            "startGeo": {
+                "lon": -78.45416345,
+                "lat": 44.15820003
+            },
+            "endGeo": {
+                "lon": -78.45420712,
+                "lat": 44.1580944
+            },
+            "distance": 7546.105723191623
+        },
+        {
+            "id": "685bfa2e-1558-47be-8bac-dc03f85dc661",
+            "endpointId": 4326,
+            "endpointName": "John's Dashcam - CK20520033",
+            "startTimestamp": 1686743558860,
+            "endTimestamp": 1686743722810,
+            "tripStatus": "ENDED",
+            "startGeo": {
+                "lon": -79.687329,
+                "lat": 43.5181895
+            },
+            "endGeo": {
+                "lon": -79.6838275,
+                "lat": 43.515946666666665
+            },
+            "distance": 569.9691205820619
+        },
+        {
+            "id": "75f0f5c5-bc89-4997-97e7-40ada788d088",
+            "endpointId": 4326,
+            "endpointName": "John's Dashcam - CK20520033",
+            "startTimestamp": 1686742051889,
+            "endTimestamp": 1686742752870,
+            "tripStatus": "ENDED",
+            "startGeo": {
+                "lon": -79.68198983333333,
+                "lat": 43.4580685
+            },
+            "endGeo": {
+                "lon": -79.68735266666665,
+                "lat": 43.51815383333333
+            },
+            "distance": 8864.563815521606
+        },
+        {
+            "id": "4b6b694f-2bd7-4491-aefc-c47d616a8986",
+            "endpointId": 4326,
+            "endpointName": "John's Dashcam - CK20520033",
+            "startTimestamp": 1686741726901,
+            "endTimestamp": 1686741871848,
+            "tripStatus": "ENDED",
+            "startGeo": {
+                "lon": -79.68171933333333,
+                "lat": 43.46191783333334
+            },
+            "endGeo": {
+                "lon": -79.68207533333333,
+                "lat": 43.458064
+            },
+            "distance": 852.6872504812774
+        },
+        {
+            "id": "0f984f9e-5062-4645-9a8e-528b837a3383",
+            "endpointId": 4326,
+            "endpointName": "John's Dashcam - CK20520033",
+            "startTimestamp": 1686706710957,
+            "endTimestamp": 1686707575906,
+            "tripStatus": "ENDED",
+            "startGeo": {
+                "lon": -79.66984916666667,
+                "lat": 43.51167050000001
+            },
+            "endGeo": {
+                "lon": -79.68171766666666,
+                "lat": 43.461912500000004
+            },
+            "distance": 8753.399815030176
+        },
+        {
+            "id": "e4973d7d-64b6-4815-ae70-e34218d1c0b1",
+            "endpointId": 4326,
+            "endpointName": "John's Dashcam - CK20520033",
+            "startTimestamp": 1686697949075,
+            "endTimestamp": 1686698504770,
+            "tripStatus": "ENDED",
+            "startGeo": {
+                "lon": -79.681522,
+                "lat": 43.461940000000006
+            },
+            "endGeo": {
+                "lon": -79.681522,
+                "lat": 43.461940000000006
+            },
+            "distance": 0.0
+        },
+        {
+            "id": "5e6b0b92-1f66-4fa1-a136-d7e5c45697fe",
+            "endpointId": 4326,
+            "endpointName": "John's Dashcam - CK20520033",
+            "startTimestamp": 1686689883830,
+            "endTimestamp": 1686690848047,
+            "tripStatus": "ENDED",
+            "startGeo": {
+                "lon": -79.68389283333333,
+                "lat": 43.515896833333336
+            },
+            "endGeo": {
+                "lon": -79.681528,
+                "lat": 43.46192483333333
+            },
+            "distance": 9279.603174381811
+        }
+    ],
+    "message": ""
+}
