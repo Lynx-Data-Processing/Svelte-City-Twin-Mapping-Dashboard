@@ -19,7 +19,7 @@
 			id="enpoint_select"
 			type="search"
 			placeholder="Endpoint ID"
-			class="form-control search-input rounded-lg"
+			class="form-control search-input"
 			data-mdb-toggle="datepicker"
 			bind:value={tripsParams.endpointId}
 			disabled
@@ -33,7 +33,7 @@
 				name="limit"
 				id="limit"
 				type="number"
-				class="form-control search-input rounded-lg"
+				class="form-control search-input"
 				placeholder="Limit"
 				min="1"
 				max="100"
@@ -48,7 +48,7 @@
 				name="offset"
 				id="offset"
 				type="number"
-				class="form-control search-input rounded-lg "
+				class="form-control search-input "
 				placeholder="Offset"
 				min="0"
 				max="10"
@@ -63,7 +63,7 @@
 				name="showEvents"
 				id="showEvents"
 				type="checkbox"
-				class="form-control search-input rounded-lg "
+				class="form-control search-input "
 				placeholder="showEvents"
 				bind:checked={tripsParams.showEvents}
 				disabled
@@ -77,7 +77,7 @@
 			name="start_date"
 			id="start_date"
 			type="datetime-local"
-			class="form-control date-picker rounded-lg"
+			class="form-control date-picker"
 			placeholder="Select a date"
 			data-mdb-toggle="datepicker"
 			min="2010-01-01"
@@ -94,7 +94,7 @@
 			name="end_date"
 			id="end_date"
 			type="datetime-local"
-			class="form-control date-picker  rounded-lg"
+			class="form-control date-picker "
 			placeholder="Select End Date Time"
 			data-mdb-toggle="datepicker"
 			min="2010-01-01"

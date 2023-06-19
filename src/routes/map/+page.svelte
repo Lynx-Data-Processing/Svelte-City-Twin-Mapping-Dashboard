@@ -12,6 +12,7 @@
 	import Layers from '$lib/components/Layers.svelte';
 	import LoadingError from '$lib/components/loading/LoadingError.svelte';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
+	import Filters from '$lib/components/menu/Filters.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { POINT } from '$lib/constants';
@@ -136,6 +137,11 @@
 			<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={true}>
 				<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
 			</Card>
+
+			<Card title="Filters" icon="fa-solid fa-filter" showOnLoad={true} disableToggle={true}>
+				<Filters />
+			</Card>
+				
 			<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
 				<SearchData {fetchTripsData} />
 			</Card>

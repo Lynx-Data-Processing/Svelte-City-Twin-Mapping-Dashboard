@@ -12,3 +12,10 @@ export const formatText = (text: string) => {
 
     return text;
 };
+
+
+export const boldFirstWord = (text: string) => {
+    let words = text.split(" ");
+    words[0] = `<span class="font-bold">${words[0]}</span>`;
+    return words.join(" ");
+}

@@ -11,3 +11,5 @@ export const MEDIUM = 'Medium';
 export const HIGH = 'High';
 
 
+export const BRAND_COLOR = '#1a73e8';
+export const BRAND_COLOR_DARK = '#0d47a1';

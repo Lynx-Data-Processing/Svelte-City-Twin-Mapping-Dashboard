@@ -14,7 +14,7 @@
 			type="search"
 			bind:value={search}
 			required
-			class="search-input rounded-lg"
+			class="search-input"
 			{placeholder}
 			on:input={() => onChangeFunction()}
 		/>

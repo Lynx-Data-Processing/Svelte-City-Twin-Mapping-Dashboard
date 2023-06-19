@@ -3,6 +3,7 @@
 	import { TRIP, TRIP_EVENT } from '$lib/types/eventTypes';
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 	import { isEmptyString } from '$lib/utils/is-emptyString';
+	import { boldFirstWord } from '$lib/utils/text-format';
 
 	export let toggleGoogleLayer: Function;
 	export let updateMapCenter: Function;
@@ -60,12 +61,11 @@
 
 <div class="flex flex-col px-4 py-4 gap-2">
 	<div class="flex flex-row gap-2">
-		<SearchBar onChangeFunction={filterLayersBySearch} bind:search />
-
+		
 		{#if isAllVisible}
 			<button
 				title = "Hide All Layers"
-				class="btn btn-black-outline w-32 btn-text-center"
+				class="btn btn-black-outline w-16 btn-text-center"
 				on:click={() => toggleAllLayers(false)}
 			>
 				<i class="fas fa-eye-slash icon-color" />
@@ -74,13 +74,16 @@
 		{:else}
 			<button
 				title = "Show All Layers"
-				class="btn btn-black-outline w-32 btn-text-center"
+				class="btn btn-black-outline w-16 btn-text-center"
 				on:click={() => toggleAllLayers(true)}
 			>
 				<i class="fas fa-eye icon-color" />
 				
 			</button>
 		{/if}
+
+		<SearchBar onChangeFunction={filterLayersBySearch} bind:search />
+
 	</div>
 
 	{#if layerList.length != 0 && filteredLayers.length === 0}
@@ -104,8 +107,14 @@
 						}}
 						class={`btn w-full ${layer.isVisible ? 'btn-primary' : 'btn-black-outline'} `}
 					>
-						<span>{layer.layerName}</span>
+					<span >{layer.layerName}</span>
 					</button>
+
+				
+					<button class="btn btn-black-outline w-16 btn-text-center">
+						<i class="fas fa-filter icon-color" />
+					</button>
+
 				</div>
 			{/each}
 		</div>

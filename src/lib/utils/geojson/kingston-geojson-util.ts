@@ -1,4 +1,4 @@
-import { OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_PLANNING_LINE_URL, OPEN_DATA_KINGSTON_TREES_URL } from '$lib/constants';
+import { OPEN_DATA_KINGSTON_BUS_ROUTES_URL, OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_PLANNING_LINE_URL, OPEN_DATA_KINGSTON_PLANNING_POINT_URL, OPEN_DATA_KINGSTON_TREES_URL } from '$lib/constants';
 import { LINE_STRING, POINT, POLYGON } from '$lib/constants/geojson';
 import { axiosCacheGetUtility } from '$lib/service/fetch-data';
 import type { IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
@@ -10,15 +10,27 @@ import { createLayerElement } from './google-map-utils';
 
 
 
-const getCoordinates = (coordinates: any) => {
+const getGeojsonCoordinates = (coordinates: any) => {
   if (coordinates.length >= 2) {
     coordinates = coordinates.slice(0, 2);
   }
   return coordinates;
 };
 
+const getCoords = (gpsElement: any) => {
+  let coordinates = [];
+  if (gpsElement.fields.geojson) {
+    coordinates = getGeojsonCoordinates(gpsElement.fields.geojson.coordinates);
+  }
+  else if (gpsElement.fields.shape) {
+    coordinates = gpsElement.fields.shape.coordinates[0];
+  } else {
+    coordinates = [[-76.491143, 44.231689]]
+  }
+  return coordinates;
+}
 
-export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeojsonDataType = POINT, color?: string) => {
+export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeojsonDataType = POINT, color?: string, hasArrows = false) => {
 
   const geoJson: IGeojsonType = {
     type: 'FeatureCollection',
@@ -29,12 +41,16 @@ export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeo
 
     try {
       const gpsElement = rawData[i];
-      const properties = gpsElement.fields;
+      const coordinates = getCoords(gpsElement);
 
-      let coordinates = getCoordinates(gpsElement.fields.geojson.coordinates);
+      const properties = gpsElement.fields;
       properties.color = color || getColorGivenIndex(i);
+      if (hasArrows) {
+        properties.hasArrows = true;
+      }
       delete gpsElement.fields.geojson
       delete gpsElement.fields.geo_point_2d
+      delete gpsElement.fields.shape
 
       const feature: IGeojsonFeatureType = {
         type: 'Feature',
@@ -87,15 +103,63 @@ export const getKingstonMapData = async () => {
     const planningLineGpsData = rawKingstonDataToGeojsonData(
       planningLineData,
       LINE_STRING,
+      "#ff5722"
     );
 
     if (!planningLineGpsData) return;
 
-    const planningLineElement = createLayerElement('Planning Line', LINE_STRING, false, 'fa-solid fa-road', 'Black', planningLineGpsData);
+    const planningLineElement = createLayerElement('Construction Planning Lines', LINE_STRING, false, 'fa-solid fa-road', '#ff5722', planningLineGpsData);
     tempLayerList.push(planningLineElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_PLANNING_LINE_URL}`);
   }
+
+  const planningPointResponse = await axiosCacheGetUtility(
+    OPEN_DATA_KINGSTON_PLANNING_POINT_URL
+  );
+
+  if (planningPointResponse.status === 200) {
+    const planningPointData = planningPointResponse.data.records;
+    if (!planningPointData.length) return;
+
+    const planningPointGpsData = rawKingstonDataToGeojsonData(
+      planningPointData,
+      POINT,
+      '#ff9800'
+    );
+
+    if (!planningPointGpsData) return;
+
+    const planningPointElement = createLayerElement('Construction Planning Point', POINT, false, 'fa-solid fa-map-marker', '#ff9800', planningPointGpsData);
+    tempLayerList.push(planningPointElement);
+  } else {
+    console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_PLANNING_POINT_URL}`);
+  }
+
+
+  const busRouteResponse = await axiosCacheGetUtility(
+    OPEN_DATA_KINGSTON_BUS_ROUTES_URL
+  );
+
+  if (busRouteResponse.status === 200) {
+    const busRouteData = busRouteResponse.data.records;
+    if (!busRouteData.length) return;
+
+    const busRouteGpsData = rawKingstonDataToGeojsonData(
+      busRouteData,
+      LINE_STRING,
+      undefined,
+      true
+    );
+
+    if (!busRouteGpsData) return;
+
+    const busRouteElement = createLayerElement('Bus Routes', LINE_STRING, false, 'fa-solid fa-bus', '#2196f3', busRouteGpsData);
+    tempLayerList.push(busRouteElement);
+  } else {
+    console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_BUS_ROUTES_URL}`);
+  }
+
 
 
 
