@@ -6,8 +6,6 @@
 		type IMapDetailsType
 	} from '$lib/types/mapTypes';
 	import type { ISearchParamType } from '$lib/types/types';
-
-
 	import Layers from '$lib/components/menu/Layers.svelte';
 	import LoadingError from '$lib/components/loading/LoadingError.svelte';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
@@ -18,7 +16,7 @@
 	import { MAP_DATA } from '$lib/constants/initialData';
 	import mockLayerListElements from '$lib/mock/layerListElements.json';
 	import { getGPSForTrips, getSmarterAiTrips } from '$lib/service/smarter-api';
-	import type { IEventGoogleDataType } from '$lib/types/eventTypes';
+	
 	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
 	import { javascriptObjectToJSONFile } from '$lib/utils/download-utils';
@@ -32,6 +30,7 @@
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
 	import Card from '$lib/components/Card.svelte';
+	import type { IEventGoogleDataType } from '$lib/types/googleTypes';
 
 	let isLoading = false;
 	let isError = false;
