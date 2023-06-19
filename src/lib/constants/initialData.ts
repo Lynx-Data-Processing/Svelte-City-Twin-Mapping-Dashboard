@@ -1,10 +1,11 @@
 import type { IMapDetailsType } from "$lib/types/mapTypes";
 import type { ISearchParamType } from "$lib/types/types";
+import { KINGSTON_COORDINATES_OBJ } from "./kingston";
 
 
 export const MAP_DATA : IMapDetailsType =  {
     mapTypeId: 'roadmap',
-    center: { lng: -76.491143, lat: 44.231689 },
+    center: KINGSTON_COORDINATES_OBJ,
     zoom: 17,
     tilt: 60,
     heading: -17.6

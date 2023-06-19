@@ -6,6 +6,8 @@ import type { IIconType, ILatLngType, ILayerListElementType } from "$lib/types/m
 import type { ITripGoogleDataType } from "$lib/types/tripTypes";
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from "../filter-data";
 import { createEventGoogleMapsPopup, createGooglePopup, createTripGoogleMapsPopup } from "./google-map-popup";
+import { KINGSTON_COORDINATES_OBJ } from "$lib/constants/kingston";
+
 const pointStyle = (style: google.maps.Data.StyleOptions, color: string, size: number = 5) => {
     return {
         ...style,
@@ -171,11 +173,7 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
 
 export const toggleGoogleMapLayerVisibility = (map: any, layerElement: ILayerListElementType) => {
     if (!map && layerElement.googleMapLayer) return;
-    if (layerElement.isVisible) {
-        layerElement.googleMapLayer.setMap(map); // Show the layer on the map
-    } else {
-        layerElement.googleMapLayer.setMap(null); // Hide the layer from the map
-    }
+    layerElement.isVisible ? layerElement.googleMapLayer.setMap(map) : layerElement.googleMapLayer.setMap(null);
     return map;
 };
 export const addLayerElementToLayerList = (
@@ -199,7 +197,8 @@ export const createLayerElement = (
     isVisible: boolean = true,
     icon: string = 'fa-solid fa-car',
     color: string = 'black',
-    geojson: IGeojsonType
+    layerImageUrl: string = '',
+    geojson: IGeojsonType,
 ) => {
     const layerElement: ILayerListElementType = {
         layerName: layerName,
@@ -210,7 +209,8 @@ export const createLayerElement = (
         color: color,
         geojson: geojson,
         initialCoordinates: getInitialCoordinates(type, geojson),
-        googleMapLayer: new google.maps.Data()
+        googleMapLayer: new google.maps.Data(),
+        layerImageUrl: layerImageUrl
     };
     return layerElement;
 };
@@ -228,9 +228,9 @@ export const getInitialCoordinates = (type: IGeojsonDataType, data: any): ILatLn
         if (coords && coords.length >= 2) {
             return { lat: coords[1], lng: coords[0] };
         }
-        return { lng: -76.491143, lat: 44.231689 }
+        return KINGSTON_COORDINATES_OBJ;
     }
     catch (err) {
-        return { lat: 0, lng: 0 };
+        return KINGSTON_COORDINATES_OBJ;
     }
 };

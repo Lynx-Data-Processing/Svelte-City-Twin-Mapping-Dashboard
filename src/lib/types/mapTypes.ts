@@ -25,7 +25,8 @@ export interface ILayerListElementType  {
     initialCoordinates?: ILatLngType,
     color?: string,
     geojson?: IGeojsonType,
-    googleMapLayer?: any
+    googleMapLayer?: any,
+    layerImageUrl: string
 }
 
 export const zoomLevelMap: { [key in IGeojsonDataType]?: number } = {

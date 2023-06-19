@@ -1,3 +1,4 @@
+import { KINGSTON_COORDINATES_ARRAY } from '$lib/constants/kingston';
 import { OPEN_DATA_KINGSTON_BUS_ROUTES_URL, OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_PLANNING_LINE_URL, OPEN_DATA_KINGSTON_PLANNING_POINT_URL, OPEN_DATA_KINGSTON_TREES_URL } from '$lib/constants';
 import { LINE_STRING, POINT, POLYGON } from '$lib/constants/geojson';
 import { axiosCacheGetUtility } from '$lib/service/fetch-data';
@@ -25,7 +26,7 @@ const getCoords = (gpsElement: any) => {
   else if (gpsElement.fields.shape) {
     coordinates = gpsElement.fields.shape.coordinates[0];
   } else {
-    coordinates = [[-76.491143, 44.231689]]
+    coordinates = [KINGSTON_COORDINATES_ARRAY]
   }
   return coordinates;
 }
@@ -85,7 +86,7 @@ export const getKingstonMapData = async () => {
     );
 
     if (!neighborhoodsGpsData) return;
-    const neighborhoodsElement = createLayerElement('Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', 'Black', neighborhoodsGpsData);
+    const neighborhoodsElement = createLayerElement('Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', 'Black', "https://cohousing.ca/wp-content/uploads/Kingston.jpg", neighborhoodsGpsData);
     tempLayerList.push(neighborhoodsElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_CITY_ZONES_URL}`);
@@ -108,7 +109,7 @@ export const getKingstonMapData = async () => {
 
     if (!planningLineGpsData) return;
 
-    const planningLineElement = createLayerElement('Construction Planning Lines', LINE_STRING, false, 'fa-solid fa-road', '#ff5722', planningLineGpsData);
+    const planningLineElement = createLayerElement('Construction Planning Lines', LINE_STRING, false, 'fa-solid fa-road', '#ff5722', 'https://advancedct.com/wp-content/uploads/2021/09/shutterstock_92209726.jpg', planningLineGpsData);
     tempLayerList.push(planningLineElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_PLANNING_LINE_URL}`);
@@ -130,7 +131,7 @@ export const getKingstonMapData = async () => {
 
     if (!planningPointGpsData) return;
 
-    const planningPointElement = createLayerElement('Construction Planning Point', POINT, false, 'fa-solid fa-map-marker', '#ff9800', planningPointGpsData);
+    const planningPointElement = createLayerElement('Construction Planning Point', POINT, false, 'fa-solid fa-map-marker', '#ff9800', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrQdis5OOgQebZ1P-AmscP92aCToDCbbBwGw&usqp=CAU', planningPointGpsData);
     tempLayerList.push(planningPointElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_PLANNING_POINT_URL}`);
@@ -154,7 +155,7 @@ export const getKingstonMapData = async () => {
 
     if (!busRouteGpsData) return;
 
-    const busRouteElement = createLayerElement('Bus Routes', LINE_STRING, false, 'fa-solid fa-bus', '#2196f3', busRouteGpsData);
+    const busRouteElement = createLayerElement('Bus Routes', LINE_STRING, false, 'fa-solid fa-bus', '#2196f3', 'https://www.kingstonist.com/wp-content/uploads/2021/07/228193978_1542240666127179_4009091391609494196_n.jpg', busRouteGpsData);
     tempLayerList.push(busRouteElement);
   } else {
     console.log(`Unable to load data for ${OPEN_DATA_KINGSTON_BUS_ROUTES_URL}`);

@@ -11,7 +11,7 @@
 
 		<form action="/logout" method="POST" class="">
 			<button type="submit" class="btn  btn-primary btn-no-rounded h-full">
-				<i class="fa-solid fa-right-from-bracket " /><span>{LOGOUT}</span>
+				<span><i class="fa-solid fa-right-from-bracket " />{LOGOUT}</span>
 			</button>
 		</form>
 	</div>

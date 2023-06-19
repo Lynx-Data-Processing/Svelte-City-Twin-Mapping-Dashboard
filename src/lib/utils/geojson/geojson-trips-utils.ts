@@ -119,6 +119,7 @@ export const convertTripsToLayerListElements = async (trips: ITrip[], showEvents
       true,
       'fa fa-route',
       tripColor,
+      '',
       tripGeojson
     );
     tempLayerListElements.push(tripLayerElement);
@@ -132,6 +133,7 @@ export const convertTripsToLayerListElements = async (trips: ITrip[], showEvents
         true,
         'fa fa-exclamation-triangle',
         eventColor,
+        '',
         eventGeojson
       );
       tempLayerListElements.push(eventLayerElement);

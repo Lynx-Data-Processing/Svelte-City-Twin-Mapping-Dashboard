@@ -115,7 +115,7 @@
 			<div class="alert alert-error my-1" role="alert">End date cannot be before start date.</div>
 		{:else}
 			<button class={`btn btn-primary my-1`} on:click={() => fetchTripsData(tripsParams)}
-				><i class="fa-solid fa-search " /><span>Search Data</span>
+				><span><i class="fa-solid fa-search " />Search Data</span>
 			</button>
 		{/if}
 	{:else}

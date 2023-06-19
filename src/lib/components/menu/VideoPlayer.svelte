@@ -117,7 +117,7 @@
 				</div>
 			</div>
 
-			<div class="mt-auto px-4 py-2 flex flex-row bg-smoke rounded-md justify-between">
+			<div class="mt-auto px-4  py-4 flex flex-row bg-smoke rounded-md justify-between">
 				<Toggle
 					numberOfButtons={numberOfVideos}
 					selectedButtonIndex={selectedVideoIndex}

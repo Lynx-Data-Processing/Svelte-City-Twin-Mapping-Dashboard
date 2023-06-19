@@ -18,10 +18,7 @@
 	import { POINT } from '$lib/constants';
 	import { MAP_DATA } from '$lib/constants/initialData';
 	import mockLayerListElements from '$lib/mock/layerListElements.json';
-	import {
-		getGPSForTrips,
-		getSmarterAiTrips
-	} from '$lib/service/smarter-api';
+	import { getGPSForTrips, getSmarterAiTrips } from '$lib/service/smarter-api';
 	import type { IEventGoogleDataType } from '$lib/types/eventTypes';
 	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
@@ -80,7 +77,7 @@
 		isLoading = true;
 		isError = false;
 		try {
-			if(searchParams.useRealData){
+			if (searchParams.useRealData) {
 				const tempTripList = await getSmarterAiTrips(searchParams);
 				if (!tempTripList || !tempTripList.length) return;
 
@@ -88,23 +85,28 @@
 				if (!tempTripWithGPSList || !tempTripWithGPSList.length) return;
 
 				const layerListElements: ILayerListElementType[] = await convertTripsToLayerListElements(
-					tempTripWithGPSList, searchParams.showEvents
+					tempTripWithGPSList,
+					searchParams.showEvents
 				);
 				if (!layerListElements || !layerListElements.length) return;
-				let layerListElementsTrips = layerListElements.filter((layerListElement) => layerListElement.layerName.includes('Trips'));
-				javascriptObjectToJSONFile(layerListElementsTrips, 'layerListElementsTrips.json')
+				let layerListElementsTrips = layerListElements.filter((layerListElement) =>
+					layerListElement.layerName.includes('Trips')
+				);
+				javascriptObjectToJSONFile(layerListElementsTrips, 'layerListElementsTrips.json');
 
-				let layerListElementsEvents = layerListElements.filter((layerListElement) => layerListElement.layerName.includes('Events'));
-				javascriptObjectToJSONFile(layerListElementsEvents, 'layerListElementsEvents.json')
+				let layerListElementsEvents = layerListElements.filter((layerListElement) =>
+					layerListElement.layerName.includes('Events')
+				);
+				javascriptObjectToJSONFile(layerListElementsEvents, 'layerListElementsEvents.json');
 
 				processLayerListElements(layerListElements);
-			}
-			else{
-				
-				const layerListElements: ILayerListElementType[] = mockLayerListElements.slice(0,25) as ILayerListElementType[];
+			} else {
+				const layerListElements: ILayerListElementType[] = mockLayerListElements.slice(
+					0,
+					25
+				) as ILayerListElementType[];
 				if (!layerListElements || !layerListElements.length) return;
 				processLayerListElements(layerListElements);
-				
 			}
 		} catch (error) {
 			console.log(error);
@@ -131,35 +133,38 @@
 
 <svelte:head><title>Lynx City Twin</title></svelte:head>
 
-<div>
-	<div class="grid grid-cols-1  2xl:grid-cols-12 ">
-		<div class="col-span-1 2xl:col-span-3 flex flex-col  2xl:flex-col p-4 gap-4">
-			<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={true}>
-				<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
-			</Card>
+<div class="grid grid-cols-1  2xl:grid-cols-12 ">
+	<div class="col-span-1 2xl:col-span-3 flex flex-col  2xl:flex-col p-4 gap-4">
+		<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={true}>
+			<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
+		</Card>
 
-			<Card title="Filters" icon="fa-solid fa-filter" showOnLoad={true} disableToggle={true}>
-				<Filters />
-			</Card>
-				
-			<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
-				<SearchData {fetchTripsData} />
-			</Card>
-			<Card title="Video Player" icon="fa-solid fa-video" disableToggle={false} showContent={selectedEvent ? true: false}>
-				<VideoPlayer {selectedEvent} />
-			</Card>
-		</div>
+		<Card title="Filters" icon="fa-solid fa-filter" showOnLoad={true} disableToggle={true}>
+			<Filters />
+		</Card>
 
-		<div class={` col-span-1 map 2xl:col-span-9`}>
-			<div class="relative h-full scale-in-center">
-				<div bind:this={mapDiv} class="h-full w-full " />
+		<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
+			<SearchData {fetchTripsData} />
+		</Card>
+		<Card
+			title="Video Player"
+			icon="fa-solid fa-video"
+			disableToggle={false}
+			showContent={selectedEvent ? true : false}
+		>
+			<VideoPlayer {selectedEvent} />
+		</Card>
+	</div>
 
-				{#if isLoading === true}
-					<LoadingSpinner />
-				{:else if isError === true}
-					<LoadingError />
-				{/if}
-			</div>
+	<div class={` col-span-1 map 2xl:col-span-9`}>
+		<div class="relative h-full scale-in-center">
+			<div bind:this={mapDiv} class="h-full w-full " />
+
+			{#if isLoading}
+				<LoadingSpinner />
+			{:else if isError}
+				<LoadingError />
+			{/if}
 		</div>
 	</div>
 </div>

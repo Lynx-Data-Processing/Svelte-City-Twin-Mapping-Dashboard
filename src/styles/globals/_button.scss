@@ -15,9 +15,19 @@
    
 	text-align: left;
     span {
-      
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
         font-weight: bold;
+
+        i{
+            margin-right: $paddings-sm;
+        }
     }
+
+ 
     &:hover {
         cursor: pointer;
         color: $black;
