@@ -3,11 +3,12 @@
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
 	import { TIME, TRIGGER, TRIP_DISTANCE } from '$lib/constants/strings';
 	import { getVideo } from '$lib/service/smarter-api';
-	import type { IEventGoogleDataType, IMediaRecordingType } from '$lib/types/eventTypes';
+	import type { IEventGoogleDataType } from '$lib/types/eventTypes';
+	import type { IMediaRecordingType } from '$lib/types/videoTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { formatText } from '$lib/utils/text-format';
-	import Toggle from '../Toggle.svelte';
-	import Underline from '../Underline.svelte';
+	import Toggle from '$lib/widgets/Toggle.svelte';
+	import Underline from '$lib/widgets/Underline.svelte';
 
 	export let selectedEvent: IEventGoogleDataType | null = null;
 	let videos: IMediaRecordingType[];

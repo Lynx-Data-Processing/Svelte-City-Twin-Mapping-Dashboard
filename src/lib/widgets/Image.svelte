@@ -6,8 +6,6 @@
 	export let isRounded = false;
 	export let scaleOnHover = true;
 	export let extraClasses = '';
-
-	imageUrl = imageUrl ?? '/assets/images/About.webp';
 	const isVideo = imageUrl.endsWith('.mp4');
 </script>
 
@@ -29,9 +27,12 @@
 			height="auto"
 			width="100%"
 			loading="lazy"
-			class={`img-card ${scaleOnHover ? 'img-card-scale': ''} ${isRounded ? 'rounded-lg' : ''}  ${extraClasses} ${imageSize} ${
-				hasColor ? 'img-card-hasColor' : ''
-			}`}
+			class={`img-card 
+			${scaleOnHover ? 'img-card-scale' : ''} 
+			${isRounded ? 'rounded-lg' : ''}  
+			${extraClasses} 
+			${imageSize} 
+			${hasColor ? 'img-card-hasColor' : ''}`}
 			src={imageUrl}
 			alt={imageAlt}
 		/>

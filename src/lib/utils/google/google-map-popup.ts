@@ -1,6 +1,7 @@
-import type { IEventGoogleDataType } from "$lib/types/eventTypes";
+
+import type { ITripGoogleDataType, IEventGoogleDataType } from "$lib/types/googleTypes";
 import type { ILayerListElementType } from "$lib/types/mapTypes";
-import type { ITripGoogleDataType } from "$lib/types/tripTypes";
+
 import { millisecondUnixToDateTime } from "../date-format";
 import { formatText } from "../text-format";
 

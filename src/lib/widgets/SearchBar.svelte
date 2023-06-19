@@ -7,7 +7,7 @@
 
 <div class="flex flex-row gap-4 w-full">
 	{#if title}
-		<h2 class="text-2xl font-bold">{title}</h2>
+		<p class="text-title">{title}</p>
 	{/if}
 	<div class="search-container flex-1 ">
 		<input

@@ -1,19 +1,16 @@
 <script lang="ts">
-	import { fade, slide } from 'svelte/transition';
-	import Filters from './menu/Filters.svelte';
-
+	import { slide } from 'svelte/transition';
 	export let title = 'Title';
 	export let icon = 'fa-solid fa-diamond';
 	export let isRounded = false;
 	export let isModalOpen = false;
+	export let bgColor = "bg-white"
 
-	const hideModal = () => {
-		isModalOpen = false;
-	};
+	const hideModal = () => isModalOpen = false;
 </script>
 
 <div class="modal {isModalOpen ? '' : 'hidden'} bg-overlay " transition:slide>
-	<div class="modal-content relative bg-white {isRounded ? 'rounded-md' : ''}">
+	<div class="modal-content relative {bgColor} {isRounded ? 'rounded-md' : ''}">
 		<div class="modal-title  flex flex-row justify-between  bg-dark bg-grid">
 			<div class=" flex flex-row gap-2 align-middle  px-4">
 				<i class={`${icon}  icon-color my-auto`} />

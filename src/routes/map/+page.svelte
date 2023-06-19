@@ -7,9 +7,8 @@
 	} from '$lib/types/mapTypes';
 	import type { ISearchParamType } from '$lib/types/types';
 
-	import Card from '$lib/components/Card.svelte';
 
-	import Layers from '$lib/components/Layers.svelte';
+	import Layers from '$lib/components/menu/Layers.svelte';
 	import LoadingError from '$lib/components/loading/LoadingError.svelte';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
 	import Filters from '$lib/components/menu/Filters.svelte';
@@ -28,10 +27,11 @@
 		addLayerElementToLayerList,
 		addLayerToGoogleMap,
 		toggleGoogleMapLayerVisibility
-	} from '$lib/utils/geojson/google-map-utils';
+	} from '$lib/utils/google/google-map-utils';
 	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
+	import Card from '$lib/components/Card.svelte';
 
 	let isLoading = false;
 	let isError = false;
@@ -101,10 +101,7 @@
 
 				processLayerListElements(layerListElements);
 			} else {
-				const layerListElements: ILayerListElementType[] = mockLayerListElements.slice(
-					0,
-					25
-				) as ILayerListElementType[];
+				const layerListElements: ILayerListElementType[] = mockLayerListElements as ILayerListElementType[];
 				if (!layerListElements || !layerListElements.length) return;
 				processLayerListElements(layerListElements);
 			}

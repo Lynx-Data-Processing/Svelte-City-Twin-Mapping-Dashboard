@@ -8,3 +8,6 @@ export const GEOMETRY_COLLECTION = 'GeometryCollection';
 export const FEATURE = 'Feature';
 export const FEATURE_COLLECTION = 'FeatureCollection';
 export const GPS = 'GPS';
+
+export const TRIP = "TRIP";
+export const TRIP_EVENT = "TRIP_EVENT";

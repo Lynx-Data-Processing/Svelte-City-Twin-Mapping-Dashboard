@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { fly, slide } from 'svelte/transition';
-	import Underline from './Underline.svelte';
+	import { slide } from 'svelte/transition';
 	export let title: string;
 	export let icon = 'fa-solid fa-diamond';
 	export let width = 'w-full';
@@ -8,9 +7,7 @@
 	export let isRounded = false;
 	export let showOnLoad = true;
 	export let showContent = showOnLoad;
-	const toggleContent = () => {
-		showContent = !showContent;
-	};
+	const toggleContent = () => showContent = !showContent;
 </script>
 
 <section class="card  h-fit card-shadow  {width}  gap-4 {isRounded ? 'rounded-md' : ''}">

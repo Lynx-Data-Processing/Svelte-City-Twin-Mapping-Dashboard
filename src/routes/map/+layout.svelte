@@ -1,11 +1,11 @@
 <script>
 	import Footer from '$lib/components/Footer.svelte';
-	import Header from '$lib/components/Header.svelte';
+	import Navbar from '$lib/components/Navbar.svelte';
 	import { fade } from 'svelte/transition';
 	import '../../styles/style.css';
 </script>
 
-<Header />
+<Navbar />
 
 <div class="main">
 	<slot />

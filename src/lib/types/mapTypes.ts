@@ -1,5 +1,4 @@
 
-import type { ITripEventType } from "./eventTypes";
 import type { IGeojsonDataType, IGeojsonType } from "./geojsonTypes";
 
 export interface ILatLngType {
@@ -26,7 +25,7 @@ export interface ILayerListElementType  {
     color?: string,
     geojson?: IGeojsonType,
     googleMapLayer?: any,
-    layerImageUrl: string
+    layerImageUrl?: string
 }
 
 export const zoomLevelMap: { [key in IGeojsonDataType]?: number } = {

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import SearchBar from '$lib/components/SearchBar.svelte';
-	import Image from '$lib/components/Image.svelte';
+	import SearchBar from '$lib/widgets/SearchBar.svelte';
+	import Image from '$lib/widgets/Image.svelte';
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 	import { isEmptyString } from '$lib/utils/is-emptyString';
-	import Modal from './Modal.svelte';
-	import Underline from './Underline.svelte';
+	import Modal from '$lib/widgets/Modal.svelte';
+	import Underline from '$lib/widgets/Underline.svelte';
 
 	export let toggleGoogleLayer: Function;
 	export let updateMapCenter: Function;
@@ -57,9 +57,7 @@
 	$: layerList && filterLayersBySearch();
 
 	let isModalOpen = false;
-	const openModal = () => {
-		isModalOpen = true;
-	};
+	const openModal = () => isModalOpen = true;
 </script>
 
 <Modal bind:isModalOpen title={'Layer Filters'} icon={'fa-solid fa-filter'} isRounded={false}>
