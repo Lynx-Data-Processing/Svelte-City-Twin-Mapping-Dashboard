@@ -135,10 +135,6 @@
 			<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
 		</Card>
 
-		<Card title="Filters" icon="fa-solid fa-filter" showOnLoad={true} disableToggle={true}>
-			<Filters />
-		</Card>
-
 		<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
 			<SearchData {fetchTripsData} />
 		</Card>

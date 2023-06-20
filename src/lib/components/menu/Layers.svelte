@@ -62,41 +62,7 @@
 
 <Modal bind:isModalOpen title={'Layer Filters'} icon={'fa-solid fa-filter'} isRounded={false}>
 	<div class="grid grid-cols-4 p-8 gap-8 max-h-[42rem] overflow-auto">
-		{#each layerList as layer}
-			<div class="flex flex-col shadow-md">
-				<div class="relative">
-					<Image
-						imageUrl={layer.layerImageUrl ??
-							'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Road_in_Norway.jpg/1200px-Road_in_Norway.jpg'}
-						scaleOnHover={false}
-						imageSize={'img-card-xs'}
-					/>
-
-					<div class="absolute top-0 right-0 bg-overlay bg-dark p-4 ">
-						<i class={`${layer.icon} icon-color`} style="color: {layer.color};" />
-					</div>
-				</div>
-
-				<div class="flex flex-col p-4 gap-2">
-					<p class="text-subtitle">{layer.layerName}</p>
-					<Underline />
-					<p><span class="font-bold">Number of Elements</span>: {layer.geojson?.features.length}</p>
-					<p><span class="font-bold">Is Visible</span>: {layer.isVisible}</p>
-					<p><span class="font-bold">Source Name</span>: {layer.sourceName}</p>
-					<p><span class="font-bold">Layer Type</span>: {layer.type}</p>
-
-					<button
-						title={layer.layerName}
-						on:click={() => {
-							toggleLayer(layer);
-						}}
-						class={`btn w-full ${layer.isVisible ? 'btn-primary' : 'btn-black-outline'} `}
-					>
-						<span>{layer.isVisible ? 'Hide Layer' : 'Show Layer'}</span>
-					</button>
-				</div>
-			</div>
-		{/each}
+		
 	</div>
 </Modal>
 
@@ -128,7 +94,7 @@
 			</button>
 		</div>
 
-		{#if layerList && filteredLayers.length > 0}
+		{#if filteredLayers.length}
 			<div class="flex flex-col max-h-96 overflow-auto gap-2">
 				{#each filteredLayers as layer}
 					<div class="flex flex-row gap-2">
@@ -151,10 +117,7 @@
 					</div>
 				{/each}
 			</div>
-		{:else}
-			<div class="alert alert-error">
-				<p>Your search - {search} - did not match any Layers</p>
-			</div>
+	
 		{/if}
 	</div>
 
