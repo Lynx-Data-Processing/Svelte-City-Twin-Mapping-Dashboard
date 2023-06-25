@@ -2,12 +2,11 @@ import axios from 'axios';
 import { fetchAuth } from "../utils/fetch-auth";
 import { PUBLIC_NODE_BACKEND_URL } from '$env/static/public';
 import type { 
-    IDeviceType,
     IEventType, 
-    IVideoType, 
-    IMediaRecordingType,
     ISensorReading 
 } from '../types/eventTypes';
+import type { IDeviceType } from '$lib/types/deviceTypes';
+import type { IMediaRecordingType, IVideoType } from '$lib/types/videoTypes';
 
 // root smarterAI enpoint
 export const getSmarterAi = async () => {
@@ -17,7 +16,7 @@ export const getSmarterAi = async () => {
         url: `${PUBLIC_NODE_BACKEND_URL}/`,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${fetchAuth()}`,
+            'lynx-authorization': `${fetchAuth()}`,
         },
     };
   
@@ -44,7 +43,7 @@ export const getDevices = async () => {
         url: `${PUBLIC_NODE_BACKEND_URL}/devices`,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${fetchAuth()}`,
+            'lynx-authorization': `${fetchAuth()}`,
         },
     };
   
@@ -77,7 +76,7 @@ export const getInfo = async (endpointId: string) => {
         url: `${PUBLIC_NODE_BACKEND_URL}/info?${params.toString()}`,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${fetchAuth()}`,
+            'lynx-authorization': `${fetchAuth()}`,
         },
     };
     
@@ -110,7 +109,7 @@ export const getEvents = async (deviceId: string) => {
         url: `${PUBLIC_NODE_BACKEND_URL}/events?${params.toString()}`,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${fetchAuth()}`,
+            'lynx-authorization': `${fetchAuth()}`,
         },
     };
     
@@ -145,7 +144,7 @@ export const getVideos = async (gpsElement: any) => {
         url: `${PUBLIC_NODE_BACKEND_URL}/video?${params.toString()}`,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${fetchAuth()}`,
+            'lynx-authorization': `${fetchAuth()}`,
         },
     };
     
@@ -198,7 +197,7 @@ export const getSensor = async (
         url: `${PUBLIC_NODE_BACKEND_URL}/sensor?${params.toString()}`,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${fetchAuth()}`,
+            'lynx-authorization': `${fetchAuth()}`,
         },
     };
     
