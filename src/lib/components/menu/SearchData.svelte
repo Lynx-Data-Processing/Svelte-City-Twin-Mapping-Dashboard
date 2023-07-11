@@ -37,7 +37,7 @@
 			<label for="limit">Limit</label>
 			<input
 				name="limit"
-				id="limit"
+				id="limit-textbox"
 				type="number"
 				class="form-control search-input rounded-lg"
 				placeholder="Limit"
@@ -52,7 +52,7 @@
 			<label for="offset">Offset</label>
 			<input
 				name="offset"
-				id="offset"
+				id="offset-textbox"
 				type="number"
 				class="form-control search-input rounded-lg "
 				placeholder="Offset"
