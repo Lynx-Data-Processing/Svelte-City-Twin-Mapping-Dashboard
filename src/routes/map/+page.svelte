@@ -140,7 +140,12 @@
 	});
 </script>
 
-<svelte:head><title>Lynx City Twin</title></svelte:head>
+<svelte:head>
+	<title>Lynx City Twin</title>
+	<meta name="description" content="Lynx City Twin"/>
+	<meta name="keywords" content="Lynx City Twin"/>
+	<meta name="author" content="Lynx"/>
+</svelte:head>
 
 <div>
 	<div class="grid grid-cols-1  2xl:grid-cols-12 ">
