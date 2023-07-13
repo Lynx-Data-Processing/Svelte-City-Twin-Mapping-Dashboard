@@ -1,9 +1,6 @@
-.search-container {
-    position: relative;
-    width: auto;
-}
+
 .search-input {
-    padding: $paddings-lg;
+   padding: 8px 14px;
     background-clip: padding-box;
     width: 100%;
     border-width: $border-width;
@@ -11,6 +8,7 @@
     font-size: $font-size-sm;
     border-style: solid;
     transition: all $speed-md;
+    box-shadow: $button-shadow;
     &:hover {
         background-color: $smoke;
     }

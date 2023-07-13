@@ -4,7 +4,7 @@
 	import { TIME, TRIGGER, TRIP_DISTANCE } from '$lib/constants/strings';
 	import { getVideo } from '$lib/service/smarter-api';
 	import type { IEventGoogleDataType } from '$lib/types/googleTypes';
-	
+
 	import type { IMediaRecordingType } from '$lib/types/videoTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { formatText } from '$lib/utils/text-format';
@@ -66,7 +66,7 @@
 	$: selectedEvent && getAllVideos();
 </script>
 
-<div class="flex flex-col  gap-2 relative">
+<div class="flex flex-col relative">
 	{#if selectedEvent && numberOfVideos >= 0}
 		{#if loadingVideo}
 			<div class="p-4 h-64">
@@ -76,7 +76,7 @@
 			<div class="flex-1 h-64">
 				<video
 					autoplay={true}
-					class="h-64 overflow-hidden rounded-top-md bg-dark"
+					class="h-64 overflow-hidden rounded-top-md bg-black"
 					controls
 					height="100%"
 					width="100%"
@@ -86,29 +86,27 @@
 				</video>
 			</div>
 
-			<div class="flex flex-col px-4 py-2 gap-2">
-				<p class="text-subtitle">{selectedEvent.endpointName}</p>
+			<div class="flex flex-row bg-primary px-4 py-2">
+				<p>{selectedEvent.endpointName}</p>
+			</div>
 
-				<Underline />
+			<div class="flex flex-col  justify-between  px-4 py-4 gap-2">
+				<div>
+					<p class="font-bold">{TRIP_DISTANCE}</p>
+					<p>
+						{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
+					</p>
+				</div>
 
-				<div class="flex flex-row justify-between ">
-					<div>
-						<p>{TRIP_DISTANCE}</p>
-						<p>
-							{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
-						</p>
-					</div>
+				<div>
+					<p class="font-bold">{TRIGGER}</p>
+					<p>{formatText(selectedEvent.triggerName)}</p>
+				</div>
 
-					<div>
-						<p>{TRIGGER}</p>
-						<p>{formatText(selectedEvent.triggerName)}</p>
-					</div>
-
-					<div class="my-auto">
-						<p>{TIME}</p>
-						<p>{millisecondUnixToDateTime(selectedEvent.recordingStartTimestamp)}</p>
-						<p>{millisecondUnixToDateTime(selectedEvent.recordingEndTimestamp)}</p>
-					</div>
+				<div class="my-auto">
+					<p class="font-bold">{TIME}</p>
+					<p>{millisecondUnixToDateTime(selectedEvent.recordingStartTimestamp)}</p>
+					<p>{millisecondUnixToDateTime(selectedEvent.recordingEndTimestamp)}</p>
 				</div>
 			</div>
 
@@ -123,7 +121,7 @@
 					class="btn"
 					title="Videos are stored in smaller, manageable chunks for optimal performance; use the buttons to select the desired video."
 				>
-					<i class="fas fa-question-circle fa-xl" />
+					<i class="fas fa-question-circle " />
 				</button>
 			</div>
 		{:else}

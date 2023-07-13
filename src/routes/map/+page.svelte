@@ -1,4 +1,14 @@
 <script lang="ts">
+	import LoadingError from '$lib/components/loading/LoadingError.svelte';
+	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
+	import Filters from '$lib/components/menu/Filters.svelte';
+	import Layers from '$lib/components/menu/Layers.svelte';
+	import SearchData from '$lib/components/menu/SearchData.svelte';
+	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
+	import { POINT } from '$lib/constants';
+	import { MAP_DATA } from '$lib/constants/initialData';
+	import mockLayerListElements from '$lib/mock/layerListElements.json';
+	import { getGPSForTrips, getSmarterAiTrips } from '$lib/service/smarter-api';
 	import {
 		zoomLevelMap,
 		type ILatLngType,
@@ -6,31 +16,21 @@
 		type IMapDetailsType
 	} from '$lib/types/mapTypes';
 	import type { ISearchParamType } from '$lib/types/types';
-	import Layers from '$lib/components/menu/Layers.svelte';
-	import LoadingError from '$lib/components/loading/LoadingError.svelte';
-	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
-	import Filters from '$lib/components/menu/Filters.svelte';
-	import SearchData from '$lib/components/menu/SearchData.svelte';
-	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
-	import { POINT } from '$lib/constants';
-	import { MAP_DATA } from '$lib/constants/initialData';
-	import mockLayerListElements from '$lib/mock/layerListElements.json';
-	import { getGPSForTrips, getSmarterAiTrips } from '$lib/service/smarter-api';
 	
+	import Card from '$lib/components/Card.svelte';
 	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
+	import type { IEventGoogleDataType } from '$lib/types/googleTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
 	import { javascriptObjectToJSONFile } from '$lib/utils/download-utils';
 	import { convertTripsToLayerListElements } from '$lib/utils/geojson/geojson-trips-utils';
+	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
 	import {
 		addLayerElementToLayerList,
 		addLayerToGoogleMap,
 		toggleGoogleMapLayerVisibility
 	} from '$lib/utils/google/google-map-utils';
-	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
-	import Card from '$lib/components/Card.svelte';
-	import type { IEventGoogleDataType } from '$lib/types/googleTypes';
 
 	let isLoading = false;
 	let isError = false;
@@ -130,14 +130,16 @@
 <svelte:head><title>Lynx City Twin</title></svelte:head>
 
 <div class="grid grid-cols-1  2xl:grid-cols-12 ">
-	<div class="col-span-1 2xl:col-span-3 flex flex-col  2xl:flex-col p-4 gap-4">
+	<div class="col-span-1 2xl:col-span-2 flex flex-col  2xl:flex-col p-4 gap-4">
+		<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
+			<SearchData {fetchTripsData} />
+		</Card>
+		
 		<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={true}>
 			<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
 		</Card>
 
-		<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
-			<SearchData {fetchTripsData} />
-		</Card>
+	
 		<Card
 			title="Video Player"
 			icon="fa-solid fa-video"
@@ -148,7 +150,7 @@
 		</Card>
 	</div>
 
-	<div class={` col-span-1 map 2xl:col-span-9`}>
+	<div class={` col-span-1 map 2xl:col-span-10`}>
 		<div class="relative h-full scale-in-center">
 			<div bind:this={mapDiv} class="h-full w-full " />
 

@@ -18,6 +18,6 @@ export const SEARCH_PARAMS : ISearchParamType = {
     offset: 0,
     showEvents: true,
     useRealData: false,
-    startDateTime: '2023-06-04T00:00',
-    endDateTime: '2023-06-17T23:00'
+    startDateTime: '2023-06-04',
+    endDateTime: '2023-06-17'
 };

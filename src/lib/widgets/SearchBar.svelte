@@ -9,12 +9,12 @@
 	{#if title}
 		<p class="text-title">{title}</p>
 	{/if}
-	<div class="search-container flex-1 ">
+	<div class="h-full w-full relative">
 		<input
 			type="search"
 			bind:value={search}
 			required
-			class="search-input"
+			class="search-input h-full"
 			{placeholder}
 			on:input={() => onChangeFunction()}
 		/>

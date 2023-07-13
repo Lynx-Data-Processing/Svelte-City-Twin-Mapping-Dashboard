@@ -1,0 +1,14 @@
+.navbar {
+    z-index: 2;
+    position: fixed;
+
+    transition: width $speed-sm ease;
+    overflow: hidden;
+    display: flex;
+    height: 100vh;
+    width: 3rem;
+
+    &:hover {
+        width: 15rem;
+    }
+}

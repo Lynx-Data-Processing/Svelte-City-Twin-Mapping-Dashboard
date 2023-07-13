@@ -77,7 +77,7 @@
 				{/if}
 			</div>
 
-			<div class="bg-dark p-12 " />
+			
 		</div>
 	</div>
 </main>

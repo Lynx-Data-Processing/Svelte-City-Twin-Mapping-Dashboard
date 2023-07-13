@@ -1,5 +1,5 @@
 
-import type { ITripGoogleDataType, IEventGoogleDataType } from "$lib/types/googleTypes";
+import type { IEventGoogleDataType, ITripGoogleDataType } from "$lib/types/googleTypes";
 import type { ILayerListElementType } from "$lib/types/mapTypes";
 
 import { millisecondUnixToDateTime } from "../date-format";
@@ -30,7 +30,7 @@ export const createTripGoogleMapsPopup = (feature: ITripGoogleDataType): string 
 
   let contentString = `
   <p class="text-subtitle ">${formatText(feature.endpointName)}</p>
-  <hr class="bg-primary w-12 h-0.5 my-2" />
+  <hr class="bg-primary w-12 h-0.5 my-1" />
   `;
 
   contentString += `
@@ -49,7 +49,7 @@ export const createEventGoogleMapsPopup = (feature: IEventGoogleDataType): strin
 
   let contentString = `
       <p class="text-subtitle ">${formatText(feature.triggerName)}</p>
-      <hr class="bg-primary w-12 h-0.5 my-2" /> 
+      <hr class="bg-primary w-12 h-0.5 my-1" /> 
     `;
 
   contentString += `
@@ -74,7 +74,7 @@ export const createEventGoogleMapsPopup = (feature: IEventGoogleDataType): strin
 export const createGooglePopup = (feature: any, layerListElement: ILayerListElementType): string => {
   let contentString = `
       <p class="text-subtitle ">${layerListElement.layerName}</p>
-      <hr class="bg-primary w-12 h-0.5 my-2" /> 
+      <hr class="bg-primary w-12 h-0.5 my-1" /> 
     `;
 
   const maxCount = 10;

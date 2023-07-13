@@ -14,6 +14,14 @@ export type ISearchParamType = {
     endDateTime: string,
 }
 
+export type INavbarElement = {
+    id: number,
+    title: string,
+    url?: string,
+    icon?: string,
+    isExternal?: boolean,
+}
+
 export interface Window {
     handleCaptchaCallback: (token: string) => Promise<void>;
 }
