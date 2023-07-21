@@ -70,7 +70,7 @@
 			{#if isAllVisible}
 				<button
 					title="Hide All Layers"
-					class="btn btn-black-outline btn-text-center"
+					class="btn btn-black-outline btn-text-center w-12"
 					on:click={toggleAllLayers}
 				>
 					<i class="fas fa-eye-slash icon-color" />
@@ -92,7 +92,7 @@
 			<div class="flex flex-col max-h-96 overflow-auto gap-2 py-2 ">
 				{#each filteredLayers as layer}
 					<div class="flex flex-row gap-2 {filteredLayers.length > 5 ? "mr-4" : ""}">
-						<div class="btn hover:cursor-default">
+						<div class="btn hover:cursor-default w-12 btn-text-center ">
 							<i class={`${layer.icon} icon-color`} style="color: {layer.color}" />
 						</div>
 

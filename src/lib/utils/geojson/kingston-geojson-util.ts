@@ -1,12 +1,12 @@
-import { KINGSTON_COORDINATES_ARRAY } from '$lib/constants/kingston';
 import { OPEN_DATA_KINGSTON_BUS_ROUTES_URL, OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_PLANNING_LINE_URL, OPEN_DATA_KINGSTON_PLANNING_POINT_URL, OPEN_DATA_KINGSTON_TREES_URL } from '$lib/constants';
 import { LINE_STRING, POINT, POLYGON } from '$lib/constants/geojson';
+import { KINGSTON_COORDINATES_ARRAY, OPEN_DATA_KINGSTON_CYCLING_PATHS_URL, OPEN_DATA_KINGSTON_WALKING_PATHS_URL } from '$lib/constants/kingston';
 import { axiosCacheGetUtility } from '$lib/service/fetch-data';
 import type { IGeojsonFeatureType, IGeojsonType } from '$lib/types/geojsonTypes';
 import type { ILayerListElementType } from '$lib/types/mapTypes';
+import { createLayerElement } from '../google/google-map-utils';
 import type { IGeojsonDataType } from './../../types/geojsonTypes';
 import { getColorGivenIndex } from './../color-utils';
-import { createLayerElement } from '../google/google-map-utils';
 
 
 
@@ -91,16 +91,30 @@ export const getKingstonMapData = async () => {
 
   const planningPointData = await getKingstonData(OPEN_DATA_KINGSTON_PLANNING_POINT_URL);
   if (planningPointData) {
-    const planningPointGpsData = rawKingstonDataToGeojsonData(planningPointData, POINT, "#ff5722");
-    const planningPointElement = createLayerElement('Construction Planning Points', POINT, false, 'fa-solid fa-road', '#ff5722', 'https://advancedct.com/wp-content/uploads/2021/09/shutterstock_92209726.jpg', planningPointGpsData);
+    const planningPointGpsData = rawKingstonDataToGeojsonData(planningPointData, POINT, "#db3c30");
+    const planningPointElement = createLayerElement('Construction Planning Points', POINT, false, 'fa-solid fa-road', '#db3c30', 'https://advancedct.com/wp-content/uploads/2021/09/shutterstock_92209726.jpg', planningPointGpsData);
     tempLayerList.push(planningPointElement);
   }
 
   const busRoutesData = await getKingstonData(OPEN_DATA_KINGSTON_BUS_ROUTES_URL);
   if (busRoutesData) {
-    const busRoutesGpsData = rawKingstonDataToGeojsonData(busRoutesData, LINE_STRING);
-    const busRoutesElement = createLayerElement('Bus Routes', LINE_STRING, false, 'fa-solid fa-bus', '#ff5722', 'https://www.kingstontransit.ca/images/kingston-transit-logo.png', busRoutesGpsData);
+    const busRoutesGpsData = rawKingstonDataToGeojsonData(busRoutesData, LINE_STRING, undefined, true);
+    const busRoutesElement = createLayerElement('Bus Routes', LINE_STRING, false, 'fa-solid fa-bus', '#ffc107', 'https://www.kingstontransit.ca/images/kingston-transit-logo.png', busRoutesGpsData);
     tempLayerList.push(busRoutesElement);
+  }
+
+  const cyclingData = await getKingstonData(OPEN_DATA_KINGSTON_CYCLING_PATHS_URL);
+  if (cyclingData) {
+    const cyclingGpsData = rawKingstonDataToGeojsonData(cyclingData, LINE_STRING, "#4caf50");
+    const cyclingElement = createLayerElement('Cycling Paths', LINE_STRING, false, 'fa-solid fa-bicycle', '#4caf50', 'https://www.kingstontransit.ca/images/kingston-transit-logo.png', cyclingGpsData);
+    tempLayerList.push(cyclingElement);
+  }
+
+  const walkingData = await getKingstonData(OPEN_DATA_KINGSTON_WALKING_PATHS_URL);
+  if (walkingData) {
+    const walkingGpsData = rawKingstonDataToGeojsonData(walkingData, POLYGON, "#795548");
+    const walkingElement = createLayerElement('Walking Paths', POLYGON, false, 'fa-solid fa-walking', '#795548', 'https://www.kingstontransit.ca/images/kingston-transit-logo.png', walkingGpsData);
+    tempLayerList.push(walkingElement);
   }
 
   return tempLayerList;
