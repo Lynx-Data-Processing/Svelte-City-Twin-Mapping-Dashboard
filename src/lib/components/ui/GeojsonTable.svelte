@@ -8,18 +8,18 @@
 
 <table class="table  w-full">
 	<tr>
-		<th class=" p-2 "><span>Id</span></th>
+		<th class=" px-4 py-2 "><span>Id</span></th>
 		{#each geojsonPropertiesKeys as key}
-			<th><span class="p-2 ">{key}</span></th>
+			<th><span class="px-4 py-2 ">{key}</span></th>
 		{/each}
 	</tr>
 
 	<tbody>
 		{#each geojson.features.slice(0, 50) as feature, i}
 			<tr>
-				<td><span class="p-2">{i}</span></td>
+				<td><span class="px-4 py-2">{i}</span></td>
 				{#each geojsonPropertiesKeys as key}
-					<td class="p-2 "><span class="ellipsis">{feature.properties[key]}</span></td>
+					<td class="px-4 py-2 "><span class="ellipsis">{feature.properties[key]}</span></td>
 				{/each}
 			</tr>
 		{/each}
