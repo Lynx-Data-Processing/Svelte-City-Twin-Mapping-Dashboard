@@ -4,7 +4,7 @@
 	const PROGRAMMING_TOOLS = ['svelte', 'nodejs', 'csharp','nginx', 'docker', 'googlecloud'];
 </script>
 
-<footer class="mt-auto bg-dark bg-topography ">
+<footer class="mt-auto bg-dark ">
 	<div class="py-16 px-8 bg-overlay">
 		<div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
 			<div class="col-span-1">

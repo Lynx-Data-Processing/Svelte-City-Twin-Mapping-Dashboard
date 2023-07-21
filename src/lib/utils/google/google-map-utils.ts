@@ -11,7 +11,7 @@ import type { IEventGoogleDataType, ITripGoogleDataType } from "$lib/types/googl
 
 export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElementType, updateSelectedEvent: Function) => {
     if (!map || !layerListElement.geojson) return;
-    
+
     layerListElement.googleMapLayer = new google.maps.Data();
     const layer = layerListElement.googleMapLayer;
     layer.addGeoJson(layerListElement.geojson);
@@ -23,44 +23,40 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
         const featureType = feature.getProperty('type') || false;
         const hasArrows = feature.getProperty('hasArrows') || false;
 
-        let style: google.maps.Data.StyleOptions = {
-            strokeColor: color || 'blue',
-            strokeWeight: 4
-        };
-
         if (featureType === TRIP_EVENT) {
-            return eventPointStyle(feature.j as IEventGoogleDataType, style, color);
+            return eventPointStyle(feature.j as IEventGoogleDataType, color);
         }
         else if (featureType === TRIP || hasArrows === true) {
-            return tripLineStyle(style, color)
+            return tripLineStyle(color)
         }
         else if (geometryType === POINT || geometryType === MULTI_POINT) {
-            return pointStyle(style, color, size);
+            return pointStyle(color, size);
         }
         else if (geometryType === POLYGON || geometryType === MULTI_POLYGON) {
-            return polygonStyle(style, color);
+            return polygonStyle(color);
         }
         else if (geometryType === LINE_STRING || geometryType === MULTI_LINE_STRING) {
-            return lineStyle(style, color);
+            return lineStyle(color);
         }
         else {
-            return style;
+            return {
+                strokeColor: color || 'blue',
+                strokeWeight: 4
+            };;
         }
     });
 
 
     layer.addListener('click', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
-        let feature = event.feature;
+        const feature = event.feature;
         const featureType = feature.getProperty('type') || null;
         let contentString = '';
         if (featureType === TRIP_EVENT) {
-            feature = feature.j as IEventGoogleDataType
-            contentString = createEventGoogleMapsPopup(feature);
+            contentString = createEventGoogleMapsPopup(feature.j as IEventGoogleDataType);
             updateSelectedEvent(feature);
         }
         else if (featureType === TRIP) {
-            feature = feature.j as ITripGoogleDataType
-            contentString = createTripGoogleMapsPopup(feature);
+            contentString = createTripGoogleMapsPopup(feature.j as ITripGoogleDataType);
         }
         else {
             contentString = createGooglePopup(feature, layerListElement);

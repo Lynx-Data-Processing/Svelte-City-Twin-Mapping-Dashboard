@@ -6,7 +6,7 @@ import { millisecondUnixToDateTime } from "../date-format";
 import { formatText } from "../text-format";
 
 
-export const createImageDiv = (image: string): string => {
+const createImageDiv = (image: string): string => {
   return `
       <div class="flex flex-row mt-4">
         <img class="w-96 h-auto object-cover" src="${image}" />
@@ -14,7 +14,7 @@ export const createImageDiv = (image: string): string => {
     `;
 };
 
-export const createContentString = (feature: any, maxCount: number): string => {
+ const createContentString = (feature: any, maxCount: number): string => {
   let contentString = '';
   let count = 0;
   feature.forEachProperty((value: any, name: any) => {

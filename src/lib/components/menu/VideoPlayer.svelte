@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_GCP_BUCKET_URL } from '$env/static/public';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
 	import { TIME, TRIGGER, TRIP_DISTANCE } from '$lib/constants/strings';
 	import { getVideo } from '$lib/service/smarter-api';
@@ -8,8 +7,8 @@
 	import type { IMediaRecordingType } from '$lib/types/videoTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { formatText } from '$lib/utils/text-format';
-	import Toggle from '$lib/widgets/Toggle.svelte';
-	import Underline from '$lib/widgets/Underline.svelte';
+	import Toggle from '$lib/components/ui/Toggle.svelte';
+
 
 	export let selectedEvent: IEventGoogleDataType | null = null;
 	let videos: IMediaRecordingType[];

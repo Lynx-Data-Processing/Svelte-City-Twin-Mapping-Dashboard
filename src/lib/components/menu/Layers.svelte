@@ -1,15 +1,15 @@
 <script lang="ts">
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 	import { isEmptyString } from '$lib/utils/is-emptyString';
-	import Image from '$lib/widgets/Image.svelte';
-	import Modal from '$lib/widgets/Modal.svelte';
-	import SearchBar from '$lib/widgets/SearchBar.svelte';
-	import Underline from '$lib/widgets/Underline.svelte';
+	import Modal from '$lib/components/ui/Modal.svelte';
+	import SearchBar from '$lib/components/ui/SearchBar.svelte';
+	import Table from '../ui/GeojsonTable.svelte';
 
 	export let toggleGoogleLayer: Function;
 	export let updateMapCenter: Function;
 	export let layerList: ILayerListElementType[];
 	let filteredLayers: ILayerListElementType[] = layerList;
+	let selectedLayer: ILayerListElementType | null = null;
 	let search = '';
 	let isAllVisible = false;
 
@@ -57,12 +57,24 @@
 	$: layerList && filterLayersBySearch();
 
 	let isModalOpen = false;
-	const openModal = () => (isModalOpen = true);
+	const openModal = (layer: ILayerListElementType) => {
+		selectedLayer = layer;
+		isModalOpen = true;
+	};
+
+	const closeModal = () => {
+		selectedLayer = null;
+		isModalOpen = false;
+	};
 </script>
 
-<Modal bind:isModalOpen title={'Layer Filters'} icon={'fa-solid fa-filter'} isRounded={false}>
-	<div class="grid grid-cols-4 p-8 gap-8 max-h-[42rem] overflow-auto" />
-</Modal>
+{#if selectedLayer && selectedLayer.geojson}
+	<Modal closeModal={closeModal} title={'Table'} icon={'fa-solid fa-filter'} isRounded={false}>
+
+			<Table bind:geojson={selectedLayer.geojson} />
+		
+	</Modal>
+{/if}
 
 <div class="flex flex-col">
 	<div class="flex flex-col px-4 py-4 gap-2">
@@ -70,10 +82,10 @@
 			{#if isAllVisible}
 				<button
 					title="Hide All Layers"
-					class="btn btn-black-outline btn-text-center w-12"
+					class="btn btn-black-outline  btn-text-center"
 					on:click={toggleAllLayers}
 				>
-					<i class="fas fa-eye-slash icon-color" />
+					<i class="fas fa-eye-slash icon-color mx-auto" />
 				</button>
 			{:else}
 				<button
@@ -91,10 +103,13 @@
 		{#if filteredLayers.length}
 			<div class="flex flex-col max-h-96 overflow-auto gap-2 py-2 ">
 				{#each filteredLayers as layer}
-					<div class="flex flex-row gap-2 {filteredLayers.length > 5 ? "mr-4" : ""}">
-						<div class="btn hover:cursor-default w-12 btn-text-center ">
-							<i class={`${layer.icon} icon-color`} style="color: {layer.color}" />
-						</div>
+					<div class="flex flex-row gap-2 ">
+						<button
+							class="btn btn-black-outline  btn-text-center"
+							on:click={() => openModal(layer)}
+						>
+							<i class={`${layer.icon} icon-color mx-auto`} style="color: {layer.color}" />
+						</button>
 
 						<button
 							title={layer.layerName}
