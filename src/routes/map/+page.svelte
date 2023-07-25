@@ -148,8 +148,8 @@
 </svelte:head>
 
 <div>
-	<div class="grid grid-cols-1  2xl:grid-cols-12 ">
-		<div class="col-span-1 2xl:col-span-3 flex flex-col  2xl:flex-col p-4 gap-4">
+	<div class="grid grid-cols-1  lg:grid-cols-12 ">
+		<div class="col-span-1 lg:col-span-3 flex flex-col  lg:flex-col p-4 gap-4">
 			<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={false}>
 				<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
 			</Card>
@@ -163,7 +163,7 @@
 		
 		</div>
 
-		<div class={` col-span-1  2xl:col-span-9`}>
+		<div class={` col-span-1  lg:col-span-9`}>
 			<div class="relative h-screen scale-in-center">
 				<div bind:this={mapDiv} class="h-full w-full " />
 
