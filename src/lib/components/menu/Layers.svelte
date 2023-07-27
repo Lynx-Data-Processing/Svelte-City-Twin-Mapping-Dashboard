@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { ILayerListElementType } from '$lib/types/mapTypes';
-	import { isEmptyString } from '$lib/utils/is-emptyString';
 	import Modal from '$lib/components/ui/Modal.svelte';
 	import SearchBar from '$lib/components/ui/SearchBar.svelte';
+	import type { ILayerListElementType } from '$lib/types/mapTypes';
+	import { isEmptyString } from '$lib/utils/is-emptyString';
 	import Table from '../ui/GeojsonTable.svelte';
 
 	export let toggleGoogleLayer: Function;
@@ -82,18 +82,18 @@
 			{#if isAllVisible}
 				<button
 					title="Hide All Layers"
-					class="btn btn-black-outline  btn-text-center"
+					class="btn-icon"
 					on:click={toggleAllLayers}
 				>
-					<i class="fas fa-eye-slash icon-color mx-auto" />
+					<i class="fas fa-eye-slash icon-color m-auto" />
 				</button>
 			{:else}
 				<button
 					title="Show All Layers"
-					class="btn btn-black-outline  btn-text-center"
+					class="btn-icon"
 					on:click={toggleAllLayers}
 				>
-					<i class="fas fa-eye icon-color" />
+					<i class="fas fa-eye icon-color m-auto" />
 				</button>
 			{/if}
 
@@ -103,12 +103,12 @@
 		{#if filteredLayers.length}
 			<div class="flex flex-col max-h-96 overflow-auto gap-2 py-2 ">
 				{#each filteredLayers as layer}
-					<div class="flex flex-row gap-2 ">
+					<div class="flex flex-row gap-2 h-full">
 						<button
-							class="btn btn-black-outline  btn-text-center"
+							class="btn-icon"
 							on:click={() => openModal(layer)}
 						>
-							<i class={`${layer.icon} icon-color mx-auto`} style="color: {layer.color}" />
+							<i class={`${layer.icon} icon-color m-auto`} style="color: {layer.color}" />
 						</button>
 
 						<button

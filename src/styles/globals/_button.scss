@@ -1,3 +1,24 @@
+.btn-icon {
+    border: 1px solid #ececec;
+    width: 4rem;
+ 
+    box-shadow: $button-shadow;
+    display: flex;
+    justify-content: center;
+    color: $black;
+    background-color: $white;
+    z-index: 1;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all $speed-sm ease;
+
+    &:hover {
+        border-color: $primary-color;
+        background-color: $btn-default-light;
+
+    }
+}
+
 .btn {
     border: 1px solid #ececec;
     padding: 12px 16px;
@@ -13,20 +34,19 @@
     cursor: pointer;
     transition: all $speed-sm ease;
 
-    p{
+    p {
         // ellipsis overflow 1 line
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 100%;
-        
+
     }
 
-    &-no-border{
+    &-no-border {
         border: none;
     }
 
- 
     &:hover {
         border-color: $primary-color;
         background-color: $btn-default-light;

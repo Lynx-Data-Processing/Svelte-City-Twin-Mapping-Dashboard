@@ -3,11 +3,11 @@ import { LINE_STRING, MULTI_LINE_STRING, MULTI_POINT, MULTI_POLYGON, POINT, POLY
 import type { IGeojsonDataType, IGeojsonType } from "$lib/types/geojsonTypes";
 import type { ILatLngType, ILayerListElementType } from "$lib/types/mapTypes";
 
-import { checkIfElementExists, removeObjectWhereValueEqualsString } from "../filter-data";
-import { createEventGoogleMapsPopup, createGooglePopup, createTripGoogleMapsPopup } from "./google-map-popup";
 import { KINGSTON_COORDINATES_OBJ } from "$lib/constants/kingston";
-import { eventPointStyle, tripLineStyle, pointStyle, polygonStyle, lineStyle } from "./google-feature-style";
 import type { IEventGoogleDataType, ITripGoogleDataType } from "$lib/types/googleTypes";
+import { checkIfElementExists, removeObjectWhereValueEqualsString } from "../filter-data";
+import { eventPointStyle, lineStyle, pointStyle, polygonStyle, tripLineStyle } from "./google-feature-style";
+import { createEventGoogleMapsPopup, createGooglePopup, createTripGoogleMapsPopup } from "./google-map-popup";
 
 export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElementType, updateSelectedEvent: Function) => {
     if (!map || !layerListElement.geojson) return;
