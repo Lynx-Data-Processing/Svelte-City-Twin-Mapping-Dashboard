@@ -1,8 +1,9 @@
+// Service worker for caching static assets and intermediate API calls
+
 
 // TODO: 
-// - Load Google Map / Map Data
-// - Load Kingston Data
-// - Cache Static Data
+// - Cache static data
+// - Check cache before API calls
 
 /// <reference types="@sveltejs/kit" />
 import { build, files, version } from '$service-worker';
@@ -13,4 +14,6 @@ const ASSETS = [
     ...build,
     ...files,
 ];
+
+
 
