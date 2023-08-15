@@ -15,11 +15,18 @@
 			href: "https://opendatakingston.cityofkingston.ca/pages/welcome/",
 			icon: "fa-solid fa-globe",
 			isExternal: true
+		},
+		{
+			id: 4, 
+			name: "Turbo Pass OSM",
+			href: "https://overpass-turbo.eu/",
+			icon: "fa-solid fa-database",
+			isExternal: true
 		}
 	];
 </script>
 
-<div class="bg-dark navbar flex flex-col ">
+<div class="bg-dark navbar flex flex-col shadow-lg ">
 	<button class="btn btn-selected btn-no-border w-full flex flex-row gap-2  ">
 		<i class="fa-solid text-xl fa-location-arrow" aria-hidden="true" />
 		<p class="my-auto">{USARS_GIS}</p>

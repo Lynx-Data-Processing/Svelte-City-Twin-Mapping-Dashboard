@@ -111,17 +111,17 @@
 	};
 
 	onMount(() => {
-		if (!map) {initializeMap();};
+		if (!map) {
+			initializeMap();
+		}
 		getInitialMapData();
 	});
 </script>
 
 <svelte:head><title>Lynx City Twin</title></svelte:head>
 
-<div class="relative h-screen overflow-hidden">
-	<div bind:this={mapDiv} class="h-full max-h-screen" />
-
-	<div class="absolute top-2 left-2 flex flex-col  2xl:flex-col p-4 gap-4 w-[26rem]">
+<div class="relative flex flex-row min-h-screen   gap-2">
+	<div class="w-[30rem] flex flex-col gap-2 p-4 ">
 		<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
 			<SearchData {fetchTripsData} />
 		</Card>
@@ -140,9 +140,15 @@
 		</Card>
 	</div>
 
-	{#if isLoading}
-		<LoadingSpinner />
-	{:else if isError}
-		<LoadingError />
-	{/if}
+	<div class="flex-1 flex flex-col h-full relative">
+	
+			<div bind:this={mapDiv} class="min-h-screen w-full " />
+
+			{#if isLoading}
+				<LoadingSpinner />
+			{:else if isError}
+				<LoadingError />
+			{/if}
+		
+	</div>
 </div>

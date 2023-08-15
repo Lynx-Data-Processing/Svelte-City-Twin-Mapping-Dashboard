@@ -3,6 +3,8 @@
 	import SearchBar from '$lib/components/ui/SearchBar.svelte';
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 	import { isEmptyString } from '$lib/utils/is-emptyString';
+	import { json } from '@sveltejs/kit';
+	import Table from '../ui/Table.svelte';
 
 	export let toggleGoogleLayer: Function;
 	export let updateMapCenter: Function;
@@ -55,20 +57,48 @@
 
 	$: layerList && filterLayersBySearch();
 
-	let isModalOpen = false;
 	const openModal = (layer: ILayerListElementType) => {
 		selectedLayer = layer;
-		isModalOpen = true;
+		createTableData(selectedLayer.geojson);
 	};
 
 	const closeModal = () => {
 		selectedLayer = null;
-		isModalOpen = false;
+	};
+
+	let tableColumns: string[] = [];
+	let tableData: string[][] = [];
+
+	const createTableData = (geojson: any) => {
+		// Get all unique keys from the geojson features
+		const allKeys: string[] = Object.keys(geojson.features[0].properties);
+		geojson.features.slice(1).forEach((feature: any) => {
+			Object.keys(feature.properties).forEach((key) => {
+				if (!allKeys.includes(key)) allKeys.push(key);
+			});
+		});
+
+		// Convert each feature's properties into a 2D array
+		const data = geojson.features.map((feature: any) => {
+			const featureData: any = { ...feature.properties };
+			allKeys.forEach((key) => {
+				if (!(key in featureData)) {
+					featureData[key] = 'N/A'; // or any default value
+				}
+			});
+			// Convert the featureData object into an array of its values
+			return allKeys.map((key) => String(featureData[key]));
+		});
+
+		tableColumns = allKeys;
+		tableData = data;
 	};
 </script>
 
 {#if selectedLayer && selectedLayer.geojson}
-	<Modal {closeModal} title={'Table'} icon={'fa-solid fa-filter'}/>
+	<Modal {closeModal} title={`Table - ${selectedLayer.layerName}`} icon={'fa-solid fa-filter'}>
+		<Table bgColor={selectedLayer.color} columns={tableColumns} data={tableData} />
+	</Modal>
 {/if}
 
 <div class="flex flex-col p-4 gap-2">

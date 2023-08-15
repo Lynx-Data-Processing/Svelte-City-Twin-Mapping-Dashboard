@@ -7,7 +7,7 @@
 
 <div class="fixed top-0 left-0 z-40 w-screen h-screen overflow-hidden bg-overlay">
 	<div class="flex flex-col p-16 max-h-4/5">
-		<div class="flex flex-row justify-between bg-dark bg-grid px-8 py-4">
+		<div class="flex flex-row justify-between bg-dark bg-grid px-4 py-2">
 			<div class=" flex flex-row gap-2 align-middle ">
 				<i class={`${icon}  my-auto`} />
 				<p class="text-subtitle my-auto">{title}</p>
@@ -17,7 +17,7 @@
 			</button>
 		</div>
 
-		<div class="{bgColor} p-8">
+		<div class="{bgColor} p-4 max-h-[40rem] overflow-auto">
 			<slot />
 		</div>
 	</div>

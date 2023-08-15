@@ -38,6 +38,8 @@ h6 {
 li,
 label,
 span,
+td,
+th,
 p {
   font-size: 0.7rem;
   line-height: 1.5;
@@ -247,6 +249,9 @@ hr {
   overflow: hidden;
   cursor: pointer;
   transition: all 0.25s ease;
+}
+.btn-sm {
+  padding: 8px 12px;
 }
 .btn p {
   white-space: nowrap;
