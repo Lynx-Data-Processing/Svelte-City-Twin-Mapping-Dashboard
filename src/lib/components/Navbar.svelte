@@ -1,15 +1,7 @@
 <script lang="ts">
 	import { LOGOUT, USARS_GIS } from '$lib/constants/strings';
-
-	interface ILinkItem {
-		id: number;
-		name: string;
-		href: string;
-		icon: string;
-		isExternal: boolean;
-	}
-
-	const linkItems: ILinkItem[] = [
+	import type { INavbarElement } from '$lib/types/types';
+	const linkItems: INavbarElement[] = [
 		{
 			id: 2,
 			name: 'Create Data',
@@ -24,15 +16,14 @@
 			icon: "fa-solid fa-globe",
 			isExternal: true
 		}
-		
 	];
 </script>
 
 <div class="bg-dark navbar flex flex-col ">
-	<div class="btn btn-primary btn-no-border w-full flex flex-row gap-2  ">
+	<button class="btn btn-selected btn-no-border w-full flex flex-row gap-2  ">
 		<i class="fa-solid text-xl fa-location-arrow" aria-hidden="true" />
 		<p class="my-auto">{USARS_GIS}</p>
-	</div>
+	</button>
 
 	{#each linkItems as linkItem, i}
 		<a

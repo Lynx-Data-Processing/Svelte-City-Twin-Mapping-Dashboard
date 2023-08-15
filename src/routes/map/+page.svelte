@@ -1,7 +1,6 @@
 <script lang="ts">
 	import LoadingError from '$lib/components/loading/LoadingError.svelte';
 	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
-	import Filters from '$lib/components/menu/Filters.svelte';
 	import Layers from '$lib/components/menu/Layers.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
@@ -16,12 +15,11 @@
 		type IMapDetailsType
 	} from '$lib/types/mapTypes';
 	import type { ISearchParamType } from '$lib/types/types';
-	
+
 	import Card from '$lib/components/Card.svelte';
 	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 	import type { IEventGoogleDataType } from '$lib/types/googleTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
-	import { javascriptObjectToJSONFile } from '$lib/utils/download-utils';
 	import { convertTripsToLayerListElements } from '$lib/utils/geojson/geojson-trips-utils';
 	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
 	import {
@@ -29,6 +27,7 @@
 		addLayerToGoogleMap,
 		toggleGoogleMapLayerVisibility
 	} from '$lib/utils/google/google-map-utils';
+	// @ts-ignore
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
 
@@ -36,7 +35,6 @@
 	let isError = false;
 
 	let mapDetails: IMapDetailsType = MAP_DATA;
-
 	let layerList: ILayerListElementType[] = [];
 	let selectedEvent: IEventGoogleDataType | null = null;
 
@@ -88,24 +86,16 @@
 					searchParams.showEvents
 				);
 				if (!layerListElements || !layerListElements.length) return;
-				let layerListElementsTrips = layerListElements.filter((layerListElement) =>
-					layerListElement.layerName.includes('Trips')
-				);
-				javascriptObjectToJSONFile(layerListElementsTrips, 'layerListElementsTrips.json');
-
-				let layerListElementsEvents = layerListElements.filter((layerListElement) =>
-					layerListElement.layerName.includes('Events')
-				);
-				javascriptObjectToJSONFile(layerListElementsEvents, 'layerListElementsEvents.json');
-
 				processLayerListElements(layerListElements);
 			} else {
-				const layerListElements: ILayerListElementType[] = mockLayerListElements as ILayerListElementType[];
+				const layerListElements: ILayerListElementType[] =
+					mockLayerListElements as ILayerListElementType[];
 				if (!layerListElements || !layerListElements.length) return;
 				processLayerListElements(layerListElements);
 			}
 		} catch (error) {
-			console.log(error);
+			console.error(error);
+			isError = true;
 		} finally {
 			isLoading = false;
 		}
@@ -121,25 +111,25 @@
 	};
 
 	onMount(() => {
-		initializeMap();
-		if (!map) return;
+		if (!map) {initializeMap();};
 		getInitialMapData();
 	});
 </script>
 
 <svelte:head><title>Lynx City Twin</title></svelte:head>
 
-<div class="grid grid-cols-1  2xl:grid-cols-12 ">
-	<div class="col-span-1 2xl:col-span-2 flex flex-col  2xl:flex-col p-4 gap-4">
+<div class="relative h-screen overflow-hidden">
+	<div bind:this={mapDiv} class="h-full max-h-screen" />
+
+	<div class="absolute top-2 left-2 flex flex-col  2xl:flex-col p-4 gap-4 w-[26rem]">
 		<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
 			<SearchData {fetchTripsData} />
 		</Card>
-		
+
 		<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={true}>
 			<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
 		</Card>
 
-	
 		<Card
 			title="Video Player"
 			icon="fa-solid fa-video"
@@ -150,15 +140,9 @@
 		</Card>
 	</div>
 
-	<div class={` col-span-1 map 2xl:col-span-10`}>
-		<div class="relative h-full scale-in-center">
-			<div bind:this={mapDiv} class="h-full w-full " />
-
-			{#if isLoading}
-				<LoadingSpinner />
-			{:else if isError}
-				<LoadingError />
-			{/if}
-		</div>
-	</div>
+	{#if isLoading}
+		<LoadingSpinner />
+	{:else if isError}
+		<LoadingError />
+	{/if}
 </div>

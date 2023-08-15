@@ -8,7 +8,7 @@
 	{#each Array(numberOfButtons) as _, index (index)}
 		<button
 			on:click={() => setSelectedIndex(index)}
-			class={`btn ${selectedButtonIndex === index ? 'btn-primary ' : 'btn-gray'}`}
+			class={`btn ${selectedButtonIndex === index ? 'btn-selected ' : 'btn-gray'}`}
 		>
 			<span>{index + 1}</span>
 		</button>

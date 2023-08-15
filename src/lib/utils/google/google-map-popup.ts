@@ -5,15 +5,6 @@ import type { ILayerListElementType } from "$lib/types/mapTypes";
 import { millisecondUnixToDateTime } from "../date-format";
 import { formatText } from "../text-format";
 
-
-const createImageDiv = (image: string): string => {
-  return `
-      <div class="flex flex-row mt-4">
-        <img class="w-96 h-auto object-cover" src="${image}" />
-      </div>
-    `;
-};
-
  const createContentString = (feature: any, maxCount: number): string => {
   let contentString = '';
   let count = 0;
@@ -60,14 +51,6 @@ export const createEventGoogleMapsPopup = (feature: IEventGoogleDataType): strin
 
     `
 
-  // if (feature.snapshots) {
-
-  //   let videoObjects = feature.snapshots.find((o) => o.source.includes("vid"));
-  //   const image = videoObjects?.downloadUrl;
-  //   if (image) {
-  //     contentString += createImageDiv(image);
-  //   }
-  // }
   return contentString;
 };
 

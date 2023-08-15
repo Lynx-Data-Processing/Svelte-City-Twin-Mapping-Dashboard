@@ -1,16 +1,16 @@
 .date-picker {
-  padding: $paddings-lg;
+  padding: 12px 16px;
   background-clip: padding-box;
   width: 100%;
   border-width: $border-width;
-  border-color: $btn-default-light;
+  border-color: $smoke;
   font-size: $font-size-sm;  
   border-style: solid;
   transition: all $speed-md;
   &:hover {
     cursor: pointer;
     color: $black;
-    background-color: $btn-default-light;
+    background-color: $smoke;
   }
 }
 

@@ -2,7 +2,7 @@
 	import { EMERGENCY_RECORD, STOP_SIGN, TAILGATING_GPS } from '$lib/constants/strings';
 </script>
 
-<div class="flex flex-col gap-2 px-4 py-4">
+<div class="flex flex-col gap-2 p-4">
 	<p>
 		Filters for all trips and events go here. Each layer should have a checkbox/ sliders to toggle
 		Geojson features.

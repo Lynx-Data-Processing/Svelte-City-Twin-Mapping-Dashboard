@@ -11,7 +11,7 @@
 	};
 </script>
 
-<div class="flex flex-col gap-4 px-4 py-4">
+<div class="flex flex-col gap-4 p-4">
 	<div id="endpointSelect">
 		<label for="endpoint_select">Endpoint</label>
 		<input
@@ -63,11 +63,12 @@
 		{#if isEndDateBeforeStartDate}
 			<div class="alert alert-error "><span>End date cannot be before start date</span></div>
 		{:else}
-			<button on:click={() => fetchTripsData(tripsParams)} class={`btn w-full btn-primary`}>
-				<div class="flex flex-row justify-between gap-4">
-					<i class={`fa-solid fa-search icon-color`} />
-					<span>Search Data</span>
-				</div>
+			<button
+				on:click={() => fetchTripsData(tripsParams)}
+				class={`btn w-full btn-selected flex flex-row justify-between gap-4`}
+			>
+				<i class={`fa-solid fa-search`} />
+				<span>Search Data</span>
 			</button>
 		{/if}
 	{:else}

@@ -4,13 +4,9 @@
 	import { fade } from 'svelte/transition';
 	import '../../styles/style.css';
 </script>
-
 <Navbar />
-
 <div class="main">
 	<slot />
-
 	<Footer />
 </div>
-
 

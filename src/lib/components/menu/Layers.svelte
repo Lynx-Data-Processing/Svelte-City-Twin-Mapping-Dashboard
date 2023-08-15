@@ -3,7 +3,6 @@
 	import SearchBar from '$lib/components/ui/SearchBar.svelte';
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 	import { isEmptyString } from '$lib/utils/is-emptyString';
-	import Table from '../ui/GeojsonTable.svelte';
 
 	export let toggleGoogleLayer: Function;
 	export let updateMapCenter: Function;
@@ -69,68 +68,49 @@
 </script>
 
 {#if selectedLayer && selectedLayer.geojson}
-	<Modal closeModal={closeModal} title={'Table'} icon={'fa-solid fa-filter'} isRounded={false}>
-
-			<Table bind:geojson={selectedLayer.geojson} />
-		
-	</Modal>
+	<Modal {closeModal} title={'Table'} icon={'fa-solid fa-filter'}/>
 {/if}
 
-<div class="flex flex-col">
-	<div class="flex flex-col px-4 py-4 gap-2">
-		<div class="flex flex-row gap-2">
-			{#if isAllVisible}
-				<button
-					title="Hide All Layers"
-					class="btn-icon"
-					on:click={toggleAllLayers}
-				>
-					<i class="fas fa-eye-slash icon-color m-auto" />
-				</button>
-			{:else}
-				<button
-					title="Show All Layers"
-					class="btn-icon"
-					on:click={toggleAllLayers}
-				>
-					<i class="fas fa-eye icon-color m-auto" />
-				</button>
-			{/if}
-
-			<SearchBar onChangeFunction={filterLayersBySearch} bind:search />
-		</div>
-
-		{#if filteredLayers.length}
-			<div class="flex flex-col max-h-96 overflow-auto gap-2 py-2 ">
-				{#each filteredLayers as layer}
-					<div class="flex flex-row gap-2 h-full">
-						<button
-							class="btn-icon"
-							on:click={() => openModal(layer)}
-						>
-							<i class={`${layer.icon} icon-color m-auto`} style="color: {layer.color}" />
-						</button>
-
-						<button
-							title={layer.layerName}
-							on:click={() => {
-								toggleLayer(layer);
-							}}
-							class={`btn w-full ${layer.isVisible ? 'btn-primary' : 'btn-black-outline'} `}
-						>
-							<div class="flex flex-row justify-between gap-4">
-								<p>{layer.layerName}</p>
-							</div>
-						</button>
-					</div>
-				{/each}
-			</div>
+<div class="flex flex-col p-4 gap-2">
+	<div class="flex flex-row gap-2">
+		{#if isAllVisible}
+			<button title="Hide All Layers" class="btn btn-icon" on:click={toggleAllLayers}>
+				<i class="fas fa-eye-slash m-auto" />
+			</button>
+		{:else}
+			<button title="Show All Layers" class="btn btn-icon" on:click={toggleAllLayers}>
+				<i class="fas fa-eye m-auto" />
+			</button>
 		{/if}
+
+		<SearchBar onChangeFunction={filterLayersBySearch} bind:search />
 	</div>
 
-	<div class="mt-auto px-4 py-4 flex flex-row bg-smoke  justify-end">
-		<div>
-			<p class="text-small">Showing {filteredLayers.length} of {layerList.length} Layers</p>
+	{#if filteredLayers.length}
+		<div class="flex flex-col max-h-96 overflow-auto gap-2 py-2 ">
+			{#each filteredLayers as layer}
+				<div class="flex flex-row gap-2 h-full">
+					<button class="btn btn-icon" on:click={() => openModal(layer)}>
+						<i class={`${layer.icon} m-auto`} style="color: {layer.color}" />
+					</button>
+
+					<button
+						title={layer.layerName}
+						on:click={() => {
+							toggleLayer(layer);
+						}}
+						class={`btn w-full ${layer.isVisible ? 'btn-selected' : 'btn-black-outline'} `}
+					>
+						<div class="flex flex-row justify-between gap-4">
+							<p>{layer.layerName}</p>
+						</div>
+					</button>
+				</div>
+			{/each}
 		</div>
-	</div>
+	{/if}
+</div>
+
+<div class="mt-auto p-4 flex flex-row bg-smoke  justify-end">
+	<p>Showing {filteredLayers.length} of {layerList.length} Layers</p>
 </div>

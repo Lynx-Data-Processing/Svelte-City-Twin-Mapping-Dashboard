@@ -4,7 +4,7 @@ import type { IGeojsonDataType, IGeojsonType } from "$lib/types/geojsonTypes";
 import type { ILatLngType, ILayerListElementType } from "$lib/types/mapTypes";
 
 import { KINGSTON_COORDINATES_OBJ } from "$lib/constants/kingston";
-import type { IEventGoogleDataType, ITripGoogleDataType } from "$lib/types/googleTypes";
+import type { IEventGoogleDataType, ITripEventType, ITripGoogleDataType } from "$lib/types/googleTypes";
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from "../filter-data";
 import { eventPointStyle, lineStyle, pointStyle, polygonStyle, tripLineStyle } from "./google-feature-style";
 import { createEventGoogleMapsPopup, createGooglePopup, createTripGoogleMapsPopup } from "./google-map-popup";
@@ -15,27 +15,30 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
     layerListElement.googleMapLayer = new google.maps.Data();
     const layer = layerListElement.googleMapLayer;
     layer.addGeoJson(layerListElement.geojson);
+
+
     const infoWindow = new google.maps.InfoWindow();
     layer.setStyle((feature: any) => {
-        const geometryType = feature.getGeometry().getType();
-        const color = feature.getProperty('color') || "black"
-        const size = feature.getProperty('size') || 5;
-        const featureType = feature.getProperty('type') || false;
-        const hasArrows = feature.getProperty('hasArrows') || false;
+        const geometryType : IGeojsonDataType = feature.getGeometry().getType();
+        const color: string = feature.getProperty('color') || "black"
+        const size : number = feature.getProperty('size') || 5;
+        const featureType: ITripEventType | null = feature.getProperty('type') || null;
+        const hasArrows: boolean = feature.getProperty('hasArrows') || false;
+
 
         if (featureType === TRIP_EVENT) {
             return eventPointStyle(feature.j as IEventGoogleDataType, color);
         }
-        else if (featureType === TRIP || hasArrows === true) {
+        else if (featureType === TRIP || hasArrows) {
             return tripLineStyle(color)
         }
-        else if (geometryType === POINT || geometryType === MULTI_POINT) {
+        else if (geometryType === POINT) {
             return pointStyle(color, size);
         }
-        else if (geometryType === POLYGON || geometryType === MULTI_POLYGON) {
+        else if (geometryType === POLYGON) {
             return polygonStyle(color);
         }
-        else if (geometryType === LINE_STRING || geometryType === MULTI_LINE_STRING) {
+        else if (geometryType === LINE_STRING) {
             return lineStyle(color);
         }
         else {
@@ -49,7 +52,7 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
 
     layer.addListener('click', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
         const feature = event.feature;
-        const featureType = feature.getProperty('type') || null;
+        const featureType: ITripEventType | null = feature.getProperty('type') || null;
         let contentString = '';
         if (featureType === TRIP_EVENT) {
             contentString = createEventGoogleMapsPopup(feature.j as IEventGoogleDataType);
@@ -102,12 +105,12 @@ export const addLayerElementToLayerList = (
 };
 
 export const createLayerElement = (
-    layerName: string = 'GPS Data',
-    type: IGeojsonDataType = POINT,
+    layerName: string,
+    type: IGeojsonDataType,
     isVisible: boolean = true,
-    icon: string = 'fa-solid fa-car',
-    color: string = 'black',
-    layerImageUrl: string = '',
+    icon: string,
+    color: string,
+    layerImageUrl: string,
     geojson: IGeojsonType,
 ) => {
     const layerElement: ILayerListElementType = {
@@ -118,14 +121,14 @@ export const createLayerElement = (
         icon: icon,
         color: color,
         geojson: geojson,
-        initialCoordinates: getInitialCoordinates(type, geojson, KINGSTON_COORDINATES_OBJ),
+        initialCoordinates: getInitialCoordinates(type, geojson),
         googleMapLayer: new google.maps.Data(),
         layerImageUrl: layerImageUrl
     };
     return layerElement;
 };
 
-const getInitialCoordinates = (type: IGeojsonDataType, data: any, defaultCoords: ILatLngType): ILatLngType => {
+const getInitialCoordinates = (type: IGeojsonDataType, data: any, defaultCoords: ILatLngType = KINGSTON_COORDINATES_OBJ): ILatLngType => {
     try {
         if (!data) return { lat: 0, lng: 0 };
         const initialCoordinateMap: { [key in IGeojsonDataType]?: number[] } = {

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
 :root {
     font-family: 'Lato', sans-serif;
@@ -70,20 +70,22 @@ p {
         letter-spacing: -.04em;
     }
 
-    &-small {
-        font-size: $font-size-sm;
-        line-height: 25px;
-        font-weight: 400;
-        letter-spacing: -.04em;
-    }
-
-    &-no-spacing {
-        line-height: 0.75;
-        /* Adjust line height to remove spacing */
-    }
-
     &-primary {
         color: $primary-color;
+    }
+}
+
+.navbar {
+    z-index: 2;
+    position: fixed;
+    transition: width $speed-sm ease;
+    overflow: hidden;
+    display: flex;
+    height: 100vh;
+    width: 3rem;
+
+    &:hover {
+        width: 15rem;
     }
 }
 
@@ -95,10 +97,6 @@ p {
 
 }
 
-.map {
-
-    min-height: calc(100vh);
-}
 
 hr {
     border: none;
@@ -106,25 +104,4 @@ hr {
     background-color: #e6e8de;
 }
 
-.dot {
-    height: 1rem;
-    width: 1rem;
-    background-color: var(--color);
-    border-radius: 50%;
-    display: inline-block;
-}
 
-.modal {
-    position: fixed;
-    z-index: 25;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.modal-content {
-    margin: 2rem auto;
-    width: 90%;
-}

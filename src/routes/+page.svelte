@@ -4,26 +4,21 @@
 	import { ThemeSupa } from '@supabase/auth-ui-shared';
 	import { Auth } from '@supabase/auth-ui-svelte';
 	import { fade } from 'svelte/transition';
-
 	import type { PageData } from './$types';
 	export let data: PageData;
-
 	// Recaptcha status for ReCaptcha component
 	let recaptcha = false;
 	$: recaptchaStatus = recaptcha;
-
 	// Learn more visibility
 	let learnMoreVisible = false;
 	const toggleLearnMore = () => {
 		learnMoreVisible = !learnMoreVisible;
 	};
 </script>
-
 <svelte:head>
 	<title>Login</title>
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </svelte:head>
-
 <main class="login-background ">
 	<div class="grid grid-cols-2 login-info w-2/5 h-3/5">
 		<div class="col-span-1 bg-primary px-16  flex flex-col justify-center ">
@@ -34,7 +29,6 @@
 			<div class=" flex flex-col  my-auto px-16">
 				<!-- <a href="/" class="mb-auto text-right text-gray-800 hover:underline">Need Help?</a> -->
 				<h1 class="mt-16  text-4xl">Sign In</h1>
-
 				{#if recaptchaStatus}
 					<span in:fade={{ duration: 500 }}>
 						<Auth
@@ -57,17 +51,14 @@
 						/>
 					</span>
 				{/if}
-
 				{#if !recaptchaStatus}
 					<span in:fade={{ duration: 500 }} class="flex flex-col">
 						<Recaptcha bind:recaptcha={recaptcha}/>
 					</span>
 				{/if}
-
 				<button class="text-center hover:underline" on:click={toggleLearnMore}>
 					Why a link? Learn More
 				</button>
-
 				
 				{#if learnMoreVisible}
 					<span in:fade={{ duration: 500 }}
@@ -76,7 +67,6 @@
 					>
 				{/if}
 			</div>
-
 			
 		</div>
 	</div>

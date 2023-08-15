@@ -1,12 +1,7 @@
 
-
-
-
 export const javascriptObjectToJSONFile = (data: object, filename: string) => {
     try {
-
         let seen: any[] = [];
-
         const dataOBJ: any = JSON.stringify(data, function (key, val) {
             if (val != null && typeof val == "object") {
                 if (seen.indexOf(val) >= 0) {
@@ -16,7 +11,6 @@ export const javascriptObjectToJSONFile = (data: object, filename: string) => {
             }
             return val;
         });
-
         const blob = new Blob([dataOBJ], { type: 'application/json' });
         const href = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -28,5 +22,4 @@ export const javascriptObjectToJSONFile = (data: object, filename: string) => {
     } catch (err) {
         console.error(err)
     }
-
 }
