@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Recaptcha from '$lib/components/auth/ReCaptcha.svelte';
 	import { BRAND_COLOR, BRAND_COLOR_DARK } from '$lib/constants';
+	import Recaptcha from '$lib/features/auth/ReCaptcha.svelte';
 	import { ThemeSupa } from '@supabase/auth-ui-shared';
 	import { Auth } from '@supabase/auth-ui-svelte';
 	import { fade } from 'svelte/transition';

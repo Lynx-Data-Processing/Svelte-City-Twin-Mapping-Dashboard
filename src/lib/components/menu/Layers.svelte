@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Modal from '$lib/components/ui/Modal.svelte';
 	import SearchBar from '$lib/components/ui/SearchBar.svelte';
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 	import { isEmptyString } from '$lib/utils/is-emptyString';
+	import IconButton from '../ui/IconButton.svelte';
 
 	export let toggleGoogleLayer: Function;
 	export let updateMapCenter: Function;
@@ -54,33 +54,24 @@
 	};
 
 	$: layerList && filterLayersBySearch();
-
-	let isModalOpen = false;
-	const openModal = (layer: ILayerListElementType) => {
-		selectedLayer = layer;
-		isModalOpen = true;
-	};
-
-	const closeModal = () => {
-		selectedLayer = null;
-		isModalOpen = false;
-	};
 </script>
-
-{#if selectedLayer && selectedLayer.geojson}
-	<Modal {closeModal} title={'Table'} icon={'fa-solid fa-filter'}/>
-{/if}
 
 <div class="flex flex-col p-4 gap-2">
 	<div class="flex flex-row gap-2">
 		{#if isAllVisible}
-			<button title="Hide All Layers" class="btn btn-icon" on:click={toggleAllLayers}>
-				<i class="fas fa-eye-slash m-auto" />
-			</button>
+			<IconButton
+				title={'Hide Layers'}
+				icon="fas fa-eye-slash"
+				onClickHandle={toggleAllLayers}
+				size={'h-10 w-10'}
+			/>
 		{:else}
-			<button title="Show All Layers" class="btn btn-icon" on:click={toggleAllLayers}>
-				<i class="fas fa-eye m-auto" />
-			</button>
+			<IconButton
+				title={'Show Layers'}
+				icon="fas fa-eye"
+				onClickHandle={toggleAllLayers}
+				size={'h-10 w-10'}
+			/>
 		{/if}
 
 		<SearchBar onChangeFunction={filterLayersBySearch} bind:search />
@@ -89,21 +80,23 @@
 	{#if filteredLayers.length}
 		<div class="flex flex-col max-h-96 overflow-auto gap-2 py-2 ">
 			{#each filteredLayers as layer}
-				<div class="flex flex-row gap-2 h-full">
-					<button class="btn btn-icon" on:click={() => openModal(layer)}>
-						<i class={`${layer.icon} m-auto`} style="color: {layer.color}" />
-					</button>
+				<div class="flex flex-row gap-2">
+					<IconButton
+						title={'Toggle Layer'}
+						icon={layer.icon}
+						iconColor={layer.color}
+						size={'h-10 w-10'}
+						onClickHandle={() => {}}
+					/>
 
 					<button
 						title={layer.layerName}
-						on:click={() => {
-							toggleLayer(layer);
-						}}
-						class={`btn w-full ${layer.isVisible ? 'btn-selected' : 'btn-black-outline'} `}
+						on:click={() => toggleLayer(layer)}
+						class="flex flex-row px-4 py-2 border-[1px] rounded-md w-full h-10 {layer.isVisible
+							? 'bg-primary text-white hover:bg-primary-dark'
+							: 'bg-white hover:bg-smoke'}"
 					>
-						<div class="flex flex-row justify-between gap-4">
-							<p>{layer.layerName}</p>
-						</div>
+						<p class="my-auto">{layer.layerName}</p>
 					</button>
 				</div>
 			{/each}

@@ -32,8 +32,6 @@ h3,
 h4,
 h5,
 h6 {
-
-
     line-height: 1.2;
     font-style: normal;
     font-weight: 700;
@@ -70,9 +68,6 @@ p {
         letter-spacing: -.04em;
     }
 
-    &-primary {
-        color: $primary-color;
-    }
 }
 
 .navbar {
@@ -84,9 +79,6 @@ p {
     height: 100vh;
     width: 3rem;
 
-    &:hover {
-        width: 15rem;
-    }
 }
 
 
@@ -105,3 +97,12 @@ hr {
 }
 
 
+.loading {
+	text-align: center;
+	display: block;
+	overflow: hidden;
+	background-color: #fff;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-image: url(https://www.arcgis.com/apps/instant/interactivelegend/assets/loader-ie9.gif);
+}

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import AlertError from '$lib/components/ui/AlertError.svelte';
+
 	import { SEARCH_PARAMS } from '$lib/constants/initialData';
 	import type { ISearchParamType } from '$lib/types/types';
 
@@ -19,7 +21,7 @@
 			id="enpoint_select"
 			type="search"
 			placeholder="Endpoint ID"
-			class="form-control search-input"
+			class="form-control flex flex-row gap-2 px-4 py-2 border-[1px] h-10 bg-white hover:bg-smoke w-full  text-sm rounded-md"
 			data-mdb-toggle="datepicker"
 			bind:value={tripsParams.endpointId}
 		/>
@@ -32,7 +34,7 @@
 				name="start_date"
 				id="start_date"
 				type="date"
-				class="search-input"
+				class="flex flex-row gap-2 px-4 py-2 border-[1px] h-10 bg-white hover:bg-smoke w-full  text-sm rounded-md"
 				placeholder="Select a date"
 				data-mdb-toggle="datepicker"
 				min="2010-01-01"
@@ -48,7 +50,7 @@
 				name="end_date"
 				id="end_date"
 				type="date"
-				class="search-input"
+				class="flex flex-row gap-2 px-4 py-2 border-[1px] h-10 bg-white hover:bg-smoke w-full  text-sm rounded-md"
 				placeholder="Select End Date Time"
 				data-mdb-toggle="datepicker"
 				min="2010-01-01"
@@ -61,17 +63,18 @@
 
 	{#if tripsParams.startDateTime && tripsParams.endDateTime}
 		{#if isEndDateBeforeStartDate}
-			<div class="alert alert-error "><span>End date cannot be before start date</span></div>
+			<AlertError message={'End Date Time must be after Start Date Time'} />
 		{:else}
 			<button
+				title={'Search Data'}
 				on:click={() => fetchTripsData(tripsParams)}
-				class={`btn w-full btn-selected flex flex-row justify-between gap-4`}
+				class="flex flex-row gap-2 px-4 py-2 border-[1px]  w-full h-10 bg-primary text-white hover:bg-primary-dark rounded-md"
 			>
-				<i class={`fa-solid fa-search`} />
-				<span>Search Data</span>
+				<i class={`fa-solid fa-search mr-2 my-auto`} />
+				<p class="my-auto">Search Data</p>
 			</button>
 		{/if}
 	{:else}
-		<div class="alert alert-error "><span>Select a Date and Time before Searching</span></div>
+		<AlertError message={'Select a Date and Time before Searching'} />
 	{/if}
 </div>

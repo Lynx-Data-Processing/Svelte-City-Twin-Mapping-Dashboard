@@ -1,11 +1,11 @@
 <script lang="ts">
-	import LoadingError from '$lib/components/loading/LoadingError.svelte';
-	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
 	import Layers from '$lib/components/menu/Layers.svelte';
 	import SearchData from '$lib/components/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { POINT } from '$lib/constants';
 	import { MAP_DATA } from '$lib/constants/initialData';
+	import LoadingError from '$lib/features/map/LoadingError.svelte';
+	import LoadingSpinner from '$lib/features/map/LoadingSpinner.svelte';
 	import mockLayerListElements from '$lib/mock/layerListElements.json';
 	import { getGPSForTrips, getSmarterAiTrips } from '$lib/service/smarter-api';
 	import {
@@ -16,7 +16,7 @@
 	} from '$lib/types/mapTypes';
 	import type { ISearchParamType } from '$lib/types/types';
 
-	import Card from '$lib/components/Card.svelte';
+	import Card from '$lib/layout/Card.svelte';
 	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
 	import type { IEventGoogleDataType } from '$lib/types/googleTypes';
 	import type { ITrip } from '$lib/types/tripTypes';
@@ -27,7 +27,7 @@
 		addLayerToGoogleMap,
 		toggleGoogleMapLayerVisibility
 	} from '$lib/utils/google/google-map-utils';
-	// @ts-ignore
+// @ts-ignore
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
 

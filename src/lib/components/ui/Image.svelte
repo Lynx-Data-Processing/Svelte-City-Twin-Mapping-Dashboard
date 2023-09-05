@@ -3,7 +3,6 @@
 	export let imageAlt: string = '';
 	export let imageSize = 'img-card-2xl';
 	export let hasColor = true;
-	export let isRounded = false;
 	export let scaleOnHover = true;
 	export let extraClasses = '';
 	const isVideo = imageUrl.endsWith('.mp4');
@@ -29,7 +28,6 @@
 			loading="lazy"
 			class={`img-card 
 			${scaleOnHover ? 'img-card-scale' : ''} 
-			${isRounded ? 'rounded-lg' : ''}  
 			${extraClasses} 
 			${imageSize} 
 			${hasColor ? 'img-card-hasColor' : ''}`}

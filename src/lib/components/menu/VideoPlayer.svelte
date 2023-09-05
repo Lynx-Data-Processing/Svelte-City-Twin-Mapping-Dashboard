@@ -1,12 +1,12 @@
 <script lang="ts">
-	import LoadingSpinner from '$lib/components/loading/LoadingSpinner.svelte';
+	import AlertError from '$lib/components/ui/AlertError.svelte';
+	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import { TIME, TRIGGER, TRIP_DISTANCE } from '$lib/constants/strings';
 	import { getVideo } from '$lib/service/smarter-api';
 	import type { IEventGoogleDataType } from '$lib/types/googleTypes';
 	import type { IMediaRecordingType } from '$lib/types/videoTypes';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 	import { formatText } from '$lib/utils/text-format';
-	import Toggle from '$lib/components/ui/Toggle.svelte';
 
 	export let selectedEvent: IEventGoogleDataType | null = null;
 	let videos: IMediaRecordingType[];
@@ -57,7 +57,7 @@
 	{#if selectedEvent && numberOfVideos >= 0}
 		{#if loadingVideo}
 			<div class="p-4 h-64">
-				<LoadingSpinner />
+				<p>Loading</p>
 			</div>
 		{:else if numberOfVideos > 0}
 			<div class="flex-1 h-64">
@@ -92,14 +92,14 @@
 					<p>{millisecondUnixToDateTime(selectedEvent.recordingEndTimestamp)}</p>
 				</div>
 			</div>
-			<div class="mt-auto px-4  py-4 flex flex-row bg-smoke rounded-md justify-between">
+			<div class="mt-auto px-4  py-4 flex flex-row bg-smoke justify-between">
 				<Toggle
 					numberOfButtons={numberOfVideos}
 					selectedButtonIndex={selectedVideoIndex}
 					setSelectedIndex={setSelectedVideoIndex}
 				/>
 				<button
-					class="btn"
+					class="px-4 py-3 border-2 border-gray-200  transition duration 150 ease-in-out "
 					title="Videos are stored in smaller, manageable chunks for optimal performance; use the buttons to select the desired video."
 				>
 					<i class="fas fa-question-circle " />
@@ -107,12 +107,12 @@
 			</div>
 		{:else}
 			<div class="p-4">
-				<div class="alert alert-error "><span>{getErrorText()}</span></div>
+				<AlertError message={getErrorText()} />
 			</div>
 		{/if}
 	{:else}
 		<div class="p-4">
-			<div class="alert alert-error "><span>{getErrorText()}</span></div>
+			<AlertError message={getErrorText()} />
 		</div>
 	{/if}
 </div>
