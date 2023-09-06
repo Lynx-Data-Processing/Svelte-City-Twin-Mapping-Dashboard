@@ -7,7 +7,6 @@ import type {
 import axios from 'axios';
 import { fetchAuth } from "../features/auth/helpers/fetch-auth";
 
-// root smarterAI enpoint
 export const getSmarterAi = async () => {
 
     const config = {

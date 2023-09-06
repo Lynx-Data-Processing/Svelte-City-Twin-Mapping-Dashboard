@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MAP_DATA } from '$lib/constants/initialData';
+	import { MAP_DATA } from '$lib/constants';
 	import Layers from '$lib/features/map/Layers.svelte';
 	import LoadingError from '$lib/features/map/LoadingError.svelte';
 	import LoadingSpinner from '$lib/features/map/LoadingSpinner.svelte';

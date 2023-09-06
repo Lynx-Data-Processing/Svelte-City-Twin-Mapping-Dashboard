@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { USARS_DISCLAIMER, USARS_GIS } from '$lib/constants/strings';
 	import { getDevicon } from '$lib/utils/devicon-icons';
 	const PROGRAMMING_TOOLS: string[] = [
 		'svelte',
@@ -14,9 +13,9 @@
 <footer class="z-50 bg-dark text-white shadow-lg py-16 grid grid-cols-1 sm:grid-cols-3 gap-8 px-8">
 	<div class="col-span-1 ">
 		<div class="flex flex-col gap-2 ">
-			<p class="text-title my-auto">{USARS_GIS}</p>
+			<p class="text-title my-auto">USARS GIS</p>
 			<p class="text-sm mt-2">
-				{USARS_DISCLAIMER}
+				The City promotes and fosters open government principles of participation, innovation, transparency and accountability. The data catalogue supports these principles and is the first step in making it easier to view, obtain and use the information the City has gathered.
 			</p>
 		</div>
 		<div class="flex flex-row gap-2 mt-8">

@@ -11,3 +11,10 @@ export const FEATURE_COLLECTION = 'FeatureCollection';
 export const GPS = 'GPS';
 export const TRIP = "TRIP";
 export const TRIP_EVENT = "TRIP_EVENT";
+
+
+export const TAILGATING_GPS = "tailgating_gps"
+export const SPEEDING = "Speeding"
+export const STOP_SIGN = "Stop Sign"
+export const EMERGENCY_RECORD = "EMERGENCY_RECORD"
+export const TRAFFIC_LIGHT = "Traffic Light"

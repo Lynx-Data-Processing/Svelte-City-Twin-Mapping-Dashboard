@@ -1,7 +1,6 @@
 <script lang="ts">
 	import AlertError from '$lib/components/AlertError.svelte';
 	import Toggle from '$lib/components/Toggle.svelte';
-	import { TIME, TRIGGER, TRIP_DISTANCE } from '$lib/constants/strings';
 	import type { IEventGoogleDataType } from '$lib/features/map/types/googleTypes';
 	import type { IMediaRecordingType } from '$lib/features/menu/types/videoTypes';
 	import { getVideo } from '$lib/service/smarter-api';
@@ -76,17 +75,17 @@
 			</div>
 			<div class="flex flex-col  justify-between  p-4 gap-2">
 				<div>
-					<p class="font-bold">{TRIP_DISTANCE}</p>
+					<p class="font-bold">Trip Distance</p>
 					<p>
 						{selectedEvent.distance ? `${(selectedEvent.distance / 1000).toFixed(2)} km` : 'N/A'}
 					</p>
 				</div>
 				<div>
-					<p class="font-bold">{TRIGGER}</p>
+					<p class="font-bold">Trigger</p>
 					<p>{selectedEvent.triggerName}</p>
 				</div>
 				<div class="my-auto">
-					<p class="font-bold">{TIME}</p>
+					<p class="font-bold">Time</p>
 					<p>{millisecondUnixToDateTime(selectedEvent.recordingStartTimestamp)}</p>
 					<p>{millisecondUnixToDateTime(selectedEvent.recordingEndTimestamp)}</p>
 				</div>

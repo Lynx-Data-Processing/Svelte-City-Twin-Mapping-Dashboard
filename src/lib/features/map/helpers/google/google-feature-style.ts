@@ -1,4 +1,4 @@
-import { EMERGENCY_RECORD, TAILGATING_GPS, TRAFFIC_LIGHT } from "$lib/constants/strings";
+import { EMERGENCY_RECORD, TAILGATING_GPS, TRAFFIC_LIGHT } from "$lib/features/map/constants/geojson";
 import { EMERGENCY_ICON_PATH, TAILGATING_ICON_PATH, TRAFFIC_LIGHT_ICON_PATH } from "$lib/features/map/constants/icons";
 import type { IEventGoogleDataType } from "$lib/features/map/types";
 
