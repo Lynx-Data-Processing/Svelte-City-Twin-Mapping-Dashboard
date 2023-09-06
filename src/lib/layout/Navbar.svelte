@@ -14,6 +14,13 @@
 			href: 'https://opendatakingston.cityofkingston.ca/pages/welcome/',
 			icon: 'fa-solid fa-globe',
 			isExternal: true
+		},
+		{
+			id: 4, 
+			name: "Turbo Pass OSM",
+			href: "https://overpass-turbo.eu/",
+			icon: "fa-solid fa-database",
+			isExternal: true
 		}
 	];
 </script>

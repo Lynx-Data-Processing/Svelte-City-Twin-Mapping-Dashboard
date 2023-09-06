@@ -38,6 +38,8 @@ h6 {
 li,
 label,
 span,
+td,
+th,
 p {
   font-size: 0.7rem;
   line-height: 1.5;

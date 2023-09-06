@@ -27,7 +27,9 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
 
 
         if (featureType === TRIP_EVENT) {
-            return eventPointStyle(feature.j as IEventGoogleDataType, color);
+            let cik = eventPointStyle(feature.j as IEventGoogleDataType, color);
+            console.log(cik)
+            return cik;
         }
         else if (featureType === TRIP || hasArrows) {
             return tripLineStyle(color)

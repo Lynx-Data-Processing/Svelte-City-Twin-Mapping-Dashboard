@@ -13,7 +13,7 @@ export const eventPointStyle = (feature: IEventGoogleDataType, color: string, si
     let style = createStyle(color);
     let icon = createIcon(color, size, '', 0.8);
     let triggerName = feature.triggerName.toLowerCase();
-
+    console.log(triggerName)
     if (triggerName.includes(TAILGATING_GPS.toLowerCase())) {
         icon = createIcon("#f5554a", 0.03, TAILGATING_ICON_PATH);
     }
@@ -23,6 +23,8 @@ export const eventPointStyle = (feature: IEventGoogleDataType, color: string, si
     else if (triggerName.includes(TRAFFIC_LIGHT.toLowerCase())) {
         icon = createIcon("#f554a", 0.3, TRAFFIC_LIGHT_ICON_PATH)
     }
+
+    console.log(icon)
     return { ...style, icon: icon };
 }
 
