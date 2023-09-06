@@ -1,8 +1,4 @@
 
-export type IDateTimeDictionaryType = {
-    startDateTime: string,
-    endDateTime: string,
-}
 
 export type ISearchParamType = {
     endpointId: string,

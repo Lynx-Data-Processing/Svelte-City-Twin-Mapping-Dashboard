@@ -1,9 +1,9 @@
 
-import type { IEventGoogleDataType, ITripGoogleDataType } from "$lib/types/googleTypes";
+import type { IEventGoogleDataType, ITripGoogleDataType } from "$lib/features/map/types/googleTypes";
 import type { ILayerListElementType } from "$lib/types/mapTypes";
 
-import { millisecondUnixToDateTime } from "../date-format";
-import { formatText } from "../text-format";
+import { millisecondUnixToDateTime } from "../../../menu/helpers/date-format";
+import { formatText } from "./text-format";
 
  const createContentString = (feature: any, maxCount: number): string => {
   let contentString = '';

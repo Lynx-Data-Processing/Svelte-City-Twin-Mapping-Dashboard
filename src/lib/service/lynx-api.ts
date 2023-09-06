@@ -1,12 +1,12 @@
-import axios from 'axios';
-import { fetchAuth } from "../utils/fetch-auth";
 import { PUBLIC_NODE_BACKEND_URL } from '$env/static/public';
-import type { 
-    IEventType, 
-    ISensorReading 
-} from '../types/eventTypes';
 import type { IDeviceType } from '$lib/types/deviceTypes';
 import type { IMediaRecordingType, IVideoType } from '$lib/types/videoTypes';
+import axios from 'axios';
+import { fetchAuth } from "../features/auth/helpers/fetch-auth";
+import type {
+    IEventType,
+    ISensorReading
+} from '../types/eventTypes';
 
 // root smarterAI enpoint
 export const getSmarterAi = async () => {

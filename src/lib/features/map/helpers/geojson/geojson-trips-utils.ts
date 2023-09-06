@@ -1,13 +1,13 @@
 import { FEATURE, FEATURE_COLLECTION, LINE_STRING, POINT, TRIP, TRIP_EVENT } from "$lib/constants";
 
+import type { IGeojsonFeatureType, IGeojsonType } from "$lib/features/map/types/geojsonTypes";
+import type { IEventGoogleDataType, ITripGoogleDataType } from "$lib/features/map/types/googleTypes";
 import type { ISensorDataType } from "$lib/types/eventTypes";
-import type { IGeojsonFeatureType, IGeojsonType } from "$lib/types/geojsonTypes";
-import type { IEventGoogleDataType, ITripGoogleDataType } from "$lib/types/googleTypes";
 import type { ILayerListElementType } from "$lib/types/mapTypes";
 import type { ITrip } from "$lib/types/tripTypes";
 import axios from "axios";
-import { getRandomColor } from "../color-utils";
 import { createLayerElement } from "../google/google-map-utils";
+import { getRandomColor } from "./color-utils";
 
 export const convertTripEventsPointsToGeojson = async (trip: ITrip, eventColor: string) => {
   let tripEventGeojsonList: IGeojsonFeatureType[] = []

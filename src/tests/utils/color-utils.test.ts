@@ -1,4 +1,4 @@
-import { getRandomColorHEX, getRandomColor } from '$lib/utils/color-utils'; // Replace 'your-file' with the correct path to the file containing the functions.
+import { getRandomColor, getRandomColorHEX } from '$lib/features/map/helpers/geojson/color-utils'; // Replace 'your-file' with the correct path to the file containing the functions.
 
 describe('getRandomColorHEX', () => {
   it('returns a valid HEX color', () => {

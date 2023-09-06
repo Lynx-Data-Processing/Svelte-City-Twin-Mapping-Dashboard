@@ -1,12 +1,11 @@
 <script lang="ts">
-	import AlertError from '$lib/components/ui/AlertError.svelte';
-	import Toggle from '$lib/components/ui/Toggle.svelte';
+	import AlertError from '$lib/components/AlertError.svelte';
+	import Toggle from '$lib/components/Toggle.svelte';
 	import { TIME, TRIGGER, TRIP_DISTANCE } from '$lib/constants/strings';
+	import type { IEventGoogleDataType } from '$lib/features/map/types/googleTypes';
+	import { millisecondUnixToDateTime } from '$lib/features/menu/helpers/date-format';
 	import { getVideo } from '$lib/service/smarter-api';
-	import type { IEventGoogleDataType } from '$lib/types/googleTypes';
 	import type { IMediaRecordingType } from '$lib/types/videoTypes';
-	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
-	import { formatText } from '$lib/utils/text-format';
 
 	export let selectedEvent: IEventGoogleDataType | null = null;
 	let videos: IMediaRecordingType[];
@@ -84,7 +83,7 @@
 				</div>
 				<div>
 					<p class="font-bold">{TRIGGER}</p>
-					<p>{formatText(selectedEvent.triggerName)}</p>
+					<p>{selectedEvent.triggerName}</p>
 				</div>
 				<div class="my-auto">
 					<p class="font-bold">{TIME}</p>

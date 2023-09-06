@@ -1,6 +1,6 @@
 import { EMERGENCY_ICON_PATH, TAILGATING_ICON_PATH, TRAFFIC_LIGHT_ICON_PATH } from "$lib/constants/icons";
 import { EMERGENCY_RECORD, TAILGATING_GPS, TRAFFIC_LIGHT } from "$lib/constants/strings";
-import type { IEventGoogleDataType } from "$lib/types/googleTypes";
+import type { IEventGoogleDataType } from "$lib/features/map/types/googleTypes";
 
 const createStyle = (color = 'blue', weight = 4) => ({ strokeColor: color, strokeWeight: weight });
 const createIcon = (color: string, scale = 5, path: string | google.maps.SymbolPath | null = google.maps.SymbolPath.CIRCLE, opacity = 1) => ({ path, scale, strokeColor: color, fillColor: color, fillOpacity: opacity });

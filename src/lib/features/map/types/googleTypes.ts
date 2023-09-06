@@ -1,6 +1,6 @@
 import type { TRIP, TRIP_EVENT } from "$lib/constants";
-import type { IEventType, ISensorDataType } from "./eventTypes";
-import type { ITrip } from "./tripTypes";
+import type { IEventType, ISensorDataType } from "../../../types/eventTypes";
+import type { ITrip } from "../../../types/tripTypes";
 
 export type ITripEventType =  typeof TRIP | typeof TRIP_EVENT ;
 export interface IEventGoogleDataType extends IEventType, ISensorDataType, ITrip {

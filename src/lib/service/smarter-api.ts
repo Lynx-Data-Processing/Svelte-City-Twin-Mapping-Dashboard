@@ -1,12 +1,12 @@
 import { PUBLIC_API_KEY, PUBLIC_TENANT_ID, PUBLIC_V5_API_KEY } from '$env/static/public';
 import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/smarter';
 
+import type { IEventGoogleDataType } from '$lib/features/map/types/googleTypes';
 import type { ITrip, ITripEvent } from '$lib/types/tripTypes';
 import type { ISearchParamType } from '$lib/types/types';
-import axios from 'axios';
-import { dateTimeToMillisecondUnix } from '../utils/date-format';
-import type { IEventGoogleDataType } from '$lib/types/googleTypes';
 import type { IMediaRecordingType } from '$lib/types/videoTypes';
+import axios from 'axios';
+import { dateTimeToMillisecondUnix } from '../features/menu/helpers/date-format';
 
 //* Fetch all devices under the Tenant key
 export const getListOfDevicesUnderTenant = async () => {

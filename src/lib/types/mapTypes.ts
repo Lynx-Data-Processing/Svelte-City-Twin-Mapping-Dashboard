@@ -1,5 +1,5 @@
 
-import type { IGeojsonDataType, IGeojsonType } from "./geojsonTypes";
+import type { IGeojsonDataType, IGeojsonType } from "../features/map/types/geojsonTypes";
 
 export interface ILatLngType {
     lat: number,

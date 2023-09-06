@@ -9,7 +9,7 @@
 	const toggleContent = () => (showContent = !showContent);
 </script>
 
-<section class="bg-white h-fit shadow-lg {width} gap-4 rounded-md overflow-hidden">
+<section class="bg-white h-fit shadow-lg {width} gap-2 rounded-md overflow-hidden">
 	<div class="flex flex-row justify-between bg-dark text-white px-4 py-3 ">
 		<div class="flex gap-2">
 			<i class="{icon} my-auto" />

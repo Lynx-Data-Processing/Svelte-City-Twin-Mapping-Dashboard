@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Layers from '$lib/components/menu/Layers.svelte';
-	import SearchData from '$lib/components/menu/SearchData.svelte';
-	import VideoPlayer from '$lib/components/menu/VideoPlayer.svelte';
 	import { POINT } from '$lib/constants';
 	import { MAP_DATA } from '$lib/constants/initialData';
 	import LoadingError from '$lib/features/map/LoadingError.svelte';
 	import LoadingSpinner from '$lib/features/map/LoadingSpinner.svelte';
+	import Layers from '$lib/features/menu/Layers.svelte';
+	import SearchData from '$lib/features/menu/SearchData.svelte';
+	import VideoPlayer from '$lib/features/menu/VideoPlayer.svelte';
 	import mockLayerListElements from '$lib/mock/layerListElements.json';
 	import { getGPSForTrips, getSmarterAiTrips } from '$lib/service/smarter-api';
 	import {
@@ -16,17 +16,17 @@
 	} from '$lib/types/mapTypes';
 	import type { ISearchParamType } from '$lib/types/types';
 
-	import Card from '$lib/layout/Card.svelte';
-	import type { IGeojsonDataType } from '$lib/types/geojsonTypes';
-	import type { IEventGoogleDataType } from '$lib/types/googleTypes';
-	import type { ITrip } from '$lib/types/tripTypes';
-	import { convertTripsToLayerListElements } from '$lib/utils/geojson/geojson-trips-utils';
-	import { getKingstonMapData } from '$lib/utils/geojson/kingston-geojson-util';
+	import { convertTripsToLayerListElements } from '$lib/features/map/helpers/geojson/geojson-trips-utils';
+	import { getKingstonMapData } from '$lib/features/map/helpers/geojson/kingston-geojson-util';
 	import {
 		addLayerElementToLayerList,
 		addLayerToGoogleMap,
 		toggleGoogleMapLayerVisibility
-	} from '$lib/utils/google/google-map-utils';
+	} from '$lib/features/map/helpers/google/google-map-utils';
+	import type { IGeojsonDataType } from '$lib/features/map/types/geojsonTypes';
+	import type { IEventGoogleDataType } from '$lib/features/map/types/googleTypes';
+	import Card from '$lib/layout/Card.svelte';
+	import type { ITrip } from '$lib/types/tripTypes';
 // @ts-ignore
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';

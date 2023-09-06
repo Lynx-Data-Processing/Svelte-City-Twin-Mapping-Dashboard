@@ -1,14 +1,13 @@
 <script lang="ts">
-	import SearchBar from '$lib/components/ui/SearchBar.svelte';
+	import IconButton from '$lib/components/IconButton.svelte';
+	import SearchBar from '$lib/components/SearchBar.svelte';
 	import type { ILayerListElementType } from '$lib/types/mapTypes';
 	import { isEmptyString } from '$lib/utils/is-emptyString';
-	import IconButton from '../ui/IconButton.svelte';
 
 	export let toggleGoogleLayer: Function;
 	export let updateMapCenter: Function;
 	export let layerList: ILayerListElementType[];
 	let filteredLayers: ILayerListElementType[] = layerList;
-	let selectedLayer: ILayerListElementType | null = null;
 	let search = '';
 	let isAllVisible = false;
 
