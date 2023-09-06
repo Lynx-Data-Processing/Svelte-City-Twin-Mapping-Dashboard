@@ -3,9 +3,9 @@
 	import Toggle from '$lib/components/Toggle.svelte';
 	import { TIME, TRIGGER, TRIP_DISTANCE } from '$lib/constants/strings';
 	import type { IEventGoogleDataType } from '$lib/features/map/types/googleTypes';
-	import { millisecondUnixToDateTime } from '$lib/features/menu/helpers/date-format';
+	import type { IMediaRecordingType } from '$lib/features/menu/types/videoTypes';
 	import { getVideo } from '$lib/service/smarter-api';
-	import type { IMediaRecordingType } from '$lib/types/videoTypes';
+	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
 
 	export let selectedEvent: IEventGoogleDataType | null = null;
 	let videos: IMediaRecordingType[];

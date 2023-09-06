@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { LOGOUT, USARS_GIS } from '$lib/constants/strings';
 	import type { INavbarElement } from '$lib/types/types';
 	const linkItems: INavbarElement[] = [
 		{

@@ -1,8 +1,7 @@
 <script lang="ts">
 	import IconButton from '$lib/components/IconButton.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
-	import { isEmptyString } from '$lib/features/menu/helpers/is-emptyString';
-	import type { ILayerListElementType } from '$lib/types/layerListElement';
+	import type { ILayerListElementType } from '$lib/features/map/types';
 
 	export let toggleGoogleLayer: Function;
 	export let updateMapCenter: Function;
@@ -43,7 +42,7 @@
 	};
 
 	const filterLayersBySearch = () => {
-		if (isEmptyString(search)) {
+		if (!search || search === '') {
 			filteredLayers = layerList;
 			return;
 		}

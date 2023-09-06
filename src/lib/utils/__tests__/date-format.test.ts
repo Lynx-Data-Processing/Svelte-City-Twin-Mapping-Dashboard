@@ -1,4 +1,4 @@
-import { dateTimeToMillisecondUnix } from '$lib/features/menu/helpers/date-format'; // Replace 'your-file' with the correct path to the file containing the functions.
+import { dateTimeToMillisecondUnix } from '$lib/utils/date-format'; // Replace 'your-file' with the correct path to the file containing the functions.
 
 describe('dateTimeToMillisecondUnix', () => {
   

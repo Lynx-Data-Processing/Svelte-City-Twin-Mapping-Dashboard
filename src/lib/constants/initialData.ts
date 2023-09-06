@@ -1,6 +1,6 @@
 
-import type { IMapDetailsType } from "$lib/features/map/types/googleTypes";
-import type { ISearchParamType } from "$lib/types/types";
+import type { IMapDetailsType } from "$lib/features/map/types";
+import type { ISearchParamType } from "$lib/features/menu/types";
 import { KINGSTON_COORDINATES_OBJ } from "../features/map/constants/kingston";
 
 

@@ -1,12 +1,11 @@
 import { PUBLIC_NODE_BACKEND_URL } from '$env/static/public';
-import type { IDeviceType } from '$lib/types/deviceTypes';
-import type { IMediaRecordingType, IVideoType } from '$lib/types/videoTypes';
+import type { IMediaRecordingType, IVideoType } from '$lib/features/menu/types/videoTypes';
+import type {
+    IDeviceType, IEventType,
+    ISensorReading
+} from '$lib/types/smarterAITypes';
 import axios from 'axios';
 import { fetchAuth } from "../features/auth/helpers/fetch-auth";
-import type {
-    IEventType,
-    ISensorReading
-} from '../types/eventTypes';
 
 // root smarterAI enpoint
 export const getSmarterAi = async () => {
@@ -19,7 +18,7 @@ export const getSmarterAi = async () => {
             'Authorization': `${fetchAuth()}`,
         },
     };
-  
+
     try {
         const res = await axios(config);
         return res;
@@ -27,7 +26,7 @@ export const getSmarterAi = async () => {
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
-        } 
+        }
         if (error.request) {
             return error.request;
         }
@@ -46,17 +45,17 @@ export const getDevices = async () => {
             'Authorization': `${fetchAuth()}`,
         },
     };
-  
+
     try {
         // parse response and return devices
         const res = await axios(config);
         const devices: IDeviceType[] = res.data.endpoints;
-        
+
         return devices;
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
-        } 
+        }
         if (error.request) {
             return error.request;
         }
@@ -70,7 +69,7 @@ export const getInfo = async (endpointId: string) => {
     const params = new URLSearchParams({
         endpointId: endpointId,
     });
-    
+
     const config = {
         method: 'get',
         url: `${PUBLIC_NODE_BACKEND_URL}/info?${params.toString()}`,
@@ -79,17 +78,17 @@ export const getInfo = async (endpointId: string) => {
             'Authorization': `${fetchAuth()}`,
         },
     };
-    
+
     try {
         // parse response and return device
         const res = await axios(config);
         const device: IDeviceType = res.data;
-        
+
         return device;
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
-        } 
+        }
         if (error.request) {
             return error.request;
         }
@@ -103,7 +102,7 @@ export const getEvents = async (deviceId: string) => {
     const params = new URLSearchParams({
         deviceId: deviceId,
     });
-    
+
     const config = {
         method: 'get',
         url: `${PUBLIC_NODE_BACKEND_URL}/events?${params.toString()}`,
@@ -112,7 +111,7 @@ export const getEvents = async (deviceId: string) => {
             'Authorization': `${fetchAuth()}`,
         },
     };
-    
+
     try {
         // parse response and return events
         const res = await axios(config);
@@ -122,7 +121,7 @@ export const getEvents = async (deviceId: string) => {
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
-        } 
+        }
         if (error.request) {
             return error.request;
         }
@@ -138,7 +137,7 @@ export const getVideos = async (gpsElement: any) => {
         startTime: `${gpsElement.startTime}`,
         endTime: `${gpsElement.endTime}`,
     });
-    
+
     const config = {
         method: 'get',
         url: `${PUBLIC_NODE_BACKEND_URL}/video?${params.toString()}`,
@@ -147,13 +146,13 @@ export const getVideos = async (gpsElement: any) => {
             'Authorization': `${fetchAuth()}`,
         },
     };
-    
+
     try {
         // parse response and return video and video metadata
         const res = await axios(config);
         const videos: IMediaRecordingType[] = res.data.mediaEventRecordings.filter((res: IMediaRecordingType) => res.type === 'VIDEO');
         const videoLink = videos.length ? videos[0].url : '';
-    
+
         const video: IVideoType = {
             eventId: gpsElement.eventId,
             deviceId: gpsElement.deviceId,
@@ -167,7 +166,7 @@ export const getVideos = async (gpsElement: any) => {
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
-        } 
+        }
         if (error.request) {
             return error.request;
         }
@@ -177,12 +176,12 @@ export const getVideos = async (gpsElement: any) => {
 
 // get sensors for a specific endpoint
 export const getSensor = async (
-    endpointId: string, 
-    startTime: number, 
+    endpointId: string,
+    startTime: number,
     endTime: number,
     sensorType: string,
     processType: string,
-    ) => {
+) => {
 
     const params = new URLSearchParams({
         endpointId: endpointId,
@@ -191,7 +190,7 @@ export const getSensor = async (
         sensorType: sensorType,
         processType: processType,
     });
-    
+
     const config = {
         method: 'get',
         url: `${PUBLIC_NODE_BACKEND_URL}/sensor?${params.toString()}`,
@@ -200,17 +199,17 @@ export const getSensor = async (
             'Authorization': `${fetchAuth()}`,
         },
     };
-    
+
     try {
         // parse response and return sensor data
         const res = await axios(config);
         const sensorData: ISensorReading = res.data;
-        
+
         return sensorData;
     } catch (error: any) {
         if (error.response) {
             return error.response.status;
-        } 
+        }
         if (error.request) {
             return error.request;
         }

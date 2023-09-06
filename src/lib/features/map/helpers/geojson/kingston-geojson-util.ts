@@ -1,10 +1,8 @@
-import { OPEN_DATA_KINGSTON_BUS_ROUTES_URL, OPEN_DATA_KINGSTON_CITY_ZONES_URL } from '$lib/constants';
+
 import { LINE_STRING, POINT, POLYGON } from '$lib/features/map/constants/geojson';
-import { KINGSTON_COORDINATES_ARRAY, OPEN_DATA_KINGSTON_CYCLING_PATHS_URL, OPEN_DATA_KINGSTON_WALKING_PATHS_URL } from '$lib/features/map/constants/kingston';
+import { KINGSTON_COORDINATES_ARRAY, OPEN_DATA_KINGSTON_BUS_ROUTES_URL, OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_CYCLING_PATHS_URL, OPEN_DATA_KINGSTON_WALKING_PATHS_URL } from '$lib/features/map/constants/kingston';
 import { axiosCacheGetUtility } from '$lib/features/map/services/fetch-data';
-import type { IGeojsonFeatureType, IGeojsonType } from '$lib/features/map/types/geojsonTypes';
-import type { ILayerListElementType } from '$lib/types/layerListElement';
-import type { IGeojsonDataType } from '../../types/geojsonTypes';
+import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType, ILayerListElementType } from '$lib/features/map/types';
 import { createLayerElement } from '../google/google-map-utils';
 import { getColorGivenIndex } from './color-utils';
 

@@ -2,7 +2,7 @@
 	import AlertError from '$lib/components/AlertError.svelte';
 
 	import { SEARCH_PARAMS } from '$lib/constants/initialData';
-	import type { ISearchParamType } from '$lib/types/types';
+	import type { ISearchParamType } from '$lib/features/menu/types/searchParamTypes';
 
 	let tripsParams: ISearchParamType = SEARCH_PARAMS;
 	export let fetchTripsData: Function;

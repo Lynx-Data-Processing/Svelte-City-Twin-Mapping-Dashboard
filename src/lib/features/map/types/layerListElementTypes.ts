@@ -1,6 +1,6 @@
 
+import type { IGeojsonDataType, IGeojsonType } from "$lib/features/map/types/geojsonTypes";
 import type { ILatLngType } from "$lib/features/map/types/googleTypes";
-import type { IGeojsonDataType, IGeojsonType } from "../features/map/types/geojsonTypes";
 
 
 

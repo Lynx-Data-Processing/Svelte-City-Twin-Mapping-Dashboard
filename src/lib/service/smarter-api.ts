@@ -2,9 +2,8 @@ import { PUBLIC_API_KEY, PUBLIC_TENANT_ID, PUBLIC_V5_API_KEY } from '$env/static
 import { API_SMARTER_AI_ENDPOINT_INFO_URL, API_SMARTER_AI_ENDPOINT_LIST_URL, API_SMARTER_AI_MEDIA_LIST_URL, API_SMARTER_AI_TRIPS_URL } from '$lib/constants/smarter';
 
 import type { IEventGoogleDataType } from '$lib/features/map/types/googleTypes';
-import type { ITrip, ITripEvent } from '$lib/types/tripTypes';
-import type { ISearchParamType } from '$lib/types/types';
-import type { IMediaRecordingType } from '$lib/types/videoTypes';
+import type { IMediaRecordingType, ISearchParamType } from '$lib/features/menu/types';
+import type { ITrip, ITripEvent } from '$lib/types/smarterAITypes';
 import axios from 'axios';
 
 //* Fetch all devices under the Tenant key

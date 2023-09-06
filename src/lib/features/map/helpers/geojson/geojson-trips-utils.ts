@@ -1,10 +1,7 @@
-import { FEATURE, FEATURE_COLLECTION, LINE_STRING, POINT, TRIP, TRIP_EVENT } from "$lib/constants";
+import { FEATURE, FEATURE_COLLECTION, LINE_STRING, POINT, TRIP, TRIP_EVENT } from "$lib/features/map/constants/geojson";
+import type { IEventGoogleDataType, IGeojsonFeatureType, IGeojsonType, ILayerListElementType, ITripGoogleDataType } from "$lib/features/map/types";
+import type { ISensorDataType, ITrip } from "$lib/types/smarterAITypes";
 
-import type { IGeojsonFeatureType, IGeojsonType } from "$lib/features/map/types/geojsonTypes";
-import type { IEventGoogleDataType, ITripGoogleDataType } from "$lib/features/map/types/googleTypes";
-import type { ISensorDataType } from "$lib/types/eventTypes";
-import type { ILayerListElementType } from "$lib/types/layerListElement";
-import type { ITrip } from "$lib/types/tripTypes";
 import axios from "axios";
 import { createLayerElement } from "../google/google-map-utils";
 import { getRandomColor } from "./color-utils";

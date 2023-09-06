@@ -1,19 +1,8 @@
 <script lang="ts">
-	import { POINT } from '$lib/constants';
 	import { MAP_DATA } from '$lib/constants/initialData';
+	import Layers from '$lib/features/map/Layers.svelte';
 	import LoadingError from '$lib/features/map/LoadingError.svelte';
 	import LoadingSpinner from '$lib/features/map/LoadingSpinner.svelte';
-	import Layers from '$lib/features/menu/Layers.svelte';
-	import SearchData from '$lib/features/menu/SearchData.svelte';
-	import VideoPlayer from '$lib/features/menu/VideoPlayer.svelte';
-	import mockLayerListElements from '$lib/mock/layerListElements.json';
-	import { getGPSForTrips, getSmarterAiTrips } from '$lib/service/smarter-api';
-	import type { ILayerListElementType } from '$lib/types/layerListElement';
-
-	
-
-	import type { ISearchParamType } from '$lib/types/types';
-
 	import { convertTripsToLayerListElements } from '$lib/features/map/helpers/geojson/geojson-trips-utils';
 	import { getKingstonMapData } from '$lib/features/map/helpers/geojson/kingston-geojson-util';
 	import {
@@ -21,10 +10,14 @@
 		addLayerToGoogleMap,
 		toggleGoogleMapLayerVisibility
 	} from '$lib/features/map/helpers/google/google-map-utils';
-	import type { IGeojsonDataType } from '$lib/features/map/types/geojsonTypes';
-	import { zoomLevelMap, type IEventGoogleDataType, type ILatLngType, type IMapDetailsType } from '$lib/features/map/types/googleTypes';
+	import { zoomLevelMap, type IEventGoogleDataType, type IGeojsonDataType, type ILatLngType, type ILayerListElementType, type IMapDetailsType } from '$lib/features/map/types';
+	import SearchData from '$lib/features/menu/SearchData.svelte';
+	import VideoPlayer from '$lib/features/menu/VideoPlayer.svelte';
+	import type { ISearchParamType } from '$lib/features/menu/types/searchParamTypes';
 	import Card from '$lib/layout/Card.svelte';
-	import type { ITrip } from '$lib/types/tripTypes';
+	import mockLayerListElements from '$lib/mock/layerListElements.json';
+	import { getGPSForTrips, getSmarterAiTrips } from '$lib/service/smarter-api';
+	import type { ITrip } from '$lib/types/smarterAITypes';
 // @ts-ignore
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
@@ -46,7 +39,7 @@
 
 	const updateMapCenter = (
 		coordinates: ILatLngType,
-		dataType: IGeojsonDataType = POINT,
+		dataType: IGeojsonDataType = 'Point',
 		zoomLevel?: number
 	) => {
 		map.setCenter(coordinates);

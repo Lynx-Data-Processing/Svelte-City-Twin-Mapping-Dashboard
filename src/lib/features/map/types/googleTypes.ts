@@ -1,6 +1,5 @@
-import type { TRIP, TRIP_EVENT } from "$lib/constants";
-import type { IEventType, ISensorDataType } from "../../../types/eventTypes";
-import type { ITrip } from "../../../types/tripTypes";
+import type { TRIP, TRIP_EVENT } from "$lib/features/map/constants/geojson";
+import type { IEventType, ISensorDataType, ITrip } from "$lib/types/smarterAITypes";
 import type { IGeojsonDataType } from "./geojsonTypes";
 
 export type ITripEventType =  typeof TRIP | typeof TRIP_EVENT ;
