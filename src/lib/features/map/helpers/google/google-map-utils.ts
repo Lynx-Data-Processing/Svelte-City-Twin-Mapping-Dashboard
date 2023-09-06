@@ -1,15 +1,14 @@
-import { LINE_STRING, MULTI_LINE_STRING, MULTI_POINT, MULTI_POLYGON, POINT, POLYGON, TRIP, TRIP_EVENT } from "$lib/features/map/constants/geojson";
-
-import type { IGeojsonDataType, IGeojsonType } from "$lib/features/map/types/geojsonTypes";
-import type { ILayerListElementType } from "$lib/features/map/types/layerListElementTypes";
-
+import { LINE_STRING, MULTI_POLYGON, POINT, POLYGON, TRIP, TRIP_EVENT } from "$lib/features/map/constants/geojson";
+import type { IGeojsonDataType, IGeojsonType,  IEventGoogleDataType, ILatLngType, ITripEventType, ITripGoogleDataType } from "$lib/features/map/types";
+import type { ILayerListElement } from "$lib/features/map/types/layerListElementTypes";
 import { KINGSTON_COORDINATES_OBJ } from "$lib/features/map/constants/kingston";
-import type { IEventGoogleDataType, ILatLngType, ITripEventType, ITripGoogleDataType } from "$lib/features/map/types/googleTypes";
 import { checkIfElementExists, removeObjectWhereValueEqualsString } from "./filter-data";
 import { eventPointStyle, lineStyle, pointStyle, polygonStyle, tripLineStyle } from "./google-feature-style";
 import { createEventGoogleMapsPopup, createGooglePopup, createTripGoogleMapsPopup } from "./google-map-popup";
+import { selectedEventStore } from "../../store/selectedEventStore";
 
-export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElementType, updateSelectedEvent: Function) => {
+
+export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElement) => {
     if (!map || !layerListElement.geojson) return;
 
     layerListElement.googleMapLayer = new google.maps.Data();
@@ -28,7 +27,6 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
 
         if (featureType === TRIP_EVENT) {
             let cik = eventPointStyle(feature.j as IEventGoogleDataType, color);
-            console.log(cik)
             return cik;
         }
         else if (featureType === TRIP || hasArrows) {
@@ -58,7 +56,7 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
         let contentString = '';
         if (featureType === TRIP_EVENT) {
             contentString = createEventGoogleMapsPopup(feature.j as IEventGoogleDataType);
-            updateSelectedEvent(feature);
+            selectedEventStore.setSelectedEvent(feature as IEventGoogleDataType);
         }
         else if (featureType === TRIP) {
             contentString = createTripGoogleMapsPopup(feature.j as ITripGoogleDataType);
@@ -84,15 +82,15 @@ export const addLayerToGoogleMap = (map: any, layerListElement: ILayerListElemen
     return map;
 };
 
-export const toggleGoogleMapLayerVisibility = (map: any, layerElement: ILayerListElementType) => {
+export const toggleGoogleMapLayerVisibility = (map: any, layerElement: ILayerListElement) => {
     if (!map && layerElement.googleMapLayer) return;
     layerElement.isVisible ? layerElement.googleMapLayer.setMap(map) : layerElement.googleMapLayer.setMap(null);
     return map;
 };
 
 export const addLayerElementToLayerList = (
-    layerList: ILayerListElementType[],
-    layerListElement: ILayerListElementType
+    layerList: ILayerListElement[],
+    layerListElement: ILayerListElement
 ) => {
     let tempLayerList = layerList;
     if (checkIfElementExists(tempLayerList, 'layerName', layerListElement.layerName)) {
@@ -115,7 +113,7 @@ export const createLayerElement = (
     layerImageUrl: string,
     geojson: IGeojsonType,
 ) => {
-    const layerElement: ILayerListElementType = {
+    const layerElement: ILayerListElement = {
         layerName: layerName,
         sourceName: `${layerName}_Source`,
         type: type,

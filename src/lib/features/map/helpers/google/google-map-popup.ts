@@ -1,5 +1,5 @@
 
-import type { IEventGoogleDataType, ILayerListElementType, ITripGoogleDataType } from "$lib/features/map/types";
+import type { IEventGoogleDataType, ILayerListElement, ITripGoogleDataType } from "$lib/features/map/types";
 import { millisecondUnixToDateTime } from "../../../../utils/date-format";
 import { formatText } from "./text-format";
 
@@ -52,7 +52,7 @@ export const createEventGoogleMapsPopup = (feature: IEventGoogleDataType): strin
   return contentString;
 };
 
-export const createGooglePopup = (feature: any, layerListElement: ILayerListElementType): string => {
+export const createGooglePopup = (feature: any, layerListElement: ILayerListElement): string => {
   let contentString = `
       <p class="text-subtitle ">${layerListElement.layerName}</p>
       <hr class="bg-primary w-12 h-0.5 my-1" /> 

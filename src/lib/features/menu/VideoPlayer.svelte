@@ -5,8 +5,13 @@
 	import type { IMediaRecordingType } from '$lib/features/menu/types/videoTypes';
 	import { getVideo } from '$lib/service/smarter-api';
 	import { millisecondUnixToDateTime } from '$lib/utils/date-format';
+	import { selectedEventStore } from '../map/store/selectedEventStore';
 
-	export let selectedEvent: IEventGoogleDataType | null = null;
+	let selectedEvent: IEventGoogleDataType | undefined;
+	selectedEventStore.subscribe((value) => {
+		selectedEvent = value.selectedEvent;
+	});
+
 	let videos: IMediaRecordingType[];
 	let loadingVideo: boolean = false;
 	let selectedVideo: IMediaRecordingType | null = null;

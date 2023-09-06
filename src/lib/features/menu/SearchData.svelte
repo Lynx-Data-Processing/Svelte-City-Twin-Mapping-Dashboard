@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AlertError from '$lib/components/AlertError.svelte';
-	import { SEARCH_PARAMS } from '$lib/constants';
+	import { SEARCH_PARAMS } from '$lib/features/menu/constants/searchParam';
 	import type { ISearchParamType } from '$lib/features/menu/types/searchParamTypes';
 
 	let tripsParams: ISearchParamType = SEARCH_PARAMS;

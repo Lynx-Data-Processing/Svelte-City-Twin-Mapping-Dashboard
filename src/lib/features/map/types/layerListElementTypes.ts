@@ -4,7 +4,7 @@ import type { ILatLngType } from "$lib/features/map/types/googleTypes";
 
 
 
-export interface ILayerListElementType  {
+export interface ILayerListElement  {
     icon: string,
     type: IGeojsonDataType,
     isVisible: boolean,

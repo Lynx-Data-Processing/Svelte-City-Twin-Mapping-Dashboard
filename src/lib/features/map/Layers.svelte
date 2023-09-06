@@ -1,20 +1,52 @@
 <script lang="ts">
 	import IconButton from '$lib/components/IconButton.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
-	import type { ILayerListElementType } from '$lib/features/map/types';
+	import {
+		zoomLevelMap,
+		type IGeojsonDataType,
+		type ILatLngType,
+		type ILayerListElement
+	} from '$lib/features/map/types';
+	import { layerListStore } from '$lib/features/map/store/layerListStore';
+	import { mapStore } from './store/mapStore';
+	import { toggleGoogleMapLayerVisibility } from './helpers/google/google-map-utils';
 
-	export let toggleGoogleLayer: Function;
-	export let updateMapCenter: Function;
-	export let layerList: ILayerListElementType[];
-	let filteredLayers: ILayerListElementType[] = layerList;
+	let map: google.maps.Map | undefined;
+	mapStore.subscribe((value) => {
+		map = value.map;
+	});
+
+	const updateMapCenter = (
+		coordinates: ILatLngType,
+		dataType: IGeojsonDataType = 'Point',
+		zoomLevel?: number
+	) => {
+		if (!map) return;
+		map.setCenter(coordinates);
+		map.setZoom(zoomLevelMap[dataType] || zoomLevel || 15);
+		map.setTilt(50);
+	};
+
+	const toggleGoogleLayer = (layerElement: ILayerListElement) => {
+		if (!map) return;
+		map = toggleGoogleMapLayerVisibility(map, layerElement);
+	};
+
+	let layerList: ILayerListElement[];
+	layerListStore.subscribe((value) => {
+		layerList = value.layerList;
+	});
+
+	let filteredLayers: ILayerListElement[];
 	let search = '';
 	let isAllVisible = false;
 
-	const toggleAllLayers = () => {
-		const isVisible = !isAllVisible;
+
+
+	const hideAllLayers = () => {
 		const tempLayerList = layerList;
 		tempLayerList.forEach((layer) => {
-			layer.isVisible = isVisible;
+			layer.isVisible = false;
 		});
 
 		layerList = tempLayerList;
@@ -22,7 +54,21 @@
 			toggleGoogleLayer(layer);
 		});
 
-		isAllVisible = isVisible;
+		isAllVisible = false;
+	};
+
+	const showAllLayers = () => {
+		const tempLayerList = layerList;
+		tempLayerList.forEach((layer) => {
+			layer.isVisible = true;
+		});
+
+		layerList = tempLayerList;
+		layerList.forEach((layer) => {
+			toggleGoogleLayer(layer);
+		});
+
+		isAllVisible = true;
 	};
 
 	const checkIfAllVisible = () => {
@@ -30,13 +76,13 @@
 		isAllVisible = visibleLayers.length === layerList.length;
 	};
 
-	const toggleLayer = (selectedLayer: ILayerListElementType) => {
+	const toggleLayer = (selectedLayer: ILayerListElement) => {
 		const index = layerList.findIndex((layer) => layer.layerName === selectedLayer.layerName);
 		layerList[index].isVisible = !layerList[index].isVisible;
 		toggleGoogleLayer(layerList[index]);
 
 		if (layerList[index].isVisible)
-			updateMapCenter(selectedLayer.initialCoordinates, selectedLayer.type);
+			updateMapCenter(selectedLayer.initialCoordinates!, selectedLayer.type);
 
 		checkIfAllVisible();
 	};
@@ -60,14 +106,14 @@
 			<IconButton
 				title={'Hide Layers'}
 				icon="fas fa-eye-slash"
-				onClickHandle={toggleAllLayers}
+				onClickHandle={hideAllLayers}
 				size={'h-10 w-10'}
 			/>
 		{:else}
 			<IconButton
 				title={'Show Layers'}
 				icon="fas fa-eye"
-				onClickHandle={toggleAllLayers}
+				onClickHandle={showAllLayers}
 				size={'h-10 w-10'}
 			/>
 		{/if}

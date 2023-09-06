@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { MAP_DATA } from '$lib/constants';
 	import Layers from '$lib/features/map/Layers.svelte';
 	import LoadingError from '$lib/features/map/LoadingError.svelte';
 	import LoadingSpinner from '$lib/features/map/LoadingSpinner.svelte';
+	import { MAP_DATA } from '$lib/features/map/constants/kingston';
 	import { convertTripsToLayerListElements } from '$lib/features/map/helpers/geojson/geojson-trips-utils';
 	import { getKingstonMapData } from '$lib/features/map/helpers/geojson/kingston-geojson-util';
 	import {
@@ -10,7 +10,11 @@
 		addLayerToGoogleMap,
 		toggleGoogleMapLayerVisibility
 	} from '$lib/features/map/helpers/google/google-map-utils';
-	import { zoomLevelMap, type IEventGoogleDataType, type IGeojsonDataType, type ILatLngType, type ILayerListElementType, type IMapDetailsType } from '$lib/features/map/types';
+	import { layerListStore } from '$lib/features/map/store/layerListStore';
+	import { mapStore } from '$lib/features/map/store/mapStore';
+	import type {
+		ILayerListElement
+	} from '$lib/features/map/types';;
 	import SearchData from '$lib/features/menu/SearchData.svelte';
 	import VideoPlayer from '$lib/features/menu/VideoPlayer.svelte';
 	import type { ISearchParamType } from '$lib/features/menu/types/searchParamTypes';
@@ -18,47 +22,33 @@
 	import mockLayerListElements from '$lib/mock/layerListElements.json';
 	import { getGPSForTrips, getSmarterAiTrips } from '$lib/service/smarter-api';
 	import type { ITrip } from '$lib/types/smarterAITypes';
-// @ts-ignore
+	// @ts-ignore
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
 
 	let isLoading = false;
 	let isError = false;
-
-	let mapDetails: IMapDetailsType = MAP_DATA;
-	let layerList: ILayerListElementType[] = [];
-	let selectedEvent: IEventGoogleDataType | null = null;
+	let layerList: ILayerListElement[];
+	layerListStore.subscribe((value) => {
+		layerList = value.layerList;
+	});
 
 	let map: Map | undefined;
+	mapStore.subscribe((value) => {
+		map = value.map;
+	});
 	let mapDiv: HTMLDivElement;
 
 	const initializeMap = () => {
 		if (!mapDiv) return;
-		map = new google.maps.Map(mapDiv, mapDetails);
-	};
-
-	const updateMapCenter = (
-		coordinates: ILatLngType,
-		dataType: IGeojsonDataType = 'Point',
-		zoomLevel?: number
-	) => {
-		map.setCenter(coordinates);
-		map.setZoom(zoomLevelMap[dataType] || zoomLevel || 15);
-		map.setTilt(50);
-	};
-
-	const updateSelectedEvent = (googleMapEvent: IEventGoogleDataType) => {
-		selectedEvent = googleMapEvent;
+		map = new google.maps.Map(mapDiv, MAP_DATA);
+		mapStore.setMap(map);
 	};
 
 	const getInitialMapData = async () => {
 		const tempKingstonLayerList = await getKingstonMapData();
 		if (!tempKingstonLayerList || !tempKingstonLayerList.length) return;
 		processLayerListElements(tempKingstonLayerList);
-	};
-
-	const toggleGoogleLayer = (layerElement: ILayerListElementType) => {
-		toggleGoogleMapLayerVisibility(map, layerElement);
 	};
 
 	const fetchTripsData = async (searchParams: ISearchParamType) => {
@@ -72,15 +62,15 @@
 				let tempTripWithGPSList: ITrip[] = await getGPSForTrips(tempTripList);
 				if (!tempTripWithGPSList || !tempTripWithGPSList.length) return;
 
-				const layerListElements: ILayerListElementType[] = await convertTripsToLayerListElements(
+				const layerListElements: ILayerListElement[] = await convertTripsToLayerListElements(
 					tempTripWithGPSList,
 					searchParams.showEvents
 				);
 				if (!layerListElements || !layerListElements.length) return;
 				processLayerListElements(layerListElements);
 			} else {
-				const layerListElements: ILayerListElementType[] =
-					mockLayerListElements as ILayerListElementType[];
+				const layerListElements: ILayerListElement[] =
+					mockLayerListElements as ILayerListElement[];
 				if (!layerListElements || !layerListElements.length) return;
 				processLayerListElements(layerListElements);
 			}
@@ -92,54 +82,53 @@
 		}
 	};
 
-	const processLayerListElements = (layerListElements: ILayerListElementType[]) => {
+	const processLayerListElements = (layerListElements: ILayerListElement[]) => {
+		let tempLayerList = layerList;
 		for (let i = 0, len = layerListElements.length; i < len; i++) {
 			const layerElement = layerListElements[i];
-			layerList = addLayerElementToLayerList(layerList, layerElement);
-			map = addLayerToGoogleMap(map, layerElement, updateSelectedEvent);
+			tempLayerList = addLayerElementToLayerList(tempLayerList, layerElement);
+			map = addLayerToGoogleMap(map, layerElement);
 			map = toggleGoogleMapLayerVisibility(map, layerElement);
 		}
+
+		layerListStore.setLayerList(tempLayerList);
 	};
 
 	onMount(() => {
-		if (!map) {
-			initializeMap();
-		}
+		if (!map) { initializeMap();}
 		getInitialMapData();
 	});
 </script>
 
 <svelte:head><title>Lynx City Twin</title></svelte:head>
 
-<div class="relative flex flex-row min-h-screen   gap-2">
-	<div class="w-[30rem] flex flex-col gap-2 p-4 ">
+<div class="relative flex flex-row min-h-screen  gap-2">
+	<div class="absolute top-2 left-2 z-20 w-[24rem] flex flex-col gap-2">
+		
+		<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={false}>
+			<Layers />
+		</Card>
 		<Card title="Search Data" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
 			<SearchData {fetchTripsData} />
-		</Card>
-
-		<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={true}>
-			<Layers bind:layerList {updateMapCenter} {toggleGoogleLayer} />
 		</Card>
 
 		<Card
 			title="Video Player"
 			icon="fa-solid fa-video"
 			disableToggle={false}
-			showContent={selectedEvent ? true : false}
+			showOnLoad={false}
 		>
-			<VideoPlayer {selectedEvent} />
+			<VideoPlayer />
 		</Card>
 	</div>
 
 	<div class="flex-1 flex flex-col h-full relative">
-	
-			<div bind:this={mapDiv} class="min-h-screen w-full " />
+		<div bind:this={mapDiv} class="min-h-screen w-full" />
 
-			{#if isLoading}
-				<LoadingSpinner />
-			{:else if isError}
-				<LoadingError />
-			{/if}
-		
+		{#if isLoading}
+			<LoadingSpinner />
+		{:else if isError}
+			<LoadingError />
+		{/if}
 	</div>
 </div>

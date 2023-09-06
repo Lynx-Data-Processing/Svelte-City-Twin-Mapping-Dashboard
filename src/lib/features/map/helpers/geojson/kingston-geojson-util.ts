@@ -2,7 +2,7 @@
 import { LINE_STRING, POINT, POLYGON } from '$lib/features/map/constants/geojson';
 import { KINGSTON_COORDINATES_ARRAY, OPEN_DATA_KINGSTON_BUS_ROUTES_URL, OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_CYCLING_PATHS_URL, OPEN_DATA_KINGSTON_WALKING_PATHS_URL } from '$lib/features/map/constants/kingston';
 import { axiosCacheGetUtility } from '$lib/features/map/services/fetch-data';
-import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType, ILayerListElementType } from '$lib/features/map/types';
+import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType, ILayerListElement } from '$lib/features/map/types';
 import { createLayerElement } from '../google/google-map-utils';
 import { getColorGivenIndex } from './color-utils';
 
@@ -77,7 +77,7 @@ const getKingstonData = async (url: string) => {
 
 
 export const getKingstonMapData = async () => {
-  const tempLayerList: ILayerListElementType[] = [];
+  const tempLayerList: ILayerListElement[] = [];
 
   const neighborhoodsData = await getKingstonData(OPEN_DATA_KINGSTON_CITY_ZONES_URL);
   if (neighborhoodsData) {
