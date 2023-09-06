@@ -23,6 +23,6 @@
 		{/if}
 	</div>
 	{#if showContent || disableToggle}
-		<div transition:slide><slot /></div>
+		<div><slot /></div>
 	{/if}
 </section>

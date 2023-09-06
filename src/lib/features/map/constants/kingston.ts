@@ -12,7 +12,7 @@ export const OPEN_DATA_KINGSTON_WALKING_PATHS_URL = "https://opendatakingston.ci
 export const KINGSTON_COORDINATES_OBJ = { lng: -76.491143, lat: 44.231689 }
 export const KINGSTON_COORDINATES_ARRAY = [ -76.491143, 44.231689 ]
 
-export const MAP_DATA : IMapDetailsType =  {
+export const INITIAL_MAP_DATA : IMapDetailsType =  {
     mapTypeId: 'roadmap',
     center: KINGSTON_COORDINATES_OBJ,
     zoom: 17,

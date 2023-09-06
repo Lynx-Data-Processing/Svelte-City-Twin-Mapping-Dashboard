@@ -8,8 +8,8 @@
 		type ILayerListElement
 	} from '$lib/features/map/types';
 	import { layerListStore } from '$lib/features/map/store/layerListStore';
-	import { mapStore } from './store/mapStore';
-	import { toggleGoogleMapLayerVisibility } from './helpers/google/google-map-utils';
+	import { mapStore } from '../store/mapStore';
+	import { toggleGoogleMapLayerVisibility } from '../helpers/google/google-map-utils';
 
 	let map: google.maps.Map | undefined;
 	mapStore.subscribe((value) => {
