@@ -1,11 +1,11 @@
 import { LINE_STRING, MULTI_LINE_STRING, MULTI_POINT, MULTI_POLYGON, POINT, POLYGON, TRIP, TRIP_EVENT } from "$lib/features/map/constants/geojson";
 
 import type { IGeojsonDataType, IGeojsonType } from "$lib/features/map/types/geojsonTypes";
-import type { ILatLngType, ILayerListElementType } from "$lib/types/mapTypes";
+import type { ILayerListElementType } from "$lib/types/layerListElement";
 
-import { KINGSTON_COORDINATES_OBJ } from "$lib/constants/kingston";
-import type { IEventGoogleDataType, ITripEventType, ITripGoogleDataType } from "$lib/features/map/types/googleTypes";
-import { checkIfElementExists, removeObjectWhereValueEqualsString } from "../../../../utils/filter-data";
+import { KINGSTON_COORDINATES_OBJ } from "$lib/features/map/constants/kingston";
+import type { IEventGoogleDataType, ILatLngType, ITripEventType, ITripGoogleDataType } from "$lib/features/map/types/googleTypes";
+import { checkIfElementExists, removeObjectWhereValueEqualsString } from "./filter-data";
 import { eventPointStyle, lineStyle, pointStyle, polygonStyle, tripLineStyle } from "./google-feature-style";
 import { createEventGoogleMapsPopup, createGooglePopup, createTripGoogleMapsPopup } from "./google-map-popup";
 

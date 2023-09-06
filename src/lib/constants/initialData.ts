@@ -1,6 +1,7 @@
-import type { IMapDetailsType } from "$lib/types/mapTypes";
+
+import type { IMapDetailsType } from "$lib/features/map/types/googleTypes";
 import type { ISearchParamType } from "$lib/types/types";
-import { KINGSTON_COORDINATES_OBJ } from "./kingston";
+import { KINGSTON_COORDINATES_OBJ } from "../features/map/constants/kingston";
 
 
 export const MAP_DATA : IMapDetailsType =  {

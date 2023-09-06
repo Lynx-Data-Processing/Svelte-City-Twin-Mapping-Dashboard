@@ -8,12 +8,10 @@
 	import VideoPlayer from '$lib/features/menu/VideoPlayer.svelte';
 	import mockLayerListElements from '$lib/mock/layerListElements.json';
 	import { getGPSForTrips, getSmarterAiTrips } from '$lib/service/smarter-api';
-	import {
-		zoomLevelMap,
-		type ILatLngType,
-		type ILayerListElementType,
-		type IMapDetailsType
-	} from '$lib/types/mapTypes';
+	import type { ILayerListElementType } from '$lib/types/layerListElement';
+
+	
+
 	import type { ISearchParamType } from '$lib/types/types';
 
 	import { convertTripsToLayerListElements } from '$lib/features/map/helpers/geojson/geojson-trips-utils';
@@ -24,7 +22,7 @@
 		toggleGoogleMapLayerVisibility
 	} from '$lib/features/map/helpers/google/google-map-utils';
 	import type { IGeojsonDataType } from '$lib/features/map/types/geojsonTypes';
-	import type { IEventGoogleDataType } from '$lib/features/map/types/googleTypes';
+	import { zoomLevelMap, type IEventGoogleDataType, type ILatLngType, type IMapDetailsType } from '$lib/features/map/types/googleTypes';
 	import Card from '$lib/layout/Card.svelte';
 	import type { ITrip } from '$lib/types/tripTypes';
 // @ts-ignore

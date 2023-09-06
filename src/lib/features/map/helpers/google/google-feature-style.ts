@@ -1,5 +1,5 @@
-import { EMERGENCY_ICON_PATH, TAILGATING_ICON_PATH, TRAFFIC_LIGHT_ICON_PATH } from "$lib/constants/icons";
 import { EMERGENCY_RECORD, TAILGATING_GPS, TRAFFIC_LIGHT } from "$lib/constants/strings";
+import { EMERGENCY_ICON_PATH, TAILGATING_ICON_PATH, TRAFFIC_LIGHT_ICON_PATH } from "$lib/features/map/constants/icons";
 import type { IEventGoogleDataType } from "$lib/features/map/types/googleTypes";
 
 const createStyle = (color = 'blue', weight = 4) => ({ strokeColor: color, strokeWeight: weight });

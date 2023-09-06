@@ -1,9 +1,9 @@
 import { OPEN_DATA_KINGSTON_BUS_ROUTES_URL, OPEN_DATA_KINGSTON_CITY_ZONES_URL } from '$lib/constants';
-import { KINGSTON_COORDINATES_ARRAY, OPEN_DATA_KINGSTON_CYCLING_PATHS_URL, OPEN_DATA_KINGSTON_WALKING_PATHS_URL } from '$lib/constants/kingston';
 import { LINE_STRING, POINT, POLYGON } from '$lib/features/map/constants/geojson';
+import { KINGSTON_COORDINATES_ARRAY, OPEN_DATA_KINGSTON_CYCLING_PATHS_URL, OPEN_DATA_KINGSTON_WALKING_PATHS_URL } from '$lib/features/map/constants/kingston';
+import { axiosCacheGetUtility } from '$lib/features/map/services/fetch-data';
 import type { IGeojsonFeatureType, IGeojsonType } from '$lib/features/map/types/geojsonTypes';
-import { axiosCacheGetUtility } from '$lib/service/fetch-data';
-import type { ILayerListElementType } from '$lib/types/mapTypes';
+import type { ILayerListElementType } from '$lib/types/layerListElement';
 import type { IGeojsonDataType } from '../../types/geojsonTypes';
 import { createLayerElement } from '../google/google-map-utils';
 import { getColorGivenIndex } from './color-utils';
@@ -36,7 +36,7 @@ export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeo
       const gpsElement = rawData[i];
       const coordinates = getCoords(gpsElement);
       const properties = gpsElement.fields;
-    
+
       delete gpsElement.fields.geojson
       delete gpsElement.fields.geo_point_2d
       delete gpsElement.fields.shape
@@ -56,7 +56,7 @@ export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeo
   return geoJson;
 };
 
-const addAdditionalStylingToGeojson = (geojson: IGeojsonType, color?: string, hasArrows=false) => {
+const addAdditionalStylingToGeojson = (geojson: IGeojsonType, color?: string, hasArrows = false) => {
   for (let i = 0, len = geojson.features.length; i < len; i++) {
     geojson.features[i].properties.color = color || getColorGivenIndex(i);
     if (hasArrows) geojson.features[i].properties.hasArrows = true;

@@ -6,7 +6,6 @@ import type { ITrip, ITripEvent } from '$lib/types/tripTypes';
 import type { ISearchParamType } from '$lib/types/types';
 import type { IMediaRecordingType } from '$lib/types/videoTypes';
 import axios from 'axios';
-import { dateTimeToMillisecondUnix } from '../features/menu/helpers/date-format';
 
 //* Fetch all devices under the Tenant key
 export const getListOfDevicesUnderTenant = async () => {

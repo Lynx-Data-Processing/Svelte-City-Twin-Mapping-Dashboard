@@ -1,8 +1,8 @@
 <script lang="ts">
 	import IconButton from '$lib/components/IconButton.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
-	import type { ILayerListElementType } from '$lib/types/mapTypes';
-	import { isEmptyString } from '$lib/utils/is-emptyString';
+	import { isEmptyString } from '$lib/features/menu/helpers/is-emptyString';
+	import type { ILayerListElementType } from '$lib/types/layerListElement';
 
 	export let toggleGoogleLayer: Function;
 	export let updateMapCenter: Function;

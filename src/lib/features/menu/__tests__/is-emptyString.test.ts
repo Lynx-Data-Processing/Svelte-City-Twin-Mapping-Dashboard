@@ -1,4 +1,4 @@
-import { isEmptyString } from "$lib/utils/is-emptyString";
+import { isEmptyString } from "$lib/features/menu/helpers/is-emptyString";
 
 describe('isEmptyString', () => {
   it('returns true for empty string', () => {
