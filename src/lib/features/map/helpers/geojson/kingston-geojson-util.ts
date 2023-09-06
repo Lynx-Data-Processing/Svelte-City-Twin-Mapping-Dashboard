@@ -2,7 +2,7 @@
 import { LINE_STRING, POINT, POLYGON } from '$lib/features/map/constants/geojson';
 import { KINGSTON_COORDINATES_ARRAY, OPEN_DATA_KINGSTON_BUS_ROUTES_URL, OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_CYCLING_PATHS_URL, OPEN_DATA_KINGSTON_WALKING_PATHS_URL } from '$lib/features/map/constants/kingston';
 import { axiosCacheGetUtility } from '$lib/features/map/services/fetch-data';
-import type { IGeojsonDataType, IGeojsonFeatureType, IGeojsonType, ILayerListElement } from '$lib/features/map/types';
+import type { GeojsonGeometryType, IGeojsonFeatureType, IGeojsonCollection, IMapLayer } from '$lib/features/map/types';
 import { createLayerElement } from '../google/google-map-utils';
 import { getColorGivenIndex } from './color-utils';
 
@@ -21,9 +21,9 @@ const getCoords = (gpsElement: any) => {
 }
 
 
-export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeojsonDataType = POINT) => {
+export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: GeojsonGeometryType = POINT) => {
 
-  const geoJson: IGeojsonType = {
+  const geoJson: IGeojsonCollection = {
     type: 'FeatureCollection',
     features: [],
   };
@@ -54,7 +54,7 @@ export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: IGeo
   return geoJson;
 };
 
-const addAdditionalStylingToGeojson = (geojson: IGeojsonType, color?: string, hasArrows = false) => {
+const addAdditionalStylingToGeojson = (geojson: IGeojsonCollection, color?: string, hasArrows = false) => {
   for (let i = 0, len = geojson.features.length; i < len; i++) {
     geojson.features[i].properties.color = color || getColorGivenIndex(i);
     if (hasArrows) geojson.features[i].properties.hasArrows = true;
@@ -77,7 +77,7 @@ const getKingstonData = async (url: string) => {
 
 
 export const getKingstonMapData = async () => {
-  const tempLayerList: ILayerListElement[] = [];
+  const tempLayerList: IMapLayer[] = [];
 
   const neighborhoodsData = await getKingstonData(OPEN_DATA_KINGSTON_CITY_ZONES_URL);
   if (neighborhoodsData) {

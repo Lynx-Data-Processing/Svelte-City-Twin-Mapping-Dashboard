@@ -1,65 +1,18 @@
-
-import type { IEventGoogleDataType, ILayerListElement, ITripGoogleDataType } from "$lib/features/map/types";
-import { millisecondUnixToDateTime } from "../../../../utils/date-format";
+import type { IMapLayer } from "$lib/features/map/types";
 import { formatText } from "./text-format";
 
- const createContentString = (feature: any, maxCount: number): string => {
-  let contentString = '';
+//* Lets create a popup for the google map but only show the first 10 properties as a preview
+export const createMapPopup = (feature: google.maps.Data.Feature , layerListElement: IMapLayer): string => {
+  let content = `<p class="text-subtitle mb-2">${layerListElement.layerName}</p>`;
+
   let count = 0;
+  const maxCount = 10;
+
   feature.forEachProperty((value: any, name: any) => {
     if (count > maxCount) return;
-    contentString += `<p> <span class="font-bold">${formatText(name)}</span>: ${value}</p>`;
+    content += `<p><span class="font-bold">${formatText(name)}</span>: ${value}</p>`;
     count++;
   });
 
-  return contentString;
-};
-
-export const createTripGoogleMapsPopup = (feature: ITripGoogleDataType): string => {
-
-  let contentString = `
-  <p class="text-subtitle ">${formatText(feature.endpointName)}</p>
-  <hr class="bg-primary w-12 h-0.5 my-1" />
-  `;
-
-  contentString += `
-    <p> <span class="font-bold">Trip ID</span>: ${formatText(feature.id)}</p>
-    <p> <span class="font-bold">Start Time</span>: ${feature.startTimestamp ? millisecondUnixToDateTime(feature.startTimestamp) : "N/A"}</p>
-    <p> <span class="font-bold">End Time</span>: ${feature.endTimestamp ? millisecondUnixToDateTime(feature.endTimestamp) : "N/A"}</p>
-    <p> <span class="font-bold">Status</span>: ${feature.tripStatus ? feature.tripStatus : "N/A"}</p>
-    <p> <span class="font-bold">Distance</span>: ${feature.distance ? `${(feature.distance / 1000).toFixed(2)} km` : 'N/A'}</p>
-    `
-
-  return contentString;
-
-}
-
-export const createEventGoogleMapsPopup = (feature: IEventGoogleDataType): string => {
-
-  let contentString = `
-      <p class="text-subtitle ">${formatText(feature.triggerName)}</p>
-      <hr class="bg-primary w-12 h-0.5 my-1" /> 
-    `;
-
-  contentString += `
-        <p> <span class="font-bold">Event ID</span>: ${formatText(feature.id)}</p>
-        <p> <span class="font-bold">Recording Start</span>: ${feature.recordingStartTimestamp ? millisecondUnixToDateTime(feature.recordingStartTimestamp) : "N/A"}</p>
-        <p> <span class="font-bold">Recording End</span>: ${feature.recordingEndTimestamp ? millisecondUnixToDateTime(feature.recordingEndTimestamp) : "N/A"}</p>
-        <p> <span class="font-bold">Trigger Name</span>: ${formatText(feature.triggerName)}</p>
-
-    `
-
-  return contentString;
-};
-
-export const createGooglePopup = (feature: any, layerListElement: ILayerListElement): string => {
-  let contentString = `
-      <p class="text-subtitle ">${layerListElement.layerName}</p>
-      <hr class="bg-primary w-12 h-0.5 my-1" /> 
-    `;
-
-  const maxCount = 10;
-  contentString += createContentString(feature, maxCount);
-
-  return contentString;
+  return content;
 };

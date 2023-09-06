@@ -3,11 +3,11 @@
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import {
 		zoomLevelMap,
-		type IGeojsonDataType,
+		type GeojsonGeometryType,
 		type ILatLngType,
-		type ILayerListElement
+		type IMapLayer
 	} from '$lib/features/map/types';
-	import { layerListStore } from '$lib/features/map/store/layerListStore';
+	import { mapLayerStore } from '$lib/features/map/store/layerListStore';
 	import { mapStore } from '../store/mapStore';
 	import { toggleGoogleMapLayerVisibility } from '../helpers/google/google-map-utils';
 
@@ -17,8 +17,8 @@
 	});
 
 	const updateMapCenter = (
-		coordinates: ILatLngType,
-		dataType: IGeojsonDataType = 'Point',
+		coordinates: ILatLngType = { lat: 0, lng: 0 },
+		dataType: GeojsonGeometryType = 'Point',
 		zoomLevel?: number
 	) => {
 		if (!map) return;
@@ -27,78 +27,47 @@
 		map.setTilt(50);
 	};
 
-	const toggleGoogleLayer = (layerElement: ILayerListElement) => {
-		if (!map) return;
-		map = toggleGoogleMapLayerVisibility(map, layerElement);
-	};
-
-	let layerList: ILayerListElement[];
-	layerListStore.subscribe((value) => {
-		layerList = value.layerList;
+	let mapLayers: IMapLayer[];
+	mapLayerStore.subscribe((value) => {
+		mapLayers = value.mapLayers;
 	});
 
-	let filteredLayers: ILayerListElement[];
+	let filteredLayers: IMapLayer[];
 	let search = '';
 	let isAllVisible = false;
 
-
-
-	const hideAllLayers = () => {
-		const tempLayerList = layerList;
+	const setVisibilityForAllLayers = (visibility: boolean) => {
+		const tempLayerList = [...mapLayers];
 		tempLayerList.forEach((layer) => {
-			layer.isVisible = false;
+			layer.isVisible = visibility;
+			map = toggleGoogleMapLayerVisibility(map, layer);
 		});
-
-		layerList = tempLayerList;
-		layerList.forEach((layer) => {
-			toggleGoogleLayer(layer);
-		});
-
-		isAllVisible = false;
+		mapLayers = tempLayerList;
+		isAllVisible = visibility;
 	};
 
-	const showAllLayers = () => {
-		const tempLayerList = layerList;
-		tempLayerList.forEach((layer) => {
-			layer.isVisible = true;
-		});
-
-		layerList = tempLayerList;
-		layerList.forEach((layer) => {
-			toggleGoogleLayer(layer);
-		});
-
-		isAllVisible = true;
-	};
-
-	const checkIfAllVisible = () => {
-		const visibleLayers = layerList.filter((layer) => layer.isVisible);
-		isAllVisible = visibleLayers.length === layerList.length;
-	};
-
-	const toggleLayer = (selectedLayer: ILayerListElement) => {
-		const index = layerList.findIndex((layer) => layer.layerName === selectedLayer.layerName);
-		layerList[index].isVisible = !layerList[index].isVisible;
-		toggleGoogleLayer(layerList[index]);
-
-		if (layerList[index].isVisible)
-			updateMapCenter(selectedLayer.initialCoordinates!, selectedLayer.type);
-
-		checkIfAllVisible();
+	const toggleLayer = (selectedLayer: IMapLayer) => {
+		const tempLayerList = [...mapLayers];
+		const index = tempLayerList.findIndex((layer) => layer.layerName === selectedLayer.layerName);
+		tempLayerList[index].isVisible = !tempLayerList[index].isVisible;
+		map = toggleGoogleMapLayerVisibility(map, tempLayerList[index]);
+		isAllVisible = mapLayers.filter((layer) => layer.isVisible).length === mapLayers.length;
+		mapLayers = tempLayerList;
 	};
 
 	const filterLayersBySearch = () => {
 		if (!search || search === '') {
-			filteredLayers = layerList;
+			filteredLayers = mapLayers;
 			return;
 		}
-		filteredLayers = layerList.filter((layer) =>
+		filteredLayers = mapLayers.filter((layer) =>
 			layer.layerName.toLowerCase().includes(search.toLowerCase())
 		);
 	};
 
-	$: layerList && filterLayersBySearch();
+	$: mapLayers && filterLayersBySearch();
 </script>
+
 
 <div class="flex flex-col p-4 gap-2">
 	<div class="flex flex-row gap-2">
@@ -106,14 +75,14 @@
 			<IconButton
 				title={'Hide Layers'}
 				icon="fas fa-eye-slash"
-				onClickHandle={hideAllLayers}
+				onClickHandle={() => setVisibilityForAllLayers(false)}
 				size={'h-10 w-10'}
 			/>
 		{:else}
 			<IconButton
 				title={'Show Layers'}
 				icon="fas fa-eye"
-				onClickHandle={showAllLayers}
+				onClickHandle={() => setVisibilityForAllLayers(true)}
 				size={'h-10 w-10'}
 			/>
 		{/if}
@@ -122,7 +91,7 @@
 	</div>
 
 	{#if filteredLayers.length}
-		<div class="flex flex-col max-h-96 overflow-auto gap-2 py-2 ">
+		<div class="flex flex-col max-h-96 overflow-auto gap-2">
 			{#each filteredLayers as layer}
 				<div class="flex flex-row gap-2">
 					<IconButton
@@ -130,7 +99,7 @@
 						icon={layer.icon}
 						iconColor={layer.color}
 						size={'h-10 w-10'}
-						onClickHandle={() => {}}
+						onClickHandle={() => updateMapCenter(layer.initialCoordinates, layer.type)}
 					/>
 
 					<button
@@ -148,6 +117,6 @@
 	{/if}
 </div>
 
-<div class="mt-auto p-4 flex flex-row bg-smoke  justify-end">
-	<p>Showing {filteredLayers.length} of {layerList.length} Layers</p>
+<div class="mt-auto px-4 py-3 flex flex-row bg-smoke  justify-end">
+	<p>Showing {filteredLayers.length} of {mapLayers.length} Layers</p>
 </div>

@@ -1,5 +1,5 @@
 import { FEATURE, FEATURE_COLLECTION, LINE_STRING, POINT, TRIP, TRIP_EVENT } from "$lib/features/map/constants/geojson";
-import type { IEventGoogleDataType, IGeojsonFeatureType, IGeojsonType, ILayerListElement, ITripGoogleDataType } from "$lib/features/map/types";
+import type { IEventGoogleDataType, IGeojsonFeatureType, IGeojsonCollection, IMapLayer, ITripGoogleDataType } from "$lib/features/map/types";
 import type { ISensorDataType, ITrip } from "$lib/types/smarterAITypes";
 
 import axios from "axios";
@@ -40,7 +40,7 @@ export const convertTripEventsPointsToGeojson = async (trip: ITrip, eventColor: 
 }
 
 export const convertTripToGeoJSON = async (trip: ITrip, tripColor: string) => {
-  const geoJson: IGeojsonType = {
+  const geoJson: IGeojsonCollection = {
     type: FEATURE_COLLECTION,
     features: [],
   };
@@ -69,7 +69,7 @@ export const convertTripToGeoJSON = async (trip: ITrip, tripColor: string) => {
 }
 
 const createEventsGeojson = async (trip: ITrip, eventColor: string) => {
-  const eventGeojson: IGeojsonType = {
+  const eventGeojson: IGeojsonCollection = {
     type: FEATURE_COLLECTION,
     features: [],
   };
@@ -80,7 +80,7 @@ const createEventsGeojson = async (trip: ITrip, eventColor: string) => {
 }
 
 export const convertTripsToLayerListElements = async (trips: ITrip[], showEvents: boolean = true) => {
-  const tempLayerListElements: ILayerListElement[] = [];
+  const tempLayerListElements: IMapLayer[] = [];
   for (let i = 0, len = trips.length; i < len; i++) {
     const trip = trips[i];
 

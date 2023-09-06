@@ -1,22 +1,22 @@
 import { writable } from 'svelte/store'
-import type { ILayerListElement } from '../types'
+import type { IMapLayer } from '../types'
 
-interface ILayerListStore {
-    layerList: ILayerListElement[]
+interface IMapLayerStore {
+    mapLayers: IMapLayer[]
 }
 
-const layerListInitialState: ILayerListStore = {
-    layerList: []
+const layerListInitialState: IMapLayerStore = {
+    mapLayers: []
 }
 
-const createLayerListStore = () => {
+const createMapLayerStore = () => {
     const { subscribe, update } = writable(layerListInitialState)
 
     return {
         subscribe,
-        setLayerList: (layerList: ILayerListElement[]) => update((state) => ({ ...state, layerList })),
-        removeAllLayerElements: () => update((state) => ({ ...state, layerList: [] })),
+        setMapLayers: (layerList: IMapLayer[]) => update((state) => ({ ...state, mapLayers: layerList })),
+        removeAllMapLayers: () => update((state) => ({ ...state, mapLayers: [] })),
     }
 }
 
-export const layerListStore = createLayerListStore()
+export const mapLayerStore = createMapLayerStore()
