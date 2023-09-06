@@ -71,7 +71,7 @@ export const toggleGoogleMapLayerVisibility = (map: any, layerElement: IMapLayer
 
 
 
-export const createLayerElement = (
+export const createMapLayer = (
     layerName: string,
     type: GeojsonGeometryType,
     isVisible: boolean = true,
@@ -88,14 +88,14 @@ export const createLayerElement = (
         icon: icon,
         color: color,
         geojson: geojson,
-        initialCoordinates: getInitialCoordinates(type, geojson),
+        initialCoordinates: getMapLayerCenterCoordinates(type, geojson),
         googleMapLayer: new google.maps.Data(),
         layerImageUrl: layerImageUrl
     };
     return layerElement;
 };
 
-const getInitialCoordinates = (type: GeojsonGeometryType, data: any, defaultCoords: ILatLngType = KINGSTON_COORDINATES_OBJ): ILatLngType => {
+const getMapLayerCenterCoordinates = (type: GeojsonGeometryType, data: any, defaultCoords: ILatLngType = KINGSTON_COORDINATES_OBJ): ILatLngType => {
     try {
         if (!data) return { lat: 0, lng: 0 };
         const initialCoordinateMap: { [key in GeojsonGeometryType]?: number[] } = {

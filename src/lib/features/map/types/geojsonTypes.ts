@@ -5,10 +5,10 @@ export type GeojsonGeometryType = typeof POINT | typeof MULTI_POINT | typeof LIN
 
 export interface IGeojsonCollection {
     type: typeof FEATURE_COLLECTION,
-    features: IGeojsonFeatureType[],
+    features: IGeojsonFeature[],
 }
 
-export interface IGeojsonFeatureType {
+export interface IGeojsonFeature {
     type: string,
     geometry: {
         type: GeojsonGeometryType,

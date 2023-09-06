@@ -16,6 +16,15 @@
 		map = value.map;
 	});
 
+	let mapLayers: IMapLayer[];
+	mapLayerStore.subscribe((value) => {
+		mapLayers = value.mapLayers;
+	});
+
+	let filteredLayers: IMapLayer[];
+	let search = '';
+	let isAllVisible = false;
+
 	const updateMapCenter = (
 		coordinates: ILatLngType = { lat: 0, lng: 0 },
 		dataType: GeojsonGeometryType = 'Point',
@@ -27,14 +36,6 @@
 		map.setTilt(50);
 	};
 
-	let mapLayers: IMapLayer[];
-	mapLayerStore.subscribe((value) => {
-		mapLayers = value.mapLayers;
-	});
-
-	let filteredLayers: IMapLayer[];
-	let search = '';
-	let isAllVisible = false;
 
 	const setVisibilityForAllLayers = (visibility: boolean) => {
 		const tempLayerList = [...mapLayers];
@@ -66,6 +67,9 @@
 	};
 
 	$: mapLayers && filterLayersBySearch();
+
+
+
 </script>
 
 
@@ -93,7 +97,7 @@
 	{#if filteredLayers.length}
 		<div class="flex flex-col max-h-96 overflow-auto gap-2">
 			{#each filteredLayers as layer}
-				<div class="flex flex-row gap-2">
+				<div class="flex flex-row gap-2 w-full">
 					<IconButton
 						title={'Toggle Layer'}
 						icon={layer.icon}
@@ -111,6 +115,8 @@
 					>
 						<p class="my-auto">{layer.layerName}</p>
 					</button>
+
+
 				</div>
 			{/each}
 		</div>

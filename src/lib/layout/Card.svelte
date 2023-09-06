@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
 	export let title: string;
 	export let icon: string;
 	export let width = 'w-full';
@@ -23,6 +22,6 @@
 		{/if}
 	</div>
 	{#if showContent || disableToggle}
-		<div><slot /></div>
+		<slot />
 	{/if}
 </section>
