@@ -108,3 +108,9 @@ hr {
 	background-repeat: no-repeat;
 	background-image: url(https://www.arcgis.com/apps/instant/interactivelegend/assets/loader-ie9.gif);
 }
+
+.bg-topography {
+    background-image: url('/images/TopoPattern.png');
+    object-fit: cover;
+    background-attachment: fixed;
+  }

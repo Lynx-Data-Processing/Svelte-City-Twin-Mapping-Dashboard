@@ -93,6 +93,13 @@ hr {
   background-image: url(https://www.arcgis.com/apps/instant/interactivelegend/assets/loader-ie9.gif);
 }
 
+.bg-topography {
+  background-image: url("/images/TopoPattern.png");
+  -o-object-fit: cover;
+     object-fit: cover;
+  background-attachment: fixed;
+}
+
 .slide-in-right {
   animation: slide-in-right var(--speed) cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }

@@ -14,60 +14,67 @@
 	const toggleLearnMore = () => {
 		learnMoreVisible = !learnMoreVisible;
 	};
+
 </script>
+
 <svelte:head>
 	<title>Login</title>
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </svelte:head>
-<main class="login-background ">
-	<div class="grid grid-cols-2 login-info w-2/5 h-3/5">
-		<div class="col-span-1 bg-primary px-16  flex flex-col justify-center ">
-			<h1 class="text-6xl text-white"><i class="fa-solid fa-location-arrow mr-5" />LYNX</h1>
-			<p class="mt-12 text-lg ">Cloud-based software to create and share interactive web maps.</p>
+
+<main class="bg-grid flex flex-col bg-dark bg-topography h-screen w-screen relative">
+	<div class="absolute top-0 left-0 h-full w-full bg-black bg-opacity-50 z-10" />
+
+	<div class="m-auto grid grid-cols-2 h-[30rem] w-[40rem] rounded-lg overflow-hidden z-20">
+		<div
+			class="flex flex-col gap-4 col-span-1 h-full bg-zinc-900 text-white justify-center align-middle px-8"
+		>
+			<p class="text-4xl font-bold"><i class="fa-solid fa-location-arrow mr-2" />USARs</p>
+			<p>Cloud-based software to create and share interactive web maps.</p>
+
 		</div>
-		<div class="col-span-1 flex flex-col">
-			<div class=" flex flex-col  my-auto px-16">
-				<!-- <a href="/" class="mb-auto text-right text-gray-800 hover:underline">Need Help?</a> -->
-				<h1 class="mt-16  text-4xl">Sign In</h1>
-				{#if recaptchaStatus}
-					<span in:fade={{ duration: 500 }}>
-						<Auth
-							supabaseClient={data.supabase}
-							view="magic_link"
-							redirectTo={`${data.url}/login?redirect=/map`}
-							showLinks={false}
-							appearance={{
-								theme: ThemeSupa,
-								variables: {
-									default: {
-										colors: {
-											brand: BRAND_COLOR,
-											brandAccent: BRAND_COLOR_DARK
-										}
+
+		<div
+			class="flex flex-col gap-1 col-span-1 h-full bg-white justify-center text-center align-middle px-8"
+		>
+			<p class="text-xl">Login</p>
+			{#if recaptchaStatus}
+				<span in:fade={{ duration: 500 }}>
+					<Auth
+						supabaseClient={data.supabase}
+						view="magic_link"
+						redirectTo={`${data.url}/login?redirect=/map`}
+						showLinks={false}
+						appearance={{
+							theme: ThemeSupa,
+							variables: {
+								default: {
+									colors: {
+										brand: BRAND_COLOR,
+										brandAccent: BRAND_COLOR_DARK
 									}
-								},
-								style: { input: 'color: #000', label: 'display: none' } 
-							}}
-						/>
-					</span>
-				{/if}
-				{#if !recaptchaStatus}
-					<span in:fade={{ duration: 500 }} class="flex flex-col">
-						<Recaptcha bind:recaptcha={recaptcha}/>
-					</span>
-				{/if}
-				<button class="text-center hover:underline" on:click={toggleLearnMore}>
-					Why a link? Learn More
-				</button>
-				
-				{#if learnMoreVisible}
-					<span in:fade={{ duration: 500 }}
-						>The magic link grants authorized users access to the application without the need for a
-						password.</span
-					>
-				{/if}
-			</div>
-			
+								}
+							},
+							style: { input: 'color: #000', label: 'display: none' }
+						}}
+					/>
+				</span>
+			{/if}
+
+			{#if !recaptchaStatus}
+				<Recaptcha bind:recaptcha />
+			{/if}
+
+			<button class="text-center hover:underline" on:click={toggleLearnMore}>
+				<p>Why a link? Learn More</p>
+			</button>
+
+			{#if learnMoreVisible}
+				<span class="mt-4" in:fade={{ duration: 500 }}
+					>The magic link grants authorized users access to the application without the need for a
+					password.</span
+				>
+			{/if}
 		</div>
 	</div>
 </main>

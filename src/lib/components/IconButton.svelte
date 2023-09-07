@@ -9,7 +9,7 @@
 
 <button 
 	title={title}
-	class="bg-white hover:bg-smoke border-[0.5px] rounded-md flex flex-row gap-2 {size} {extraClasses}"
+	class="bg-white hover:bg-zinc-200 border-[0.5px] rounded-md flex {size} {extraClasses}"
 	style="color: {iconColor}"
 	on:click={() => onClickHandle()}
 >

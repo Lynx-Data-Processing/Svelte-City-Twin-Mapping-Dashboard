@@ -1,17 +1,15 @@
 <script lang="ts">
 	import IconButton from '$lib/components/IconButton.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
-	import {
-		zoomLevelMap,
-		type GeojsonGeometryType,
-		type ILatLngType,
-		type IMapLayer
-	} from '$lib/features/map/types';
 	import { mapLayerStore } from '$lib/features/map/store/layerListStore';
 	import { mapStore } from '../store/mapStore';
 	import { toggleGoogleMapLayerVisibility } from '../helpers/google/google-map-utils';
+	import UpdateCenterButton from './layers/UpdateCenterButton.svelte';
+	import LayerToggle from './layers/LayerToggle.svelte';
+	import DownloadButton from './layers/DownloadButton.svelte';
+	import type { IMapLayer } from '../types';
 
-	let map: google.maps.Map | undefined;
+	let map: google.maps.Map;
 	mapStore.subscribe((value) => {
 		map = value.map;
 	});
@@ -24,17 +22,6 @@
 	let filteredLayers: IMapLayer[];
 	let search = '';
 	let isAllVisible = false;
-
-	const updateMapCenter = (
-		coordinates: ILatLngType = { lat: 0, lng: 0 },
-		dataType: GeojsonGeometryType = 'Point',
-		zoomLevel?: number
-	) => {
-		if (!map) return;
-		map.setCenter(coordinates);
-		map.setZoom(zoomLevelMap[dataType] || zoomLevel || 15);
-		map.setTilt(50);
-	};
 
 
 	const setVisibilityForAllLayers = (visibility: boolean) => {
@@ -68,61 +55,48 @@
 
 	$: mapLayers && filterLayersBySearch();
 
+	let selectedLayer: IMapLayer | null = null;
+	let isLayerMenuOpen: boolean = false;
 
-
+	const handleToggleLayerMenu = (layer: IMapLayer) => {
+		if (layer.layerName !== selectedLayer?.layerName) {
+			selectedLayer = layer;
+			isLayerMenuOpen = true;
+		} else {
+			selectedLayer = isLayerMenuOpen ? null : layer;
+			isLayerMenuOpen = !isLayerMenuOpen;
+		}
+	};
 </script>
-
 
 <div class="flex flex-col p-4 gap-2">
 	<div class="flex flex-row gap-2">
-		{#if isAllVisible}
-			<IconButton
-				title={'Hide Layers'}
-				icon="fas fa-eye-slash"
-				onClickHandle={() => setVisibilityForAllLayers(false)}
-				size={'h-10 w-10'}
-			/>
-		{:else}
-			<IconButton
-				title={'Show Layers'}
-				icon="fas fa-eye"
-				onClickHandle={() => setVisibilityForAllLayers(true)}
-				size={'h-10 w-10'}
-			/>
-		{/if}
-
+		<IconButton
+			title={isAllVisible ? 'Hide All Layers' : 'Show All Layers'}
+			icon={isAllVisible ? 'fas fa-eye ' : 'fas fa-eye-slash'}
+			onClickHandle={() => setVisibilityForAllLayers(!isAllVisible)}
+			size="h-10 w-10"
+		/>
 		<SearchBar onChangeFunction={filterLayersBySearch} bind:search />
 	</div>
 
 	{#if filteredLayers.length}
 		<div class="flex flex-col max-h-96 overflow-auto gap-2">
 			{#each filteredLayers as layer}
-				<div class="flex flex-row gap-2 w-full">
-					<IconButton
-						title={'Toggle Layer'}
-						icon={layer.icon}
-						iconColor={layer.color}
-						size={'h-10 w-10'}
-						onClickHandle={() => updateMapCenter(layer.initialCoordinates, layer.type)}
-					/>
+				<div class="overflow-hidden border-[1px] rounded-md h-fit w-full bg-white ">
+					<LayerToggle {layer} {toggleLayer} {handleToggleLayerMenu} />
 
-					<button
-						title={layer.layerName}
-						on:click={() => toggleLayer(layer)}
-						class="flex flex-row px-4 py-2 border-[1px] rounded-md w-full h-10 {layer.isVisible
-							? 'bg-primary text-white hover:bg-primary-dark'
-							: 'bg-white hover:bg-smoke'}"
-					>
-						<p class="my-auto">{layer.layerName}</p>
-					</button>
+					{#if isLayerMenuOpen && selectedLayer?.layerName === layer.layerName}
+						<UpdateCenterButton {layer} {map} />
 
-
+						<DownloadButton {layer} />
+					{/if}
 				</div>
 			{/each}
 		</div>
 	{/if}
 </div>
 
-<div class="mt-auto px-4 py-3 flex flex-row bg-smoke  justify-end">
+<div class="mt-auto px-4 py-4 flex flex-row bg-smoke  justify-end">
 	<p>Showing {filteredLayers.length} of {mapLayers.length} Layers</p>
 </div>

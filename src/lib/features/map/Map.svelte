@@ -13,7 +13,7 @@
 	} from './helpers/google/google-map-utils';
 	import Card from '$lib/layout/Card.svelte';
 	import Layers from './components/Layers.svelte';
-	import SideBar from './components/SideBar.svelte';
+	import SideBar from '../../layout/SideBar.svelte';
 	import SelectedMapElement from './components/SelectedMapElement.svelte';
 	import SearchData from './components/SearchData.svelte';
 
@@ -90,6 +90,8 @@
 			<i class="fa-solid {component.icon}" aria-hidden="true" />
 		</button>
 	{/each}
+
+	
 </SideBar>
 
 <section class="main relative flex flex-row min-h-screen">
