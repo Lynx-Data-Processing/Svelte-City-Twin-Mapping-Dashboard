@@ -17,6 +17,7 @@
 	import { mapStore } from './store/mapStore';
 	import type { IMapLayer } from './types';
 	import TableElement from './components/TableElement.svelte';
+	import ImportGeojson from './components/ImportGeojson.svelte';
 
 	let mapLayers: IMapLayer[];
 	mapLayerStore.subscribe((value) => {
@@ -78,6 +79,10 @@
 		{
 			name: 'Table',
 			icon: 'fa-solid fa-table'
+		},
+		{
+			name: 'Import Geojson',
+			icon: 'fa-solid fa-file-import'
 		}
 	];
 	let selectedComponent = components[0];
@@ -141,6 +146,17 @@
 			disableToggle={true}
 		>
 			<TableElement />
+		</Card>
+
+		<Card
+			width="w-[26rem]"
+			title="Import Geojson"
+			icon="fa-solid fa-file-import"
+			extraClasses={selectedComponent.name === 'Import Geojson' ? '' : 'hidden'}
+			showOnLoad={true}
+			disableToggle={true}
+		>
+			<ImportGeojson {processMapLayers} />
 		</Card>
 	</div>
 

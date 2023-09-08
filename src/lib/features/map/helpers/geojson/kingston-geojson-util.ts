@@ -96,20 +96,20 @@ export const getKingstonMapData = async () => {
     tempLayerList.push(cyclingElement);
   }
 
-  const walkingData = await getKingstonData(OPEN_DATA_KINGSTON_WALKING_PATHS_URL);
-  if (walkingData) {
-    let walkingGpsData = rawKingstonDataToGeojsonData(walkingData, POLYGON);
-    walkingGpsData = addAdditionalStylingToGeojson(walkingGpsData, '#795548');
-    const walkingElement = createMapLayer('Walking Paths', POLYGON, false, 'fa-solid fa-walking', '#795548', walkingGpsData);
-    tempLayerList.push(walkingElement);
-  }
+  // const walkingData = await getKingstonData(OPEN_DATA_KINGSTON_WALKING_PATHS_URL);
+  // if (walkingData) {
+  //   let walkingGpsData = rawKingstonDataToGeojsonData(walkingData, POLYGON);
+  //   walkingGpsData = addAdditionalStylingToGeojson(walkingGpsData, '#795548');
+  //   const walkingElement = createMapLayer('Walking Paths', POLYGON, false, 'fa-solid fa-walking', '#795548', walkingGpsData);
+  //   tempLayerList.push(walkingElement);
+  // }
 
-  const traffic_lights = await axiosCacheGetUtility('/data/traffic_lights.json');
-  if (traffic_lights.status === 200) {
-    let trafficLightsGpsData = addAdditionalStylingToGeojson(traffic_lights.data, '#ff9800');
-    const trafficLightsElement = createMapLayer('Traffic Lights', POINT, false, 'fa-solid fa-traffic-light', '#ff9800', trafficLightsGpsData);
-    tempLayerList.push(trafficLightsElement);
-  }
+  // const traffic_lights = await axiosCacheGetUtility('/data/traffic_lights.json');
+  // if (traffic_lights.status === 200) {
+  //   let trafficLightsGpsData = addAdditionalStylingToGeojson(traffic_lights.data, '#ff9800');
+  //   const trafficLightsElement = createMapLayer('Traffic Lights', POINT, false, 'fa-solid fa-traffic-light', '#ff9800', trafficLightsGpsData);
+  //   tempLayerList.push(trafficLightsElement);
+  // }
 
   return tempLayerList;
 }
