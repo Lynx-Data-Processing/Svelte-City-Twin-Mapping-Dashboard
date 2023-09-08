@@ -13,7 +13,6 @@ export interface IMapLayer  {
     color?: string,
     geojson?: IGeojsonCollection,
     googleMapLayer?: any,
-    layerImageUrl?: string
 }
 
 export interface ISeachParameters {

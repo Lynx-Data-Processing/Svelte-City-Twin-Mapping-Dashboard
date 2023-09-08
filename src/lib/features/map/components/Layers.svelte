@@ -2,12 +2,13 @@
 	import IconButton from '$lib/components/IconButton.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import { mapLayerStore } from '$lib/features/map/store/layerListStore';
-	import { mapStore } from '../store/mapStore';
+	import { slide } from 'svelte/transition';
 	import { toggleGoogleMapLayerVisibility } from '../helpers/google/google-map-utils';
-	import UpdateCenterButton from './layers/UpdateCenterButton.svelte';
-	import LayerToggle from './layers/LayerToggle.svelte';
-	import DownloadButton from './layers/DownloadButton.svelte';
+	import { mapStore } from '../store/mapStore';
 	import type { IMapLayer } from '../types';
+	import DownloadButton from './layers/DownloadButton.svelte';
+	import LayerToggle from './layers/LayerToggle.svelte';
+	import UpdateCenterButton from './layers/UpdateCenterButton.svelte';
 
 	let map: google.maps.Map;
 	mapStore.subscribe((value) => {
@@ -22,7 +23,6 @@
 	let filteredLayers: IMapLayer[];
 	let search = '';
 	let isAllVisible = false;
-
 
 	const setVisibilityForAllLayers = (visibility: boolean) => {
 		const tempLayerList = [...mapLayers];

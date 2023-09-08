@@ -12,7 +12,7 @@ const searchParamInitialState: ISearchParamStore = {
         dateEnd: "2023-07-18T09:47",
         location: undefined,
         model: "model1",
-        returnVideo: false
+        returnVideo: true
     }
 }
 

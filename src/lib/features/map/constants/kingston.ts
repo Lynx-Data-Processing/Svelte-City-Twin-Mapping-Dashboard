@@ -10,13 +10,19 @@ export const OPEN_DATA_KINGSTON_CYCLING_PATHS_URL = "https://opendatakingston.ci
 export const OPEN_DATA_KINGSTON_WALKING_PATHS_URL = "https://opendatakingston.cityofkingston.ca/api/records/1.0/search/?dataset=paths&q=&rows=5000&facet=material"
 
 export const KINGSTON_COORDINATES_OBJ = { lng: -76.491143, lat: 44.231689 }
-export const KINGSTON_COORDINATES_ARRAY = [ -76.491143, 44.231689 ]
+export const KINGSTON_COORDINATES_ARRAY = [-76.491143, 44.231689]
 
-export const INITIAL_MAP_DATA : IMapDetailsType =  {
-    mapTypeId: 'roadmap',
+export const INITIAL_MAP_DATA: IMapDetailsType = {
+    mapTypeId: 'satellite',
     center: KINGSTON_COORDINATES_OBJ,
     zoom: 17,
-    tilt: 60,
-    heading: -17.6
+    tilt: 45,
+    heading: -17.6,
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+      style: 1,
+      mapTypeIds: ["satellite","roadmap", "terrain"],
+      position: 2
+    },
 };
 

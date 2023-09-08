@@ -5,10 +5,11 @@
 	export let disableToggle = false;
 	export let showOnLoad = true;
 	export let showContent = showOnLoad;
+	export let extraClasses = '';
 	const toggleContent = () => (showContent = !showContent);
 </script>
 
-<section class="bg-white h-fit shadow-lg {width} gap-2 rounded-md overflow-hidden">
+<section class="bg-white h-fit shadow-lg {width} gap-2 rounded-md overflow-hidden {extraClasses}">
 	<div class="flex flex-row justify-between bg-dark text-white px-4 py-3 ">
 		<div class="flex gap-2">
 			<i class="{icon} my-auto" />

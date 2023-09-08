@@ -8,5 +8,11 @@ export interface IMapDetailsType {
   mapTypeId: string,
   heading: number,
   tilt: number,
-  center: ILatLngType
+  center: ILatLngType,
+  mapTypeControl: boolean,
+  mapTypeControlOptions: {
+    style: number,
+    mapTypeIds: string[],
+    position: number
+  }
 }

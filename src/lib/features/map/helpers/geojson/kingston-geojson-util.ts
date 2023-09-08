@@ -2,9 +2,9 @@
 import { LINE_STRING, POINT, POLYGON } from '$lib/features/map/constants/geojson';
 import { KINGSTON_COORDINATES_ARRAY, OPEN_DATA_KINGSTON_BUS_ROUTES_URL, OPEN_DATA_KINGSTON_CITY_ZONES_URL, OPEN_DATA_KINGSTON_CYCLING_PATHS_URL, OPEN_DATA_KINGSTON_WALKING_PATHS_URL } from '$lib/features/map/constants/kingston';
 import { axiosCacheGetUtility } from '$lib/features/map/services/fetch-data';
-import type { GeojsonGeometryType, IGeojsonFeature, IGeojsonCollection, IMapLayer } from '$lib/features/map/types';
+import type { GeojsonGeometryType, IGeojsonCollection, IGeojsonFeature, IMapLayer } from '$lib/features/map/types';
 import { createMapLayer } from '../google/google-map-utils';
-import { getColorGivenIndex } from './color-utils';
+import { addAdditionalStylingToGeojson } from './geojson-utils';
 
 
 
@@ -54,13 +54,6 @@ export const rawKingstonDataToGeojsonData = (rawData: any, geojsonDataType: Geoj
   return geoJson;
 };
 
-const addAdditionalStylingToGeojson = (geojson: IGeojsonCollection, color?: string, hasArrows = false) => {
-  for (let i = 0, len = geojson.features.length; i < len; i++) {
-    geojson.features[i].properties.color = color || getColorGivenIndex(i);
-    if (hasArrows) geojson.features[i].properties.hasArrows = true;
-  }
-  return geojson;
-}
 
 
 const getKingstonData = async (url: string) => {
@@ -83,7 +76,7 @@ export const getKingstonMapData = async () => {
   if (neighborhoodsData) {
     let neighborhoodsGpsData = rawKingstonDataToGeojsonData(neighborhoodsData, POLYGON);
     neighborhoodsGpsData = addAdditionalStylingToGeojson(neighborhoodsGpsData, '#000000');
-    const neighborhoodsElement = createMapLayer('Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', 'Black', "https://cohousing.ca/wp-content/uploads/Kingston.jpg", neighborhoodsGpsData);
+    const neighborhoodsElement = createMapLayer('Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', 'Black', neighborhoodsGpsData);
     tempLayerList.push(neighborhoodsElement);
   }
 
@@ -91,7 +84,7 @@ export const getKingstonMapData = async () => {
   if (busRoutesData) {
     let busRoutesGpsData = rawKingstonDataToGeojsonData(busRoutesData, LINE_STRING);
     busRoutesGpsData = addAdditionalStylingToGeojson(busRoutesGpsData, undefined, true);
-    const busRoutesElement = createMapLayer('Bus Routes', LINE_STRING, false, 'fa-solid fa-bus', '#ffc107', 'https://www.kingstontransit.ca/images/kingston-transit-logo.png', busRoutesGpsData);
+    const busRoutesElement = createMapLayer('Bus Routes', LINE_STRING, false, 'fa-solid fa-bus', '#ffc107',  busRoutesGpsData);
     tempLayerList.push(busRoutesElement);
   }
 
@@ -99,7 +92,7 @@ export const getKingstonMapData = async () => {
   if (cyclingData) {
     let cyclingGpsData = rawKingstonDataToGeojsonData(cyclingData, LINE_STRING);
     cyclingGpsData = addAdditionalStylingToGeojson(cyclingGpsData, '#4caf50');
-    const cyclingElement = createMapLayer('Cycling Paths', LINE_STRING, false, 'fa-solid fa-bicycle', '#4caf50', 'https://www.kingstontransit.ca/images/kingston-transit-logo.png', cyclingGpsData);
+    const cyclingElement = createMapLayer('Cycling Paths', LINE_STRING, false, 'fa-solid fa-bicycle', '#4caf50', cyclingGpsData);
     tempLayerList.push(cyclingElement);
   }
 
@@ -107,14 +100,14 @@ export const getKingstonMapData = async () => {
   if (walkingData) {
     let walkingGpsData = rawKingstonDataToGeojsonData(walkingData, POLYGON);
     walkingGpsData = addAdditionalStylingToGeojson(walkingGpsData, '#795548');
-    const walkingElement = createMapLayer('Walking Paths', POLYGON, false, 'fa-solid fa-walking', '#795548', 'https://www.kingstontransit.ca/images/kingston-transit-logo.png', walkingGpsData);
+    const walkingElement = createMapLayer('Walking Paths', POLYGON, false, 'fa-solid fa-walking', '#795548', walkingGpsData);
     tempLayerList.push(walkingElement);
   }
 
   const traffic_lights = await axiosCacheGetUtility('/data/traffic_lights.json');
   if (traffic_lights.status === 200) {
     let trafficLightsGpsData = addAdditionalStylingToGeojson(traffic_lights.data, '#ff9800');
-    const trafficLightsElement = createMapLayer('Traffic Lights', POINT, false, 'fa-solid fa-traffic-light', '#ff9800', 'https://www.kingstontransit.ca/images/kingston-transit-logo.png', trafficLightsGpsData);
+    const trafficLightsElement = createMapLayer('Traffic Lights', POINT, false, 'fa-solid fa-traffic-light', '#ff9800', trafficLightsGpsData);
     tempLayerList.push(trafficLightsElement);
   }
 

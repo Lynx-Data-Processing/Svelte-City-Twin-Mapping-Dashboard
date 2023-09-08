@@ -1,7 +1,14 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import {
+		addAdditionalStylingToGeojson,
+		convertToGeojson
+	} from '../helpers/geojson/geojson-utils';
+	import { createMapLayer } from '../helpers/google/google-map-utils';
+	import { getQueensData } from '../services/queens';
 	import { mapStore } from '../store/mapStore';
 	import { searchParamStore } from '../store/searchParamsStore';
-	import type { ISeachParameters } from '../types';
+	import type { IMapLayer, ISeachParameters } from '../types';
 
 	let searchParameters: ISeachParameters;
 	searchParamStore.subscribe((value) => {
@@ -13,25 +20,45 @@
 		map = value.map;
 	});
 
-	function handleSearch() {
+	let isSuccessful = false;
+	let showStatus = false;
+	export let processMapLayers: (layerListElements: IMapLayer[]) => void;
+
+	async function handleSearch() {
 		if (map) {
 			const bounds = map.getBounds();
 			if (bounds) {
 				const ne = bounds.getNorthEast();
 				const sw = bounds.getSouthWest();
-
-				// Create a polygon array based on the bounding box
 				const polygon = [
 					[sw.lat(), sw.lng()],
 					[ne.lat(), sw.lng()],
 					[ne.lat(), ne.lng()],
 					[sw.lat(), ne.lng()]
 				];
+				searchParameters.location = JSON.stringify(polygon);
 
 				// Convert the polygon array to a string representation
 				searchParameters.location = JSON.stringify(polygon);
 
-				// Trigger the search action here, e.g., call an API or update the store
+				try {
+					let data = await getQueensData(searchParameters);
+					let geojson = addAdditionalStylingToGeojson(
+						convertToGeojson(data, 'Point'),
+						'#3f51b5',
+						false
+					);
+					processMapLayers([
+						createMapLayer('Queens Data', 'Point', true, 'fa-solid fa-camera', '#3f51b5', geojson)
+					]);
+
+					isSuccessful = true;
+				} catch (error) {
+					isSuccessful = false;
+				}
+
+				showStatus = true;
+				setTimeout(() => (showStatus = false), 3000);
 			}
 		}
 	}
@@ -58,7 +85,6 @@
 		/>
 	</label>
 
-
 	<!-- Model Input -->
 	<label class="flex flex-col">
 		<span>Model</span>
@@ -76,7 +102,21 @@
 		<span>Return Video</span>
 	</label>
 
-	<button on:click={handleSearch} title="Search" class="bg-dark hover:bg-zinc-800 text-white p-2 w-full h-10 rounded-md">
-		<i class="fa-solid fa-magnifying-glass" aria-hidden="true" />
-	</button>
+	{#if showStatus}
+		<div
+			class="{isSuccessful
+				? 'bg-green-800'
+				: 'bg-red-800'} flex text-white p-2 w-full h-10 rounded-md text-center align-middle"
+		>
+			<p class="m-auto">{isSuccessful ? 'Search Successful' : 'Search Failed'}</p>
+		</div>
+	{:else}
+		<button
+			on:click={handleSearch}
+			title="Search"
+			class="bg-dark hover:bg-zinc-800 text-white p-2 w-full h-10 rounded-md"
+		>
+			<i class="fa-solid fa-magnifying-glass" aria-hidden="true" />
+		</button>
+	{/if}
 </div>

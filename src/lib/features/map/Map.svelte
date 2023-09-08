@@ -1,21 +1,21 @@
 <script lang="ts">
+	import Card from '$lib/layout/Card.svelte';
 	// @ts-ignore
 	import type { Map } from 'google.maps';
-	import { mapLayerStore } from './store/layerListStore';
-	import { mapStore } from './store/mapStore';
-	import type { IMapLayer } from './types';
-	import { INITIAL_MAP_DATA } from './constants/kingston';
 	import { onMount } from 'svelte';
+	import SideBar from '../../layout/SideBar.svelte';
+	import Layers from './components/Layers.svelte';
+	import SearchData from './components/SearchData.svelte';
+	import SelectedMapElement from './components/SelectedMapElement.svelte';
+	import { INITIAL_MAP_DATA } from './constants/kingston';
 	import { getKingstonMapData } from './helpers/geojson/kingston-geojson-util';
 	import {
 		addLayerToGoogleMap,
 		toggleGoogleMapLayerVisibility
 	} from './helpers/google/google-map-utils';
-	import Card from '$lib/layout/Card.svelte';
-	import Layers from './components/Layers.svelte';
-	import SideBar from '../../layout/SideBar.svelte';
-	import SelectedMapElement from './components/SelectedMapElement.svelte';
-	import SearchData from './components/SearchData.svelte';
+	import { mapLayerStore } from './store/layerListStore';
+	import { mapStore } from './store/mapStore';
+	import type { IMapLayer } from './types';
 
 	let mapLayers: IMapLayer[];
 	mapLayerStore.subscribe((value) => {
@@ -70,10 +70,10 @@
 			name: 'Search',
 			icon: 'fa-solid fa-search'
 		},
-        {
-            name: 'Selected Map Element',
-            icon: 'fa-solid fa-map-marker'
-        }
+		{
+			name: 'Selected Map Element',
+			icon: 'fa-solid fa-map-marker'
+		}
 	];
 	let selectedComponent = components[0];
 </script>
@@ -81,7 +81,7 @@
 <SideBar>
 	{#each components as component}
 		<button
-            title={component.name}
+			title={component.name}
 			class="{selectedComponent.name === component.name
 				? 'bg-primary hover:bg-primary-dark'
 				: 'bg-dark hover:bg-zinc-800'} text-white p-2 w-full h-12"
@@ -91,24 +91,39 @@
 		</button>
 	{/each}
 
-	
 </SideBar>
 
 <section class="main relative flex flex-row min-h-screen">
-	<div class="absolute top-2 left-2 z-20 w-[24rem] flex flex-col gap-2">
-		{#if selectedComponent.name === 'Layers'}
-			<Card title="Layers" icon="fa-solid fa-layer-group" showOnLoad={true} disableToggle={false}>
-				<Layers />
-			</Card>
-		{:else if selectedComponent.name === 'Search'}
-			<Card title="Search" icon="fa-solid fa-search" showOnLoad={true} disableToggle={false}>
-				<SearchData />
-			</Card>
-		{:else if selectedComponent.name === 'Selected Map Element'}
-            <Card title="Selected Map Element" icon="fa-solid fa-map-marker" showOnLoad={true} disableToggle={false}>
-                <SelectedMapElement />
-            </Card>
-        {/if}
+	<div class="absolute top-2 left-2 z-20 w-[26rem] flex flex-col gap-2">
+		<Card
+			extraClasses={selectedComponent.name === 'Layers' ? '' : 'hidden'}
+			title="Layers"
+			icon="fa-solid fa-layer-group"
+			showOnLoad={true}
+			disableToggle={true}
+		>
+			<Layers />
+		</Card>
+
+		<Card
+			extraClasses={selectedComponent.name === 'Search' ? '' : 'hidden'}
+			title="Search"
+			icon="fa-solid fa-search"
+			showOnLoad={true}
+			disableToggle={true}
+		>
+			<SearchData {processMapLayers} />
+		</Card>
+
+		<Card
+			extraClasses={selectedComponent.name === 'Selected Map Element' ? '' : 'hidden'}
+			title="Selected Map Element"
+			icon="fa-solid fa-map-marker"
+			showOnLoad={true}
+			disableToggle={true}
+		>
+			<SelectedMapElement />
+		</Card>
 	</div>
 
 	<div bind:this={mapDiv} class="min-h-screen w-full" />

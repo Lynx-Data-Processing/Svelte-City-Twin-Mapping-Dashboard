@@ -1,9 +1,9 @@
 import { LINE_STRING, MULTI_POLYGON, POINT, POLYGON } from "$lib/features/map/constants/geojson";
-import type { GeojsonGeometryType, IGeojsonCollection, ILatLngType, IMapLayer } from "$lib/features/map/types";
 import { KINGSTON_COORDINATES_OBJ } from "$lib/features/map/constants/kingston";
+import type { GeojsonGeometryType, IGeojsonCollection, ILatLngType, IMapLayer } from "$lib/features/map/types";
+import { mapStore } from "../../store/mapStore";
 import { arrowLineStyle, lineStyle, pointStyle, polygonStyle } from "./google-feature-style";
 import { createMapPopup } from "./google-map-popup";
-import { mapStore } from "../../store/mapStore";
 
 export const addLayerToGoogleMap = (map: any, layerListElement: IMapLayer) => {
     if (!map || !layerListElement.geojson) return;
@@ -77,7 +77,6 @@ export const createMapLayer = (
     isVisible: boolean = true,
     icon: string,
     color: string,
-    layerImageUrl: string,
     geojson: IGeojsonCollection,
 ) => {
     const layerElement: IMapLayer = {
@@ -90,7 +89,6 @@ export const createMapLayer = (
         geojson: geojson,
         initialCoordinates: getMapLayerCenterCoordinates(type, geojson),
         googleMapLayer: new google.maps.Data(),
-        layerImageUrl: layerImageUrl
     };
     return layerElement;
 };

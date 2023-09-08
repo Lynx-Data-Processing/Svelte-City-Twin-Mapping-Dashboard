@@ -8,10 +8,10 @@ export const pointStyle = (color: string, size: number = 5) => {
 
 export const polygonStyle = (color: string) => ({ ...createStyle(color), strokeColor: color, fillColor: color, fillOpacity: 0.5 });
 
-export const lineStyle = (color: string) => createStyle(color, 6);
+export const lineStyle = (color: string) => createStyle(color, 4);
 
 export const arrowLineStyle = (color: string) => ({
-    ...createStyle(color, 6),
+    ...createStyle(color, 4),
     icons: [
         {
             icon: createIcon('white', 2, google.maps.SymbolPath.BACKWARD_CLOSED_ARROW),
