@@ -22,7 +22,7 @@
 	on:click={() => {
 		updateMapCenter(layer.initialCoordinates, layer.type);
 	}}
-	class="flex flex-row gap-2 w-full h-10 justify-start px-4 bg-zinc-50 hover:bg-zinc-200 "
+	class="flex flex-row gap-2 w-full h-10 justify-start px-4 bg-zinc-200 hover:bg-zinc-300 "
 >
 	<i class="fa-solid fa-magnifying-glass-plus my-auto" />
 	<p class="my-auto">Zoom To</p>

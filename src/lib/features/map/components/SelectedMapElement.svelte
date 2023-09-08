@@ -73,19 +73,19 @@
 				<!-- other types will go to the table -->
 			{/if}
 		{/each}
-		<table>
+		<table class="w-full border-collapse rounded-md overflow-hidden">
 			<thead>
-				<tr class="text-left">
-					<th class="font-bold w-1/2">Key</th>
-					<th class="font-bold w-1/2">Value</th>
+				<tr class="text-left bg-zinc-200 rounded-md overflow-hidden  h-10">
+					<th class="font-bold w-1/2 p-2 ">Key</th>
+					<th class="font-bold w-1/2 p-2 ">Value</th>
 				</tr>
 			</thead>
 			<tbody>
-				{#each properties as property}
+				{#each properties as property, idx}
 					{#if !isImage(property.value) && !isVideo(property.value)}
-						<tr>
-							<td>{property.name}</td>
-							<td>
+						<tr class="{idx%2==0? "bg-zinc-50 " : "bg-zinc-100"} hover:bg-zinc-300 h-10">
+							<td class="p-2 ">{property.name}</td>
+							<td class="p-2 ">
 								{#if isColor(property.value)}
                                     <span style="color: {property.value};">{property.value}</span>
                                 {:else if isNumber(property.value)}

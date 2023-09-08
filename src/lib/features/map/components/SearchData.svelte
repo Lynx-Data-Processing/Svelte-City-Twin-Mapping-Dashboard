@@ -22,7 +22,7 @@
 
 	let isSuccessful = false;
 	let showStatus = false;
-	export let processMapLayers: (layerListElements: IMapLayer[]) => void;
+	export let processMapLayers: Function;
 
 	async function handleSearch() {
 		if (map) {

@@ -43,6 +43,8 @@ h6 {
 li,
 label,
 span,
+option,
+select,
 td,
 th,
 p {
@@ -73,7 +75,7 @@ p {
 }
 
 .navbar {
-    z-index: 2;
+   
     position: fixed;
     transition: width $speed-sm ease;
     overflow: hidden;

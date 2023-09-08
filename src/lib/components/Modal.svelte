@@ -4,10 +4,10 @@
 </script>
 
 {#if isOpen}
-	<div class="fixed flex z-[50] h-full w-full">
+	<div class="fixed flex z-40 h-full w-full">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div class="absolute z-[50] bg-black bg-opacity-80 h-full w-full" on:click={handleClose} />
-		<div class="my-auto z-[60] mx-auto h-fit w-[32rem] bg-white rounded-md">
+		<div class="absolute z-40 bg-black bg-opacity-80 h-full w-full" on:click={handleClose} />
+		<div class="my-auto z-50 mx-auto h-fit w-[32rem] rounded-md overflow-hidden">
 			<slot />
 		</div>
 	</div>

@@ -2,11 +2,9 @@
 	import IconButton from '$lib/components/IconButton.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import { mapLayerStore } from '$lib/features/map/store/layerListStore';
-	import { slide } from 'svelte/transition';
 	import { toggleGoogleMapLayerVisibility } from '../helpers/google/google-map-utils';
 	import { mapStore } from '../store/mapStore';
 	import type { IMapLayer } from '../types';
-	import DownloadButton from './layers/DownloadButton.svelte';
 	import LayerToggle from './layers/LayerToggle.svelte';
 	import UpdateCenterButton from './layers/UpdateCenterButton.svelte';
 
@@ -89,7 +87,7 @@
 					{#if isLayerMenuOpen && selectedLayer?.layerName === layer.layerName}
 						<UpdateCenterButton {layer} {map} />
 
-						<DownloadButton {layer} />
+					
 					{/if}
 				</div>
 			{/each}

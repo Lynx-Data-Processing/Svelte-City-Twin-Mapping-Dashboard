@@ -16,6 +16,7 @@
 	import { mapLayerStore } from './store/layerListStore';
 	import { mapStore } from './store/mapStore';
 	import type { IMapLayer } from './types';
+	import TableElement from './components/TableElement.svelte';
 
 	let mapLayers: IMapLayer[];
 	mapLayerStore.subscribe((value) => {
@@ -73,6 +74,10 @@
 		{
 			name: 'Selected Map Element',
 			icon: 'fa-solid fa-map-marker'
+		},
+		{
+			name: 'Table',
+			icon: 'fa-solid fa-table'
 		}
 	];
 	let selectedComponent = components[0];
@@ -90,12 +95,12 @@
 			<i class="fa-solid {component.icon}" aria-hidden="true" />
 		</button>
 	{/each}
-
 </SideBar>
 
 <section class="main relative flex flex-row min-h-screen">
-	<div class="absolute top-2 left-2 z-20 w-[26rem] flex flex-col gap-2">
+	<div class="absolute top-2 left-2 z-[10] flex flex-col gap-2">
 		<Card
+			width="w-[26rem]"
 			extraClasses={selectedComponent.name === 'Layers' ? '' : 'hidden'}
 			title="Layers"
 			icon="fa-solid fa-layer-group"
@@ -106,6 +111,7 @@
 		</Card>
 
 		<Card
+			width="w-[26rem]"
 			extraClasses={selectedComponent.name === 'Search' ? '' : 'hidden'}
 			title="Search"
 			icon="fa-solid fa-search"
@@ -116,6 +122,7 @@
 		</Card>
 
 		<Card
+			width="w-[26rem]"
 			extraClasses={selectedComponent.name === 'Selected Map Element' ? '' : 'hidden'}
 			title="Selected Map Element"
 			icon="fa-solid fa-map-marker"
@@ -123,6 +130,17 @@
 			disableToggle={true}
 		>
 			<SelectedMapElement />
+		</Card>
+
+		<Card
+			width="w-[26rem]"
+			title="Table"
+			extraClasses={selectedComponent.name === 'Table' ? '' : 'hidden'}
+			icon="fa-solid fa-table"
+			showOnLoad={true}
+			disableToggle={true}
+		>
+			<TableElement />
 		</Card>
 	</div>
 
