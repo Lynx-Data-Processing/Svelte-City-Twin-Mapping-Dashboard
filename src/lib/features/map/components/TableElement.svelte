@@ -1,8 +1,12 @@
 <script lang="ts">
+	import SearchBar from '$lib/components/SearchBar.svelte';
 	import { mapLayerStore } from '$lib/features/map/store/layerListStore';
+	import { isColor, isNumber, stringifyObject } from '$lib/utils/value-type';
+	import { convertGeoJSONToLatLng } from '../helpers/geojson/geojson-utils';
+	import { mapStore } from '../store/mapStore';
 	import type { IGeojsonFeature, IMapLayer } from '../types';
 	import DownloadButton from './layers/DownloadButton.svelte';
-	import SearchBar from '$lib/components/SearchBar.svelte';
+	import UpdateCenterButton from './layers/UpdateCenterButton.svelte';
 
 	let mapLayers: IMapLayer[];
 	let selectedLayer: IMapLayer;
@@ -14,8 +18,10 @@
 		mapLayers = value.mapLayers;
 	});
 
-	let sortDirection: 'asc' | 'desc' | null = null;
-	let sortedByColumn: string | null = null;
+	let map: google.maps.Map;
+	mapStore.subscribe((value) => {
+		map = value.map;
+	});
 
 	const selectLayer = (layer: IMapLayer) => {
 		selectedLayer = layer;
@@ -44,26 +50,6 @@
 		}
 	};
 
-	const sortTable = (columnKey: string) => {
-		if (sortedByColumn === columnKey) {
-			sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-		} else {
-			sortedByColumn = columnKey;
-			sortDirection = 'asc';
-		}
-
-		if (selectedLayerGeojson && selectedLayerGeojson.features) {
-			const sortedFeatures = [...selectedLayerGeojson.features].sort((a, b) => {
-				const aValue = a.properties[columnKey];
-				const bValue = b.properties[columnKey];
-				if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-				if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-				return 0;
-			});
-			selectedLayerGeojson.features = sortedFeatures;
-		}
-	};
-
 	let search = '';
 	let filteredLayerGeojson: any = null;
 	const filterGeojsonBySearch = () => {
@@ -85,8 +71,33 @@
 			})
 		};
 	};
-
 	$: selectLayer(selectedLayer);
+
+	
+	let sortDirection: 'asc' | 'desc' | null = null;
+	let sortedByColumn: string | null = null;
+	const sortTable = (columnKey: string) => {
+		if (sortedByColumn === columnKey) {
+			sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+		} else {
+			sortedByColumn = columnKey;
+			sortDirection = 'asc';
+		}
+
+		if (selectedLayerGeojson && selectedLayerGeojson.features) {
+			let tempGeojson = selectedLayerGeojson;
+			const sortedFeatures = [...tempGeojson.features].sort((a, b) => {
+				const aValue = a.properties[columnKey];
+				const bValue = b.properties[columnKey];
+				if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+				if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+				return 0;
+			});
+			tempGeojson.features = sortedFeatures;
+			selectedLayerGeojson = tempGeojson;
+			filterGeojsonBySearch();
+		}
+	};
 </script>
 
 <div class="flex flex-col p-4 gap-2">
@@ -98,16 +109,20 @@
 	</select>
 
 	{#if selectedLayer}
-		<SearchBar onChangeFunction={filterGeojsonBySearch} bind:search placeholder={"Search Features..."} />
+		<SearchBar
+			onChangeFunction={filterGeojsonBySearch}
+			bind:search
+			placeholder={'Search Map Layer Features...'}
+		/>
 	{/if}
 	{#if filteredLayerGeojson && filteredLayerGeojson.features.length > 0}
-		<div class="flex flex-col max-h-[30rem] overflow-auto pr-6 pb-6">
+		<div class="flex flex-col max-h-[45rem] overflow-auto pr-6 pb-6">
 			<table class="w-full border-collapse rounded-md overflow-hidden">
 				<thead>
 					<tr class="text-left bg-zinc-200 rounded-md overflow-hidden h-10">
-						<th class="font-bold px-4 py-2 w-12 ">Id</th>
+						
 						{#each Array.from(uniqueKeys) as key, idx}
-							<th class="font-bold px-4 py-2 w-12">
+							<th class="font-bold px-4 py-2 ">
 								<div class="flex flex-row justify-between">
 									{key}
 
@@ -121,15 +136,40 @@
 								</div>
 							</th>
 						{/each}
+						<th class="font-bold px-4 py-2 ">Options</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#each filteredLayerGeojson.features as feature, idx}
-						<tr class="{idx % 2 == 0 ? 'bg-zinc-50 ' : 'bg-zinc-100'} hover:bg-zinc-300 h-10">
-							<td class="px-4 py-2 font-bold">{idx}</td>
+						<tr class="{idx % 2 == 0 ? 'bg-white ' : 'bg-zinc-50'} hover:bg-zinc-100 h-10">
+							
 							{#each Array.from(uniqueKeys) as key}
-								<td class="px-4 py-2">{feature.properties[key] ?? '-'}</td>
+								<td class="px-4 py-2">
+									{#if !feature.properties[key]}
+										-
+									{:else if isColor(feature.properties[key])}
+										<span class="flex flex-row gap-2" style="color: {feature.properties[key]};">
+											<span
+												class="rounded-full h-4 w-4"
+												style="background-color: {feature.properties[key]};"
+											/>
+											{feature.properties[key]}
+										</span>
+									{:else if isNumber(feature.properties[key])}
+										<span>{feature.properties[key]}</span>
+									{:else}
+										<span>{stringifyObject(feature.properties[key])}</span>
+									{/if}
+								</td>
 							{/each}
+							<td class="px-4 py-2 ">
+								<UpdateCenterButton
+									extraClasses={'rounded-md'}
+									initialCoordinates={convertGeoJSONToLatLng(feature)}
+									geojsonGeometry={feature.geometry.type}
+									{map}
+								/>
+							</td>
 						</tr>
 					{/each}
 				</tbody>
@@ -138,6 +178,7 @@
 	{/if}
 
 	{#if filteredLayerGeojson && filteredLayerGeojson.features.length > 0}
+		<hr />
 		<div class="border-[1px] rounded-md h-fit w-full bg-white ">
 			<DownloadButton layer={selectedLayer} />
 		</div>

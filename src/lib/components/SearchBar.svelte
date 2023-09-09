@@ -4,11 +4,4 @@
 	export let search: string = '';
 </script>
 
-<input
-	type="search"
-	bind:value={search}
-	required
-	class="flex flex-row gap-2 px-4 py-2 border-[1px] h-10 bg-white hover:bg-zinc-200 w-full  text-sm rounded-md"
-	{placeholder}
-	on:input={() => onChangeFunction()}
-/>
+<input bind:value={search} type="text" class="px-4 py-2 w-full border-[1px] rounded-md" placeHolder={placeholder} on:input={() => onChangeFunction()}/>

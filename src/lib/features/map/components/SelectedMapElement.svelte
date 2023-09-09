@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { isColor, isImage, isNumber, isVideo, stringifyObject } from '$lib/utils/value-type';
 	import { mapStore } from '../store/mapStore';
 
 	let selectedMapElement: google.maps.Data.Feature | undefined;
@@ -6,56 +7,11 @@
 
 	mapStore.subscribe((value) => {
 		selectedMapElement = value.selectedMapElement;
-
-		// Reset properties array
 		properties = [];
-
-		// Loop through each property and add to array
 		selectedMapElement?.forEachProperty((value, name) => {
 			properties.push({ name, value });
 		});
 	});
-
-	function isImage(url: any) {
-		try {
-			return typeof url === 'string' && /\.(jpeg|jpg|gif|png)$/i.test(url);
-		} catch (e) {
-			return false;
-		}
-	}
-
-	function isVideo(url: any) {
-		try {
-			return typeof url === 'string' && /\.(mp4|webm|ogg)$/i.test(url);
-		} catch (e) {
-			return false;
-		}
-	}
-
-	function isColor(value: any) {
-		try {
-			return typeof value === 'string' && /^#([0-9a-f]{3}){1,2}$/i.test(value);
-		} catch (e) {
-			return false;
-		}
-	}
-
-	function isNumber(value: any) {
-		try {
-			return !isNaN(parseFloat(value)) && isFinite(value);
-		} catch (e) {
-			return false;
-		}
-	}
-
-	 // Function to stringify objects
-	 function stringifyObject(obj: any): string {
-        try {
-            return typeof obj === 'object' ? JSON.stringify(obj) : obj;
-        } catch (e) {
-            return 'Invalid Object';
-        }
-    }
 </script>
 
 <div class="flex flex-col p-4 gap-2">
@@ -66,7 +22,7 @@
 			{:else if isVideo(property.value)}
 				<video class="rounded-md" controls>
 					<track kind="captions" />
-					<source src={property.value} type="video/mp4">
+					<source src={property.value} type="video/mp4" />
 					Your browser does not support the video tag.
 				</video>
 			{:else}
@@ -83,17 +39,23 @@
 			<tbody>
 				{#each properties as property, idx}
 					{#if !isImage(property.value) && !isVideo(property.value)}
-						<tr class="{idx%2==0? "bg-zinc-50 " : "bg-zinc-100"} hover:bg-zinc-300 h-10">
+						<tr class="{idx % 2 == 0 ? 'bg-white ' : 'bg-zinc-50'} hover:bg-zinc-100 h-10">
 							<td class="p-2 ">{property.name}</td>
 							<td class="p-2 ">
 								{#if isColor(property.value)}
-                                    <span style="color: {property.value};">{property.value}</span>
-                                {:else if isNumber(property.value)}
-                                    <span>{property.value}</span>
-                                {:else}
-                                    <!-- Stringify objects or other unknown types -->
-                                    <span>{stringifyObject(property.value)}</span>
-                                {/if}
+									<span class="flex flex-row gap-2" style="color: {property.value};">
+										<span
+											class="rounded-full h-4 w-4"
+											style="background-color: {property.value};"
+										/>
+										{property.value}
+									</span>
+								{:else if isNumber(property.value)}
+									<span>{property.value}</span>
+								{:else}
+									<!-- Stringify objects or other unknown types -->
+									<span>{stringifyObject(property.value)}</span>
+								{/if}
 							</td>
 						</tr>
 					{/if}

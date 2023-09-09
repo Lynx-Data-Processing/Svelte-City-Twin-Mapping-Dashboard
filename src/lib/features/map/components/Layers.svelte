@@ -73,9 +73,9 @@
 			title={isAllVisible ? 'Hide All Layers' : 'Show All Layers'}
 			icon={isAllVisible ? 'fas fa-eye ' : 'fas fa-eye-slash'}
 			onClickHandle={() => setVisibilityForAllLayers(!isAllVisible)}
-			size="h-10 w-10"
+			size="h-10 w-12"
 		/>
-		<SearchBar onChangeFunction={filterLayersBySearch} bind:search />
+		<SearchBar onChangeFunction={filterLayersBySearch} bind:search placeholder={"Search Map Layers..."}/>
 	</div>
 
 	{#if filteredLayers.length}
@@ -85,7 +85,7 @@
 					<LayerToggle {layer} {toggleLayer} {handleToggleLayerMenu} />
 
 					{#if isLayerMenuOpen && selectedLayer?.layerName === layer.layerName}
-						<UpdateCenterButton {layer} {map} />
+						<UpdateCenterButton initialCoordinates={layer.initialCoordinates} geojsonGeometry={layer.type} {map} />
 
 					
 					{/if}

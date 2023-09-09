@@ -4,9 +4,11 @@
 	import type { Map } from 'google.maps';
 	import { onMount } from 'svelte';
 	import SideBar from '../../layout/SideBar.svelte';
+	import ImportGeojson from './components/ImportGeojson.svelte';
 	import Layers from './components/Layers.svelte';
 	import SearchData from './components/SearchData.svelte';
 	import SelectedMapElement from './components/SelectedMapElement.svelte';
+	import TableElement from './components/TableElement.svelte';
 	import { INITIAL_MAP_DATA } from './constants/kingston';
 	import { getKingstonMapData } from './helpers/geojson/kingston-geojson-util';
 	import {
@@ -16,8 +18,6 @@
 	import { mapLayerStore } from './store/layerListStore';
 	import { mapStore } from './store/mapStore';
 	import type { IMapLayer } from './types';
-	import TableElement from './components/TableElement.svelte';
-	import ImportGeojson from './components/ImportGeojson.svelte';
 
 	let mapLayers: IMapLayer[];
 	mapLayerStore.subscribe((value) => {
@@ -93,7 +93,7 @@
 		<button
 			title={component.name}
 			class="{selectedComponent.name === component.name
-				? 'bg-primary hover:bg-primary-dark'
+				? 'bg-zinc-800'
 				: 'bg-dark hover:bg-zinc-800'} text-white p-2 w-full h-12"
 			on:click={() => (selectedComponent = component)}
 		>
@@ -127,8 +127,8 @@
 		</Card>
 
 		<Card
-			width="w-[26rem]"
-			extraClasses={selectedComponent.name === 'Selected Map Element' ? '' : 'hidden'}
+			width="min-w-[26rem] max-w-[40rem]"
+			extraClasses={`${selectedComponent.name === 'Selected Map Element' ? '' : 'hidden'} 	resize-x`}
 			title="Selected Map Element"
 			icon="fa-solid fa-map-marker"
 			showOnLoad={true}
@@ -138,9 +138,9 @@
 		</Card>
 
 		<Card
-			width="w-[26rem]"
+			width="min-w-[26rem] max-w-7xl "
 			title="Table"
-			extraClasses={selectedComponent.name === 'Table' ? '' : 'hidden'}
+			extraClasses={`${selectedComponent.name === 'Table' ? '' : 'hidden'} resize-x`}
 			icon="fa-solid fa-table"
 			showOnLoad={true}
 			disableToggle={true}
@@ -152,7 +152,7 @@
 			width="w-[26rem]"
 			title="Import Geojson"
 			icon="fa-solid fa-file-import"
-			extraClasses={selectedComponent.name === 'Import Geojson' ? '' : 'hidden'}
+			extraClasses={`${selectedComponent.name === 'Import Geojson' ? '' : 'hidden'} `}
 			showOnLoad={true}
 			disableToggle={true}
 		>

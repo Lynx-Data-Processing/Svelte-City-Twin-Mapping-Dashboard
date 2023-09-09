@@ -4,6 +4,7 @@ import type { ISeachParameters } from "../types";
 
 interface ISearchParamStore {
     searchParameters: ISeachParameters
+    searchHistory: ISeachParameters[]
 }
 
 const searchParamInitialState: ISearchParamStore = {
@@ -13,7 +14,9 @@ const searchParamInitialState: ISearchParamStore = {
         location: undefined,
         model: "model1",
         returnVideo: true
-    }
+    },
+    searchHistory: []
+
 }
 
 const createSearchParamStore = () => {
@@ -23,6 +26,8 @@ const createSearchParamStore = () => {
         subscribe,
         setSearchParameters: (searchParameters: ISeachParameters) => update((state) => ({ ...state, searchParameters })),
         removeSearchParameters: () => update((state) => ({ ...state, searchParameters: searchParamInitialState.searchParameters })),
+        setSearchHistory: (searchHistory: ISeachParameters[]) => update((state) => ({ ...state, searchHistory })),
+        removeSearchHistory: () => update((state) => ({ ...state, searchHistory: searchParamInitialState.searchHistory }))
     }
 }
 
