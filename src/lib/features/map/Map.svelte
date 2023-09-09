@@ -19,6 +19,7 @@
 	import { mapStore } from './store/mapStore';
 	import type { IMapLayer } from './types';
 
+
 	let mapLayers: IMapLayer[];
 	mapLayerStore.subscribe((value) => {
 		mapLayers = value.mapLayers;
@@ -76,6 +77,7 @@
 			name: 'Selected Map Element',
 			icon: 'fa-solid fa-map-marker'
 		},
+
 		{
 			name: 'Table',
 			icon: 'fa-solid fa-table'
@@ -103,7 +105,7 @@
 </SideBar>
 
 <section class="main relative flex flex-row min-h-screen">
-	<div class="absolute top-2 left-2 z-[10] flex flex-col gap-2">
+	<div class="absolute top-2 left-2 z-[10] flex flex-row gap-2">
 		<Card
 			width="w-[26rem]"
 			extraClasses={selectedComponent.name === 'Layers' ? '' : 'hidden'}
@@ -111,6 +113,7 @@
 			icon="fa-solid fa-layer-group"
 			showOnLoad={true}
 			disableToggle={true}
+			dividerColor="bg-primary"
 		>
 			<Layers />
 		</Card>
@@ -122,6 +125,7 @@
 			icon="fa-solid fa-search"
 			showOnLoad={true}
 			disableToggle={true}
+			dividerColor="bg-green-700"
 		>
 			<SearchData {processMapLayers} />
 		</Card>
@@ -133,17 +137,20 @@
 			icon="fa-solid fa-map-marker"
 			showOnLoad={true}
 			disableToggle={true}
+			dividerColor="bg-red-700"
 		>
 			<SelectedMapElement />
 		</Card>
 
+
 		<Card
-			width="min-w-[26rem] max-w-7xl "
+			width="min-w-[26rem] max-w-5xl "
 			title="Table"
 			extraClasses={`${selectedComponent.name === 'Table' ? '' : 'hidden'} resize-x`}
 			icon="fa-solid fa-table"
 			showOnLoad={true}
 			disableToggle={true}
+			dividerColor="bg-purple-700"
 		>
 			<TableElement />
 		</Card>
@@ -155,9 +162,13 @@
 			extraClasses={`${selectedComponent.name === 'Import Geojson' ? '' : 'hidden'} `}
 			showOnLoad={true}
 			disableToggle={true}
+			dividerColor="bg-orange-700"
 		>
 			<ImportGeojson {processMapLayers} />
 		</Card>
+
+		
+
 	</div>
 
 	<div bind:this={mapDiv} class="min-h-screen w-full" />

@@ -76,7 +76,7 @@
 	}
 </script>
 
-<div class="flex flex-col gap-4 p-4">
+<div class="flex flex-col gap-2 p-4">
 	<!-- Date Start Input -->
 	<label class="flex flex-col">
 		<span class="font-bold mb-2">Date Start</span>

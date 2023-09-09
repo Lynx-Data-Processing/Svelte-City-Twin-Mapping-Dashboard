@@ -5,12 +5,12 @@ import { mapStore } from "../../store/mapStore";
 import { arrowLineStyle, lineStyle, pointStyle, polygonStyle } from "./google-feature-style";
 import { createMapPopup } from "./google-map-popup";
 
-export const addLayerToGoogleMap = (map: any, layerListElement: IMapLayer) => {
-    if (!map || !layerListElement.geojson) return;
+export const addLayerToGoogleMap = (map: any, layerElement: IMapLayer) => {
+    if (!map || !layerElement.geojson) return;
 
-    layerListElement.googleMapLayer = new google.maps.Data();
-    const layer = layerListElement.googleMapLayer;
-    layer.addGeoJson(layerListElement.geojson);
+    layerElement.googleMapLayer = new google.maps.Data();
+    const layer = layerElement.googleMapLayer;
+    layer.addGeoJson(layerElement.geojson);
 
 
     const infoWindow = new google.maps.InfoWindow();
@@ -41,7 +41,7 @@ export const addLayerToGoogleMap = (map: any, layerListElement: IMapLayer) => {
 
     layer.addListener('click', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
         const feature = event.feature;
-        const contentString = createMapPopup(feature, layerListElement);
+        const contentString = createMapPopup(feature, layerElement);
         infoWindow.setContent(contentString);
         infoWindow.setPosition(event.latLng);
         infoWindow.open(map);
@@ -50,7 +50,7 @@ export const addLayerToGoogleMap = (map: any, layerListElement: IMapLayer) => {
         mapStore.setSelectedMapElement(feature);
     });
 
-    if (layerListElement.type === POLYGON || layerListElement.type === MULTI_POLYGON) {
+    if (layerElement.type === POLYGON || layerElement.type === MULTI_POLYGON) {
         layer.addListener('mouseover', (event: { feature: any; latLng: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined; }) => {
             const feature = event.feature;
             layer.overrideStyle(feature, { fillOpacity: 0.8 });
@@ -68,8 +68,6 @@ export const toggleGoogleMapLayerVisibility = (map: any, layerElement: IMapLayer
     layerElement.isVisible ? layerElement.googleMapLayer.setMap(map) : layerElement.googleMapLayer.setMap(null);
     return map;
 };
-
-
 
 export const createMapLayer = (
     layerName: string,

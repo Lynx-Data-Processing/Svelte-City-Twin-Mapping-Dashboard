@@ -116,17 +116,17 @@
 		/>
 	{/if}
 	{#if filteredLayerGeojson && filteredLayerGeojson.features.length > 0}
-		<div class="flex flex-col max-h-[45rem] overflow-auto pr-6 pb-6">
+		<div class="flex flex-col max-h-[25rem] overflow-auto pr-6 pb-6">
 			<table class="w-full border-collapse rounded-md overflow-hidden">
 				<thead>
 					<tr class="text-left bg-zinc-200 rounded-md overflow-hidden h-10">
 						
 						{#each Array.from(uniqueKeys) as key, idx}
-							<th class="font-bold px-4 py-2 ">
-								<div class="flex flex-row justify-between">
+							<th class="font-bold p-2">
+								<div class="flex flex-row gap-2">
 									{key}
 
-									<button on:click={() => sortTable(key)} class="ml-4 btn btn-sm">
+									<button on:click={() => sortTable(key)} class="btn btn-sm">
 										{#if sortedByColumn === key && sortDirection === 'asc'}
 											<i class={`fa-solid fa-arrow-up `} />
 										{:else}
@@ -136,7 +136,7 @@
 								</div>
 							</th>
 						{/each}
-						<th class="font-bold px-4 py-2 ">Options</th>
+						<th class="font-bold p-2">Options</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -144,7 +144,7 @@
 						<tr class="{idx % 2 == 0 ? 'bg-white ' : 'bg-zinc-50'} hover:bg-zinc-100 h-10">
 							
 							{#each Array.from(uniqueKeys) as key}
-								<td class="px-4 py-2">
+								<td class="p-2">
 									{#if !feature.properties[key]}
 										-
 									{:else if isColor(feature.properties[key])}
@@ -162,7 +162,7 @@
 									{/if}
 								</td>
 							{/each}
-							<td class="px-4 py-2 ">
+							<td class="p-2">
 								<UpdateCenterButton
 									extraClasses={'rounded-md'}
 									initialCoordinates={convertGeoJSONToLatLng(feature)}

@@ -6,6 +6,7 @@
 	export let showOnLoad = true;
 	export let showContent = showOnLoad;
 	export let extraClasses = '';
+	export let dividerColor = 'bg-primary';
 	const toggleContent = () => (showContent = !showContent);
 </script>
 
@@ -22,6 +23,7 @@
 			</button>
 		{/if}
 	</div>
+	<div class="{dividerColor} py-0.5"/>
 	{#if showContent || disableToggle}
 		<slot />
 	{/if}

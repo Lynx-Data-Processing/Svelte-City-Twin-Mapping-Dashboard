@@ -7,7 +7,6 @@ export interface IMapLayer  {
     type: GeojsonGeometryType,
     isVisible: boolean,
     layerName: string,
-    hasFilter?: boolean,
     sourceName: string,
     initialCoordinates?: ILatLngType,
     color?: string,

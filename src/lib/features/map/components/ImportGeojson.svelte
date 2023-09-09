@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { addAdditionalStylingToGeojson } from '../helpers/geojson/geojson-utils';
 	import { createMapLayer } from '../helpers/google/google-map-utils';
-	import { mapStore } from '../store/mapStore';
-	import type { GeojsonGeometryType, IMapLayer } from '../types';
+	import type { GeojsonGeometryType } from '../types';
 
 	let isSuccessful = false;
 	let showStatus = false;
@@ -30,8 +29,7 @@
 
 	function processLayer() {
 		if (geojson && layerName && layerColor && geometryType) {
-
-      geojson = addAdditionalStylingToGeojson(geojson, layerColor, false);
+			geojson = addAdditionalStylingToGeojson(geojson, layerColor, false);
 			processMapLayers([
 				createMapLayer(
 					layerName,
@@ -72,7 +70,6 @@
 				<option value="Point">Point</option>
 				<option value="LineString">LineString</option>
 				<option value="Polygon">Polygon</option>
-				<!-- Add more types as needed -->
 			</select>
 		</label>
 

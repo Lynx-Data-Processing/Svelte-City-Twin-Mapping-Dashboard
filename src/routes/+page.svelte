@@ -14,7 +14,6 @@
 	const toggleLearnMore = () => {
 		learnMoreVisible = !learnMoreVisible;
 	};
-
 </script>
 
 <svelte:head>
@@ -31,7 +30,6 @@
 		>
 			<p class="text-4xl font-bold"><i class="fa-solid fa-location-arrow mr-2" />USARs</p>
 			<p>Cloud-based software to create and share interactive web maps.</p>
-
 		</div>
 
 		<div
