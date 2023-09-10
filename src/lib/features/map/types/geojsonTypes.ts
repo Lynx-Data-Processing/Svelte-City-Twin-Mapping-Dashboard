@@ -16,7 +16,7 @@ export interface IGeojsonFeature {
     },
     properties: {
         [key: string]: any,
-        id: string
+        id?: string
     }
 };
 

@@ -1,6 +1,5 @@
 import { LINE_STRING, MULTI_LINE_STRING, MULTI_POINT, MULTI_POLYGON, POINT, POLYGON } from "../../constants/geojson";
 import type { GeojsonGeometryType, IGeojsonCollection, IGeojsonFeature, ILatLngType } from "../../types";
-import { getColorGivenIndex } from "./color-utils";
 
 //* All elements must have a lng and lat property otherwise it will not be converted
 export const convertToGeojson = (data: any[], geojsonGeometryType: GeojsonGeometryType) => {
@@ -36,7 +35,7 @@ export const convertToGeojson = (data: any[], geojsonGeometryType: GeojsonGeomet
 
 export const addAdditionalStylingToGeojson = (geojson: IGeojsonCollection, color?: string, hasArrows = false) => {
   for (let i = 0, len = geojson.features.length; i < len; i++) {
-    geojson.features[i].properties.color = color || getColorGivenIndex(i);
+    geojson.features[i].properties.color = color || "#000000";
     if (hasArrows) geojson.features[i].properties.hasArrows = true;
   }
   return geojson;

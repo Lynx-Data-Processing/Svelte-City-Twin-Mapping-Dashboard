@@ -1,6 +1,6 @@
 
-const createStyle = (color = 'blue', weight = 4) => ({ strokeColor: color, strokeWeight: weight });
-const createIcon = (color: string, scale = 5, path: string | google.maps.SymbolPath | null = google.maps.SymbolPath.CIRCLE, opacity = 1) => ({ path, scale, strokeColor: color, fillColor: color, fillOpacity: opacity });
+export const createStyle = (color = 'blue', weight = 4) => ({ strokeColor: color, strokeWeight: weight });
+export const createIcon = (color: string, scale = 5, path: string | google.maps.SymbolPath | null = google.maps.SymbolPath.CIRCLE, opacity = 1) => ({ path, scale, strokeColor: color, fillColor: color, fillOpacity: opacity });
 
 export const pointStyle = (color: string, size: number = 5) => {
     return { ...createStyle(color), icon: createIcon(color, size) }
