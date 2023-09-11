@@ -24,7 +24,7 @@
 <main class="bg-grid flex flex-col bg-dark bg-topography h-screen w-screen relative">
 	<div class="absolute top-0 left-0 h-full w-full bg-black bg-opacity-50 z-10" />
 
-	<div class="m-auto grid grid-cols-2 h-[30rem] w-[40rem] rounded-md overflow-hidden z-20">
+	<div class="m-auto grid grid-cols-2 h-[30rem] w-[45rem] rounded-md overflow-hidden z-20">
 		<div
 			class="flex flex-col gap-4 col-span-1 h-full bg-zinc-900 text-white justify-center align-middle px-8"
 		>

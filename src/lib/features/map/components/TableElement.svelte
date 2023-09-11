@@ -49,6 +49,7 @@
 			filterGeojsonBySearch();
 		}
 	};
+	$: selectLayer(selectedLayer);
 
 	let search = '';
 	let filteredLayerGeojson: any = null;
@@ -71,8 +72,6 @@
 			})
 		};
 	};
-	$: selectLayer(selectedLayer);
-
 	
 	let sortDirection: 'asc' | 'desc' | null = null;
 	let sortedByColumn: string | null = null;

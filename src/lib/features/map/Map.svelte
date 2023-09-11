@@ -18,7 +18,7 @@
 	import { mapLayerStore } from './store/layerListStore';
 	import { mapStore } from './store/mapStore';
 	import type { IMapLayer } from './types';
-
+	import Filters from './components/Filters.svelte';
 
 	let mapLayers: IMapLayer[];
 	mapLayerStore.subscribe((value) => {
@@ -66,10 +66,6 @@
 
 	const components = [
 		{
-			name: 'Layers',
-			icon: 'fa-solid fa-layer-group'
-		},
-		{
 			name: 'Search',
 			icon: 'fa-solid fa-search'
 		},
@@ -77,7 +73,15 @@
 			name: 'Selected Map Element',
 			icon: 'fa-solid fa-map-marker'
 		},
+		{
+			name: 'Layers',
+			icon: 'fa-solid fa-layer-group'
+		},
 
+		{
+			name: 'Filters',
+			icon: 'fa-solid fa-filter'
+		},
 		{
 			name: 'Table',
 			icon: 'fa-solid fa-table'
@@ -120,6 +124,18 @@
 
 		<Card
 			width="w-[26rem]"
+			extraClasses={selectedComponent.name === 'Filters' ? '' : 'hidden'}
+			title="Filters"
+			icon="fa-solid fa-filter"
+			showOnLoad={true}
+			disableToggle={true}
+			dividerColor="bg-yellow-700"
+		>
+			<Filters />
+		</Card>
+
+		<Card
+			width="w-[26rem]"
 			extraClasses={selectedComponent.name === 'Search' ? '' : 'hidden'}
 			title="Search"
 			icon="fa-solid fa-search"
@@ -141,7 +157,6 @@
 		>
 			<SelectedMapElement />
 		</Card>
-
 
 		<Card
 			width="min-w-[26rem] max-w-5xl "
@@ -166,9 +181,6 @@
 		>
 			<ImportGeojson {processMapLayers} />
 		</Card>
-
-		
-
 	</div>
 
 	<div bind:this={mapDiv} class="min-h-screen w-full" />

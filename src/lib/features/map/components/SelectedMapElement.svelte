@@ -25,8 +25,6 @@
 					<source src={property.value} type="video/mp4" />
 					Your browser does not support the video tag.
 				</video>
-			{:else}
-				<!-- other types will go to the table -->
 			{/if}
 		{/each}
 		<table class="w-full border-collapse rounded-md overflow-hidden">
@@ -53,7 +51,6 @@
 								{:else if isNumber(property.value)}
 									<span>{property.value}</span>
 								{:else}
-									<!-- Stringify objects or other unknown types -->
 									<span>{stringifyObject(property.value)}</span>
 								{/if}
 							</td>
