@@ -109,14 +109,15 @@
 	</label>
 
 	<!-- Return Video Checkbox -->
-	<label class="flex items-center">
-		<input type="checkbox" bind:checked={searchParameters.returnVideo} class="mr-2" />
+	<label class="flex flex-col">
 		<span class="font-bold mb-2">Return Video</span>
+		<input type="checkbox" bind:checked={searchParameters.returnVideo} class="mr-auto" />
+
 	</label>
 
 	{#if showStatus}
 		<div
-			class="{isSuccessful ? 'bg-green-800' : 'bg-red-800'} flex text-white p-2 w-full h-10 rounded-md text-center align-middle"
+			class="{isSuccessful ? 'bg-green-800' : 'bg-red-800'} flex text-white p-2 w-full h-10 rounded-md text-center align-middle mt-4"
 		>
 			<p class="m-auto">{isSuccessful ? 'Search Successful' : 'Search Failed'}</p>
 		</div>
@@ -124,7 +125,7 @@
 		<button
 			on:click={handleSearch}
 			title="Search"
-			class="bg-dark hover:bg-zinc-800 text-white p-2 w-full h-10 rounded-md"
+			class="bg-dark hover:bg-zinc-800 text-white p-2 w-full h-10 rounded-md mt-4"
 			disabled={isLoading}
 		>
 			<i class="fa-solid fa-magnifying-glass" aria-hidden="true" />

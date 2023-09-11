@@ -177,8 +177,7 @@
 	{/if}
 
 	{#if filteredLayerGeojson && filteredLayerGeojson.features.length > 0}
-		<hr />
-		<div class="border-[1px] rounded-md h-fit w-full bg-white ">
+		<div class="border-[1px] rounded-md h-fit w-full bg-white mt-4">
 			<DownloadButton layer={selectedLayer} />
 		</div>
 	{/if}

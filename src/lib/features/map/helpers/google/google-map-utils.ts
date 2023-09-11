@@ -1,6 +1,6 @@
 import { LINE_STRING, MULTI_POLYGON, POINT, POLYGON } from "$lib/features/map/constants/geojson";
 import { KINGSTON_COORDINATES_OBJ } from "$lib/features/map/constants/kingston";
-import type { GeojsonGeometryType, IGeojsonCollection, ILatLngType, IMapLayer } from "$lib/features/map/types";
+import type { GeojsonGeometryType, IFilters, IGeojsonCollection, IGeojsonFeature, ILatLngType, IMapLayer } from "$lib/features/map/types";
 import { mapStore } from "../../store/mapStore";
 import { arrowLineStyle, lineStyle, pointStyle, polygonStyle } from "./google-feature-style";
 import { createMapPopup } from "./google-map-popup";
@@ -15,11 +15,11 @@ export const addLayerToGoogleMap = (map: any, layerElement: IMapLayer) => {
 
     const infoWindow = new google.maps.InfoWindow();
     layer.setStyle((feature: google.maps.Data.Feature) => {
-        const geometryType : GeojsonGeometryType = feature.getGeometry()!.getType() as GeojsonGeometryType;
-        const hasArrows : boolean = feature.getProperty('hasArrows') || false;
+        const geometryType: GeojsonGeometryType = feature.getGeometry()!.getType() as GeojsonGeometryType;
+        const hasArrows: boolean = feature.getProperty('hasArrows') || false;
         const color: string = feature.getProperty('color') || "black"
-        const size : number = feature.getProperty('size') || 5;
-    
+        const size: number = feature.getProperty('size') || 5;
+
 
         if (geometryType === POINT) {
             return pointStyle(color, size);
@@ -69,6 +69,17 @@ export const toggleGoogleMapLayerVisibility = (map: any, layerElement: IMapLayer
     return map;
 };
 
+export const filterGoogleMapLayerGeojsonWithoutUpdatingLayerGeojson = (map: any, layerElement: IMapLayer, geojson: IGeojsonCollection) => {
+    if (!map && layerElement.googleMapLayer) return;
+    layerElement.googleMapLayer.setMap(null);
+    layerElement.googleMapLayer.forEach((feature: any) => {
+        layerElement.googleMapLayer.remove(feature);
+    });
+    layerElement.googleMapLayer.addGeoJson(geojson);
+    layerElement.isVisible ? layerElement.googleMapLayer.setMap(map) : layerElement.googleMapLayer.setMap(null);
+    return map;
+}
+
 export const createMapLayer = (
     layerName: string,
     type: GeojsonGeometryType,
@@ -87,6 +98,7 @@ export const createMapLayer = (
         geojson: geojson,
         initialCoordinates: getMapLayerCenterCoordinates(type, geojson),
         googleMapLayer: new google.maps.Data(),
+        filters: createLayerFilters(geojson),
     };
     return layerElement;
 };
@@ -110,3 +122,27 @@ const getMapLayerCenterCoordinates = (type: GeojsonGeometryType, data: any, defa
         return defaultCoords;
     }
 };
+
+export const createLayerFilters = (geojson: any) => {
+    const tempFilters: IFilters[] = [];
+    geojson.features.forEach((feature: IGeojsonFeature) => {
+        const properties = feature.properties;
+        if (!properties) return;
+
+        Object.keys(properties).forEach((key) => {
+            const value = properties[key];
+            const filter = tempFilters.find((filter) => filter.name === key);
+            if (filter) {
+                if (!filter.values.includes(value)) filter.values.push(value);
+            } else {
+                tempFilters.push({
+                    name: key,
+                    type: 'text',
+                    values: [value],
+                    selectedValue: 'All'
+                });
+            }
+        });
+    });
+    return tempFilters;
+}

@@ -75,7 +75,7 @@ export const getKingstonMapData = async () => {
   const neighborhoodsData = await getKingstonData(OPEN_DATA_KINGSTON_CITY_ZONES_URL);
   if (neighborhoodsData) {
     let neighborhoodsGpsData = rawKingstonDataToGeojsonData(neighborhoodsData, POLYGON);
-    neighborhoodsGpsData = addAdditionalStylingToGeojson(neighborhoodsGpsData, '#000000');
+    neighborhoodsGpsData = addAdditionalStylingToGeojson(neighborhoodsGpsData, undefined);
     const neighborhoodsElement = createMapLayer('Neighborhoods', POLYGON, false, 'fa-solid fa-table-cells-large', 'Black', neighborhoodsGpsData);
     tempLayerList.push(neighborhoodsElement);
   }
